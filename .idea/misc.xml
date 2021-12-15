@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/aiqfome/AndroidStudioProjects/Irineu333/NeoRegex/app/src/main/res/drawable/bg_ripple_primary.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/aiqfome/AndroidStudioProjects/Irineu333/NeoRegex/app/src/main/res/drawable/bg_rounded_white.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/aiqfome/AndroidStudioProjects/Irineu333/NeoRegex/app/src/main/res/drawable/ic_btn_round_add_black.xml" value="0.2755208333333333" />
+        <entry key="..\:/Users/aiqfome/AndroidStudioProjects/Irineu333/NeoRegex/app/src/main/res/layout/activity_main.xml" value="0.264" />
+      </map>
+    </option>
+  </component>
+  <component name="EntryPointsManager">
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="androidx.annotation.ColorInt" />
+    </list>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
