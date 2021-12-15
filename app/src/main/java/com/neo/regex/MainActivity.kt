@@ -30,6 +30,30 @@ class MainActivity : AppCompatActivity() {
 
         configRegex()
 
+        val highlight = HighlightTextWatcher()
+
+        highlight.range = HighlightTextWatcher.RANGE.ALL
+
+        highlight.addScheme(
+            //Character set
+            BackgroundScheme(
+                Pattern.compile("\\[.+]"),
+                color(R.color.character_set_background)
+            ).addScopeScheme(
+                ColorScheme(
+                    Pattern.compile("^\\[|]$"),
+                    color(R.color.character_set_foreground)
+                )
+            ),
+            //Escaped characters
+            ColorScheme(
+                Pattern.compile("\\\\[{}()|/+*?^$\\-\\[\\]\\\\]"),
+                color(R.color.escaped_characters)
+            )
+        )
+
+        binding.etRegex.addTextChangedListener(highlight)
+
     }
 
     private fun configRegex() {

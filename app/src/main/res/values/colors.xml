@@ -8,4 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!--    regex highlighting-->
+
+    <color name="character_set_background">#FFF494</color>
+    <color name="character_set_foreground">#E68A00</color>
+
+    <color name="escaped_characters">#9A0AF8</color>
 </resources>
