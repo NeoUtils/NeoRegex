@@ -1,7 +1,11 @@
 package com.neo.utilskt
 
+import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Resources
+import android.os.Handler
+import android.os.Looper
 import android.util.TypedValue
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
@@ -24,3 +28,14 @@ fun Resources.Theme.color(colorRes: Int): Int {
 @ColorInt
 fun Context.color(@ColorRes colorRes: Int) = ContextCompat.getColor(this, colorRes)
 fun Fragment.color(@ColorRes colorRes: Int) = requireContext().color(colorRes)
+
+fun runOnMainThread(delay: Long, function: () -> Unit) {
+    Handler(Looper.getMainLooper()).postDelayed(function, delay)
+}
+
+fun Context.dialog(title : String, message : String) : AlertDialog {
+    val builder = AlertDialog.Builder(this)
+    builder.setTitle(title)
+    builder.setMessage(message)
+    return builder.show()
+}

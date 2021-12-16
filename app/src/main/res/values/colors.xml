@@ -10,8 +10,17 @@
 
     <!--    regex highlighting-->
 
-    <color name="character_set_background">#FFF494</color>
+    <color name="character_set_background">#66E6CF00</color>
     <color name="character_set_foreground">#E68A00</color>
 
     <color name="escaped_characters">#9A0AF8</color>
+
+    <color name="group_background">#4D009F05</color>
+    <color name="group_foreground">#009F05</color>
+
+    <color name="keys">#E6AC00</color>
+
+    <color name="link">#332196F3</color>
+
+    <color name="alternation">#065C00</color>
 </resources>
