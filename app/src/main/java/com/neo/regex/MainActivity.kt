@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
                 var textColor = Color.BLACK
 
                 matchersHighlight.addScheme(
-                    object : BaseScheme(it.pattern) {
+                    object : BaseScheme(it.pattern ?: Pattern.compile("")) {
 
                         override fun getSpan(text: CharSequence, start: Int, end: Int): Any {
 
@@ -106,7 +106,6 @@ class MainActivity : AppCompatActivity() {
                     )
                 )
             }
-
 
             matchersHighlight.setSpan(binding.etSpan)
         }
