@@ -3,7 +3,6 @@ package com.neo.regex
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlin.random.Random
 
 class MainViewModel : ViewModel() {
     private val _expressions: MutableLiveData<MutableList<Expression>> by lazy {

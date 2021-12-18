@@ -18,9 +18,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/app_name"
+            android:fontFamily="@font/pacifico_regular"
+            android:text="Neo"
             android:textColor="?attr/colorOnPrimary"
             android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/tv_regex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="1dp"
+            android:fontFamily="@font/signika_negative_medium"
+            android:text="REGEX"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="28sp" />
+
 
     </androidx.appcompat.widget.Toolbar>
 

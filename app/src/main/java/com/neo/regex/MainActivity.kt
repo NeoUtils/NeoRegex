@@ -12,6 +12,8 @@ import com.neo.highlight.core.Highlight
 import com.neo.highlight.util.listener.HighlightTextWatcher
 import com.neo.highlight.util.scheme.*
 import com.neo.highlight.util.scheme.base.BaseScheme
+import com.neo.regex.util.genColor
+import com.neo.regex.util.genHSV
 
 import com.neo.utilskt.color
 import com.neo.utilskt.dialog
@@ -62,65 +64,40 @@ class MainActivity : AppCompatActivity() {
             matchersHighlight.clearScheme()
             matchersHighlight.removeSpan(binding.etSpan.text)
 
-            val isManyExpressions = expressions.size > 1
-            var color = Color.BLACK
-            var matchColor = 0
-            var schemeColorTemp = 0
+            var matches = 0
 
             matchersHighlight.addScheme(
                 OnMatchScheme { _, _, _ ->
-                    matchColor = 0
+                    matches = 0
                 }
             )
 
             expressions.forEach {
 
-                if (schemeColorTemp > 250) schemeColorTemp = 0
-
-                schemeColorTemp += 10
+                var textColor = Color.BLACK
 
                 matchersHighlight.addScheme(
                     object : BaseScheme(Pattern.compile(it.regex)) {
 
-                        var schemeColor = schemeColorTemp
-
                         override fun getSpan(text: CharSequence, start: Int, end: Int): Any {
 
+                            val hsv = it.hsv ?: genHSV(matches * 10, true)
 
-                            if (isManyExpressions) {
-                                val backgroundColorSpan = BackgroundColorSpan(genColor(schemeColor))
-
-                                color = if (matchColor > 220) {
-                                    Color.WHITE
-                                } else {
-                                    Color.BLACK
-                                }
-
-                                return backgroundColorSpan
-                            }
-
-                            if (matchColor > 250) matchColor = 0
-
-                            color = if (matchColor > 220) {
+                            textColor = if (matches > 220) {
                                 Color.WHITE
                             } else {
                                 Color.BLACK
                             }
 
-                            val backgroundColorSpan = BackgroundColorSpan(genColor(matchColor))
+                            matches++
 
-                            matchColor += 10
-
-                            return backgroundColorSpan
+                            return BackgroundColorSpan(genColor(hsv))
                         }
 
-                        private fun genColor(count: Int): Int {
-                            return Color.HSVToColor(floatArrayOf(count.toFloat(), 100f, 100f))
-                        }
                     }.addScopeScheme(
                         object : BaseScheme(null) {
                             override fun getSpan(text: CharSequence, start: Int, end: Int): Any {
-                                return ForegroundColorSpan(color)
+                                return ForegroundColorSpan(textColor)
                             }
                         },
                         OnClickScheme { text, _, _ ->
