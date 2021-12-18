@@ -7,6 +7,7 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.ColorInt
 import androidx.core.view.setMargins
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -16,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.neo.highlight.core.Highlight
 import com.neo.highlight.core.Scheme
 import com.neo.regex.databinding.ItemExpressionBinding
+import com.neo.regex.util.genColor
+import com.neo.regex.util.genHSV
 import com.neo.utilskt.color
 import com.neo.utilskt.dp
 
@@ -34,26 +37,39 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val expression = expressions[position]
+        val isLastItem = position == itemCount - 1
+        val context = holder.itemView.context.theme
 
         holder.clearListeners()
 
-        val isLastItem = position == itemCount - 1
         holder.moreExpressionBtnIsVisible(isLastItem)
 
         holder.setExpressionHighlight(highlight)
 
-        holder.setExpression(expression.regex)
+        if (itemCount > 1) {
+            expression.hsv = genHSV(position * 10, true)
+        } else {
+            expression.hsv = null
+        }
 
         holder.setExpressionChangeListener {
             expression.regex = it
 
             try {
                 onMatchListener?.invoke(expressions)
-                holder.hideError()
+
+                expression.hsv?.let { hsv ->
+                    holder.setColor(genColor(hsv))
+                } ?: run {
+                    holder.setColor(context.color(R.attr.colorPrimary))
+                }
+
             } catch (e: Exception) {
                 holder.showError(e.message)
             }
         }
+
+        holder.setExpression(expression.regex)
 
         if (isLastItem) {
             holder.setMoreExpressionListener(moreExpressionListener)
@@ -167,11 +183,13 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
             binding.etExpression.error = message
         }
 
-        fun hideError() {
+        fun setColor(color: Int) {
             gradientDrawable.setStroke(
                 context.dp(1.5f).toInt(),
-                context.theme.color(R.attr.colorPrimary)
+                color
             )
+
+            binding.ibAddExpressionBtn.setColorFilter(color)
 
             binding.etExpression.error = null
         }
