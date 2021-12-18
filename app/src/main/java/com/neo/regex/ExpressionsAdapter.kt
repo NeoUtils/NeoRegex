@@ -7,8 +7,8 @@ import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.ColorInt
 import androidx.core.view.setMargins
+import androidx.core.view.setPadding
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
@@ -21,6 +21,7 @@ import com.neo.regex.util.genColor
 import com.neo.regex.util.genHSV
 import com.neo.utilskt.color
 import com.neo.utilskt.dp
+import java.util.regex.Pattern
 
 class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
 
@@ -52,24 +53,36 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
             expression.hsv = null
         }
 
-        holder.setExpressionChangeListener {
-            expression.regex = it
+        holder.setExpression(expression.regex)
 
+        val configColor = {
+            expression.hsv?.let { hsv ->
+                holder.setColor(genColor(hsv))
+            } ?: run {
+                holder.setColor(context.color(R.attr.colorPrimary))
+            }
+        }
+
+        expression.let {
             try {
-                onMatchListener?.invoke(expressions)
-
-                expression.hsv?.let { hsv ->
-                    holder.setColor(genColor(hsv))
-                } ?: run {
-                    holder.setColor(context.color(R.attr.colorPrimary))
-                }
-
-            } catch (e: Exception) {
+                expression.pattern = Pattern.compile(it.regex)
+                configColor.invoke()
+            } catch (e : Exception) {
                 holder.showError(e.message)
             }
         }
 
-        holder.setExpression(expression.regex)
+        holder.setExpressionChangeListener {
+            expression.regex = it
+
+            try {
+                expression.pattern = Pattern.compile(it)
+                onMatchListener?.invoke(expressions)
+                configColor.invoke()
+            } catch (e: Exception) {
+                holder.showError(e.message)
+            }
+        }
 
         if (isLastItem) {
             holder.setMoreExpressionListener(moreExpressionListener)
@@ -150,9 +163,17 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
         }
 
         fun moreExpressionBtnIsVisible(isVisible: Boolean) {
+            val paddingDefault = context.dp(14)
             binding.ibAddExpressionBtn.visibility = if (isVisible) {
+                binding.etExpression.setPadding(
+                    paddingDefault,
+                    paddingDefault,
+                    0,
+                    paddingDefault
+                )
                 View.VISIBLE
             } else {
+                binding.etExpression.setPadding(paddingDefault)
                 View.GONE
             }
         }
@@ -190,7 +211,6 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
             )
 
             binding.ibAddExpressionBtn.setColorFilter(color)
-
             binding.etExpression.error = null
         }
     }

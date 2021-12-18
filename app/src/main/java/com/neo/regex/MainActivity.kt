@@ -77,19 +77,19 @@ class MainActivity : AppCompatActivity() {
                 var textColor = Color.BLACK
 
                 matchersHighlight.addScheme(
-                    object : BaseScheme(Pattern.compile(it.regex)) {
+                    object : BaseScheme(it.pattern) {
 
                         override fun getSpan(text: CharSequence, start: Int, end: Int): Any {
 
                             val hsv = it.hsv ?: genHSV(matches * 10, true)
 
-                            textColor = if (matches > 220) {
+                            matches++
+
+                            textColor = if (hsv > 220) {
                                 Color.WHITE
                             } else {
                                 Color.BLACK
                             }
-
-                            matches++
 
                             return BackgroundColorSpan(genColor(hsv))
                         }
@@ -123,7 +123,11 @@ class MainActivity : AppCompatActivity() {
     private fun setupObservers() {
 
         viewModel.expressions.observe(this) { expressions ->
-            expressionsAdapter.setAllExpressions(expressions)
+            try {
+                expressionsAdapter.setAllExpressions(expressions)
+            } catch (e: Exception) {
+                dialog("Error", e.message ?: "Não foi possível renderizar")
+            }
         }
 
     }
