@@ -55,33 +55,29 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
 
         holder.setExpression(expression.regex)
 
-        val configColor = {
-            expression.hsv?.let { hsv ->
-                holder.setColor(genColor(hsv))
-            } ?: run {
-                holder.setColor(context.color(R.attr.colorPrimary))
-            }
-        }
-
-        expression.let {
-            try {
-                expression.pattern = Pattern.compile(it.regex)
-                configColor.invoke()
-            } catch (e : Exception) {
-                holder.showError(e.message)
-            }
-        }
-
-        holder.setExpressionChangeListener {
-            expression.regex = it
+        val genRegex = {
 
             try {
-                expression.pattern = Pattern.compile(it)
-                onMatchListener?.invoke(expressions)
-                configColor.invoke()
+                expression.pattern = null
+                expression.pattern = Pattern.compile(expression.regex)
+
+                expression.hsv?.let { hsv ->
+                    holder.setColor(genColor(hsv))
+                } ?: run {
+                    holder.setColor(context.color(R.attr.colorPrimary))
+                }
+
             } catch (e: Exception) {
                 holder.showError(e.message)
             }
+        }
+
+        genRegex.invoke()
+
+        holder.setExpressionChangeListener {
+            expression.regex = it
+            genRegex.invoke()
+            onMatchListener?.invoke(expressions)
         }
 
         if (isLastItem) {
