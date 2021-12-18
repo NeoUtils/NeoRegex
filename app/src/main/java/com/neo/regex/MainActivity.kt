@@ -1,31 +1,33 @@
 package com.neo.regex
 
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.text.style.BackgroundColorSpan
-import androidx.core.widget.addTextChangedListener
-import com.neo.highlight.util.listener.HighlightTextWatcher
-import com.neo.regex.databinding.ActivityMainBinding
 import android.text.style.ForegroundColorSpan
-import android.widget.Toast
+import com.neo.regex.databinding.ActivityMainBinding
+import androidx.activity.viewModels
 import com.neo.highlight.core.Highlight
+import com.neo.highlight.util.listener.HighlightTextWatcher
 import com.neo.highlight.util.scheme.*
-
 import com.neo.highlight.util.scheme.base.BaseScheme
+
 import com.neo.utilskt.color
 import com.neo.utilskt.dialog
-import com.neo.utilskt.dp
 import com.neo.utilskt.runOnMainThread
 import java.util.regex.Pattern
 
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var matchersHighlight: HighlightTextWatcher
     private lateinit var binding: ActivityMainBinding
+
+    private val viewModel: MainViewModel by viewModels()
+
+    private val expressionsAdapter: ExpressionsAdapter by lazy {
+        ExpressionsAdapter()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,15 +38,122 @@ class MainActivity : AppCompatActivity() {
         configRegexMatchers()
         configRegexHighlighting()
 
+        setupView()
+        setupObservers()
+        setupListeners()
+
+    }
+
+    private fun setupListeners() {
+        expressionsAdapter.setMoreExpressionListener {
+            viewModel.addExpression()
+        }
+
+        expressionsAdapter.setRemoveExpressionListener { position ->
+            viewModel.removeExpression(position)
+        }
+
+
+        val matchersHighlight = HighlightTextWatcher().apply {
+            range = HighlightTextWatcher.RANGE.ALL
+        }
+
+        expressionsAdapter.seOnMatchListener { expressions ->
+            matchersHighlight.clearScheme()
+            matchersHighlight.removeSpan(binding.etSpan.text)
+
+            val isManyExpressions = expressions.size > 1
+            var color = Color.BLACK
+            var matchColor = 0
+            var schemeColorTemp = 0
+
+            matchersHighlight.addScheme(
+                OnMatchScheme { _, _, _ ->
+                    matchColor = 0
+                }
+            )
+
+            expressions.forEach {
+
+                if (schemeColorTemp > 250) schemeColorTemp = 0
+
+                schemeColorTemp += 10
+
+                matchersHighlight.addScheme(
+                    object : BaseScheme(Pattern.compile(it.regex)) {
+
+                        var schemeColor = schemeColorTemp
+
+                        override fun getSpan(text: CharSequence, start: Int, end: Int): Any {
+
+
+                            if (isManyExpressions) {
+                                val backgroundColorSpan = BackgroundColorSpan(genColor(schemeColor))
+
+                                color = if (matchColor > 220) {
+                                    Color.WHITE
+                                } else {
+                                    Color.BLACK
+                                }
+
+                                return backgroundColorSpan
+                            }
+
+                            if (matchColor > 250) matchColor = 0
+
+                            color = if (matchColor > 220) {
+                                Color.WHITE
+                            } else {
+                                Color.BLACK
+                            }
+
+                            val backgroundColorSpan = BackgroundColorSpan(genColor(matchColor))
+
+                            matchColor += 10
+
+                            return backgroundColorSpan
+                        }
+
+                        private fun genColor(count: Int): Int {
+                            return Color.HSVToColor(floatArrayOf(count.toFloat(), 100f, 100f))
+                        }
+                    }.addScopeScheme(
+                        object : BaseScheme(null) {
+                            override fun getSpan(text: CharSequence, start: Int, end: Int): Any {
+                                return ForegroundColorSpan(color)
+                            }
+                        },
+                        OnClickScheme { text, _, _ ->
+                            //showRegex(text, regex)
+                        }
+                    )
+                )
+            }
+
+
+            matchersHighlight.setSpan(binding.etSpan)
+        }
+
+        binding.etSpan.movementMethod = LinkMovementMethod.getInstance()
+
+        binding.etSpan.addTextChangedListener(matchersHighlight)
+    }
+
+    private fun setupView() = with(binding) {
+        expressionsAdapter.attachOnRecyclerView(rvExpressions)
+    }
+
+    private fun setupObservers() {
+
+        viewModel.expressions.observe(this) { expressions ->
+            expressionsAdapter.setAllExpressions(expressions)
+        }
+
     }
 
     private fun configRegexHighlighting() {
-        val regexHighlight = HighlightTextWatcher()
 
-        regexHighlight.range = HighlightTextWatcher.RANGE.ALL
-
-        regexHighlight.addScheme(
-
+        expressionsAdapter.setExpressionHighlight(
             ColorScheme(
                 Pattern.compile("\\|"),
                 color(R.color.alternation)
@@ -68,15 +177,11 @@ class MainActivity : AppCompatActivity() {
             Scope(
                 Pattern.compile("[^|]+"),
                 OnClickScheme { text, _, _ ->
-                    highlightMatchers(text)
+                    //highlightMatchers(text)
                 },
                 BackgroundScheme(color(R.color.link))
             )
         )
-
-        binding.etRegex.movementMethod = LinkMovementMethod.getInstance()
-
-        binding.etRegex.addTextChangedListener(regexHighlight)
     }
 
     private fun highlightMatchers(text: CharSequence) {
@@ -97,73 +202,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun configRegexMatchers() {
-        matchersHighlight = HighlightTextWatcher()
 
-        matchersHighlight.range = HighlightTextWatcher.RANGE.ALL
-
-        binding.etRegex.addTextChangedListener { textRegex ->
-            matchersHighlight.clearScheme()
-            matchersHighlight.removeSpan(binding.etSpan.text)
-
-            val gradientDrawable = binding.llRegexContainer.background as GradientDrawable
-
-            try {
-                val regex = Pattern.compile(textRegex.toString())
-                var color = Color.BLACK
-                var count = 0
-
-                matchersHighlight.addScheme(
-                    OnMatchScheme { _, _, _ ->
-                        count = 0
-                    }
-                )
-
-                matchersHighlight.addScheme(
-                    object : BaseScheme(regex) {
-
-                        override fun getSpan(text: CharSequence, start: Int, end: Int): Any {
-
-                            if (count > 250) count = 0
-
-                            color = if (count > 220) {
-                                Color.WHITE
-                            } else {
-                                Color.BLACK
-                            }
-
-                            val span = BackgroundColorSpan(genColor(count))
-
-                            count += 10
-
-                            return span
-                        }
-
-                        private fun genColor(count: Int): Int {
-                            return Color.HSVToColor(floatArrayOf(count.toFloat(), 100f, 100f))
-                        }
-                    }.addScopeScheme(
-                        object : BaseScheme(null) {
-                            override fun getSpan(text: CharSequence, start: Int, end: Int): Any {
-                                return ForegroundColorSpan(color)
-                            }
-                        },
-                        OnClickScheme { text, _, _ ->
-                            showRegex(text, regex)
-                        }
-                    )
-                )
-
-                matchersHighlight.setSpan(binding.etSpan)
-
-                gradientDrawable.setStroke(dp(1.5f).toInt(), theme.color(R.attr.colorPrimary))
-            } catch (e: Exception) {
-                gradientDrawable.setStroke(dp(1.5f).toInt(), Color.RED)
-            }
-        }
-
-        binding.etSpan.movementMethod = LinkMovementMethod.getInstance()
-
-        binding.etSpan.addTextChangedListener(matchersHighlight)
     }
 
     private fun showRegex(text: CharSequence, regex: Pattern) {

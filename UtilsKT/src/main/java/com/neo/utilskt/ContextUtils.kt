@@ -29,7 +29,7 @@ fun Resources.Theme.color(colorRes: Int): Int {
 fun Context.color(@ColorRes colorRes: Int) = ContextCompat.getColor(this, colorRes)
 fun Fragment.color(@ColorRes colorRes: Int) = requireContext().color(colorRes)
 
-fun runOnMainThread(delay: Long, function: () -> Unit) {
+fun runOnMainThread(delay: Long = 0, function: () -> Unit) {
     Handler(Looper.getMainLooper()).postDelayed(function, delay)
 }
 
