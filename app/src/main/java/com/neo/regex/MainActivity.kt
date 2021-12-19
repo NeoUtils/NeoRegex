@@ -120,8 +120,6 @@ class MainActivity : AppCompatActivity() {
             matchersHighlight.setSpan(binding.etSpan)
         }
 
-        binding.etSpan.movementMethod = LinkMovementMethod.getInstance()
-
         binding.etSpan.addTextChangedListener(matchersHighlight)
     }
 
