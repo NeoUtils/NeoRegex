@@ -8,16 +8,19 @@ import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import com.neo.regex.databinding.ActivityMainBinding
 import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.neo.highlight.core.Highlight
 import com.neo.highlight.util.listener.HighlightTextWatcher
 import com.neo.highlight.util.scheme.*
 import com.neo.highlight.util.scheme.base.BaseScheme
-import com.neo.regex.util.genColor
-import com.neo.regex.util.genHSV
+import com.neo.regex.utils.genColor
+import com.neo.regex.utils.genHSV
 
 import com.neo.utilskt.color
 import com.neo.utilskt.dialog
 import com.neo.utilskt.runOnMainThread
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 
@@ -37,7 +40,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        configRegexMatchers()
         configRegexHighlighting()
 
         setupView()
@@ -74,37 +76,50 @@ class MainActivity : AppCompatActivity() {
 
             expressions.forEach {
 
-                var textColor = Color.BLACK
+                it.pattern?.let { pattern ->
 
-                matchersHighlight.addScheme(
-                    object : BaseScheme(it.pattern ?: Pattern.compile("")) {
+                    var textColor = Color.BLACK
 
-                        override fun getSpan(text: CharSequence, start: Int, end: Int): Any {
+                    matchersHighlight.addScheme(
+                        object : BaseScheme(pattern) {
 
-                            val hsv = it.hsv ?: genHSV(matches * 10, true)
-
-                            matches++
-
-                            textColor = if (hsv > 220) {
-                                Color.WHITE
-                            } else {
-                                Color.BLACK
-                            }
-
-                            return BackgroundColorSpan(genColor(hsv))
-                        }
-
-                    }.addScopeScheme(
-                        object : BaseScheme(null) {
                             override fun getSpan(text: CharSequence, start: Int, end: Int): Any {
-                                return ForegroundColorSpan(textColor)
+
+                                val hsv = it.hsv ?: genHSV(matches * 15, 250, true)
+
+                                matches++
+
+                                textColor = if (hsv > 220) {
+                                    Color.WHITE
+                                } else {
+                                    Color.BLACK
+                                }
+
+                                val backgroundColor = if (hsv == 250) {
+                                    theme.color(R.attr.colorPrimary)
+                                } else {
+                                    genColor(hsv)
+                                }
+                                return BackgroundColorSpan(backgroundColor)
                             }
-                        },
-                        OnClickScheme { text, _, _ ->
-                            //showRegex(text, regex)
-                        }
+
+                        }.addScopeScheme(
+                            object : BaseScheme(null) {
+                                override fun getSpan(
+                                    text: CharSequence,
+                                    start: Int,
+                                    end: Int
+                                ): Any {
+                                    return ForegroundColorSpan(textColor)
+                                }
+                            },
+                            OnClickScheme { text, _, _ ->
+                                //showRegex(text, regex)
+                            }
+                        )
                     )
-                )
+
+                }
             }
 
             matchersHighlight.setSpan(binding.etSpan)
@@ -153,36 +168,26 @@ class MainActivity : AppCompatActivity() {
             ColorScheme(
                 Pattern.compile("\\\\[wWdDsS]"),
                 color(R.color.keys)
-            ),
-            Scope(
-                Pattern.compile("[^|]+"),
-                OnClickScheme { text, _, _ ->
-                    //highlightMatchers(text)
-                },
-                BackgroundScheme(color(R.color.link))
             )
         )
     }
 
-    private fun highlightMatchers(text: CharSequence) {
-
+    private fun matchTemporary(pattern: Pattern, temp: Long) {
         val highlight = Highlight()
 
         val scope = Scope(
-            Pattern.compile(text.toString()),
+            pattern,
             BackgroundScheme(color(R.color.link))
         )
 
         highlight.addScheme(scope)
         highlight.setSpan(binding.etSpan)
 
-        runOnMainThread(500) {
+        lifecycleScope.launch {
+            delay(temp)
+
             binding.etSpan.text = binding.etSpan.text
         }
-    }
-
-    private fun configRegexMatchers() {
-
     }
 
     private fun showRegex(text: CharSequence, regex: Pattern) {
