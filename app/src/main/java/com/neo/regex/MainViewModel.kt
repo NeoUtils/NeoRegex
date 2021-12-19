@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
     private val _expressions: MutableLiveData<MutableList<Expression>> by lazy {
-        MutableLiveData(mutableListOf(Expression(), Expression()))
+        MutableLiveData(mutableListOf(Expression()))
     }
 
     val expressions: LiveData<MutableList<Expression>> get() = _expressions

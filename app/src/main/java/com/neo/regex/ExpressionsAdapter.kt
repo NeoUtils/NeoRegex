@@ -129,8 +129,9 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
         onMatchListener = listener
     }
 
-    class Holder(private val binding: ItemExpressionBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    class Holder(
+        private val binding: ItemExpressionBinding
+        ) : RecyclerView.ViewHolder(binding.root) {
 
         private val context = itemView.context
         private val gradientDrawable = binding.llRegexContainer.background as GradientDrawable
@@ -148,7 +149,9 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(context.dp(4))
+                val vertical = context.dp(4)
+                val horizontal = context.dp(16)
+                setMargins(horizontal, vertical, horizontal, vertical)
             }
 
             binding.etExpression.addTextChangedListener {

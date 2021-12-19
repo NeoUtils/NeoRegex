@@ -8,8 +8,6 @@ import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import com.neo.regex.databinding.ActivityMainBinding
 import androidx.activity.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.neo.highlight.core.Highlight
 import com.neo.highlight.util.listener.HighlightTextWatcher
 import com.neo.highlight.util.scheme.*
 import com.neo.highlight.util.scheme.base.BaseScheme
@@ -18,9 +16,6 @@ import com.neo.regex.utils.genHSV
 
 import com.neo.utilskt.color
 import com.neo.utilskt.dialog
-import com.neo.utilskt.runOnMainThread
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 
@@ -40,12 +35,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        configRegexHighlighting()
+        init()
+
+    }
+
+    private fun init() {
+        configExpressionAdapter()
 
         setupView()
         setupObservers()
         setupListeners()
-
     }
 
     private fun setupListeners() {
@@ -56,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         expressionsAdapter.setRemoveExpressionListener { position ->
             viewModel.removeExpression(position)
         }
-
 
         val matchersHighlight = HighlightTextWatcher().apply {
             range = HighlightTextWatcher.RANGE.ALL
@@ -112,9 +110,6 @@ class MainActivity : AppCompatActivity() {
                                 ): Any {
                                     return ForegroundColorSpan(textColor)
                                 }
-                            },
-                            OnClickScheme { text, _, _ ->
-                                //showRegex(text, regex)
                             }
                         )
                     )
@@ -146,7 +141,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun configRegexHighlighting() {
+    private fun configExpressionAdapter() {
 
         expressionsAdapter.setExpressionHighlight(
             ColorScheme(
@@ -170,30 +165,5 @@ class MainActivity : AppCompatActivity() {
                 color(R.color.keys)
             )
         )
-    }
-
-    private fun matchTemporary(pattern: Pattern, temp: Long) {
-        val highlight = Highlight()
-
-        val scope = Scope(
-            pattern,
-            BackgroundScheme(color(R.color.link))
-        )
-
-        highlight.addScheme(scope)
-        highlight.setSpan(binding.etSpan)
-
-        lifecycleScope.launch {
-            delay(temp)
-
-            binding.etSpan.text = binding.etSpan.text
-        }
-    }
-
-    private fun showRegex(text: CharSequence, regex: Pattern) {
-        val regexList = regex.pattern().split("|")
-        val matcher = regexList.first { text.matches(Regex(it)) }
-
-        dialog("Regex", matcher)
     }
 }
