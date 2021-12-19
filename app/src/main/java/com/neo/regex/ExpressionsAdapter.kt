@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.neo.highlight.core.Highlight
 import com.neo.highlight.core.Scheme
 import com.neo.regex.databinding.ItemExpressionBinding
-import com.neo.regex.util.genColor
-import com.neo.regex.util.genHSV
+import com.neo.regex.utils.genColor
+import com.neo.regex.utils.genHSV
 import com.neo.utilskt.color
 import com.neo.utilskt.dp
 import java.util.regex.Pattern
@@ -39,7 +39,8 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val expression = expressions[position]
         val isLastItem = position == itemCount - 1
-        val context = holder.itemView.context.theme
+        val context = holder.itemView.context
+        val theme = context.theme
 
         holder.clearListeners()
 
@@ -48,7 +49,7 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
         holder.setExpressionHighlight(highlight)
 
         if (itemCount > 1) {
-            expression.hsv = genHSV(position * 10, true)
+            expression.hsv = genHSV(position * 15, 250,true)
         } else {
             expression.hsv = null
         }
@@ -58,13 +59,21 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
         val genRegex = {
 
             try {
+                val regex = expression.regex
                 expression.pattern = null
-                expression.pattern = Pattern.compile(expression.regex)
+                expression.pattern = if(regex.isNotEmpty()) Pattern.compile(regex) else null
 
                 expression.hsv?.let { hsv ->
-                    holder.setColor(genColor(hsv))
+
+                    val backgroundColor = if (hsv == 250) {
+                        theme.color(R.attr.colorPrimary)
+                    } else {
+                        genColor(hsv)
+                    }
+
+                    holder.setColor(backgroundColor)
                 } ?: run {
-                    holder.setColor(context.color(R.attr.colorPrimary))
+                    holder.setColor(theme.color(R.attr.colorPrimary))
                 }
 
             } catch (e: Exception) {
