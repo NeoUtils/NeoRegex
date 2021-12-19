@@ -162,8 +162,6 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
                 }
             }
 
-            binding.etExpression.movementMethod = LinkMovementMethod.getInstance()
-
             binding.ibAddExpressionBtn.setOnClickListener {
                 moreExpressionListener?.invoke()
             }
