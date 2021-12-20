@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Neo Regex</string>
+    <string name="open_drawer">Abrir</string>
+    <string name="close_drawer">Fechar</string>
 </resources>

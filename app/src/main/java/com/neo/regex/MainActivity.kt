@@ -8,6 +8,7 @@ import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import com.neo.regex.databinding.ActivityMainBinding
 import androidx.activity.viewModels
+import androidx.appcompat.app.ActionBarDrawerToggle
 import com.neo.highlight.util.listener.HighlightTextWatcher
 import com.neo.highlight.util.scheme.*
 import com.neo.highlight.util.scheme.base.BaseScheme
@@ -17,7 +18,6 @@ import com.neo.regex.utils.genHSV
 import com.neo.utilskt.color
 import com.neo.utilskt.dialog
 import java.util.regex.Pattern
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,7 +36,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         init()
-
     }
 
     private fun init() {
@@ -62,7 +61,7 @@ class MainActivity : AppCompatActivity() {
 
         expressionsAdapter.seOnMatchListener { expressions ->
             matchersHighlight.clearScheme()
-            matchersHighlight.removeSpan(binding.etSpan.text)
+            matchersHighlight.removeSpan(binding.content.etSpan.text)
 
             var matches = 0
 
@@ -117,14 +116,31 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            matchersHighlight.setSpan(binding.etSpan)
+            matchersHighlight.setSpan(binding.content.etSpan)
         }
 
-        binding.etSpan.addTextChangedListener(matchersHighlight)
+        binding.content.etSpan.addTextChangedListener(matchersHighlight)
     }
 
-    private fun setupView() = with(binding) {
+    private fun setupView() = with(binding.content) {
+
         expressionsAdapter.attachOnRecyclerView(rvExpressions)
+
+        configDrawerMenu()
+    }
+
+    private fun configDrawerMenu() {
+        val toggle = ActionBarDrawerToggle(
+            this,
+            binding.drawerLayout,
+            binding.toolbar,
+            R.string.open_drawer,
+            R.string.close_drawer
+        )
+
+        binding.drawerLayout.addDrawerListener(toggle)
+
+        toggle.syncState()
     }
 
     private fun setupObservers() {
