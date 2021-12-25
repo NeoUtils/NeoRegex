@@ -46,11 +46,7 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
 
         holder.setExpressionHighlight(highlight)
 
-        if (itemCount > 1) {
-            expression.hsv = genHSV(position * 15, 250,true)
-        } else {
-            expression.hsv = null
-        }
+        val isMultiField = itemCount > 1
 
         holder.setExpression(expression.regex)
 
@@ -58,20 +54,19 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
 
             try {
                 val regex = expression.regex
-                expression.pattern = if(regex.isNotEmpty()) Pattern.compile(regex) else null
+                expression.pattern = if (regex.isNotEmpty()) Pattern.compile(regex) else null
 
-                expression.hsv?.let { hsv ->
-
-                    val backgroundColor = if (hsv == 250) {
-                        theme.color(R.attr.colorPrimary)
+                holder.setColor(
+                    if (isMultiField) {
+                        if (position == 0) {
+                            theme.color(R.attr.colorPrimary)
+                        } else {
+                            genColor(genHSV(position * 15, 250, true))
+                        }
                     } else {
-                        genColor(hsv)
+                        theme.color(R.attr.colorPrimary)
                     }
-
-                    holder.setColor(backgroundColor)
-                } ?: run {
-                    holder.setColor(theme.color(R.attr.colorPrimary))
-                }
+                )
 
             } catch (e: Exception) {
                 expression.pattern = null
@@ -129,7 +124,7 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
 
     class Holder(
         private val binding: ItemExpressionBinding
-        ) : RecyclerView.ViewHolder(binding.root) {
+    ) : RecyclerView.ViewHolder(binding.root) {
 
         private val context = itemView.context
         private val gradientDrawable = binding.llRegexContainer.background as GradientDrawable
