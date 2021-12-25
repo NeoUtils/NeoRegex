@@ -32,10 +32,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingTop="1dp"
+                android:paddingTop="1.5dp"
                 android:text="REGEX"
                 android:textColor="?attr/colorOnPrimary"
-                android:textSize="25sp" />
+                android:textSize="26sp" />
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -52,6 +52,7 @@
             layout="@layout/main_content" />
 
         <include
+            android:id="@+id/nav_bar"
             layout="@layout/main_nav_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

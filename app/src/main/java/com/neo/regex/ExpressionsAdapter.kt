@@ -3,11 +3,9 @@ package com.neo.regex
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.setMargins
 import androidx.core.view.setPadding
 import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -25,12 +23,12 @@ import java.util.regex.Pattern
 
 class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
 
-    private var expressions: List<Expression> = listOf()
+    private var expressions: List<ExpressionState> = listOf()
     private val highlight by lazy { Highlight() }
 
     private var moreExpressionListener: (() -> Unit)? = null
     private var removeExpressionListener: ((Int) -> Unit)? = null
-    private var onMatchListener: ((List<Expression>) -> Unit)? = null
+    private var onMatchListener: ((List<ExpressionState>) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         return Holder(ItemExpressionBinding.inflate(LayoutInflater.from(parent.context)))
@@ -60,7 +58,6 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
 
             try {
                 val regex = expression.regex
-                expression.pattern = null
                 expression.pattern = if(regex.isNotEmpty()) Pattern.compile(regex) else null
 
                 expression.hsv?.let { hsv ->
@@ -77,6 +74,7 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
                 }
 
             } catch (e: Exception) {
+                expression.pattern = null
                 holder.showError(e.message)
             }
         }
@@ -102,7 +100,7 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setAllExpressions(expressions: MutableList<Expression>) {
+    fun setAllExpressions(expressions: MutableList<ExpressionState>) {
         this.expressions = expressions
         notifyDataSetChanged()
         onMatchListener?.invoke(expressions)
@@ -125,7 +123,7 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
         highlight.schemes = schemes.toList()
     }
 
-    fun seOnMatchListener(listener: (List<Expression>) -> Unit) {
+    fun seOnMatchListener(listener: (List<ExpressionState>) -> Unit) {
         onMatchListener = listener
     }
 

@@ -2,4 +2,5 @@
     <string name="app_name">Neo Regex</string>
     <string name="open_drawer">Abrir</string>
     <string name="close_drawer">Fechar</string>
+    <string name="click_to_update">Clique para atualizar</string>
 </resources>
