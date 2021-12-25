@@ -1,6 +1,6 @@
-package com.neo.regex
+package com.neo.regex.model
 
-data class UpdateState(
+data class Update(
     val hasUpdate : Boolean? = null,
     val lastVersionCode : Int? = null,
     val lastVersionName : String? = null,
