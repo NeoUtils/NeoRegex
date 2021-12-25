@@ -1,4 +1,4 @@
-package com.neo.regex
+package com.neo.regex.adapter
 
 import android.annotation.SuppressLint
 import android.graphics.Color
@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
 import androidx.recyclerview.widget.RecyclerView
 import com.neo.highlight.core.Highlight
 import com.neo.highlight.core.Scheme
+import com.neo.regex.R
 import com.neo.regex.databinding.ItemExpressionBinding
+import com.neo.regex.model.Expression
 import com.neo.regex.utils.genColor
 import com.neo.regex.utils.genHSV
 import com.neo.utilskt.color

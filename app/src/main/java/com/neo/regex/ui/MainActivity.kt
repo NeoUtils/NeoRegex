@@ -1,4 +1,4 @@
-package com.neo.regex
+package com.neo.regex.ui
 
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +16,6 @@ import com.neo.regex.utils.genHSV
 
 import com.neo.utilskt.color
 import com.neo.utilskt.dialog
-import com.neo.utilskt.visibility
 import java.util.regex.Pattern
 import android.content.Intent
 import android.net.Uri
@@ -25,7 +24,10 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.ktx.logEvent
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
-import java.lang.NullPointerException
+import com.neo.regex.BuildConfig
+import com.neo.regex.adapter.ExpressionsAdapter
+import com.neo.regex.R
+import com.neo.utilskt.visibility
 import java.lang.RuntimeException
 
 

@@ -1,4 +1,4 @@
-package com.neo.regex
+package com.neo.regex.model
 
 import java.util.regex.Pattern
 
