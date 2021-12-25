@@ -56,10 +56,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun init() {
 
-        binding.toolbar.setOnClickListener {
-            throw RuntimeException("Test Crash")
-        }
-
         setupView()
         setupObservers()
         setupListeners()
