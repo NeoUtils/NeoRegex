@@ -5,11 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {
-    private val _expressions: MutableLiveData<MutableList<ExpressionState>> by lazy {
-        MutableLiveData(mutableListOf(ExpressionState()))
+    private val _expressions: MutableLiveData<MutableList<Expression>> by lazy {
+        MutableLiveData(mutableListOf(Expression()))
     }
 
-    val expressions: LiveData<MutableList<ExpressionState>> get() = _expressions
+    val expressions: LiveData<MutableList<Expression>> get() = _expressions
 
     private val _update: MutableLiveData<UpdateState> by lazy {
         updateManager
@@ -47,7 +47,7 @@ class MainViewModel : ViewModel() {
 
     fun addExpression() {
         _expressions.value = _expressions.value?.apply {
-            add(ExpressionState())
+            add(Expression())
         }
     }
 

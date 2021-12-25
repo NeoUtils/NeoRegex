@@ -23,12 +23,12 @@ import java.util.regex.Pattern
 
 class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
 
-    private var expressions: List<ExpressionState> = listOf()
+    private var expressions: MutableList<Expression> = mutableListOf()
     private val highlight by lazy { Highlight() }
 
     private var moreExpressionListener: (() -> Unit)? = null
     private var removeExpressionListener: ((Int) -> Unit)? = null
-    private var onMatchListener: ((List<ExpressionState>) -> Unit)? = null
+    private var onMatchListener: ((List<Expression>) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         return Holder(ItemExpressionBinding.inflate(LayoutInflater.from(parent.context)))
@@ -37,6 +37,7 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
     override fun onBindViewHolder(holder: Holder, position: Int) {
         val expression = expressions[position]
         val isLastItem = position == itemCount - 1
+        val isMultiField = itemCount > 1
         val context = holder.itemView.context
         val theme = context.theme
 
@@ -45,8 +46,6 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
         holder.moreExpressionBtnIsVisible(isLastItem)
 
         holder.setExpressionHighlight(highlight)
-
-        val isMultiField = itemCount > 1
 
         holder.setExpression(expression.regex)
 
@@ -83,7 +82,12 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
         }
 
         if (isLastItem) {
-            holder.setMoreExpressionListener(moreExpressionListener)
+            holder.setMoreExpressionListener {
+                expressions.add(Expression())
+                notifyItemInserted(itemCount)
+                notifyItemChanged(position)
+                onMatchListener?.invoke(expressions)
+            }
         } else {
             holder.setMoreExpressionListener(null)
         }
@@ -95,7 +99,7 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setAllExpressions(expressions: MutableList<ExpressionState>) {
+    fun setAllExpressions(expressions: MutableList<Expression>) {
         this.expressions = expressions
         notifyDataSetChanged()
         onMatchListener?.invoke(expressions)
@@ -118,7 +122,7 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
         highlight.schemes = schemes.toList()
     }
 
-    fun seOnMatchListener(listener: (List<ExpressionState>) -> Unit) {
+    fun seOnMatchListener(listener: (List<Expression>) -> Unit) {
         onMatchListener = listener
     }
 
@@ -228,7 +232,12 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
 
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             if (direction == RIGHT) {
-                removeExpressionListener?.invoke(viewHolder.adapterPosition)
+
+                expressions.removeAt(viewHolder.adapterPosition)
+                notifyItemRemoved(viewHolder.adapterPosition)
+                notifyItemChanged(itemCount - 1)
+                onMatchListener?.invoke(expressions)
+
                 if (viewHolder is Holder) {
                     viewHolder.clearListeners()
                 }

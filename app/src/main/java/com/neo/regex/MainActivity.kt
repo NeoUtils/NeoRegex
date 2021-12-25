@@ -202,7 +202,10 @@ class MainActivity : AppCompatActivity() {
 
                             Firebase.analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT) {
                                 param(FirebaseAnalytics.Param.ITEM_ID, it.id.toString())
-                                param(FirebaseAnalytics.Param.ITEM_NAME, tvLastVersion.text.toString())
+                                param(
+                                    FirebaseAnalytics.Param.ITEM_NAME,
+                                    tvLastVersion.text.toString()
+                                )
                                 param(FirebaseAnalytics.Param.CONTENT_TYPE, "button")
                             }
 
@@ -219,6 +222,8 @@ class MainActivity : AppCompatActivity() {
 
                         val version = "v" + BuildConfig.VERSION_NAME
                         tvLastVersion.text = version
+
+                        cdUpdate.setOnClickListener(null)
                     }
 
                     tvUpdateBtn.visibility(hasUpdate)
