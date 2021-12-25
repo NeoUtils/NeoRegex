@@ -27,6 +27,7 @@ import com.google.firebase.ktx.Firebase
 import com.neo.regex.BuildConfig
 import com.neo.regex.adapter.ExpressionsAdapter
 import com.neo.regex.R
+import com.neo.regex.model.Update
 import com.neo.utilskt.visibility
 import java.lang.RuntimeException
 
@@ -199,6 +200,8 @@ class MainActivity : AppCompatActivity() {
                         val version = "v" + update.lastVersionName!!
                         tvLastVersion.text = version
 
+                        tvMessage.text = getString(R.string.text_has_update)
+
                         cdUpdate.setOnClickListener {
                             val downloadLink = update.downloadLink
 
@@ -214,6 +217,8 @@ class MainActivity : AppCompatActivity() {
                             goToUrl(downloadLink!!)
                         }
 
+                        //showUpdateDialog(update)
+
                     } else {
                         ivIcon.setImageResource(R.drawable.ic_checked)
 
@@ -225,6 +230,8 @@ class MainActivity : AppCompatActivity() {
                         val version = "v" + BuildConfig.VERSION_NAME
                         tvLastVersion.text = version
 
+                        tvMessage.text = getString(R.string.text_updated)
+
                         cdUpdate.setOnClickListener(null)
                     }
 
@@ -235,6 +242,23 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    private fun showUpdateDialog(update: Update) {
+        val sharedPreferences =
+            getSharedPreferences("update_manager", MODE_PRIVATE)
+
+        val savedLastVersionCode =
+            sharedPreferences
+                .getInt("last_version_code", 1)
+
+        if (savedLastVersionCode < update.lastVersionCode!!) {
+            dialog("Update", "Você tem uma atualziação disponível")
+        }
+
+        sharedPreferences
+            .edit()
+            .putInt("last_version_code", update.lastVersionCode).apply()
     }
 
     private fun goToUrl(url: String) {
