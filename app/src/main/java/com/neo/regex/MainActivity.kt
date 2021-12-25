@@ -3,7 +3,6 @@ package com.neo.regex
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
 import android.text.style.BackgroundColorSpan
 import android.text.style.ForegroundColorSpan
 import com.neo.regex.databinding.ActivityMainBinding
@@ -17,16 +16,30 @@ import com.neo.regex.utils.genHSV
 
 import com.neo.utilskt.color
 import com.neo.utilskt.dialog
+import com.neo.utilskt.visibility
 import java.util.regex.Pattern
+import android.content.Intent
+import android.net.Uri
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.ktx.logEvent
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
+import java.lang.NullPointerException
+import java.lang.RuntimeException
+
 
 class MainActivity : AppCompatActivity() {
 
+    //lateinit
     private lateinit var binding: ActivityMainBinding
 
+    //val
     private val viewModel: MainViewModel by viewModels()
 
+    //val lazy
     private val expressionsAdapter: ExpressionsAdapter by lazy {
-        ExpressionsAdapter()
+        getExpressionAdapter()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +52,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        configExpressionAdapter()
+
+        binding.toolbar.setOnClickListener {
+            throw RuntimeException("Test Crash")
+        }
 
         setupView()
         setupObservers()
@@ -54,6 +70,11 @@ class MainActivity : AppCompatActivity() {
         expressionsAdapter.setRemoveExpressionListener { position ->
             viewModel.removeExpression(position)
         }
+
+        binding.content.etSpan.addTextChangedListener(setupMatchHighlight())
+    }
+
+    private fun setupMatchHighlight(): HighlightTextWatcher {
 
         val matchersHighlight = HighlightTextWatcher().apply {
             range = HighlightTextWatcher.RANGE.ALL
@@ -119,7 +140,7 @@ class MainActivity : AppCompatActivity() {
             matchersHighlight.setSpan(binding.content.etSpan)
         }
 
-        binding.content.etSpan.addTextChangedListener(matchersHighlight)
+        return matchersHighlight
     }
 
     private fun setupView() = with(binding.content) {
@@ -149,14 +170,79 @@ class MainActivity : AppCompatActivity() {
             try {
                 expressionsAdapter.setAllExpressions(expressions)
             } catch (e: Exception) {
-                dialog("Error", e.message ?: "Não foi possível renderizar")
+                dialog("Error", e.message!!)
+            }
+        }
+
+        viewModel.update.observe(this) { update ->
+            with(binding.navBar) {
+                val visible = update.hasUpdate != null
+
+                if (visible) {
+
+                    val hasUpdate = update.hasUpdate == true
+
+                    if (hasUpdate) {
+                        ivIcon.setImageResource(R.drawable.ic_update)
+
+                        color(R.color.yellow).let { color ->
+                            ivIcon.setColorFilter(color)
+                            tvLastVersion.setTextColor(color)
+                        }
+
+                        val version = "v" + update.lastVersionName!!
+                        tvLastVersion.text = version
+
+                        cdUpdate.setOnClickListener {
+                            val downloadLink = update.downloadLink
+
+                            Firebase.analytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT) {
+                                param(FirebaseAnalytics.Param.ITEM_ID, it.id.toString())
+                                param(FirebaseAnalytics.Param.ITEM_NAME, tvLastVersion.text.toString())
+                                param(FirebaseAnalytics.Param.CONTENT_TYPE, "button")
+                            }
+
+                            goToUrl(downloadLink!!)
+                        }
+
+                    } else {
+                        ivIcon.setImageResource(R.drawable.ic_checked)
+
+                        color(R.color.green).let { color ->
+                            ivIcon.setColorFilter(color)
+                            tvLastVersion.setTextColor(color)
+                        }
+
+                        val version = "v" + BuildConfig.VERSION_NAME
+                        tvLastVersion.text = version
+                    }
+
+                    tvUpdateBtn.visibility(hasUpdate)
+                }
+
+                cdUpdate.visibility(visible)
             }
         }
 
     }
 
-    private fun configExpressionAdapter() {
+    private fun goToUrl(url: String) {
+        runCatching {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        }.onFailure {
+            Firebase.crashlytics.recordException(it)
+        }
+    }
 
+    private fun getExpressionAdapter(): ExpressionsAdapter {
+        return ExpressionsAdapter().apply {
+            configRegexHighlight(this)
+        }
+    }
+
+    private fun configRegexHighlight(
+        expressionsAdapter: ExpressionsAdapter
+    ) {
         expressionsAdapter.setExpressionHighlight(
             ColorScheme(
                 Pattern.compile("\\|"),
@@ -181,3 +267,4 @@ class MainActivity : AppCompatActivity() {
         )
     }
 }
+
