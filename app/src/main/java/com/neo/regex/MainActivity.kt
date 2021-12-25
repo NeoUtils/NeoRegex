@@ -92,7 +92,7 @@ class MainActivity : AppCompatActivity() {
                 }
             )
 
-            expressions.forEach {
+            expressions.forEachIndexed { index, it ->
 
                 it.pattern?.let { pattern ->
 
@@ -103,7 +103,11 @@ class MainActivity : AppCompatActivity() {
 
                             override fun getSpan(text: CharSequence, start: Int, end: Int): Any {
 
-                                val hsv = it.hsv ?: genHSV(matches * 15, 250, true)
+                                val hsv = if (expressions.size == 1) {
+                                    genHSV(matches * 15, 250, true)
+                                } else {
+                                    genHSV(index * 15, 250, true)
+                                }
 
                                 matches++
 
