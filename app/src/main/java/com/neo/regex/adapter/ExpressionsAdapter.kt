@@ -86,8 +86,10 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
         if (isLastItem) {
             holder.setMoreExpressionListener {
                 expressions.add(Expression())
+
                 notifyItemInserted(itemCount)
                 notifyItemChanged(position)
+
                 onMatchListener?.invoke(expressions)
             }
         } else {
@@ -232,12 +234,15 @@ class ExpressionsAdapter : RecyclerView.Adapter<ExpressionsAdapter.Holder>() {
             target: RecyclerView.ViewHolder
         ) = false
 
+        @SuppressLint("NotifyDataSetChanged")
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
             if (direction == RIGHT) {
 
                 expressions.removeAt(viewHolder.adapterPosition)
                 notifyItemRemoved(viewHolder.adapterPosition)
-                notifyItemChanged(itemCount - 1)
+
+                notifyDataSetChanged()
+
                 onMatchListener?.invoke(expressions)
 
                 if (viewHolder is Holder) {
