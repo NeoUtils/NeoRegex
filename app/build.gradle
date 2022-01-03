@@ -8,14 +8,24 @@ plugins {
 android {
     signingConfigs {
         release {
+
+            def fileKeystoreProperties = rootProject.file("keystore.properties")
+
             def keystoreProperties = new Properties()
 
-            keystoreProperties.load(new FileInputStream(rootProject.file("keystore.properties")))
+            if (fileKeystoreProperties.exists()) {
+                keystoreProperties.load(new FileInputStream(fileKeystoreProperties))
+            }
 
-            storeFile file(keystoreProperties['storeFile'])
-            storePassword keystoreProperties['storePassword']
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']  
+            def storeFilePath = keystoreProperties['storeFile']
+
+            if (storeFilePath != null) {
+
+                storeFile file(storeFilePath)
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
         }
     }
     compileSdk 31
