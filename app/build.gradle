@@ -15,16 +15,15 @@ android {
 
             if (fileKeystoreProperties.exists()) {
                 keystoreProperties.load(new FileInputStream(fileKeystoreProperties))
-            }
 
-            def storeFilePath = keystoreProperties['storeFile']
+                def storeFilePath = keystoreProperties['storeFile']
 
-            if (storeFilePath != null) {
-
-                storeFile file(storeFilePath)
-                storePassword keystoreProperties['storePassword']
-                keyAlias keystoreProperties['keyAlias']
-                keyPassword keystoreProperties['keyPassword']
+                if (storeFilePath != null) {
+                    storeFile file(storeFilePath)
+                    storePassword keystoreProperties['storePassword']
+                    keyAlias keystoreProperties['keyAlias']
+                    keyPassword keystoreProperties['keyPassword']
+                }
             }
         }
     }
