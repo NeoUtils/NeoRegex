@@ -1,0 +1,4 @@
+# Copy this file without the .example extension and with the path to your Android SDK.
+
+# Android SDK
+sdk.dir=/.../Android/Sdk

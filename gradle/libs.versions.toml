@@ -1,0 +1,37 @@
+[versions]
+agp = "8.2.2" # Kotlin Plugin 1.9.22 support APG 7.0 ~ 8.2
+cmp = "1.6.11" # Jetpack Compose 1.6.7
+kotlin = "2.0.0"
+
+# androix
+androidx-compose = "1.6.8"
+androidx-activity = "1.9.1"
+androidx-lifecycle = "2.8.0"
+
+# kotlinx
+kotlinx-coroutines = "1.8.1"
+
+[libraries]
+
+# android
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "androidx-compose" }
+
+androidx-activity = { module = "androidx.activity:activity", version.ref = "androidx-activity" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
+
+# multiplatform
+androidx-multplatform-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
+androidx-multplatform-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
+
+kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+
+[plugins]
+
+# android
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+
+# multiplatform
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kmp-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kmp-compose = { id = "org.jetbrains.compose", version.ref = "cmp" }
