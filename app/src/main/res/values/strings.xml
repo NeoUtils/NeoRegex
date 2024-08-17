@@ -1,8 +1,0 @@
-<resources>
-    <string name="app_name">Neo Regex</string>
-    <string name="open_drawer">Abrir</string>
-    <string name="close_drawer">Fechar</string>
-    <string name="click_to_update">Clique para atualizar</string>
-    <string name="text_has_update">Uma nova versão está disponível!</string>
-    <string name="text_updated">Você está na ultima versão!</string>
-</resources>

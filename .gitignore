@@ -1,16 +1,11 @@
-*.iml
-.gradle
-/local.properties
+# Idea files
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+
+# Local files
 local.properties
 keystore.properties
