@@ -1,3 +1,4 @@
+import extension.config
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -8,14 +9,14 @@ plugins {
 
 compose.desktop {
     application {
-        mainClass = "com.neo.regex.ui.MainKt"
+        mainClass = "${config.basePackage}.ui.MainKt"
 
         nativeDistributions {
 
             targetFormats(TargetFormat.Exe, TargetFormat.Rpm)
 
-            packageName = "com.neo.regex"
-            packageVersion = "2.0.0"
+            packageName = config.basePackage
+            packageVersion = config.app.name(withPhase = false)
         }
     }
 }
