@@ -1,3 +1,5 @@
+import extension.catalog
+import extension.config
 import org.gradle.api.JavaVersion
 import org.gradle.kotlin.dsl.dependencies
 
@@ -7,17 +9,17 @@ plugins {
 }
 
 android {
-    namespace = "com.neo.regex"
-    compileSdk = 34
+    namespace = config.basePackage
+    compileSdk = config.android.compileSdk
 
     defaultConfig {
-        applicationId = "com.neo.regex"
+        applicationId = config.basePackage
 
-        minSdk = 24
-        targetSdk = 34
+        minSdk = config.android.minSdk
+        targetSdk = config.android.targetSdk
 
-        versionCode = 1
-        versionName = "2.0.0-alpha"
+        versionCode = config.app.code()
+        versionName = config.app.name()
     }
 
     buildFeatures {
