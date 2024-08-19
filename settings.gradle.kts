@@ -2,6 +2,8 @@
 
 rootProject.name = "NeoRegex"
 
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 pluginManagement {
 
     includeBuild("build-logic")
@@ -21,3 +23,4 @@ dependencyResolutionManagement {
 }
 
 include(":application")
+include(":design-system")
