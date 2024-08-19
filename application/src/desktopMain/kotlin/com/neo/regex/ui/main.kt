@@ -15,8 +15,6 @@ fun main() = application {
         onCloseRequest = ::exitApplication,
         title = "NeoRegex",
         state = rememberWindowState(
-            width = 300.dp,
-            height = 300.dp,
             position = WindowPosition.Aligned(
                 Alignment.Center
             )

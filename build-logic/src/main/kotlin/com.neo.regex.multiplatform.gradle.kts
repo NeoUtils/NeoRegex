@@ -24,25 +24,14 @@ kotlin {
 
         val desktopMain by getting
 
-        androidMain.dependencies {
-
-            // activity
-            implementation(catalog.androidx.activity)
-            implementation(catalog.androidx.activity.compose)
-        }
-
         commonMain.dependencies {
 
             // compose
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.ui)
-            implementation(compose.material)
+            implementation(compose.material3)
             implementation(compose.components.resources)
-
-            // lifecycle
-            implementation(catalog.androidx.multplatform.lifecycle.viewmodel)
-            implementation(catalog.androidx.multplatform.lifecycle.runtime.compose)
         }
 
         desktopMain.dependencies {
