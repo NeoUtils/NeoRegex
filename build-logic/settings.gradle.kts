@@ -1,11 +1,6 @@
 @file:Suppress("UnstableApiUsage")
 
-rootProject.name = "NeoRegex"
-
 pluginManagement {
-
-    includeBuild("build-logic")
-
     repositories {
         google()
         gradlePluginPortal()
@@ -15,9 +10,11 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
-        google()
         mavenCentral()
     }
+    versionCatalogs {
+        create("libs") {
+            from(files("../gradle/libs.versions.toml"))
+        }
+    }
 }
-
-include(":application")
