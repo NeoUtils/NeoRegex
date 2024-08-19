@@ -13,6 +13,12 @@ kotlinx-coroutines = "1.8.1"
 
 [libraries]
 
+# plugins
+plugin-android-gradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
+plugin-kotlin-gradle = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+plugin-compose = { group = "org.jetbrains.compose", name = "compose-gradle-plugin", version.ref = "cmp" }
+plugin-compose-compiler = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
+
 # android
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "androidx-compose" }
 
