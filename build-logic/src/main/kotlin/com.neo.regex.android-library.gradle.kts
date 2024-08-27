@@ -1,7 +1,4 @@
-import extension.catalog
 import extension.config
-import org.gradle.api.JavaVersion
-import org.gradle.kotlin.dsl.dependencies
 
 plugins {
     id("com.android.library")
@@ -30,9 +27,5 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-    }
-
-    dependencies {
-        debugImplementation(catalog.androidx.compose.ui.tooling)
     }
 }
