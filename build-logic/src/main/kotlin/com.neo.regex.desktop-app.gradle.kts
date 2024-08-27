@@ -9,7 +9,7 @@ plugins {
 
 compose.desktop {
     application {
-        mainClass = config.basePackage + ".ui.MainKt"
+        mainClass = config.basePackage + ".MainKt"
 
         nativeDistributions {
 

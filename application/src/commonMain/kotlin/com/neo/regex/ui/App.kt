@@ -1,22 +1,18 @@
 package com.neo.regex.ui
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import com.neo.regex.core.getPlatform
+import androidx.compose.runtime.*
+import androidx.compose.ui.text.input.TextFieldValue
+import com.neo.regex.design.theme.NeoTheme
 
 @Composable
-fun App() = MaterialTheme {
+fun App() = NeoTheme(darkMode = false) {
 
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize()
-    ) {
+    var text by remember { mutableStateOf(TextFieldValue()) }
 
-        Text("Hello, ${getPlatform()}!")
-    }
+    TextEditor(
+        value = text,
+        onValueChange = {
+            text = it
+        },
+    )
 }

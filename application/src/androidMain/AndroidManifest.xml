@@ -9,7 +9,7 @@
             android:theme="@android:style/Theme.Material.Light.NoActionBar">
 
         <activity
-                android:name="com.neo.regex.ui.MainActivity"
+                android:name="com.neo.regex.MainActivity"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
