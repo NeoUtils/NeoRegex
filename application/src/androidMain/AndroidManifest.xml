@@ -10,6 +10,7 @@
 
         <activity
                 android:name="com.neo.regex.MainActivity"
+                android:windowSoftInputMode="adjustResize"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

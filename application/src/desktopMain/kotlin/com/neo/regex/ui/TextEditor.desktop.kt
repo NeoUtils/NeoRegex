@@ -55,7 +55,7 @@ actual fun TextEditor(
                 )
             ),
             modifier = Modifier.background(
-                color = Color.LightGray.copy(alpha = 0.5f)
+                color = Color.LightGray.copy(alpha = 0.4f)
             ).fillMaxHeight()
         )
 
