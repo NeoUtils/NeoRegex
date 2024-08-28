@@ -1,4 +1,4 @@
-package com.neo.regex.ui
+package com.neo.regex.core.sharedui
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.padding

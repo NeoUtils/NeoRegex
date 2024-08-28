@@ -1,4 +1,4 @@
-package com.neo.regex.ui
+package com.neo.regex.core.sharedui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.LineHeightStyle
-import com.neo.regex.design.theme.NeoTheme.dimensions
+import com.neo.regex.designsystem.theme.NeoTheme.dimensions
 
 @Composable
 actual fun TextEditor(

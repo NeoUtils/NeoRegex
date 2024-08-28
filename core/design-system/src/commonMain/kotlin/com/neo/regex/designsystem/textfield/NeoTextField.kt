@@ -1,4 +1,4 @@
-package com.neo.regex.design.textfield
+package com.neo.regex.designsystem.textfield
 
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.MaterialTheme.typography

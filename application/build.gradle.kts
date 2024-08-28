@@ -6,17 +6,25 @@ plugins {
     id("com.neo.regex.desktop-app")
 }
 
-dependencies {
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
 
-    // activity
-    androidMainImplementation(catalog.androidx.activity)
-    androidMainImplementation(catalog.androidx.activity.compose)
+            // modules
+            implementation(projects.core.designSystem)
+            implementation(projects.core.resources)
+            implementation(projects.core.sharedUi)
 
-    // lifecycle
-    commonMainImplementation(catalog.androidx.multplatform.lifecycle.viewmodel)
-    commonMainImplementation(catalog.androidx.multplatform.lifecycle.runtime.compose)
+            // lifecycle
+            implementation(catalog.androidx.multplatform.lifecycle.viewmodel)
+            implementation(catalog.androidx.multplatform.lifecycle.runtime.compose)
+        }
 
-    // modules
-    commonMainImplementation(projects.core.designSystem)
-    commonMainImplementation(projects.core.resources)
+        androidMain.dependencies {
+
+            // activity
+            implementation(catalog.androidx.activity)
+            implementation(catalog.androidx.activity.compose)
+        }
+    }
 }

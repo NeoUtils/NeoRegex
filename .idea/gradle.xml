@@ -24,6 +24,7 @@
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/design-system" />
             <option value="$PROJECT_DIR$/core/resources" />
+            <option value="$PROJECT_DIR$/core/shared-ui" />
           </set>
         </option>
       </GradleProjectSettings>

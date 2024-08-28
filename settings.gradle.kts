@@ -25,3 +25,4 @@ dependencyResolutionManagement {
 include(":application")
 include(":core:design-system")
 include(":core:resources")
+include(":core:shared-ui")
