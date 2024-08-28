@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -24,7 +26,9 @@ import com.neo.regex.designsystem.theme.NeoTheme.dimensions
 import com.neo.regex.resources.Res
 import com.neo.regex.resources.ic_redo_24
 import com.neo.regex.resources.ic_undo_24
+import com.neo.regex.resources.insert_regex_hint
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HomeScreen() = Column(
@@ -40,7 +44,8 @@ fun HomeScreen() = Column(
         onValueChange = {
             text = it
         },
-        modifier = Modifier.weight(1f)
+        modifier = Modifier
+            .weight(weight = 1f)
     )
 
     Footer(Modifier.fillMaxWidth())
@@ -52,11 +57,10 @@ private fun Footer(
 ) = Surface(
     modifier = modifier,
     shape = RectangleShape,
-    shadowElevation = 8.dp
+    shadowElevation = dimensions.small
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = Modifier.fillMaxWidth()
     ) {
         var regex by remember { mutableStateOf("") }
 
@@ -67,10 +71,11 @@ private fun Footer(
             },
             hint = {
                 Text(
-                    text = "Enter regex",
+                    text = stringResource(Res.string.insert_regex_hint),
                     style = typography.bodyLarge
                 )
             },
+            singleLine = true,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .padding(dimensions.default)
@@ -88,7 +93,10 @@ private fun Footer(
 
 @Composable
 private fun HistoryControl(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    shape: CornerBasedShape = RoundedCornerShape(dimensions.small),
+    onUndo: () -> Unit = {},
+    onRedo: () -> Unit = {}
 ) = Row(
     modifier = modifier
         .height(IntrinsicSize.Min)
@@ -103,23 +111,26 @@ private fun HistoryControl(
         contentDescription = null,
         modifier = Modifier
             .clip(
-                RoundedCornerShape(
-                    topStart = dimensions.small,
-                    bottomStart = dimensions.small
+                shape.copy(
+                    topEnd = CornerSize(0.dp),
+                    bottomEnd = CornerSize(0.dp)
                 )
             )
-            .clickable { }
+            .clickable(onClick = onUndo)
             .padding(
-                vertical = 4.dp,
-                horizontal = 8.dp,
+                vertical = dimensions.tiny,
+                horizontal = dimensions.small,
             )
     )
 
     VerticalDivider(
         modifier = Modifier
-            .width(1.dp)
-            .weight(weight = 1f, fill = false)
             .fillMaxHeight()
+            .width(1.dp)
+            .weight(
+                weight = 1f,
+                fill = false
+            )
     )
 
     Icon(
@@ -127,15 +138,15 @@ private fun HistoryControl(
         contentDescription = null,
         modifier = Modifier
             .clip(
-                RoundedCornerShape(
-                    topEnd = dimensions.small,
-                    bottomEnd = dimensions.small
+                shape.copy(
+                    topStart = CornerSize(0.dp),
+                    bottomStart = CornerSize(0.dp)
                 )
             )
-            .clickable { }
+            .clickable(onClick = onRedo)
             .padding(
-                vertical = 4.dp,
-                horizontal = 8.dp,
+                vertical = dimensions.tiny,
+                horizontal = dimensions.small,
             )
     )
 }

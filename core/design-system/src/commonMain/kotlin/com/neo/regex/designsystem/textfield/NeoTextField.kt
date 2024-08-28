@@ -13,6 +13,7 @@ fun NeoTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(),
+    singleLine: Boolean = false,
     hint: (@Composable () -> Unit)? = null
 ) {
 
@@ -25,10 +26,11 @@ fun NeoTextField(
         onValueChange = {
             onValueChange(it)
         },
-        modifier = modifier
-            .onFocusChanged {
-                focused = it.isFocused
-            },
+        singleLine = singleLine,
+        textStyle = mergedTextStyle,
+        modifier = modifier.onFocusChanged {
+            focused = it.isFocused
+        },
         decorationBox = {
             when {
                 focused || value.isNotEmpty() -> {
@@ -43,7 +45,6 @@ fun NeoTextField(
                     it()
                 }
             }
-        },
-        textStyle = mergedTextStyle
+        }
     )
 }
