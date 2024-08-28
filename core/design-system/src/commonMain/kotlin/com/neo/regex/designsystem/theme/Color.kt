@@ -1,4 +1,4 @@
-package com.neo.regex.design.theme
+package com.neo.regex.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 

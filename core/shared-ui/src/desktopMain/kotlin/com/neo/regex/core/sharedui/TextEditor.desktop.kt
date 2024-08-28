@@ -1,4 +1,4 @@
-package com.neo.regex.ui
+package com.neo.regex.core.sharedui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.VerticalScrollbar
@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.LineHeightStyle
-import com.neo.regex.design.theme.NeoTheme.dimensions
+import com.neo.regex.designsystem.theme.NeoTheme.dimensions
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalFoundationApi::class)
