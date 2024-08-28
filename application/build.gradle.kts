@@ -17,11 +17,6 @@ dependencies {
     commonMainImplementation(catalog.androidx.multplatform.lifecycle.runtime.compose)
 
     // modules
-    commonMainImplementation(projects.designSystem)
-}
-
-compose.resources {
-    publicResClass = true
-    packageOfResClass = "com.neo.resources"
-    generateResClass = always
+    commonMainImplementation(projects.core.designSystem)
+    commonMainImplementation(projects.core.resources)
 }
