@@ -13,14 +13,17 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.neo.regex.core.extension.attachFocusTarget
 import com.neo.regex.core.sharedui.TextEditor
+import com.neo.regex.core.util.LocalFocusTarget
+import com.neo.regex.core.util.rememberTarget
 import com.neo.regex.designsystem.textfield.NeoTextField
 import com.neo.regex.designsystem.theme.NeoTheme.dimensions
 import com.neo.regex.resources.Res
@@ -37,23 +40,26 @@ fun HomeScreen() = Column(
         .fillMaxSize()
 ) {
 
-    var text by remember { mutableStateOf(TextFieldValue()) }
+    val textTarget = rememberTarget()
 
     TextEditor(
-        value = text,
+        value = textTarget.text,
         onValueChange = {
-            text = it
+            textTarget.update(it)
         },
         modifier = Modifier
+            .attachFocusTarget(textTarget)
             .weight(weight = 1f)
     )
 
-    Footer(Modifier.fillMaxWidth())
+    Footer(
+        modifier = Modifier.fillMaxWidth(),
+    )
 }
 
 @Composable
 private fun Footer(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) = Surface(
     modifier = modifier,
     shape = RectangleShape,
@@ -62,12 +68,13 @@ private fun Footer(
     Row(
         modifier = Modifier.fillMaxWidth()
     ) {
-        var regex by remember { mutableStateOf("") }
+
+        val regexTarget = rememberTarget()
 
         NeoTextField(
-            value = regex,
+            value = regexTarget.text,
             onValueChange = {
-                regex = it
+                regexTarget.update(it)
             },
             hint = {
                 Text(
@@ -77,6 +84,7 @@ private fun Footer(
             },
             singleLine = true,
             modifier = Modifier
+                .attachFocusTarget(regexTarget)
                 .align(Alignment.CenterVertically)
                 .padding(dimensions.default)
                 .weight(weight = 1f)
@@ -86,6 +94,9 @@ private fun Footer(
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .padding(dimensions.small)
+                .focusProperties {
+                    canFocus = false
+                },
         )
     }
 }
@@ -95,8 +106,6 @@ private fun Footer(
 private fun HistoryControl(
     modifier: Modifier = Modifier,
     shape: CornerBasedShape = RoundedCornerShape(dimensions.small),
-    onUndo: () -> Unit = {},
-    onRedo: () -> Unit = {}
 ) = Row(
     modifier = modifier
         .height(IntrinsicSize.Min)
@@ -106,6 +115,10 @@ private fun HistoryControl(
             shape = RoundedCornerShape(dimensions.small)
         )
 ) {
+
+    val focusTarget = LocalFocusTarget.current
+    val historyManager = focusTarget.target?.historyManager
+
     Icon(
         painter = painterResource(Res.drawable.ic_undo_24),
         contentDescription = null,
@@ -116,11 +129,20 @@ private fun HistoryControl(
                     bottomEnd = CornerSize(0.dp)
                 )
             )
-            .clickable(onClick = onUndo)
+            .clickable(
+                onClick = {
+                    focusTarget.target?.undo()
+                }
+            )
             .padding(
                 vertical = dimensions.tiny,
                 horizontal = dimensions.small,
-            )
+            ),
+        tint = if (historyManager?.canUndo == true) {
+            colorScheme.onSurfaceVariant
+        } else {
+            colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+        }
     )
 
     VerticalDivider(
@@ -143,10 +165,19 @@ private fun HistoryControl(
                     bottomStart = CornerSize(0.dp)
                 )
             )
-            .clickable(onClick = onRedo)
+            .clickable(
+                onClick = {
+                    focusTarget.target?.redo()
+                }
+            )
             .padding(
                 vertical = dimensions.tiny,
                 horizontal = dimensions.small,
-            )
+            ),
+        tint = if (historyManager?.canRedo == true) {
+            colorScheme.onSurfaceVariant
+        } else {
+            colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
+        }
     )
 }
