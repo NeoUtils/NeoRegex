@@ -8,6 +8,10 @@ android {
     namespace = config.basePackage
     compileSdk = config.android.compileSdk
 
+    defaultConfig {
+        minSdk = config.android.minSdk
+    }
+
     buildFeatures {
         compose = true
     }

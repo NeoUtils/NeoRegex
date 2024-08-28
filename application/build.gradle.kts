@@ -19,3 +19,9 @@ dependencies {
     // modules
     commonMainImplementation(projects.designSystem)
 }
+
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "com.neo.resources"
+    generateResClass = always
+}
