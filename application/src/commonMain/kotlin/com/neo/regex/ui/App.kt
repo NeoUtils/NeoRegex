@@ -78,17 +78,16 @@ fun Footer(
                     style = typography.bodyLarge
                 )
             },
-            modifier = Modifier.padding(
-                dimensions.medium
-            ).weight(weight = 1f)
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(dimensions.default)
+                .weight(weight = 1f)
         )
 
         HistoryControl(
             modifier = Modifier
                 .align(Alignment.CenterVertically)
-                .padding(
-                    dimensions.small
-                )
+                .padding(dimensions.small)
         )
     }
 }
@@ -114,7 +113,8 @@ fun HistoryControl(
                     topStart = dimensions.small,
                     bottomStart = dimensions.small
                 )
-            ).clickable { }
+            )
+            .clickable { }
             .padding(
                 vertical = 4.dp,
                 horizontal = 8.dp,
