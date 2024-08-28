@@ -14,6 +14,8 @@ import androidx.compose.ui.graphics.Color
 
 private val LightColors = lightColorScheme(
     // TODO: Define colors
+    surfaceVariant = Color.White,
+    surfaceTint = Color.White,
 )
 
 @Composable
