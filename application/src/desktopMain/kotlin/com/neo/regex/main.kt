@@ -7,13 +7,16 @@ import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import com.neo.regex.resources.Res
+import com.neo.regex.resources.app_name
 import com.neo.regex.ui.App
+import org.jetbrains.compose.resources.stringResource
 
 fun main() = application {
 
     Window(
         onCloseRequest = ::exitApplication,
-        title = "NeoRegex",
+        title = stringResource(Res.string.app_name),
         state = rememberWindowState(
             position = WindowPosition.Aligned(
                 Alignment.Center

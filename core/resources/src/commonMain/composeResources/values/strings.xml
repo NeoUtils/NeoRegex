@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">NeoRegex</string>
+    <string name="insert_regex_hint">Enter regex</string>
+</resources>
