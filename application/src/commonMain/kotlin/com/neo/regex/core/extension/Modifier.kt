@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.input.key.*
 import com.neo.regex.core.util.FocusTarget
 import com.neo.regex.core.util.LocalFocusTarget
 
@@ -17,4 +18,18 @@ fun Modifier.attachFocusTarget(
     }
 }.focusRequester(
     target.focusRequester
-)
+).onPreviewKeyEvent {
+    when {
+        it.undo -> {
+            target.undo()
+            true
+        }
+
+        it.redo -> {
+            target.redo()
+            true
+        }
+
+        else -> false
+    }
+}
