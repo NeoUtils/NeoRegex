@@ -13,6 +13,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
@@ -25,6 +27,7 @@ actual fun TextEditor(
     onValueChange: (TextFieldValue) -> Unit,
     modifier: Modifier,
     textStyle: TextStyle,
+    onFocusChange: (FocusState) -> Unit,
 ) {
 
     val mergedTextStyle = typography.bodyLarge.merge(textStyle)
@@ -71,7 +74,8 @@ actual fun TextEditor(
                 .weight(weight = 1f, fill = false)
                 .fillMaxSize()
                 // TODO(improve): https://github.com/JetBrains/compose-multiplatform/issues/4533
-                .verticalScroll(scrollState),
+                .verticalScroll(scrollState)
+                .onFocusChanged(onFocusChange),
         )
     }
 }
