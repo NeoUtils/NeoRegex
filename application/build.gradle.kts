@@ -16,7 +16,7 @@ kotlin {
             implementation(projects.core.sharedUi)
 
             // lifecycle
-            implementation(catalog.androidx.multplatform.lifecycle.viewmodel)
+            implementation(catalog.androidx.multplatform.lifecycle.viewmodel.compose)
             implementation(catalog.androidx.multplatform.lifecycle.runtime.compose)
         }
 
