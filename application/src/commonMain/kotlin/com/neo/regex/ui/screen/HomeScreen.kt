@@ -20,9 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.unit.dp
 import com.neo.regex.core.extension.attachFocusTarget
+import com.neo.regex.core.extension.onLongHold
 import com.neo.regex.core.sharedui.TextEditor
 import com.neo.regex.core.util.LocalFocusTarget
 import com.neo.regex.core.util.rememberTarget
@@ -111,7 +111,6 @@ private fun Footer(
     }
 }
 
-
 @Composable
 private fun HistoryControl(
     modifier: Modifier = Modifier,
@@ -144,7 +143,9 @@ private fun HistoryControl(
                 onClick = {
                     focusTarget.target?.undo()
                 }
-            )
+            ).onLongHold {
+                focusTarget.target?.undo()
+            }
             .padding(
                 vertical = dimensions.tiny,
                 horizontal = dimensions.small,
@@ -181,7 +182,9 @@ private fun HistoryControl(
                 onClick = {
                     focusTarget.target?.redo()
                 }
-            )
+            ).onLongHold {
+                focusTarget.target?.redo()
+            }
             .padding(
                 vertical = dimensions.tiny,
                 horizontal = dimensions.small,
