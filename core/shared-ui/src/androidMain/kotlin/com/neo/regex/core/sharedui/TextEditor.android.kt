@@ -73,7 +73,7 @@ actual fun TextEditor(
                 .padding(start = dimensions.tiny)
                 .weight(weight = 1f, fill = false)
                 .fillMaxSize()
-                // TODO(improve): https://github.com/JetBrains/compose-multiplatform/issues/4533
+                // TODO(improve): https://github.com/NeoUtils/NeoRegex/issues/15
                 .verticalScroll(scrollState)
                 .onFocusChanged(onFocusChange),
         )
