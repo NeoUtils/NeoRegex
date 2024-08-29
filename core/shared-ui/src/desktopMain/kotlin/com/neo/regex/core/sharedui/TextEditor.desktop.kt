@@ -15,6 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
@@ -29,6 +31,7 @@ actual fun TextEditor(
     onValueChange: (TextFieldValue) -> Unit,
     modifier: Modifier,
     textStyle: TextStyle,
+    onFocusChange: (FocusState) -> Unit,
 ) {
 
     val mergedTextStyle = typography.bodyMedium.merge(textStyle)
@@ -76,6 +79,7 @@ actual fun TextEditor(
                 lineCount.value = it.lineCount
             },
             modifier = Modifier
+                .onFocusChanged(onFocusChange)
                 .padding(start = dimensions.tiny)
                 .weight(weight = 1f, fill = false)
                 .fillMaxSize(),

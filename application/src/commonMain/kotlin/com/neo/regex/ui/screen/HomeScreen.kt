@@ -14,6 +14,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,6 +43,7 @@ fun HomeScreen() = Column(
 ) {
 
     val textTarget = rememberTarget()
+    val focusTarget = LocalFocusTarget.current
 
     TextEditor(
         value = textTarget.text,
@@ -50,7 +52,10 @@ fun HomeScreen() = Column(
         },
         modifier = Modifier
             .attachFocusTarget(textTarget)
-            .weight(weight = 1f)
+            .weight(weight = 1f),
+        onFocusChange = {
+            focusTarget.target = textTarget
+        }
     )
 
     Footer(
