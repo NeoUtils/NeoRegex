@@ -1,4 +1,4 @@
-package com.neo.regex.ui.screen
+package com.neo.regex.ui.screen.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,58 +14,93 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.unit.dp
-import com.neo.regex.core.extension.attachFocusTarget
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.neo.regex.core.domain.Target
 import com.neo.regex.core.extension.onLongHold
+import com.neo.regex.core.extension.redo
+import com.neo.regex.core.extension.undo
 import com.neo.regex.core.sharedui.TextEditor
-import com.neo.regex.core.util.LocalFocusTarget
-import com.neo.regex.core.util.rememberTarget
 import com.neo.regex.designsystem.textfield.NeoTextField
 import com.neo.regex.designsystem.theme.NeoTheme.dimensions
 import com.neo.regex.resources.Res
 import com.neo.regex.resources.ic_redo_24
 import com.neo.regex.resources.ic_undo_24
 import com.neo.regex.resources.insert_regex_hint
+import com.neo.regex.ui.screen.home.action.HomeAction
+import com.neo.regex.ui.screen.home.state.HomeUiState
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-fun HomeScreen() = Column(
+fun HomeScreen(
+    viewModel: HomeViewModel = viewModel()
+) = Column(
     modifier = Modifier
         .background(colorScheme.background)
         .fillMaxSize()
 ) {
 
-    val textTarget = rememberTarget()
-    val focusTarget = LocalFocusTarget.current
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     TextEditor(
-        value = textTarget.text,
+        value = uiState.text,
         onValueChange = {
-            textTarget.update(it)
+            viewModel.onAction(
+                HomeAction.UpdateText(it)
+            )
         },
         modifier = Modifier
-            .attachFocusTarget(textTarget)
-            .weight(weight = 1f),
+            .weight(weight = 1f)
+            .onPreviewKeyEvent {
+                when {
+                    it.undo -> {
+                        viewModel.onAction(
+                            HomeAction.History.Undo(Target.TEXT)
+                        )
+                        true
+                    }
+
+                    it.redo -> {
+                        viewModel.onAction(
+                            HomeAction.History.Redo(Target.TEXT)
+                        )
+                        true
+                    }
+
+                    else -> false
+                }
+            },
         onFocusChange = {
-            focusTarget.target = textTarget
+            if (it.isFocused) {
+                viewModel.onAction(
+                    HomeAction.TargetChange(Target.TEXT)
+                )
+            }
         }
     )
 
     Footer(
         modifier = Modifier.fillMaxWidth(),
+        onAction = viewModel::onAction,
+        uiState = uiState,
     )
 }
 
 @Composable
 private fun Footer(
     modifier: Modifier = Modifier,
+    onAction: (HomeAction) -> Unit,
+    uiState: HomeUiState
 ) = Surface(
     modifier = modifier,
     shape = RectangleShape,
@@ -75,16 +110,12 @@ private fun Footer(
         modifier = Modifier.fillMaxWidth()
     ) {
 
-        val regexTarget = rememberTarget()
-
-        LaunchedEffect(Unit) {
-            regexTarget.focusRequester.requestFocus()
-        }
-
         NeoTextField(
-            value = regexTarget.text,
+            value = uiState.regex,
             onValueChange = {
-                regexTarget.update(it)
+                onAction(
+                    HomeAction.UpdateRegex(it)
+                )
             },
             hint = {
                 Text(
@@ -94,10 +125,35 @@ private fun Footer(
             },
             singleLine = true,
             modifier = Modifier
-                .attachFocusTarget(regexTarget)
                 .align(Alignment.CenterVertically)
                 .padding(dimensions.default)
                 .weight(weight = 1f)
+                .onFocusChanged {
+                    if (it.isFocused) {
+                        onAction(
+                            HomeAction.TargetChange(Target.REGEX)
+                        )
+                    }
+                }
+                .onPreviewKeyEvent {
+                    when {
+                        it.undo -> {
+                            onAction(
+                                HomeAction.History.Undo(Target.REGEX)
+                            )
+                            true
+                        }
+
+                        it.redo -> {
+                            onAction(
+                                HomeAction.History.Redo(Target.REGEX)
+                            )
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
         )
 
         HistoryControl(
@@ -107,6 +163,8 @@ private fun Footer(
                 .focusProperties {
                     canFocus = false
                 },
+            onAction = onAction,
+            state = uiState.history
         )
     }
 }
@@ -115,6 +173,8 @@ private fun Footer(
 private fun HistoryControl(
     modifier: Modifier = Modifier,
     shape: CornerBasedShape = RoundedCornerShape(dimensions.small),
+    onAction: (HomeAction.History) -> Unit,
+    state: HomeUiState.History
 ) = Row(
     modifier = modifier
         .height(IntrinsicSize.Min)
@@ -125,8 +185,6 @@ private fun HistoryControl(
         )
 ) {
 
-    val focusTarget = LocalFocusTarget.current
-    val historyManager = focusTarget.target?.historyManager
 
     Icon(
         painter = painterResource(Res.drawable.ic_undo_24),
@@ -139,22 +197,24 @@ private fun HistoryControl(
                 )
             )
             .clickable(
-                enabled = historyManager?.canUndo == true,
-                onClick = {
-                    focusTarget.target?.undo()
-                }
-            ).onLongHold {
-                focusTarget.target?.undo()
+                enabled = state.canUndo
+            ) {
+                onAction(
+                    HomeAction.History.Undo()
+                )
+            }
+            .onLongHold {
+                onAction(
+                    HomeAction.History.Undo()
+                )
             }
             .padding(
                 vertical = dimensions.tiny,
                 horizontal = dimensions.small,
             ),
-        tint = if (historyManager?.canUndo == true) {
-            colorScheme.onSurfaceVariant
-        } else {
-            colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-        }
+        tint = colorScheme.onSurfaceVariant.copy(
+            alpha = if (state.canUndo) 1f else 0.5f
+        )
     )
 
     VerticalDivider(
@@ -178,21 +238,23 @@ private fun HistoryControl(
                 )
             )
             .clickable(
-                enabled = historyManager?.canRedo == true,
-                onClick = {
-                    focusTarget.target?.redo()
-                }
-            ).onLongHold {
-                focusTarget.target?.redo()
+                enabled = state.canRedo
+            ) {
+                onAction(
+                    HomeAction.History.Redo()
+                )
+            }
+            .onLongHold {
+                onAction(
+                    HomeAction.History.Redo()
+                )
             }
             .padding(
                 vertical = dimensions.tiny,
                 horizontal = dimensions.small,
             ),
-        tint = if (historyManager?.canRedo == true) {
-            colorScheme.onSurfaceVariant
-        } else {
-            colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-        }
+        tint = colorScheme.onSurfaceVariant.copy(
+            alpha = if (state.canRedo) 1f else 0.5f
+        )
     )
 }
