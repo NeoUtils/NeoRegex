@@ -7,7 +7,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 
 class HistoryManager {
 
-    private var undoStack: Entry? = Entry(TextFieldValue())
+    private var undoStack: Entry? = null
     private var redoStack: Entry? = null
 
     var canUndo by mutableStateOf(false)
@@ -22,7 +22,7 @@ class HistoryManager {
     )
 
     fun snapshot(value: TextFieldValue) {
-        undoStack = Entry(value, undoStack)
+        undoStack = Entry(value, next = undoStack ?: Entry(TextFieldValue()))
         redoStack = null
 
         canRedo = false
