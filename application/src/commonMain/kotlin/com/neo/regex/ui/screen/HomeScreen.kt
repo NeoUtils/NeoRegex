@@ -77,6 +77,10 @@ private fun Footer(
 
         val regexTarget = rememberTarget()
 
+        LaunchedEffect(Unit) {
+            regexTarget.focusRequester.requestFocus()
+        }
+
         NeoTextField(
             value = regexTarget.text,
             onValueChange = {
@@ -136,6 +140,7 @@ private fun HistoryControl(
                 )
             )
             .clickable(
+                enabled = historyManager?.canUndo == true,
                 onClick = {
                     focusTarget.target?.undo()
                 }
@@ -172,6 +177,7 @@ private fun HistoryControl(
                 )
             )
             .clickable(
+                enabled = historyManager?.canRedo == true,
                 onClick = {
                     focusTarget.target?.redo()
                 }
