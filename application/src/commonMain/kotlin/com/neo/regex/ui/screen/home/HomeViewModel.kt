@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.stateIn
 
 class HomeViewModel : ViewModel() {
 
-    private val targetFlow = MutableStateFlow(Target.REGEX)
+    private val targetFlow = MutableStateFlow<Target?>(Target.REGEX)
 
     private val histories = mapOf(
         Target.TEXT to HistoryManager(TextFieldValue()),
@@ -45,6 +45,8 @@ class HomeViewModel : ViewModel() {
                     canRedo = regex.canRedo
                 )
             }
+
+            null -> HomeUiState.History()
         }
     }
 
@@ -67,25 +69,34 @@ class HomeViewModel : ViewModel() {
     fun onAction(action: HomeAction) {
 
         when (action) {
-            is HomeAction.UpdateRegex -> {
+            is HomeAction.Input.UpdateRegex -> {
                 onRegexChange(action.input)
             }
 
+            is HomeAction.Input.UpdateText -> {
+                onTextChange(action.input)
+            }
+
             is HomeAction.History.Undo -> {
-                onUndo(target = action.target ?: targetFlow.value)
+                onUndo(
+                    target = action.target
+                        ?: targetFlow.value
+                        ?: return
+                )
             }
 
             is HomeAction.History.Redo -> {
-                onRedo(target = action.target ?: targetFlow.value)
+                onRedo(
+                    target = action.target
+                        ?: targetFlow.value
+                        ?: return
+                )
             }
 
             is HomeAction.TargetChange -> {
                 targetFlow.value = action.target
             }
 
-            is HomeAction.UpdateText -> {
-                onTextChange(action.input)
-            }
         }
     }
 
@@ -99,14 +110,14 @@ class HomeViewModel : ViewModel() {
         histories[Target.REGEX]?.snapshot(input)
     }
 
-    private fun onRedo(target: Target = this.targetFlow.value) {
+    private fun onRedo(target: Target) {
 
         val redo = histories[target]?.redo() ?: return
 
         inputs[target]?.value = redo
     }
 
-    private fun onUndo(target: Target = this.targetFlow.value) {
+    private fun onUndo(target: Target) {
 
         val undo = histories[target]?.undo() ?: return
 

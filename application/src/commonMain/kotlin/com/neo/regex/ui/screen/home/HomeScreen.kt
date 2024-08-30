@@ -27,9 +27,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.neo.regex.core.domain.Target
 import com.neo.regex.core.extension.onLongHold
-import com.neo.regex.core.extension.redo
-import com.neo.regex.core.extension.undo
 import com.neo.regex.core.sharedui.TextEditor
+import com.neo.regex.core.util.Command
 import com.neo.regex.designsystem.textfield.NeoTextField
 import com.neo.regex.designsystem.theme.NeoTheme.dimensions
 import com.neo.regex.resources.Res
@@ -56,21 +55,28 @@ fun HomeScreen(
         value = uiState.text,
         onValueChange = {
             viewModel.onAction(
-                HomeAction.UpdateText(it)
+                HomeAction.Input.UpdateText(it)
             )
+        },
+        onFocusChange = {
+            if (it.isFocused) {
+                viewModel.onAction(
+                    HomeAction.TargetChange(Target.TEXT)
+                )
+            }
         },
         modifier = Modifier
             .weight(weight = 1f)
             .onPreviewKeyEvent {
-                when {
-                    it.undo -> {
+                when (Command.from(it)) {
+                    Command.UNDO -> {
                         viewModel.onAction(
                             HomeAction.History.Undo(Target.TEXT)
                         )
                         true
                     }
 
-                    it.redo -> {
+                    Command.REDO -> {
                         viewModel.onAction(
                             HomeAction.History.Redo(Target.TEXT)
                         )
@@ -79,28 +85,21 @@ fun HomeScreen(
 
                     else -> false
                 }
-            },
-        onFocusChange = {
-            if (it.isFocused) {
-                viewModel.onAction(
-                    HomeAction.TargetChange(Target.TEXT)
-                )
             }
-        }
     )
 
     Footer(
-        modifier = Modifier.fillMaxWidth(),
-        onAction = viewModel::onAction,
         uiState = uiState,
+        onAction = viewModel::onAction,
+        modifier = Modifier.fillMaxWidth(),
     )
 }
 
 @Composable
 private fun Footer(
-    modifier: Modifier = Modifier,
+    uiState: HomeUiState,
     onAction: (HomeAction) -> Unit,
-    uiState: HomeUiState
+    modifier: Modifier = Modifier
 ) = Surface(
     modifier = modifier,
     shape = RectangleShape,
@@ -114,13 +113,7 @@ private fun Footer(
             value = uiState.regex,
             onValueChange = {
                 onAction(
-                    HomeAction.UpdateRegex(it)
-                )
-            },
-            hint = {
-                Text(
-                    text = stringResource(Res.string.insert_regex_hint),
-                    style = typography.bodyLarge
+                    HomeAction.Input.UpdateRegex(it)
                 )
             },
             singleLine = true,
@@ -136,15 +129,15 @@ private fun Footer(
                     }
                 }
                 .onPreviewKeyEvent {
-                    when {
-                        it.undo -> {
+                    when (Command.from(it)) {
+                        Command.UNDO -> {
                             onAction(
                                 HomeAction.History.Undo(Target.REGEX)
                             )
                             true
                         }
 
-                        it.redo -> {
+                        Command.REDO -> {
                             onAction(
                                 HomeAction.History.Redo(Target.REGEX)
                             )
@@ -153,28 +146,34 @@ private fun Footer(
 
                         else -> false
                     }
-                }
+                },
+            hint = {
+                Text(
+                    text = stringResource(Res.string.insert_regex_hint),
+                    style = typography.bodyLarge
+                )
+            }
         )
 
         HistoryControl(
+            state = uiState.history,
+            onAction = onAction,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .padding(dimensions.small)
                 .focusProperties {
                     canFocus = false
-                },
-            onAction = onAction,
-            state = uiState.history
+                }
         )
     }
 }
 
 @Composable
 private fun HistoryControl(
-    modifier: Modifier = Modifier,
-    shape: CornerBasedShape = RoundedCornerShape(dimensions.small),
+    state: HomeUiState.History,
     onAction: (HomeAction.History) -> Unit,
-    state: HomeUiState.History
+    modifier: Modifier = Modifier,
+    shape: CornerBasedShape = RoundedCornerShape(dimensions.small)
 ) = Row(
     modifier = modifier
         .height(IntrinsicSize.Min)
@@ -189,6 +188,9 @@ private fun HistoryControl(
     Icon(
         painter = painterResource(Res.drawable.ic_undo_24),
         contentDescription = null,
+        tint = colorScheme.onSurfaceVariant.copy(
+            alpha = if (state.canUndo) 1f else 0.5f
+        ),
         modifier = Modifier
             .clip(
                 shape.copy(
@@ -196,9 +198,7 @@ private fun HistoryControl(
                     bottomEnd = CornerSize(0.dp)
                 )
             )
-            .clickable(
-                enabled = state.canUndo
-            ) {
+            .clickable(state.canUndo) {
                 onAction(
                     HomeAction.History.Undo()
                 )
@@ -211,10 +211,7 @@ private fun HistoryControl(
             .padding(
                 vertical = dimensions.tiny,
                 horizontal = dimensions.small,
-            ),
-        tint = colorScheme.onSurfaceVariant.copy(
-            alpha = if (state.canUndo) 1f else 0.5f
-        )
+            )
     )
 
     VerticalDivider(
@@ -230,6 +227,9 @@ private fun HistoryControl(
     Icon(
         painter = painterResource(Res.drawable.ic_redo_24),
         contentDescription = null,
+        tint = colorScheme.onSurfaceVariant.copy(
+            alpha = if (state.canRedo) 1f else 0.5f
+        ),
         modifier = Modifier
             .clip(
                 shape.copy(
@@ -237,9 +237,7 @@ private fun HistoryControl(
                     bottomStart = CornerSize(0.dp)
                 )
             )
-            .clickable(
-                enabled = state.canRedo
-            ) {
+            .clickable(state.canRedo) {
                 onAction(
                     HomeAction.History.Redo()
                 )
@@ -252,9 +250,6 @@ private fun HistoryControl(
             .padding(
                 vertical = dimensions.tiny,
                 horizontal = dimensions.small,
-            ),
-        tint = colorScheme.onSurfaceVariant.copy(
-            alpha = if (state.canRedo) 1f else 0.5f
-        )
+            )
     )
 }
