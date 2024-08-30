@@ -1,13 +1,11 @@
 package com.neo.regex.ui.screen.home
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.neo.regex.core.domain.model.Input
 import com.neo.regex.core.domain.model.Target
 import com.neo.regex.core.extension.toTextFieldValue
+import com.neo.regex.core.sharedui.Match
 import com.neo.regex.core.util.HistoryManager
 import com.neo.regex.ui.screen.home.action.HomeAction
 import com.neo.regex.ui.screen.home.state.HomeUiState
@@ -15,7 +13,7 @@ import kotlinx.coroutines.flow.*
 
 class HomeViewModel : ViewModel() {
 
-    private val targetFlow = MutableStateFlow<Target?>(Target.REGEX)
+    private val targetFlow = MutableStateFlow<Target?>(value = null)
 
     private val histories = mapOf(
         Target.TEXT to HistoryManager(Input()),
@@ -27,7 +25,7 @@ class HomeViewModel : ViewModel() {
         Target.REGEX to MutableStateFlow(Input())
     )
 
-    private val textSpanStyles = combine(
+    private val matches = combine(
         checkNotNull(inputs[Target.TEXT]).map { it.text },
         checkNotNull(inputs[Target.REGEX]).map { it.text }
     ) { text, pattern ->
@@ -38,15 +36,14 @@ class HomeViewModel : ViewModel() {
 
         buildList {
             regex?.findAll(text)?.forEach {
-                add(
-                    AnnotatedString.Range(
-                        item = SpanStyle(
-                            background = Color.Red,
-                        ),
-                        start = it.range.first,
-                        end = it.range.last + 1
-                    )
-                )
+               if(it.value.isNotEmpty()) {
+                   add(
+                       Match(
+                           start = it.range.first,
+                           end = it.range.last + 1
+                       )
+                   )
+               }
             }
         }
     }
@@ -79,12 +76,13 @@ class HomeViewModel : ViewModel() {
         checkNotNull(inputs[Target.TEXT]),
         checkNotNull(inputs[Target.REGEX]),
         historyFlow,
-        textSpanStyles
-    ) { text, regex, history, textSpanStyles ->
+        matches
+    ) { text, regex, history, matches ->
         HomeUiState(
-            text.toTextFieldValue(textSpanStyles),
-            regex.toTextFieldValue(),
-            history
+            text = text.toTextFieldValue(),
+            regex = regex.toTextFieldValue(),
+            history = history,
+            matches = matches
         )
     }.stateIn(
         scope = viewModelScope,

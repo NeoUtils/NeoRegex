@@ -8,10 +8,7 @@ import com.neo.regex.core.domain.model.Input
 fun Input.toTextFieldValue(
     spanStyles: List<AnnotatedString.Range<SpanStyle>> = listOf()
 ) = TextFieldValue(
-    annotatedString =  AnnotatedString(
-        text = text,
-        spanStyles = spanStyles
-    ),
+    annotatedString = text.withSpanStyles(spanStyles),
     selection = selection,
     composition = null
 )

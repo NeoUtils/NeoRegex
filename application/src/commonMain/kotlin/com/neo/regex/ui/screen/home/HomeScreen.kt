@@ -22,12 +22,15 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.neo.regex.core.domain.model.Target
 import com.neo.regex.core.extension.onLongHold
 import com.neo.regex.core.extension.toInput
+import com.neo.regex.core.sharedui.Match
 import com.neo.regex.core.sharedui.TextEditor
 import com.neo.regex.core.util.Command
 import com.neo.regex.designsystem.textfield.NeoTextField
@@ -66,6 +69,10 @@ fun HomeScreen(
                 )
             }
         },
+        textStyle = TextStyle(
+            letterSpacing = 1.sp,
+            fontSize = 16.sp,
+        ),
         modifier = Modifier
             .weight(weight = 1f)
             .onPreviewKeyEvent {
@@ -86,7 +93,8 @@ fun HomeScreen(
 
                     else -> false
                 }
-            }
+            },
+        matches = uiState.matches,
     )
 
     Footer(
