@@ -114,7 +114,9 @@ private fun Footer(
             value = uiState.regex,
             onValueChange = {
                 onAction(
-                    HomeAction.Input.UpdateRegex(it.toInput())
+                    HomeAction.Input.UpdateRegex(
+                        it.toInput(allowMultiline = false)
+                    )
                 )
             },
             singleLine = true,
