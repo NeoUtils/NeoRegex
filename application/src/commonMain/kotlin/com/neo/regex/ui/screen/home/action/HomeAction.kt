@@ -9,13 +9,18 @@ sealed class HomeAction {
         val target: Target
     ) : HomeAction()
 
-    data class UpdateRegex(
-        val input: TextFieldValue
-    ) : HomeAction()
+    sealed class Input : HomeAction() {
 
-    class UpdateText(
-        val input: TextFieldValue
-    ) : HomeAction()
+        abstract val input: TextFieldValue
+
+        data class UpdateText(
+            override val input: TextFieldValue
+        ) : Input()
+
+        data class UpdateRegex(
+            override val input: TextFieldValue
+        ) : Input()
+    }
 
     sealed class History : HomeAction() {
 
