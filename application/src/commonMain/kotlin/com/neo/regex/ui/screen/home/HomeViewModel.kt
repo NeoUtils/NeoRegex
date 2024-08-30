@@ -1,30 +1,55 @@
 package com.neo.regex.ui.screen.home
 
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.neo.regex.core.domain.Target
+import com.neo.regex.core.domain.model.Input
+import com.neo.regex.core.domain.model.Target
+import com.neo.regex.core.extension.toTextFieldValue
 import com.neo.regex.core.util.HistoryManager
 import com.neo.regex.ui.screen.home.action.HomeAction
 import com.neo.regex.ui.screen.home.state.HomeUiState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 
 class HomeViewModel : ViewModel() {
 
     private val targetFlow = MutableStateFlow<Target?>(Target.REGEX)
 
     private val histories = mapOf(
-        Target.TEXT to HistoryManager(TextFieldValue()),
-        Target.REGEX to HistoryManager(TextFieldValue())
+        Target.TEXT to HistoryManager(Input()),
+        Target.REGEX to HistoryManager(Input())
     )
 
     private val inputs = mapOf(
-        Target.TEXT to MutableStateFlow(TextFieldValue()),
-        Target.REGEX to MutableStateFlow(TextFieldValue())
+        Target.TEXT to MutableStateFlow(Input()),
+        Target.REGEX to MutableStateFlow(Input())
     )
+
+    private val textSpanStyles = combine(
+        checkNotNull(inputs[Target.TEXT]).map { it.text },
+        checkNotNull(inputs[Target.REGEX]).map { it.text }
+    ) { text, pattern ->
+
+        val regex = runCatching {
+            Regex(pattern)
+        }.getOrNull()
+
+        buildList {
+            regex?.findAll(text)?.forEach {
+                add(
+                    AnnotatedString.Range(
+                        item = SpanStyle(
+                            background = Color.Red,
+                        ),
+                        start = it.range.first,
+                        end = it.range.last + 1
+                    )
+                )
+            }
+        }
+    }
 
     private val historyFlow = combine(
         targetFlow,
@@ -54,10 +79,11 @@ class HomeViewModel : ViewModel() {
         checkNotNull(inputs[Target.TEXT]),
         checkNotNull(inputs[Target.REGEX]),
         historyFlow,
-    ) { text, regex, history ->
+        textSpanStyles
+    ) { text, regex, history, textSpanStyles ->
         HomeUiState(
-            text,
-            regex,
+            text.toTextFieldValue(textSpanStyles),
+            regex.toTextFieldValue(),
             history
         )
     }.stateIn(
@@ -100,12 +126,12 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    private fun onTextChange(input: TextFieldValue) {
+    private fun onTextChange(input: Input) {
         inputs[Target.TEXT]?.value = input
         histories[Target.TEXT]?.snapshot(input)
     }
 
-    private fun onRegexChange(input: TextFieldValue) {
+    private fun onRegexChange(input: Input) {
         inputs[Target.REGEX]?.value = input
         histories[Target.REGEX]?.snapshot(input)
     }
