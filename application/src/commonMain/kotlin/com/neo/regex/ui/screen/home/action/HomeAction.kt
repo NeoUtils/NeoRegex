@@ -1,7 +1,7 @@
 package com.neo.regex.ui.screen.home.action
 
-import androidx.compose.ui.text.input.TextFieldValue
-import com.neo.regex.core.domain.Target
+import com.neo.regex.core.domain.model.Target
+import com.neo.regex.core.domain.model.Input as InputModel
 
 sealed class HomeAction {
 
@@ -11,14 +11,14 @@ sealed class HomeAction {
 
     sealed class Input : HomeAction() {
 
-        abstract val input: TextFieldValue
+        abstract val input: InputModel
 
         data class UpdateText(
-            override val input: TextFieldValue
+            override val input: InputModel
         ) : Input()
 
         data class UpdateRegex(
-            override val input: TextFieldValue
+            override val input: InputModel
         ) : Input()
     }
 
