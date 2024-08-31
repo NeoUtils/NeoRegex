@@ -2,11 +2,8 @@ package com.neo.regex.core.util
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 
-class HistoryManager<T>(
-    private val initialValue: T
-) {
+class HistoryManager<T> {
 
     private var undoStack: Entry<T>? = null
     private var redoStack: Entry<T>? = null
@@ -15,7 +12,7 @@ class HistoryManager<T>(
     val state = _state.asStateFlow()
 
     fun snapshot(value: T) {
-        undoStack = Entry(value, next = undoStack ?: Entry(initialValue))
+        undoStack = Entry(value, undoStack)
         redoStack = null
 
         updateState()
