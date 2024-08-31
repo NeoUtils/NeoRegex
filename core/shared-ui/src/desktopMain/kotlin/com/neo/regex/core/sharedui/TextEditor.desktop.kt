@@ -19,6 +19,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.inset
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -89,9 +90,11 @@ actual fun TextEditor(
             modifier = Modifier
                 .onFocusChanged(onFocusChange)
                 .padding(start = dimensions.tiny)
+                .weight(weight = 1f, fill = false)
+                .fillMaxSize()
                 .drawBehind {
                     textLayout?.let { textLayout ->
-                        runCatching {
+                        val boxes = runCatching {
                             matches.flatMap { match ->
                                 textLayout.getBoundingBoxes(
                                     match.start,
@@ -102,17 +105,19 @@ actual fun TextEditor(
                                     )
                                 }
                             }
-                        }.getOrNull()?.forEach {
-                            drawRect(
-                                color = Blue100,
-                                topLeft = Offset(it.left, it.top),
-                                size = Size(it.width, it.height)
-                            )
-                        }
+                        }.getOrElse { listOf() }
+
+                       inset(vertical = -scrollState.offset) {
+                           boxes.forEach {
+                               drawRect(
+                                   color = Blue100,
+                                   topLeft = Offset(it.left, it.top),
+                                   size = Size(it.width, it.height)
+                               )
+                           }
+                       }
                     }
-                }
-                .weight(weight = 1f, fill = false)
-                .fillMaxSize(),
+                },
         )
 
         VerticalScrollbar(scrollbarAdapter)
