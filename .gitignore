@@ -1,5 +1,6 @@
 .gradle
 build
+/.kotlin/sessions/
 
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/

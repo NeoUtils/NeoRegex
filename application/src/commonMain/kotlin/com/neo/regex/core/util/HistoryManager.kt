@@ -1,26 +1,25 @@
 package com.neo.regex.core.util
 
+import com.neo.regex.core.domain.model.Input
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.concurrent.atomic.AtomicBoolean
 
-class HistoryManager<T : Any>(
-    private val config: Config<T> = Config()
-) {
+class HistoryManager {
 
-    private var undoStack: Entry<T>? = null
-    private var redoStack: Entry<T>? = null
+    private var undoStack: Entry? = null
+    private var redoStack: Entry? = null
 
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
 
     private var lock = AtomicBoolean(false)
 
-    fun push(value: T) {
+    fun push(value: Input) {
 
         if (lock.get()) return
 
-        if (config.shouldPush(value, undoStack, redoStack)) {
+        if (shouldPush(value)) {
 
             undoStack = Entry(value, undoStack)
             redoStack = null
@@ -29,7 +28,7 @@ class HistoryManager<T : Any>(
             return
         }
 
-        if (config.shouldUpdateLast(value, undoStack, redoStack)) {
+        if (shouldUpdateLast(value)) {
 
             undoStack?.value = value
 
@@ -37,7 +36,15 @@ class HistoryManager<T : Any>(
         }
     }
 
-    fun undo(): T? {
+    private fun shouldPush(value: Input): Boolean {
+        return undoStack?.value?.text != value.text
+    }
+
+    private fun shouldUpdateLast(value: Input): Boolean {
+        return redoStack == null && value != undoStack?.value
+    }
+
+    fun undo(): Input? {
         val entry = undoStack ?: return null
 
         undoStack = entry.next ?: return null
@@ -50,7 +57,7 @@ class HistoryManager<T : Any>(
         return undoStack?.value
     }
 
-    fun redo(): T? {
+    fun redo(): Input? {
         val entry = redoStack ?: return null
 
         redoStack = entry.next
@@ -74,18 +81,13 @@ class HistoryManager<T : Any>(
         )
     }
 
-    data class Entry<T>(
-        var value: T,
-        val next: Entry<T>? = null
+    data class Entry(
+        var value: Input,
+        val next: Entry? = null
     )
 
     data class State(
         val canUndo: Boolean = false,
         val canRedo: Boolean = false,
-    )
-
-    class Config<T : Any>(
-        val shouldPush: (T, Entry<T>?, Entry<T>?) -> Boolean = { _, _, _ -> true },
-        val shouldUpdateLast: (T, Entry<T>?, Entry<T>?) -> Boolean = { _, _, _ -> false }
     )
 }

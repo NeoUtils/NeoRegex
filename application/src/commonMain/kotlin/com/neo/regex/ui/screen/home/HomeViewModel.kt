@@ -16,18 +16,9 @@ class HomeViewModel : ViewModel() {
 
     private val targetFlow = MutableStateFlow<Target?>(value = null)
 
-    private val historyConfig = HistoryManager.Config<Input>(
-        shouldPush = { newInput, undoStack, _ ->
-            newInput.text != undoStack?.value?.text
-        },
-        shouldUpdateLast = { newInput, undoStack, redoStack ->
-            redoStack == null && newInput != undoStack?.value
-        }
-    )
-
     private val histories = targeted(
-        Target.TEXT to HistoryManager(historyConfig),
-        Target.REGEX to HistoryManager(historyConfig)
+        Target.TEXT to HistoryManager(),
+        Target.REGEX to HistoryManager()
     )
 
     private val inputs = targeted(
