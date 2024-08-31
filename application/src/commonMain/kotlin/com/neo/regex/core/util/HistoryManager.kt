@@ -8,27 +8,17 @@ class HistoryManager<T>(
     private val initialValue: T
 ) {
 
-    private var undoStack: Entry? = null
-    private var redoStack: Entry? = null
+    private var undoStack: Entry<T>? = null
+    private var redoStack: Entry<T>? = null
 
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
-
-    private inner class Entry(
-        val value: T,
-        val next: Entry? = null
-    )
 
     fun snapshot(value: T) {
         undoStack = Entry(value, next = undoStack ?: Entry(initialValue))
         redoStack = null
 
-        _state.update {
-            it.copy(
-                canUndo = true,
-                canRedo = false
-            )
-        }
+        updateState()
     }
 
     fun undo(): T? {
@@ -37,12 +27,7 @@ class HistoryManager<T>(
         undoStack = entry.next
         redoStack = Entry(entry.value, redoStack)
 
-        _state.update {
-            it.copy(
-                canUndo = undoStack != null,
-                canRedo = true
-            )
-        }
+        updateState()
 
         return entry.value
     }
@@ -53,15 +38,22 @@ class HistoryManager<T>(
         redoStack = entry.next
         undoStack = Entry(entry.value, undoStack)
 
-        _state.update {
-            it.copy(
-                canUndo = true,
-                canRedo = redoStack != null
-            )
-        }
+        updateState()
 
         return entry.value
     }
+
+    private fun updateState() {
+        _state.value = State(
+            canUndo = undoStack != null,
+            canRedo = redoStack != null
+        )
+    }
+
+    private data class Entry<T>(
+        val value: T,
+        val next: Entry<T>? = null
+    )
 
     data class State(
         val canUndo: Boolean = false,

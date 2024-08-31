@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.neo.regex.core.domain.model.Input
 import com.neo.regex.core.domain.model.Target
+import com.neo.regex.core.domain.model.targeted
 import com.neo.regex.core.extension.toTextFieldValue
 import com.neo.regex.core.sharedui.model.Match
 import com.neo.regex.core.util.HistoryManager
@@ -15,19 +16,19 @@ class HomeViewModel : ViewModel() {
 
     private val targetFlow = MutableStateFlow<Target?>(value = null)
 
-    private val histories = mapOf(
+    private val histories = targeted(
         Target.TEXT to HistoryManager(Input()),
         Target.REGEX to HistoryManager(Input())
     )
 
-    private val inputs = mapOf(
+    private val inputs = targeted(
         Target.TEXT to MutableStateFlow(Input()),
         Target.REGEX to MutableStateFlow(Input())
     )
 
     private val matches = combine(
-        checkNotNull(inputs[Target.TEXT]).map { it.text },
-        checkNotNull(inputs[Target.REGEX]).map { it.text }
+        inputs[Target.TEXT].map { it.text },
+        inputs[Target.REGEX].map { it.text }
     ) { text, pattern ->
 
         val regex = runCatching {
@@ -50,8 +51,8 @@ class HomeViewModel : ViewModel() {
 
     private val historyFlow = combine(
         targetFlow,
-        checkNotNull(histories[Target.TEXT]).state,
-        checkNotNull(histories[Target.REGEX]).state
+        histories[Target.TEXT].state,
+        histories[Target.REGEX].state
     ) { target, text, regex ->
         when (target) {
             Target.TEXT -> {
@@ -73,8 +74,8 @@ class HomeViewModel : ViewModel() {
     }
 
     val uiState = combine(
-        checkNotNull(inputs[Target.TEXT]),
-        checkNotNull(inputs[Target.REGEX]),
+        inputs[Target.TEXT],
+        inputs[Target.REGEX],
         historyFlow,
         matches
     ) { text, regex, history, matches ->
@@ -125,27 +126,21 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun onTextChange(input: Input) {
-        inputs[Target.TEXT]?.value = input
-        histories[Target.TEXT]?.snapshot(input)
+        histories[Target.TEXT].snapshot(inputs[Target.TEXT].value)
+        inputs[Target.TEXT].value = input
     }
 
     private fun onRegexChange(input: Input) {
-        inputs[Target.REGEX]?.value = input
-        histories[Target.REGEX]?.snapshot(input)
+        histories[Target.REGEX].snapshot(inputs[Target.REGEX].value)
+        inputs[Target.REGEX].value = input
     }
 
     private fun onRedo(target: Target) {
-
-        val redo = histories[target]?.redo() ?: return
-
-        inputs[target]?.value = redo
+        inputs[target].value = histories[target].redo() ?: return
     }
 
     private fun onUndo(target: Target) {
-
-        val undo = histories[target]?.undo() ?: return
-
-        inputs[target]?.value = undo
+        inputs[target].value = histories[target].undo() ?: return
     }
 }
 
