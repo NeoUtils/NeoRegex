@@ -16,9 +16,9 @@ class HomeViewModel : ViewModel() {
 
     private val targetFlow = MutableStateFlow<Target?>(value = null)
 
-    private val histories = targeted(
-        Target.TEXT to HistoryManager(Input()),
-        Target.REGEX to HistoryManager(Input())
+    private val histories = targeted<HistoryManager<Input>>(
+        Target.TEXT to HistoryManager(),
+        Target.REGEX to HistoryManager()
     )
 
     private val inputs = targeted(
