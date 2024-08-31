@@ -2,6 +2,7 @@ package com.neo.regex.core.util
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import java.util.concurrent.atomic.AtomicBoolean
 
 class HistoryManager<T> {
 
@@ -11,7 +12,12 @@ class HistoryManager<T> {
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
 
-    fun snapshot(value: T) {
+    private var lock = AtomicBoolean(false)
+
+    fun push(value: T) {
+
+        if (lock.get()) return
+
         undoStack = Entry(value, undoStack)
         redoStack = null
 
@@ -21,12 +27,14 @@ class HistoryManager<T> {
     fun undo(): T? {
         val entry = undoStack ?: return null
 
-        undoStack = entry.next
+        undoStack = entry.next ?: return null
         redoStack = Entry(entry.value, redoStack)
 
         updateState()
 
-        return entry.value
+        lock.set(true)
+
+        return undoStack?.value
     }
 
     fun redo(): T? {
@@ -37,13 +45,19 @@ class HistoryManager<T> {
 
         updateState()
 
+        lock.set(true)
+
         return entry.value
+    }
+
+    fun unlock() {
+        lock.set(false)
     }
 
     private fun updateState() {
         _state.value = State(
-            canUndo = undoStack != null,
-            canRedo = redoStack != null
+            canUndo = undoStack?.next != null,
+            canRedo = redoStack != null,
         )
     }
 
@@ -54,6 +68,6 @@ class HistoryManager<T> {
 
     data class State(
         val canUndo: Boolean = false,
-        val canRedo: Boolean = false
+        val canRedo: Boolean = false,
     )
 }
