@@ -25,6 +25,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.LineHeightStyle
 import com.neo.regex.core.sharedui.extension.getBoundingBoxes
+import com.neo.regex.designsystem.theme.Blue100
 import com.neo.regex.designsystem.theme.NeoTheme.dimensions
 import kotlin.math.roundToInt
 
@@ -93,14 +94,17 @@ actual fun TextEditor(
                         runCatching {
                             matches.flatMap { match ->
                                 textLayout.getBoundingBoxes(
-                                    match.start, match.end
+                                    match.start,
+                                    match.end
                                 ).map {
-                                    it.deflate(delta = 1f)
+                                    it.deflate(
+                                        delta = mergedTextStyle.letterSpacing.toPx()
+                                    )
                                 }
                             }
                         }.getOrNull()?.forEach {
                             drawRect(
-                                color = Color.Red,
+                                color = Blue100,
                                 topLeft = Offset(it.left, it.top),
                                 size = Size(it.width, it.height)
                             )

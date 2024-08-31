@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.LineHeightStyle
 import com.neo.regex.core.sharedui.extension.getBoundingBoxes
+import com.neo.regex.designsystem.theme.Blue100
 import com.neo.regex.designsystem.theme.NeoTheme.dimensions
 
 @Composable
@@ -80,17 +81,24 @@ actual fun TextEditor(
                 .padding(start = dimensions.tiny)
                 .drawBehind {
                     textLayout?.let { textLayout ->
-                        runCatching {
+                        val boxes = runCatching {
                             matches.flatMap { match ->
-                                textLayout.getBoundingBoxes(
-                                    match.start, match.end
-                                ).map {
-                                    it.deflate(delta = 1f)
-                                }
+                                textLayout
+                                    .getBoundingBoxes(
+                                        match.start,
+                                        match.end
+                                    )
+                                    .map {
+                                        it.deflate(
+                                            delta = mergedTextStyle.letterSpacing.toPx()
+                                        )
+                                    }
                             }
-                        }.getOrNull()?.forEach {
+                        }.getOrElse { listOf() }
+
+                        boxes.forEach {
                             drawRect(
-                                color = Color.Red,
+                                color = Blue100,
                                 topLeft = Offset(it.left, it.top),
                                 size = Size(it.width, it.height)
                             )
