@@ -1,11 +1,10 @@
 package com.neo.regex.ui.screen.home.state
 
-import androidx.compose.ui.text.input.TextFieldValue
 import com.neo.regex.core.sharedui.model.Match
 
 data class HomeUiState(
-    val text: TextFieldValue = TextFieldValue(),
-    val regex: TextFieldValue = TextFieldValue(),
+    val text: String = "",
+    val regex: String = "",
     val history: History = History(),
     val matches: List<Match> = listOf(),
 ) {

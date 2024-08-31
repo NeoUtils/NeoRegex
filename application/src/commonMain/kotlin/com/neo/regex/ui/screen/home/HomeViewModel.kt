@@ -2,32 +2,33 @@ package com.neo.regex.ui.screen.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.neo.regex.core.domain.model.Input
 import com.neo.regex.core.domain.model.Target
-import com.neo.regex.core.extension.toTextFieldValue
 import com.neo.regex.core.sharedui.model.Match
 import com.neo.regex.core.util.HistoryManager
 import com.neo.regex.ui.screen.home.action.HomeAction
 import com.neo.regex.ui.screen.home.state.HomeUiState
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 
 class HomeViewModel : ViewModel() {
 
     private val targetFlow = MutableStateFlow<Target?>(value = null)
 
     private val histories = mapOf(
-        Target.TEXT to HistoryManager(Input()),
-        Target.REGEX to HistoryManager(Input())
+        Target.TEXT to HistoryManager(""),
+        Target.REGEX to HistoryManager("")
     )
 
     private val inputs = mapOf(
-        Target.TEXT to MutableStateFlow(Input()),
-        Target.REGEX to MutableStateFlow(Input())
+        Target.TEXT to MutableStateFlow(""),
+        Target.REGEX to MutableStateFlow("")
     )
 
     private val matches = combine(
-        checkNotNull(inputs[Target.TEXT]).map { it.text },
-        checkNotNull(inputs[Target.REGEX]).map { it.text }
+        checkNotNull(inputs[Target.TEXT]),
+        checkNotNull(inputs[Target.REGEX])
     ) { text, pattern ->
 
         val regex = runCatching {
@@ -36,14 +37,14 @@ class HomeViewModel : ViewModel() {
 
         buildList {
             regex?.findAll(text)?.forEach {
-               if(it.value.isNotEmpty()) {
-                   add(
-                       Match(
-                           start = it.range.first,
-                           end = it.range.last + 1
-                       )
-                   )
-               }
+                if (it.value.isNotEmpty()) {
+                    add(
+                        Match(
+                            start = it.range.first,
+                            end = it.range.last + 1
+                        )
+                    )
+                }
             }
         }
     }
@@ -79,8 +80,8 @@ class HomeViewModel : ViewModel() {
         matches
     ) { text, regex, history, matches ->
         HomeUiState(
-            text = text.toTextFieldValue(),
-            regex = regex.toTextFieldValue(),
+            text = text,
+            regex = regex,
             history = history,
             matches = matches
         )
@@ -124,12 +125,12 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    private fun onTextChange(input: Input) {
+    private fun onTextChange(input: String) {
         inputs[Target.TEXT]?.value = input
         histories[Target.TEXT]?.snapshot(input)
     }
 
-    private fun onRegexChange(input: Input) {
+    private fun onRegexChange(input: String) {
         inputs[Target.REGEX]?.value = input
         histories[Target.REGEX]?.snapshot(input)
     }

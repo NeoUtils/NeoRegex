@@ -11,14 +11,14 @@ sealed class HomeAction {
 
     sealed class Input : HomeAction() {
 
-        abstract val input: InputModel
+        abstract val input: String
 
         data class UpdateText(
-            override val input: InputModel
+            override val input: String
         ) : Input()
 
         data class UpdateRegex(
-            override val input: InputModel
+            override val input: String
         ) : Input()
     }
 

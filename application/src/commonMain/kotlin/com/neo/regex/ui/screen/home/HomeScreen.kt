@@ -29,7 +29,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.neo.regex.core.domain.model.Target
 import com.neo.regex.core.extension.onLongHold
-import com.neo.regex.core.extension.toInput
 import com.neo.regex.core.sharedui.TextEditor
 import com.neo.regex.core.util.Command
 import com.neo.regex.designsystem.textfield.NeoTextField
@@ -58,7 +57,7 @@ fun HomeScreen(
         value = uiState.text,
         onValueChange = {
             viewModel.onAction(
-                HomeAction.Input.UpdateText(it.toInput())
+                HomeAction.Input.UpdateText(it)
             )
         },
         onFocusChange = {
@@ -73,7 +72,8 @@ fun HomeScreen(
             fontSize = 16.sp,
         ),
         modifier = Modifier
-            .weight(weight = 1f)
+            .weight(weight = 1f, fill = false)
+            .fillMaxSize()
             .onPreviewKeyEvent {
                 when (Command.from(it)) {
                     Command.UNDO -> {
@@ -122,7 +122,10 @@ private fun Footer(
             onValueChange = {
                 onAction(
                     HomeAction.Input.UpdateRegex(
-                        it.toInput(allowMultiline = false)
+                        it.replace(
+                            oldValue = "\n",
+                            newValue = ""
+                        )
                     )
                 )
             },

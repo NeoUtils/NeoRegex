@@ -9,8 +9,8 @@ import com.neo.regex.core.sharedui.model.Match
 
 @Composable
 expect fun TextEditor(
-    value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
+    value: String,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     onFocusChange: (FocusState) -> Unit = {},
     matches: List<Match> = listOf(),

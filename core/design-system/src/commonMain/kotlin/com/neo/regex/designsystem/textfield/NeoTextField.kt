@@ -6,12 +6,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.TextFieldValue
 
 @Composable
 fun NeoTextField(
-    value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
+    value: String,
+    onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(),
     singleLine: Boolean = false,
@@ -34,7 +33,7 @@ fun NeoTextField(
         },
         decorationBox = {
             when {
-                focused || value.text.isNotEmpty() -> {
+                focused || value.isNotEmpty() -> {
                     it()
                 }
 
