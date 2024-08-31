@@ -5,21 +5,36 @@ import androidx.compose.ui.text.TextLayoutResult
 
 fun TextLayoutResult.getBoundingBoxes(start: Int, end: Int): List<Rect> {
 
-    val boundingBoxes = mutableListOf<Rect>()
+    val boxes = mutableListOf<Rect>()
 
     var lastRect: Rect? = null
+    var lastLine: Int? = null
 
     for (offset in start until end) {
 
         var rect = getBoundingBox(offset)
+        val line = getLineForOffset(offset)
 
-        if (lastRect?.top == rect.top) {
+        if (lastRect != null && lastLine == line) {
             rect = lastRect.union(rect)
-            boundingBoxes.remove(lastRect)
+            boxes.remove(lastRect)
+            boxes.add(rect)
         }
 
+        if (lastRect != null && lastLine != line) {
+
+            boxes.add(
+                lastRect.copy(
+                    left = size.width.toFloat()
+                )
+            )
+
+            boxes.remove(lastRect)
+        }
+
+        lastLine = line
         lastRect = rect
-        boundingBoxes.add(rect)
+        boxes.add(rect)
     }
-    return boundingBoxes
+    return boxes
 }
