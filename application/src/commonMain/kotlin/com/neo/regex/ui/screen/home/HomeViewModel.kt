@@ -37,14 +37,14 @@ class HomeViewModel : ViewModel() {
 
         buildList {
             regex?.findAll(text)?.forEach {
-               if(it.value.isNotEmpty()) {
-                   add(
-                       Match(
-                           start = it.range.first,
-                           end = it.range.last + 1
-                       )
-                   )
-               }
+                if (it.value.isNotEmpty()) {
+                    add(
+                        Match(
+                            start = it.range.first,
+                            end = it.range.last + 1
+                        )
+                    )
+                }
             }
         }
     }
@@ -91,15 +91,25 @@ class HomeViewModel : ViewModel() {
         initialValue = HomeUiState()
     )
 
+    init {
+        inputs[Target.TEXT].onEach {
+            histories[Target.TEXT].push(it)
+        }.launchIn(viewModelScope)
+
+        inputs[Target.REGEX].onEach {
+            histories[Target.REGEX].push(it)
+        }.launchIn(viewModelScope)
+    }
+
     fun onAction(action: HomeAction) {
 
         when (action) {
             is HomeAction.Input.UpdateRegex -> {
-                onRegexChange(action.input)
+                onChange(Target.REGEX, action.input)
             }
 
             is HomeAction.Input.UpdateText -> {
-                onTextChange(action.input)
+                onChange(Target.TEXT, action.input)
             }
 
             is HomeAction.History.Undo -> {
@@ -125,14 +135,9 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    private fun onTextChange(input: Input) {
-        histories[Target.TEXT].snapshot(inputs[Target.TEXT].value)
-        inputs[Target.TEXT].value = input
-    }
-
-    private fun onRegexChange(input: Input) {
-        histories[Target.REGEX].snapshot(inputs[Target.REGEX].value)
-        inputs[Target.REGEX].value = input
+    private fun onChange(target: Target, input: Input) {
+        histories[target].unlock()
+        inputs[target].value = input
     }
 
     private fun onRedo(target: Target) {
