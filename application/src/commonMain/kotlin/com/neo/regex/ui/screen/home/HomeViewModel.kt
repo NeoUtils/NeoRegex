@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.neo.regex.core.domain.model.Input
 import com.neo.regex.core.domain.model.Target
 import com.neo.regex.core.extension.toTextFieldValue
-import com.neo.regex.core.sharedui.Match
+import com.neo.regex.core.sharedui.model.Match
 import com.neo.regex.core.util.HistoryManager
 import com.neo.regex.ui.screen.home.action.HomeAction
 import com.neo.regex.ui.screen.home.state.HomeUiState

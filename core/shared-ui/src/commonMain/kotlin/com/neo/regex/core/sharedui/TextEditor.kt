@@ -5,11 +5,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
-
-data class Match(
-    val start: Int,
-    val end: Int
-)
+import com.neo.regex.core.sharedui.model.Match
 
 @Composable
 expect fun TextEditor(

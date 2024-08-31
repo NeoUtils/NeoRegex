@@ -30,7 +30,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.neo.regex.core.domain.model.Target
 import com.neo.regex.core.extension.onLongHold
 import com.neo.regex.core.extension.toInput
-import com.neo.regex.core.sharedui.Match
 import com.neo.regex.core.sharedui.TextEditor
 import com.neo.regex.core.util.Command
 import com.neo.regex.designsystem.textfield.NeoTextField
