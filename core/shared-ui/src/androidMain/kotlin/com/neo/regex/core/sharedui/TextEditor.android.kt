@@ -79,11 +79,11 @@ actual fun TextEditor(
                 textLayout = it
             },
             modifier = Modifier
-                .onFocusChanged(onFocusChange)
                 .padding(start = dimensions.tiny)
                 .weight(weight = 1f, fill = false)
                 .fillMaxSize()
                 .verticalScroll(scrollState) // TODO(improve): https://github.com/NeoUtils/NeoRegex/issues/15
+                .onFocusChanged(onFocusChange)
                 .drawBehind {
                     textLayout?.let { textLayout ->
                         val boxes = runCatching {
