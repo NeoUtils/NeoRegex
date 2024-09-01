@@ -20,14 +20,18 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.unit.toSize
 import com.neo.regex.core.sharedui.extension.getBoundingBoxes
 import com.neo.regex.core.sharedui.model.Match
 import com.neo.regex.designsystem.theme.Blue100
@@ -58,6 +62,8 @@ actual fun TextEditor(
     var textLayout by remember { mutableStateOf<TextLayoutResult?>(null) }
 
     var mouseHover by remember { mutableStateOf<Offset?>(null) }
+
+    val textMeasurer = rememberTextMeasurer()
 
     Row(modifier) {
 
@@ -112,33 +118,48 @@ actual fun TextEditor(
                             textLayout.getBoundingBoxes(
                                 match.start, match.end
                             ).map {
-                                it.deflate(
-                                    delta = 0.8f
+                                Pair(
+                                    match,
+                                    it.deflate(
+                                        delta = 0.8f
+                                    )
                                 )
                             }
                         }
 
-                        matchBoxes.forEach {
+                        matchBoxes.forEach { (_, rect) ->
                             drawRect(
                                 color = Blue100,
-                                topLeft = Offset(it.left, y = it.top - scrollState.offset),
-                                size = Size(it.width, it.height)
+                                topLeft = Offset(rect.left, y = rect.top - scrollState.offset),
+                                size = Size(rect.width, rect.height)
                             )
                         }
 
                         mouseHover?.let { hover ->
-                            matchBoxes.firstOrNull {
-                                it.contains(hover)
-                            }?.let { box ->
+                            val matchBox = matchBoxes.firstOrNull { (_, rect) ->
+                                rect.contains(hover)
+                            }
+
+                            matchBox?.let { (match, rect) ->
                                 drawRect(
                                     color = Color.DarkGray,
-                                    topLeft = Offset(box.left, y = box.top - scrollState.offset),
-                                    size = Size(box.width, box.height),
+                                    topLeft = Offset(rect.left, y = rect.top - scrollState.offset),
+                                    size = Size(rect.width, rect.height),
                                     style = Stroke(
                                         width = 1f
                                     )
                                 )
+
+                                tooltip(
+                                    topCenter = hover.copy(
+                                        y = rect.inflate(0.8f).bottom - scrollState.offset
+                                    ),
+                                    measure = textMeasurer.measure(
+                                        text = "$match"
+                                    )
+                                )
                             }
+
                         }
                     }
                 },
@@ -148,3 +169,26 @@ actual fun TextEditor(
     }
 }
 
+fun DrawScope.tooltip(
+    topCenter: Offset,
+    measure: TextLayoutResult,
+    backgroundColor: Color = Color.LightGray
+) {
+    val tooltipSize = measure.size.toSize()
+
+    val topLeft = Offset(
+        x = topCenter.x - tooltipSize.width / 2,
+        y = topCenter.y
+    )
+
+    drawRect(
+        color = backgroundColor,
+        topLeft = topLeft,
+        size = tooltipSize
+    )
+
+    drawText(
+        textLayoutResult = measure,
+        topLeft = topLeft
+    )
+}
