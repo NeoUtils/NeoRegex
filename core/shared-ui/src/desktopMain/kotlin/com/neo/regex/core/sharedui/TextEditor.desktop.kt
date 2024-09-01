@@ -22,7 +22,6 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.graphics.drawscope.inset
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.TextLayoutResult
@@ -119,30 +118,30 @@ actual fun TextEditor(
                 .fillMaxSize()
                 .onPointerEvent(PointerEventType.Move) { event ->
 
-                    val position = event.changes.first().position
+                    val position = event.changes.first().position.let {
+                        it.copy(y = it.y + scrollState.offset)
+                    }
 
                     hover = boxes.firstOrNull { it.contains(position) }
                 }
                 .drawBehind {
-                    inset(vertical = -scrollState.offset) {
-                        boxes.forEach {
-                            drawRect(
-                                color = Blue100,
-                                topLeft = Offset(it.left, it.top),
-                                size = Size(it.width, it.height)
-                            )
-                        }
+                    boxes.forEach {
+                        drawRect(
+                            color = Blue100,
+                            topLeft = Offset(it.left, y = it.top - scrollState.offset),
+                            size = Size(it.width, it.height)
+                        )
+                    }
 
-                        hover?.let {
-                            drawRect(
-                                color = Color.DarkGray,
-                                topLeft = Offset(it.left, it.top),
-                                size = Size(it.width, it.height),
-                                style = Stroke(
-                                    width = 1f
-                                )
+                    hover?.let {
+                        drawRect(
+                            color = Color.DarkGray,
+                            topLeft = Offset(it.left, y = it.top - scrollState.offset),
+                            size = Size(it.width, it.height),
+                            style = Stroke(
+                                width = 1f
                             )
-                        }
+                        )
                     }
                 },
         )
