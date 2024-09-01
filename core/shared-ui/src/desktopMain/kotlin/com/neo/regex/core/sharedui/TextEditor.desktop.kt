@@ -14,7 +14,7 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.CornerRadius
@@ -65,7 +65,7 @@ actual fun TextEditor(
 
     var textLayout by remember { mutableStateOf<TextLayoutResult?>(null) }
 
-    var mouseHover by remember { mutableStateOf<Offset?>(null) }
+    var hoverOffset by remember { mutableStateOf<Offset?>(null) }
 
     val textMeasurer = rememberTextMeasurer()
 
@@ -109,16 +109,16 @@ actual fun TextEditor(
                 .weight(weight = 1f, fill = false)
                 .fillMaxSize()
                 .onPointerEvent(PointerEventType.Move) { event ->
-                    mouseHover = event.changes.first().position.let {
+                    hoverOffset = event.changes.first().position.let {
                         it.copy(y = it.y + scrollState.offset)
                     }
                 }
                 .onPointerEvent(PointerEventType.Exit) {
-                    mouseHover = null
+                    hoverOffset = null
                 }
-                .drawBehind {
-                    textLayout?.let { textLayout ->
-                        val matchBoxes = matches.flatMap { match ->
+                .drawWithContent {
+                    val matchBoxes = textLayout?.let { textLayout ->
+                        matches.flatMap { match ->
                             textLayout.getBoundingBoxes(
                                 match.start, match.end
                             ).map {
@@ -130,45 +130,48 @@ actual fun TextEditor(
                                 )
                             }
                         }
+                    } ?: listOf()
 
-                        matchBoxes.forEach { (_, rect) ->
-                            drawRect(
-                                color = Blue100,
-                                topLeft = Offset(rect.left, y = rect.top - scrollState.offset),
-                                size = Size(rect.width, rect.height)
-                            )
+                    matchBoxes.forEach { (_, rect) ->
+                        drawRect(
+                            color = Blue100,
+                            topLeft = Offset(rect.left, y = rect.top - scrollState.offset),
+                            size = Size(rect.width, rect.height)
+                        )
+                    }
+
+                    drawContent()
+
+                    hoverOffset?.let { hoverOffset ->
+                        val matchBox = matchBoxes.firstOrNull { (_, rect) ->
+                            rect.contains(hoverOffset)
                         }
 
-                        mouseHover?.let { hover ->
-                            val matchBox = matchBoxes.firstOrNull { (_, rect) ->
-                                rect.contains(hover)
-                            }
-
-                            matchBox?.let { (match, rect) ->
-                                drawRect(
-                                    color = Color.DarkGray,
-                                    topLeft = Offset(rect.left, y = rect.top - scrollState.offset),
-                                    size = Size(rect.width, rect.height),
-                                    style = Stroke(
-                                        width = 1f
-                                    )
+                        matchBox?.let { (match, rect) ->
+                            drawRect(
+                                color = Color.DarkGray,
+                                topLeft = Offset(rect.left, y = rect.top - scrollState.offset),
+                                size = Size(rect.width, rect.height),
+                                style = Stroke(
+                                    width = 1f
                                 )
+                            )
 
-                                tooltip(
-                                    anchorRect = rect.inflate(0.8f).let {
-                                        Rect(
-                                            left = hover.x,
-                                            top = it.top - scrollState.offset,
-                                            right = hover.x,
-                                            bottom = it.bottom - scrollState.offset
-                                        )
-                                    },
-                                    measure = textMeasurer.measure(
-                                        text = "$match"
+                            tooltip(
+                                anchorRect = rect.inflate(
+                                    delta = 0.8f
+                                ).let {
+                                    Rect(
+                                        left = hoverOffset.x,
+                                        top = it.top - scrollState.offset,
+                                        right = hoverOffset.x,
+                                        bottom = it.bottom - scrollState.offset
                                     )
+                                },
+                                measure = textMeasurer.measure(
+                                    text = "$match"
                                 )
-                            }
-
+                            )
                         }
                     }
                 },
@@ -210,31 +213,32 @@ fun DrawScope.tooltip(
         )
     }
 
-    val trianglePath = Path().apply {
-        if (drawAbove) {
-            moveTo(anchorRect.center.x, anchorRect.top)
-            lineTo(
-                anchorRect.center.x - triangleHeightPx,
-                anchorRect.top - triangleHeightPx
-            )
-            lineTo(anchorRect.center.x + triangleHeightPx, anchorRect.top - triangleHeightPx)
-            close()
-        } else {
-            moveTo(anchorRect.center.x, anchorRect.bottom)
-            lineTo(
-                anchorRect.center.x - triangleHeightPx,
-                anchorRect.bottom + triangleHeightPx
-            )
-            lineTo(
-                anchorRect.center.x + triangleHeightPx,
-                anchorRect.bottom + triangleHeightPx
-            )
-            close()
-        }
-    }
-
     drawPath(
-        path = trianglePath,
+        path = Path().apply {
+            if (drawAbove) {
+                moveTo(anchorRect.center.x, anchorRect.top)
+                lineTo(
+                    x = anchorRect.center.x - triangleHeightPx,
+                    y = anchorRect.top - triangleHeightPx
+                )
+                lineTo(
+                    x = anchorRect.center.x + triangleHeightPx,
+                    y = anchorRect.top - triangleHeightPx
+                )
+                close()
+            } else {
+                moveTo(anchorRect.center.x, anchorRect.bottom)
+                lineTo(
+                    x = anchorRect.center.x - triangleHeightPx,
+                    y = anchorRect.bottom + triangleHeightPx
+                )
+                lineTo(
+                    x = anchorRect.center.x + triangleHeightPx,
+                    y = anchorRect.bottom + triangleHeightPx
+                )
+                close()
+            }
+        },
         color = backgroundColor
     )
 
