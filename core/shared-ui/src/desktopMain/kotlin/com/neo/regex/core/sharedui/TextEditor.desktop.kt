@@ -18,7 +18,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
@@ -58,24 +57,7 @@ actual fun TextEditor(
 
     var textLayout by remember { mutableStateOf<TextLayoutResult?>(null) }
 
-    val boxes = remember(textLayout, matches) {
-        textLayout?.let { textLayout ->
-            runCatching {
-                matches.flatMap { match ->
-                    textLayout.getBoundingBoxes(
-                        match.start,
-                        match.end
-                    ).map {
-                        it.deflate(
-                            delta = 0.8f
-                        )
-                    }
-                }
-            }.getOrNull()
-        } ?: listOf()
-    }
-
-    var hover by remember { mutableStateOf<Rect?>(null) }
+    var mouseHover by remember { mutableStateOf<Offset?>(null) }
 
     Row(modifier) {
 
@@ -117,31 +99,47 @@ actual fun TextEditor(
                 .weight(weight = 1f, fill = false)
                 .fillMaxSize()
                 .onPointerEvent(PointerEventType.Move) { event ->
-
-                    val position = event.changes.first().position.let {
+                    mouseHover = event.changes.first().position.let {
                         it.copy(y = it.y + scrollState.offset)
                     }
-
-                    hover = boxes.firstOrNull { it.contains(position) }
+                }
+                .onPointerEvent(PointerEventType.Exit) {
+                    mouseHover = null
                 }
                 .drawBehind {
-                    boxes.forEach {
-                        drawRect(
-                            color = Blue100,
-                            topLeft = Offset(it.left, y = it.top - scrollState.offset),
-                            size = Size(it.width, it.height)
-                        )
-                    }
+                    textLayout?.let { textLayout ->
+                        val matchBoxes = matches.flatMap { match ->
+                            textLayout.getBoundingBoxes(
+                                match.start, match.end
+                            ).map {
+                                it.deflate(
+                                    delta = 0.8f
+                                )
+                            }
+                        }
 
-                    hover?.let {
-                        drawRect(
-                            color = Color.DarkGray,
-                            topLeft = Offset(it.left, y = it.top - scrollState.offset),
-                            size = Size(it.width, it.height),
-                            style = Stroke(
-                                width = 1f
+                        matchBoxes.forEach {
+                            drawRect(
+                                color = Blue100,
+                                topLeft = Offset(it.left, y = it.top - scrollState.offset),
+                                size = Size(it.width, it.height)
                             )
-                        )
+                        }
+
+                        mouseHover?.let { hover ->
+                            matchBoxes.firstOrNull {
+                                it.contains(hover)
+                            }?.let { box ->
+                                drawRect(
+                                    color = Color.DarkGray,
+                                    topLeft = Offset(box.left, y = box.top - scrollState.offset),
+                                    size = Size(box.width, box.height),
+                                    style = Stroke(
+                                        width = 1f
+                                    )
+                                )
+                            }
+                        }
                     }
                 },
         )
