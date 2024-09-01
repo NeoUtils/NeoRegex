@@ -27,12 +27,10 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
-import androidx.compose.ui.text.TextLayoutResult
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -170,8 +168,8 @@ actual fun TextEditor(
                                     )
                                 },
                                 measure = textMeasurer.measure(
-                                    text = match.toString(),
-                                    style= TextStyle(
+                                    text = match.toText(),
+                                    style = TextStyle(
                                         color = Color.White,
                                         fontFamily = FontFamily.Monospace
                                     )
@@ -183,6 +181,52 @@ actual fun TextEditor(
         )
 
         VerticalScrollbar(scrollbarAdapter)
+    }
+}
+
+private fun Match.toText(): AnnotatedString {
+
+    val range = buildAnnotatedString {
+        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+            append("range: ")
+        }
+        withStyle(SpanStyle(fontWeight = FontWeight.Normal)) {
+            append("$range")
+        }
+    }
+
+    if (groups.isEmpty()) {
+        return range
+    }
+
+    val groups = groups.mapIndexed { index, group ->
+        buildAnnotatedString {
+            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                append("$index: ")
+            }
+            withStyle(SpanStyle(fontWeight = FontWeight.Normal)) {
+                append(group)
+            }
+        }
+    }
+
+    val separator = "\u2500".repeat(
+        listOf(
+            range,
+            *groups.toTypedArray()
+        ).maxBy {
+            it.length
+        }.length
+    )
+
+    return buildAnnotatedString {
+        append(range)
+        append("\n")
+        append(separator)
+        groups.forEach {
+            append("\n")
+            append(it)
+        }
     }
 }
 
