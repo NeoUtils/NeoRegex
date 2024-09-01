@@ -19,6 +19,7 @@ import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
@@ -154,9 +155,14 @@ actual fun TextEditor(
                                 )
 
                                 tooltip(
-                                    topCenter = hover.copy(
-                                        y = rect.inflate(0.8f).bottom - scrollState.offset
-                                    ),
+                                    anchorRect = rect.inflate(0.8f).let {
+                                        Rect(
+                                            left = hover.x,
+                                            top = it.top - scrollState.offset,
+                                            right = hover.x,
+                                            bottom = it.bottom - scrollState.offset
+                                        )
+                                    },
                                     measure = textMeasurer.measure(
                                         text = "$match"
                                     )
@@ -173,7 +179,7 @@ actual fun TextEditor(
 }
 
 fun DrawScope.tooltip(
-    topCenter: Offset,
+    anchorRect: Rect,
     measure: TextLayoutResult,
     backgroundColor: Color = Color.DarkGray,
     textColor: Color = Color.White,
@@ -190,18 +196,45 @@ fun DrawScope.tooltip(
         height = measure.size.height + 2 * paddingPx
     )
 
-    val topLeft = Offset(
-        x = topCenter.x - tooltipSize.width / 2,
-        y = topCenter.y + triangleHeightPx
-    )
+    val drawAbove = anchorRect.bottom + triangleHeightPx + tooltipSize.height > size.height
+
+    val topLeft = if (drawAbove) {
+        Offset(
+            x = anchorRect.center.x - tooltipSize.width / 2,
+            y = anchorRect.top - tooltipSize.height - triangleHeightPx
+        )
+    } else {
+        Offset(
+            x = anchorRect.center.x - tooltipSize.width / 2,
+            y = anchorRect.bottom + triangleHeightPx
+        )
+    }
+
+    val trianglePath = Path().apply {
+        if (drawAbove) {
+            moveTo(anchorRect.center.x, anchorRect.top)
+            lineTo(
+                anchorRect.center.x - triangleHeightPx,
+                anchorRect.top - triangleHeightPx
+            )
+            lineTo(anchorRect.center.x + triangleHeightPx, anchorRect.top - triangleHeightPx)
+            close()
+        } else {
+            moveTo(anchorRect.center.x, anchorRect.bottom)
+            lineTo(
+                anchorRect.center.x - triangleHeightPx,
+                anchorRect.bottom + triangleHeightPx
+            )
+            lineTo(
+                anchorRect.center.x + triangleHeightPx,
+                anchorRect.bottom + triangleHeightPx
+            )
+            close()
+        }
+    }
 
     drawPath(
-        path = Path().apply {
-            moveTo(topCenter.x, topCenter.y)
-            lineTo(topCenter.x - triangleHeightPx, topCenter.y + triangleHeightPx)
-            lineTo(topCenter.x + triangleHeightPx, topCenter.y + triangleHeightPx)
-            close()
-        },
+        path = trianglePath,
         color = backgroundColor
     )
 
