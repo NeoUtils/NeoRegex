@@ -12,14 +12,18 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.rememberTextFieldVerticalScrollState
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.inset
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -31,7 +35,7 @@ import com.neo.regex.designsystem.theme.Blue100
 import com.neo.regex.designsystem.theme.NeoTheme.dimensions
 import kotlin.math.roundToInt
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
 @Composable
 actual fun TextEditor(
     value: TextFieldValue,
@@ -53,6 +57,25 @@ actual fun TextEditor(
     val offset = remember(scrollState.offset) { scrollState.offset.roundToInt() }
 
     var textLayout by remember { mutableStateOf<TextLayoutResult?>(null) }
+
+    val boxes = remember(textLayout, matches) {
+        textLayout?.let { textLayout ->
+            runCatching {
+                matches.flatMap { match ->
+                    textLayout.getBoundingBoxes(
+                        match.start,
+                        match.end
+                    ).map {
+                        it.deflate(
+                            delta = 0.8f
+                        )
+                    }
+                }
+            }.getOrNull()
+        } ?: listOf()
+    }
+
+    var hover by remember { mutableStateOf<Rect?>(null) }
 
     Row(modifier) {
 
@@ -93,30 +116,29 @@ actual fun TextEditor(
                 .padding(start = dimensions.tiny)
                 .weight(weight = 1f, fill = false)
                 .fillMaxSize()
-                .drawBehind {
-                    textLayout?.let { textLayout ->
-                        val boxes = runCatching {
-                            matches.flatMap { match ->
-                                textLayout.getBoundingBoxes(
-                                    match.start,
-                                    match.end
-                                ).map {
-                                    it.deflate(
-                                        delta = mergedTextStyle.letterSpacing.toPx()
-                                    )
-                                }
-                            }
-                        }.getOrElse { listOf() }
+                .onPointerEvent(PointerEventType.Move) { event ->
 
-                       inset(vertical = -scrollState.offset) {
-                           boxes.forEach {
-                               drawRect(
-                                   color = Blue100,
-                                   topLeft = Offset(it.left, it.top),
-                                   size = Size(it.width, it.height)
-                               )
-                           }
-                       }
+                    val position = event.changes.first().position
+
+                    hover = boxes.firstOrNull { it.contains(position) }
+                }
+                .drawBehind {
+                    inset(vertical = -scrollState.offset) {
+                        boxes.forEach {
+                            drawRect(
+                                color = Blue100,
+                                topLeft = Offset(it.left, it.top),
+                                size = Size(it.width, it.height)
+                            )
+                        }
+
+                        hover?.let {
+                            drawRect(
+                                color = Color.Red,
+                                topLeft = Offset(it.left, it.top),
+                                size = Size(it.width, it.height)
+                            )
+                        }
                     }
                 },
         )
