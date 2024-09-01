@@ -120,7 +120,8 @@ actual fun TextEditor(
                     val matchBoxes = textLayout?.let { textLayout ->
                         matches.flatMap { match ->
                             textLayout.getBoundingBoxes(
-                                match.start, match.end
+                                match.range.first,
+                                match.range.last
                             ).map {
                                 Pair(
                                     match,
@@ -169,7 +170,11 @@ actual fun TextEditor(
                                     )
                                 },
                                 measure = textMeasurer.measure(
-                                    text = "$match"
+                                    text = match.toString(),
+                                    style= TextStyle(
+                                        color = Color.White,
+                                        fontFamily = FontFamily.Monospace
+                                    )
                                 )
                             )
                         }
@@ -185,7 +190,6 @@ fun DrawScope.tooltip(
     anchorRect: Rect,
     measure: TextLayoutResult,
     backgroundColor: Color = Color.DarkGray,
-    textColor: Color = Color.White,
     padding: Dp = 8.dp,
     cornerRadius: Dp = 4.dp,
     triangleHeight: Dp = 8.dp
@@ -252,6 +256,5 @@ fun DrawScope.tooltip(
     drawText(
         textLayoutResult = measure,
         topLeft = topLeft + Offset(paddingPx, paddingPx),
-        color = textColor
     )
 }

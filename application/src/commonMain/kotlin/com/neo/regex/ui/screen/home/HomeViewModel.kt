@@ -40,8 +40,9 @@ class HomeViewModel : ViewModel() {
                 if (it.value.isNotEmpty()) {
                     add(
                         Match(
-                            start = it.range.first,
-                            end = it.range.last + 1
+                            text = it.value,
+                            range = it.range,
+                            groups = it.groupValues.drop(n = 1)
                         )
                     )
                 }

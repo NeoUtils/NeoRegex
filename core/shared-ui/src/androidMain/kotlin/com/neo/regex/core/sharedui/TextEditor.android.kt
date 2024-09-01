@@ -90,8 +90,8 @@ actual fun TextEditor(
                             matches.flatMap { match ->
                                 textLayout
                                     .getBoundingBoxes(
-                                        match.start,
-                                        match.end
+                                        match.range.first,
+                                        match.range.last
                                     )
                                     .map {
                                         it.deflate(

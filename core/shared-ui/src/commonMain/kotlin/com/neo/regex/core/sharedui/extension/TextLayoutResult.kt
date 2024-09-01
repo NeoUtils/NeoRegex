@@ -10,7 +10,7 @@ fun TextLayoutResult.getBoundingBoxes(start: Int, end: Int): List<Rect> {
     var lastRect: Rect? = null
     var lastLine: Int? = null
 
-    for (offset in start until end) {
+    for (offset in start .. end) {
 
         var rect = getBoundingBox(offset)
         val line = getLineForOffset(offset)
