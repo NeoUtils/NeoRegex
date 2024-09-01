@@ -17,9 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.PointerEventType
@@ -31,7 +33,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.LineHeightStyle
-import androidx.compose.ui.unit.toSize
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.neo.regex.core.sharedui.extension.getBoundingBoxes
 import com.neo.regex.core.sharedui.model.Match
 import com.neo.regex.designsystem.theme.Blue100
@@ -172,23 +175,46 @@ actual fun TextEditor(
 fun DrawScope.tooltip(
     topCenter: Offset,
     measure: TextLayoutResult,
-    backgroundColor: Color = Color.LightGray
+    backgroundColor: Color = Color.DarkGray,
+    textColor: Color = Color.White,
+    padding: Dp = 8.dp,
+    cornerRadius: Dp = 4.dp,
+    triangleHeight: Dp = 8.dp
 ) {
-    val tooltipSize = measure.size.toSize()
+    val paddingPx = padding.toPx()
+    val cornerRadiusPx = cornerRadius.toPx()
+    val triangleHeightPx = triangleHeight.toPx()
+
+    val tooltipSize = Size(
+        width = measure.size.width + 2 * paddingPx,
+        height = measure.size.height + 2 * paddingPx
+    )
 
     val topLeft = Offset(
         x = topCenter.x - tooltipSize.width / 2,
-        y = topCenter.y
+        y = topCenter.y + triangleHeightPx
     )
 
-    drawRect(
+    drawPath(
+        path = Path().apply {
+            moveTo(topCenter.x, topCenter.y)
+            lineTo(topCenter.x - triangleHeightPx, topCenter.y + triangleHeightPx)
+            lineTo(topCenter.x + triangleHeightPx, topCenter.y + triangleHeightPx)
+            close()
+        },
+        color = backgroundColor
+    )
+
+    drawRoundRect(
         color = backgroundColor,
         topLeft = topLeft,
-        size = tooltipSize
+        size = tooltipSize,
+        cornerRadius = CornerRadius(cornerRadiusPx)
     )
 
     drawText(
         textLayoutResult = measure,
-        topLeft = topLeft
+        topLeft = topLeft + Offset(paddingPx, paddingPx),
+        color = textColor
     )
 }
