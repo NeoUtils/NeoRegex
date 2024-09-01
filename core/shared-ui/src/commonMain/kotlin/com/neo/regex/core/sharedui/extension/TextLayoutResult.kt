@@ -18,7 +18,6 @@ fun TextLayoutResult.getBoundingBoxes(start: Int, end: Int): List<Rect> {
         if (lastRect != null && lastLine == line) {
             rect = lastRect.union(rect)
             boxes.remove(lastRect)
-            boxes.add(rect)
         }
 
         if (lastRect != null && lastLine != line) {
