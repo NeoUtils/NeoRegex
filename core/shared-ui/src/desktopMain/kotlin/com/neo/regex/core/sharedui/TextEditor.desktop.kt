@@ -21,6 +21,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.inset
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
@@ -134,9 +135,12 @@ actual fun TextEditor(
 
                         hover?.let {
                             drawRect(
-                                color = Color.Red,
+                                color = Color.DarkGray,
                                 topLeft = Offset(it.left, it.top),
-                                size = Size(it.width, it.height)
+                                size = Size(it.width, it.height),
+                                style = Stroke(
+                                    width = 1f
+                                )
                             )
                         }
                     }
