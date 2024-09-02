@@ -3,6 +3,7 @@ package com.neo.regex.core.sharedui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.HoverInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Row
@@ -40,6 +41,7 @@ import com.neo.regex.core.sharedui.extension.getBoundingBoxes
 import com.neo.regex.core.sharedui.extension.toText
 import com.neo.regex.core.sharedui.extension.tooltip
 import com.neo.regex.core.sharedui.model.Match
+import com.neo.regex.core.sharedui.model.MatchBox
 import com.neo.regex.designsystem.theme.Blue100
 import com.neo.regex.designsystem.theme.NeoTheme.dimensions
 import kotlin.math.roundToInt
@@ -122,7 +124,7 @@ actual fun TextEditor(
                                 match.range.first,
                                 match.range.last
                             ).map {
-                                Pair(
+                                MatchBox(
                                     match,
                                     it.deflate(
                                         delta = 0.8f

@@ -2,7 +2,6 @@ package com.neo.regex.core.sharedui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -55,47 +54,30 @@ actual fun TextEditor(
 
     var textLayout by remember { mutableStateOf<TextLayoutResult?>(null) }
 
-    var pressedMatch by remember { mutableStateOf<Match?>(null) }
-
     val interactionSource = remember { MutableInteractionSource() }
-
-    var selectedMatch by remember { mutableStateOf<Match?>(null) }
 
     val textMeasurer = rememberTextMeasurer()
 
-    LaunchedEffect(matches) {
-        selectedMatch = null
+    val hideHandleSelection = remember(value.selection, matches) {
+        value.selection.collapsed && matches.any { match ->
+            match.range.contains(value.selection.start)
+        }
     }
 
-    LaunchedEffect(interactionSource, matches) {
-        interactionSource.interactions.collect { interaction ->
-            when (interaction) {
-                is PressInteraction.Press -> {
-                    pressedMatch = textLayout?.let { textLayout ->
-                        matches.firstOrNull { match ->
-                            textLayout
-                                .getBoundingBoxes(
-                                    match.range.first,
-                                    match.range.last
-                                )
-                                .any {
-                                    it.contains(interaction.pressPosition)
-                                }
-                        }
-                    }
-                    selectedMatch = null
-                }
+    val defaultTextSelectionColors = LocalTextSelectionColors.current
 
-                is PressInteraction.Release -> {
-                    selectedMatch = pressedMatch
-                }
-
-                is PressInteraction.Cancel -> {
-                    pressedMatch = null
-                    selectedMatch = null
-                }
-            }
-        }
+    val textSelectionColors = remember(
+        hideHandleSelection,
+        defaultTextSelectionColors
+    ) {
+        TextSelectionColors(
+            handleColor = if (hideHandleSelection) {
+                Color.Transparent
+            } else {
+                defaultTextSelectionColors.handleColor
+            },
+            backgroundColor = defaultTextSelectionColors.backgroundColor,
+        )
     }
 
     Row(modifier) {
@@ -117,22 +99,7 @@ actual fun TextEditor(
         )
 
 
-        val defaultTextSelectionColors = LocalTextSelectionColors.current
-
-        val textSelectionColors = remember(selectedMatch) {
-            TextSelectionColors(
-                handleColor = if (selectedMatch != null) {
-                    Color.Transparent
-                } else {
-                    defaultTextSelectionColors.handleColor
-                },
-                backgroundColor = defaultTextSelectionColors.backgroundColor,
-            )
-        }
-
-        CompositionLocalProvider(
-            LocalTextSelectionColors provides textSelectionColors
-        ) {
+        CompositionLocalProvider(LocalTextSelectionColors provides textSelectionColors) {
             // TODO(improve): it's not performant for large text
             BasicTextField(
                 value = value.copy(
@@ -154,23 +121,21 @@ actual fun TextEditor(
                     .onFocusChanged(onFocusChange)
                     .drawWithContent {
                         val matchBoxes = textLayout?.let { textLayout ->
-                            runCatching {
-                                matches.flatMap { match ->
-                                    textLayout
-                                        .getBoundingBoxes(
-                                            match.range.first,
-                                            match.range.last
-                                        )
-                                        .map {
-                                            MatchBox(
-                                                match,
-                                                it.deflate(
-                                                    delta = 0.8f
-                                                )
+                            matches.flatMap { match ->
+                                textLayout
+                                    .getBoundingBoxes(
+                                        match.range.first,
+                                        match.range.last
+                                    )
+                                    .map {
+                                        MatchBox(
+                                            match,
+                                            it.deflate(
+                                                delta = 0.8f
                                             )
-                                        }
-                                }
-                            }.getOrNull()
+                                        )
+                                    }
+                            }
                         } ?: listOf()
 
                         matchBoxes.forEach { (_, rect) ->
@@ -181,54 +146,52 @@ actual fun TextEditor(
                             )
                         }
 
-                        pressedMatch?.let { match ->
-                            val matchBox = matchBoxes.firstOrNull { (it, _) ->
-                                it == match
+                        val selectedMatchBox = value.selection
+                            .takeIf {
+                                it.collapsed
+                            }
+                            ?.let { selection ->
+                                matchBoxes.firstOrNull { (match, _) ->
+                                    match.range.contains(selection.start)
+                                }
                             }
 
-                            matchBox?.let { (_, rect) ->
-                                drawRect(
-                                    color = Color.DarkGray,
-                                    topLeft = Offset(rect.left, y = rect.top - scrollState.value),
-                                    size = Size(rect.width, rect.height),
-                                    style = Stroke(
-                                        width = 1f
-                                    )
+                        selectedMatchBox?.let { (_, rect) ->
+
+                            drawRect(
+                                color = Color.DarkGray,
+                                topLeft = Offset(rect.left, y = rect.top - scrollState.value),
+                                size = Size(rect.width, rect.height),
+                                style = Stroke(
+                                    width = 1f
                                 )
-                            }
+                            )
                         }
 
                         drawContent()
 
-                        selectedMatch?.let { match ->
-                            val matchBox = matchBoxes.firstOrNull { (it, _) ->
-                                it == match
-                            }
-
-                            matchBox?.let { (_, rect) ->
-
-                                tooltip(
-                                    anchorRect = rect
-                                        .inflate(
-                                            delta = 0.8f
+                        selectedMatchBox?.let { (match, rect) ->
+                            tooltip(
+                                anchorRect = rect
+                                    .inflate(
+                                        delta = 0.8f
+                                    )
+                                    .let {
+                                        Rect(
+                                            left = rect.left,
+                                            top = it.top - scrollState.value,
+                                            right = rect.right,
+                                            bottom = it.bottom - scrollState.value
                                         )
-                                        .let {
-                                            Rect(
-                                                left = rect.left,
-                                                top = it.top - scrollState.value,
-                                                right = rect.right,
-                                                bottom = it.bottom - scrollState.value
-                                            )
-                                        },
-                                    measure = textMeasurer.measure(
-                                        text = match.toText(),
-                                        style = TextStyle(
-                                            color = Color.White,
-                                            fontFamily = FontFamily.Monospace
-                                        )
+                                    },
+                                measure = textMeasurer.measure(
+                                    text = match.toText(),
+                                    style = TextStyle(
+                                        color = Color.White,
+                                        fontFamily = FontFamily.Monospace
                                     )
                                 )
-                            }
+                            )
                         }
                     },
                 onTextLayout = {
