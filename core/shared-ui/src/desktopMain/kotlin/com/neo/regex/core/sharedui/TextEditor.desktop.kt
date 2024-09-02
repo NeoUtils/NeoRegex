@@ -3,6 +3,8 @@ package com.neo.regex.core.sharedui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -141,9 +143,9 @@ actual fun TextEditor(
 
                     drawContent()
 
-                    hoverOffset?.let { hoverOffset ->
+                    hoverOffset?.let { offset ->
                         val matchBox = matchBoxes.firstOrNull { (_, rect) ->
-                            rect.contains(hoverOffset)
+                            rect.contains(offset)
                         }
 
                         matchBox?.let { (match, rect) ->
@@ -161,9 +163,9 @@ actual fun TextEditor(
                                     delta = 0.8f
                                 ).let {
                                     Rect(
-                                        left = hoverOffset.x,
+                                        left = offset.x,
                                         top = it.top - scrollState.offset,
-                                        right = hoverOffset.x,
+                                        right = offset.x,
                                         bottom = it.bottom - scrollState.offset
                                     )
                                 },
