@@ -9,15 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
@@ -25,21 +23,20 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.LineHeightStyle
-import androidx.compose.ui.unit.dp
 import com.neo.regex.core.sharedui.extension.getBoundingBoxes
+import com.neo.regex.core.sharedui.extension.toText
+import com.neo.regex.core.sharedui.extension.tooltip
 import com.neo.regex.core.sharedui.model.Match
 import com.neo.regex.core.sharedui.model.MatchBox
 import com.neo.regex.designsystem.theme.Blue100
 import com.neo.regex.designsystem.theme.NeoTheme.dimensions
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 actual fun TextEditor(
     value: TextFieldValue,
@@ -64,7 +61,11 @@ actual fun TextEditor(
 
     var selectedMatch by remember { mutableStateOf<Match?>(null) }
 
-    val keyboard = LocalSoftwareKeyboardController.current
+    val textMeasurer = rememberTextMeasurer()
+
+    LaunchedEffect(matches) {
+        selectedMatch = null
+    }
 
     LaunchedEffect(interactionSource, matches) {
         interactionSource.interactions.collect { interaction ->
@@ -82,18 +83,16 @@ actual fun TextEditor(
                                 }
                         }
                     }
+                    selectedMatch = null
+                }
+
+                is PressInteraction.Release -> {
+                    selectedMatch = pressedMatch
                 }
 
                 is PressInteraction.Cancel -> {
                     pressedMatch = null
-                }
-
-                is PressInteraction.Release -> {
-                    if (pressedMatch != null) {
-                        keyboard?.hide()
-                    }
-                    selectedMatch = pressedMatch
-                    pressedMatch = null
+                    selectedMatch = null
                 }
             }
         }
@@ -117,91 +116,125 @@ actual fun TextEditor(
                 .fillMaxHeight()
         )
 
-        // TODO(improve): it's not performant for large text
-        BasicTextField(
-            value = value.copy(
-                composition = null
-            ),
-            onValueChange = onValueChange,
-            textStyle = mergedTextStyle.copy(
-                lineHeightStyle = LineHeightStyle(
-                    alignment = LineHeightStyle.Alignment.Proportional,
-                    trim = LineHeightStyle.Trim.None
-                )
-            ),
-            interactionSource = interactionSource,
-            modifier = Modifier
-                .padding(start = dimensions.tiny)
-                .weight(weight = 1f, fill = false)
-                .fillMaxSize()
-                .verticalScroll(scrollState) // TODO(improve): https://github.com/NeoUtils/NeoRegex/issues/15
-                .onFocusChanged(onFocusChange)
-                .drawBehind {
-                    val matchBoxes = textLayout?.let { textLayout ->
-                        runCatching {
-                            matches.flatMap { match ->
-                                textLayout
-                                    .getBoundingBoxes(
-                                        match.range.first,
-                                        match.range.last
-                                    )
-                                    .map {
-                                        MatchBox(
-                                            match,
-                                            it.deflate(
-                                                delta = 0.8f
-                                            )
+
+        val defaultTextSelectionColors = LocalTextSelectionColors.current
+
+        val textSelectionColors = remember(selectedMatch) {
+            TextSelectionColors(
+                handleColor = if (selectedMatch != null) {
+                    Color.Transparent
+                } else {
+                    defaultTextSelectionColors.handleColor
+                },
+                backgroundColor = defaultTextSelectionColors.backgroundColor,
+            )
+        }
+
+        CompositionLocalProvider(
+            LocalTextSelectionColors provides textSelectionColors
+        ) {
+            // TODO(improve): it's not performant for large text
+            BasicTextField(
+                value = value.copy(
+                    composition = null
+                ),
+                onValueChange = onValueChange,
+                textStyle = mergedTextStyle.copy(
+                    lineHeightStyle = LineHeightStyle(
+                        alignment = LineHeightStyle.Alignment.Proportional,
+                        trim = LineHeightStyle.Trim.None
+                    )
+                ),
+                interactionSource = interactionSource,
+                modifier = Modifier
+                    .padding(start = dimensions.tiny)
+                    .weight(weight = 1f, fill = false)
+                    .fillMaxSize()
+                    .verticalScroll(scrollState) // TODO(improve): https://github.com/NeoUtils/NeoRegex/issues/15
+                    .onFocusChanged(onFocusChange)
+                    .drawWithContent {
+                        val matchBoxes = textLayout?.let { textLayout ->
+                            runCatching {
+                                matches.flatMap { match ->
+                                    textLayout
+                                        .getBoundingBoxes(
+                                            match.range.first,
+                                            match.range.last
                                         )
-                                    }
-                            }
-                        }.getOrNull()
-                    } ?: listOf()
+                                        .map {
+                                            MatchBox(
+                                                match,
+                                                it.deflate(
+                                                    delta = 0.8f
+                                                )
+                                            )
+                                        }
+                                }
+                            }.getOrNull()
+                        } ?: listOf()
 
-                    matchBoxes.forEach { (_, rect) ->
-                        drawRect(
-                            color = Blue100,
-                            topLeft = Offset(rect.left, rect.top),
-                            size = Size(rect.width, rect.height)
-                        )
-                    }
-
-                    pressedMatch?.let { match ->
-                        val matchBox = matchBoxes.firstOrNull { (it, _) ->
-                            it == match
-                        }
-
-                        matchBox?.let { (_, rect) ->
+                        matchBoxes.forEach { (_, rect) ->
                             drawRect(
-                                color = Color.DarkGray,
-                                topLeft = Offset(rect.left, y = rect.top - scrollState.value),
-                                size = Size(rect.width, rect.height),
-                                style = Stroke(
-                                    width = 1f
-                                )
+                                color = Blue100,
+                                topLeft = Offset(rect.left, rect.top),
+                                size = Size(rect.width, rect.height)
                             )
                         }
-                    }
-                },
-            onTextLayout = {
-                textLayout = it
-            }
-        )
 
-        selectedMatch?.let {
-            ModalBottomSheet(
-                onDismissRequest = {
-                    selectedMatch = null
-                }
-            ) {
-                Text(
-                    text = buildAnnotatedString {
-                        append("range: ${it.range}")
+                        pressedMatch?.let { match ->
+                            val matchBox = matchBoxes.firstOrNull { (it, _) ->
+                                it == match
+                            }
+
+                            matchBox?.let { (_, rect) ->
+                                drawRect(
+                                    color = Color.DarkGray,
+                                    topLeft = Offset(rect.left, y = rect.top - scrollState.value),
+                                    size = Size(rect.width, rect.height),
+                                    style = Stroke(
+                                        width = 1f
+                                    )
+                                )
+                            }
+                        }
+
+                        drawContent()
+
+                        selectedMatch?.let { match ->
+                            val matchBox = matchBoxes.firstOrNull { (it, _) ->
+                                it == match
+                            }
+
+                            matchBox?.let { (_, rect) ->
+
+                                tooltip(
+                                    anchorRect = rect
+                                        .inflate(
+                                            delta = 0.8f
+                                        )
+                                        .let {
+                                            Rect(
+                                                left = rect.left,
+                                                top = it.top - scrollState.value,
+                                                right = rect.right,
+                                                bottom = it.bottom - scrollState.value
+                                            )
+                                        },
+                                    measure = textMeasurer.measure(
+                                        text = match.toText(),
+                                        style = TextStyle(
+                                            color = Color.White,
+                                            fontFamily = FontFamily.Monospace
+                                        )
+                                    )
+                                )
+                            }
+                        }
                     },
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .padding(16.dp)
-                )
-            }
+                onTextLayout = {
+                    textLayout = it
+                }
+            )
         }
     }
 }

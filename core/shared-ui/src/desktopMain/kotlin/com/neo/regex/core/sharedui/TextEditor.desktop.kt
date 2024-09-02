@@ -37,6 +37,8 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.neo.regex.core.sharedui.extension.getBoundingBoxes
+import com.neo.regex.core.sharedui.extension.toText
+import com.neo.regex.core.sharedui.extension.tooltip
 import com.neo.regex.core.sharedui.model.Match
 import com.neo.regex.designsystem.theme.Blue100
 import com.neo.regex.designsystem.theme.NeoTheme.dimensions
@@ -90,7 +92,7 @@ actual fun TextEditor(
         // TODO(improve): it's not performant for large text
         BasicTextField(
             value = value.copy(
-                composition = null
+                composition = null,
             ),
             scrollState = scrollState,
             onValueChange = onValueChange,
@@ -100,9 +102,6 @@ actual fun TextEditor(
                     trim = LineHeightStyle.Trim.None
                 )
             ),
-            onTextLayout = {
-                textLayout = it
-            },
             modifier = Modifier
                 .onFocusChanged(onFocusChange)
                 .padding(start = dimensions.tiny)
@@ -180,127 +179,11 @@ actual fun TextEditor(
                         }
                     }
                 },
+            onTextLayout = {
+                textLayout = it
+            },
         )
 
         VerticalScrollbar(scrollbarAdapter)
     }
-}
-
-private fun Match.toText(): AnnotatedString {
-
-    val range = buildAnnotatedString {
-        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-            append("range: ")
-        }
-        withStyle(SpanStyle(fontWeight = FontWeight.Normal)) {
-            append("$range")
-        }
-    }
-
-    if (groups.isEmpty()) {
-        return range
-    }
-
-    val groups = groups.mapIndexed { index, group ->
-        buildAnnotatedString {
-            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                append("$index: ")
-            }
-            withStyle(SpanStyle(fontWeight = FontWeight.Normal)) {
-                append(group)
-            }
-        }
-    }
-
-    val separator = "\u2500".repeat(
-        listOf(
-            range,
-            *groups.toTypedArray()
-        ).maxBy {
-            it.length
-        }.length
-    )
-
-    return buildAnnotatedString {
-        append(range)
-        append("\n")
-        append(separator)
-        groups.forEach {
-            append("\n")
-            append(it)
-        }
-    }
-}
-
-fun DrawScope.tooltip(
-    anchorRect: Rect,
-    measure: TextLayoutResult,
-    backgroundColor: Color = Color.DarkGray,
-    padding: Dp = 8.dp,
-    cornerRadius: Dp = 4.dp,
-    triangleHeight: Dp = 8.dp
-) {
-    val paddingPx = padding.toPx()
-    val cornerRadiusPx = cornerRadius.toPx()
-    val triangleHeightPx = triangleHeight.toPx()
-
-    val tooltipSize = Size(
-        width = measure.size.width + 2 * paddingPx,
-        height = measure.size.height + 2 * paddingPx
-    )
-
-    val drawAbove = anchorRect.bottom + triangleHeightPx + tooltipSize.height > size.height
-
-    val topLeft = if (drawAbove) {
-        Offset(
-            x = anchorRect.center.x - tooltipSize.width / 2,
-            y = anchorRect.top - tooltipSize.height - triangleHeightPx
-        )
-    } else {
-        Offset(
-            x = anchorRect.center.x - tooltipSize.width / 2,
-            y = anchorRect.bottom + triangleHeightPx
-        )
-    }
-
-    drawPath(
-        path = Path().apply {
-            if (drawAbove) {
-                moveTo(anchorRect.center.x, anchorRect.top)
-                lineTo(
-                    x = anchorRect.center.x - triangleHeightPx,
-                    y = anchorRect.top - triangleHeightPx
-                )
-                lineTo(
-                    x = anchorRect.center.x + triangleHeightPx,
-                    y = anchorRect.top - triangleHeightPx
-                )
-                close()
-            } else {
-                moveTo(anchorRect.center.x, anchorRect.bottom)
-                lineTo(
-                    x = anchorRect.center.x - triangleHeightPx,
-                    y = anchorRect.bottom + triangleHeightPx
-                )
-                lineTo(
-                    x = anchorRect.center.x + triangleHeightPx,
-                    y = anchorRect.bottom + triangleHeightPx
-                )
-                close()
-            }
-        },
-        color = backgroundColor
-    )
-
-    drawRoundRect(
-        color = backgroundColor,
-        topLeft = topLeft,
-        size = tooltipSize,
-        cornerRadius = CornerRadius(cornerRadiusPx)
-    )
-
-    drawText(
-        textLayoutResult = measure,
-        topLeft = topLeft + Offset(paddingPx, paddingPx),
-    )
 }
