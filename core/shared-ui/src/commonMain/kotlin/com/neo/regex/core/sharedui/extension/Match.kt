@@ -22,8 +22,13 @@ fun Match.toText(): AnnotatedString {
         return range
     }
 
-    val groups = groups.mapIndexed { index, group ->
-        buildAnnotatedString {
+    val groups = buildAnnotatedString {
+        groups.mapIndexed { index, group ->
+
+            if (index != 0) {
+                append("\n")
+            }
+
             withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                 append("$index: ")
             }
@@ -36,7 +41,7 @@ fun Match.toText(): AnnotatedString {
     val separator = "\u2500".repeat(
         listOf(
             range,
-            *groups.toTypedArray()
+            *groups.split("\n").toTypedArray()
         ).maxBy {
             it.length
         }.length
@@ -46,9 +51,7 @@ fun Match.toText(): AnnotatedString {
         append(range)
         append("\n")
         append(separator)
-        groups.forEach {
-            append("\n")
-            append(it)
-        }
+        append("\n")
+        append(groups)
     }
 }
