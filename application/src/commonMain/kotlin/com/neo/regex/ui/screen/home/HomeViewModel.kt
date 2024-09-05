@@ -37,16 +37,14 @@ class HomeViewModel : ViewModel() {
 
         buildList {
             regex?.findAll(text)?.forEachIndexed { index, match ->
-                if (match.value.isNotEmpty()) {
-                    add(
-                        Match(
-                            text = match.value,
-                            range = match.range,
-                            groups = match.groupValues.drop(n = 1),
-                            number = index + 1
-                        )
+                add(
+                    Match(
+                        text = match.value,
+                        range = match.range,
+                        groups = match.groupValues.drop(n = 1),
+                        number = index.inc()
                     )
-                }
+                )
             }
         }
     }
