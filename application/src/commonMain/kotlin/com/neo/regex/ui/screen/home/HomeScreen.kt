@@ -13,12 +13,13 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.key.onPreviewKeyEvent
@@ -113,10 +114,7 @@ private fun Footer(
     shape = RectangleShape,
     shadowElevation = dimensions.small
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-
+    Row(Modifier.fillMaxWidth()) {
         NeoTextField(
             value = uiState.regex,
             onValueChange = {

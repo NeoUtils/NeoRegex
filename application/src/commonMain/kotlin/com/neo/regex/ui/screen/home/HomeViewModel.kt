@@ -76,12 +76,14 @@ class HomeViewModel : ViewModel() {
     }
 
     val uiState = combine(
+        targetFlow,
         inputs[Target.TEXT],
         inputs[Target.REGEX],
         historyFlow,
         matches
-    ) { text, regex, history, matches ->
+    ) { target, text, regex, history, matches ->
         HomeUiState(
+            target = target,
             text = text.toTextFieldValue(),
             regex = regex.toTextFieldValue(),
             history = history,
@@ -134,6 +136,13 @@ class HomeViewModel : ViewModel() {
                 targetFlow.value = action.target
             }
 
+            HomeAction.Toggle -> {
+                targetFlow.value = when (targetFlow.value) {
+                    Target.TEXT -> Target.REGEX
+                    Target.REGEX -> Target.TEXT
+                    null -> Target.TEXT
+                }
+            }
         }
     }
 
