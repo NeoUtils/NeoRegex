@@ -127,7 +127,6 @@ private fun Footer(
             singleLine = true,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
-                .padding(dimensions.medium)
                 .weight(weight = 1f)
                 .onFocusChanged {
                     if (it.isFocused) {
@@ -155,12 +154,7 @@ private fun Footer(
                         else -> false
                     }
                 },
-            hint = {
-                Text(
-                    text = stringResource(Res.string.insert_regex_hint),
-                    style = typography.bodyLarge
-                )
-            },
+            hint = stringResource(Res.string.insert_regex_hint),
         )
 
         HistoryControl(
