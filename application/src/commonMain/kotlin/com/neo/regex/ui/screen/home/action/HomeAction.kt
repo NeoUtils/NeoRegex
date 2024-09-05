@@ -5,6 +5,8 @@ import com.neo.regex.core.domain.model.Input as InputModel
 
 sealed class HomeAction {
 
+    data object Toggle : HomeAction()
+
     data class TargetChange(
         val target: Target
     ) : HomeAction()
