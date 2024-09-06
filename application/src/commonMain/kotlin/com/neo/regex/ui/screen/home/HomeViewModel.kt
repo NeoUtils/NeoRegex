@@ -10,11 +10,14 @@ import com.neo.regex.core.sharedui.model.Match
 import com.neo.regex.core.util.HistoryManager
 import com.neo.regex.ui.screen.home.action.HomeAction
 import com.neo.regex.ui.screen.home.state.HomeUiState
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
+import java.util.regex.PatternSyntaxException
 
+@OptIn(FlowPreview::class)
 class HomeViewModel : ViewModel() {
 
-    private val targetFlow = MutableStateFlow<Target?>(value = null)
+    private val target = MutableStateFlow<Target?>(value = null)
 
     private val histories = targeted(
         Target.TEXT to HistoryManager(),
@@ -26,31 +29,37 @@ class HomeViewModel : ViewModel() {
         Target.REGEX to MutableStateFlow(Input())
     )
 
-    private val matches = combine(
+    private val matchResult = combine(
         inputs[Target.TEXT].map { it.text },
         inputs[Target.REGEX].map { it.text }
     ) { text, pattern ->
 
-        val regex = runCatching {
+        val regex = try {
             Regex(pattern)
-        }.getOrNull()
-
-        buildList {
-            regex?.findAll(text)?.forEachIndexed { index, match ->
-                add(
-                    Match(
-                        text = match.value,
-                        range = match.range,
-                        groups = match.groupValues.drop(n = 1),
-                        number = index.inc()
-                    )
-                )
-            }
+        } catch (exception: PatternSyntaxException) {
+            return@combine HomeUiState.MatchResult.Failure(
+                exception.description
+            )
         }
+
+        HomeUiState.MatchResult.Success(
+            matches = buildList {
+                regex.findAll(text).forEachIndexed { index, match ->
+                    add(
+                        Match(
+                            text = match.value,
+                            range = match.range,
+                            groups = match.groupValues.drop(n = 1),
+                            number = index.inc()
+                        )
+                    )
+                }
+            }
+        )
     }
 
     private val historyFlow = combine(
-        targetFlow,
+        target,
         histories[Target.TEXT].state,
         histories[Target.REGEX].state
     ) { target, text, regex ->
@@ -74,18 +83,23 @@ class HomeViewModel : ViewModel() {
     }
 
     val uiState = combine(
-        targetFlow,
+        target,
         inputs[Target.TEXT],
         inputs[Target.REGEX],
         historyFlow,
-        matches
-    ) { target, text, regex, history, matches ->
+        matchResult.debounce {
+            when(it) {
+                is HomeUiState.MatchResult.Failure -> ERROR_DELAY
+                is HomeUiState.MatchResult.Success -> 0L
+            }
+        }
+    ) { target, text, regex, history, matchResult ->
         HomeUiState(
             target = target,
             text = text.toTextFieldValue(),
             regex = regex.toTextFieldValue(),
             history = history,
-            matches = matches
+            matchResult = matchResult
         )
     }.stateIn(
         scope = viewModelScope,
@@ -117,7 +131,7 @@ class HomeViewModel : ViewModel() {
             is HomeAction.History.Undo -> {
                 onUndo(
                     target = action.target
-                        ?: targetFlow.value
+                        ?: target.value
                         ?: return
                 )
             }
@@ -125,17 +139,17 @@ class HomeViewModel : ViewModel() {
             is HomeAction.History.Redo -> {
                 onRedo(
                     target = action.target
-                        ?: targetFlow.value
+                        ?: target.value
                         ?: return
                 )
             }
 
             is HomeAction.TargetChange -> {
-                targetFlow.value = action.target
+                target.value = action.target
             }
 
             HomeAction.Toggle -> {
-                targetFlow.value = when (targetFlow.value) {
+                target.value = when (target.value) {
                     Target.TEXT -> Target.REGEX
                     Target.REGEX -> Target.TEXT
                     null -> Target.TEXT
@@ -155,6 +169,10 @@ class HomeViewModel : ViewModel() {
 
     private fun onUndo(target: Target) {
         inputs[target].value = histories[target].undo() ?: return
+    }
+
+    companion object {
+        private const val ERROR_DELAY = 500L
     }
 }
 
