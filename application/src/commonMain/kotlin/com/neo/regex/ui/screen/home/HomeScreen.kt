@@ -9,17 +9,14 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.key.onPreviewKeyEvent
@@ -41,6 +38,8 @@ import com.neo.regex.resources.ic_undo_24
 import com.neo.regex.resources.insert_regex_hint
 import com.neo.regex.ui.screen.home.action.HomeAction
 import com.neo.regex.ui.screen.home.state.HomeUiState
+import com.neo.regex.ui.screen.home.state.error
+import com.neo.regex.ui.screen.home.state.matches
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -94,7 +93,7 @@ fun HomeScreen(
                     else -> false
                 }
             },
-        matches = uiState.matches,
+        matches = uiState.matchResult.matches,
     )
 
     Footer(
@@ -155,6 +154,7 @@ private fun Footer(
                     }
                 },
             hint = stringResource(Res.string.insert_regex_hint),
+            error = uiState.matchResult.error
         )
 
         HistoryControl(
@@ -162,7 +162,8 @@ private fun Footer(
             onAction = onAction,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
-                .padding(dimensions.small)
+                .padding(vertical = dimensions.small)
+                .padding(end = dimensions.small)
                 .focusProperties {
                     canFocus = false
                 }
@@ -185,7 +186,6 @@ private fun HistoryControl(
             shape = RoundedCornerShape(dimensions.small)
         )
 ) {
-
 
     Icon(
         painter = painterResource(Res.drawable.ic_undo_24),
