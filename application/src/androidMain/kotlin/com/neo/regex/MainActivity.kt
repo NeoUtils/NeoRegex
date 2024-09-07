@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import com.neo.regex.designsystem.theme.NeoTheme
 import com.neo.regex.ui.App
 
 class MainActivity : ComponentActivity() {
@@ -13,13 +14,17 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            App()
+           NeoTheme {
+               App()
+           }
         }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
-    App()
+private fun DefaultPreview() {
+   NeoTheme {
+       App()
+   }
 }

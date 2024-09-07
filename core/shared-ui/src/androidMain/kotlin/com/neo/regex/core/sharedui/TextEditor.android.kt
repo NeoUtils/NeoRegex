@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -23,8 +24,8 @@ import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontFamily
@@ -35,7 +36,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.neo.regex.core.sharedui.extension.getBoundingBoxes
 import com.neo.regex.core.sharedui.model.Match
 import com.neo.regex.core.sharedui.model.MatchBox
-import com.neo.regex.designsystem.theme.Blue100
 import com.neo.regex.designsystem.theme.NeoTheme.dimensions
 
 @Composable
@@ -61,6 +61,8 @@ actual fun TextEditor(
     var pressedMatchOffset by remember { mutableStateOf<Offset?>(null) }
 
     var selectedMatch by remember { mutableStateOf<Match?>(null) }
+
+    val colorScheme = colorScheme
 
     LaunchedEffect(interactionSource, matches) {
         interactionSource.interactions.collect { interaction ->
@@ -109,10 +111,11 @@ actual fun TextEditor(
                 lineHeightStyle = LineHeightStyle(
                     alignment = LineHeightStyle.Alignment.Proportional,
                     trim = LineHeightStyle.Trim.None
-                )
+                ),
+                color = colorScheme.onSurfaceVariant,
             ),
             modifier = Modifier
-                .background(Color.LightGray.copy(alpha = 0.4f))
+                .background(colorScheme.surfaceVariant)
                 .fillMaxHeight()
         )
 
@@ -126,10 +129,13 @@ actual fun TextEditor(
                 lineHeightStyle = LineHeightStyle(
                     alignment = LineHeightStyle.Alignment.Proportional,
                     trim = LineHeightStyle.Trim.None
-                )
+                ),
+                color = colorScheme.onSurface,
             ),
             interactionSource = interactionSource,
+            cursorBrush = SolidColor(colorScheme.onSurface),
             modifier = Modifier
+                .background(colorScheme.surface)
                 .padding(start = dimensions.tiny)
                 .fillMaxSize()
                 .verticalScroll(scrollState) // TODO(improve): https://github.com/NeoUtils/NeoRegex/issues/15
@@ -155,7 +161,7 @@ actual fun TextEditor(
 
                     matchBoxes.forEach { (_, rect) ->
                         drawRect(
-                            color = Blue100,
+                            color = colorScheme.secondary,
                             topLeft = Offset(rect.left, rect.top),
                             size = Size(rect.width, rect.height)
                         )
@@ -171,8 +177,11 @@ actual fun TextEditor(
 
                     matchBox?.let { (_, rect) ->
                         drawRect(
-                            color = Color.DarkGray,
-                            topLeft = Offset(rect.left, y = rect.top - scrollState.value),
+                            color = colorScheme.onSurface,
+                            topLeft = Offset(
+                                x = rect.left,
+                                y = rect.top - scrollState.value
+                            ),
                             size = Size(rect.width, rect.height),
                             style = Stroke(
                                 width = 1f

@@ -3,9 +3,6 @@ package com.neo.regex.core.sharedui
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.VerticalScrollbar
 import androidx.compose.foundation.background
-import androidx.compose.foundation.interaction.HoverInteraction
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollbarAdapter
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.rememberTextFieldVerticalScrollState
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -20,23 +19,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
-import androidx.compose.ui.text.*
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.LineHeightStyle
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import com.neo.regex.core.sharedui.extension.getBoundingBoxes
 import com.neo.regex.core.sharedui.extension.toText
 import com.neo.regex.core.sharedui.extension.tooltip
@@ -65,30 +61,31 @@ actual fun TextEditor(
 
     val scrollbarAdapter = rememberScrollbarAdapter(scrollState)
 
-    val offset = remember(scrollState.offset) { scrollState.offset.roundToInt() }
-
     var textLayout by remember { mutableStateOf<TextLayoutResult?>(null) }
 
     var hoverOffset by remember { mutableStateOf<Offset?>(null) }
 
     val textMeasurer = rememberTextMeasurer()
 
+    val colorScheme = colorScheme
+
     Row(modifier) {
 
         LineNumbers(
             count = textLayout?.lineCount ?: 1,
-            offset = offset,
+            offset = scrollState.offset.roundToInt(),
             textStyle = TextStyle(
                 lineHeight = mergedTextStyle.lineHeight,
                 fontSize = mergedTextStyle.fontSize,
                 lineHeightStyle = LineHeightStyle(
                     alignment = LineHeightStyle.Alignment.Proportional,
                     trim = LineHeightStyle.Trim.None
-                )
+                ),
+                color = colorScheme.onSurfaceVariant,
             ),
-            modifier = Modifier.background(
-                color = Color.LightGray.copy(alpha = 0.4f)
-            ).fillMaxHeight()
+            modifier = Modifier
+                .background(colorScheme.surfaceVariant)
+                .fillMaxHeight()
         )
 
         // TODO(improve): it's not performant for large text
@@ -102,9 +99,12 @@ actual fun TextEditor(
                 lineHeightStyle = LineHeightStyle(
                     alignment = LineHeightStyle.Alignment.Proportional,
                     trim = LineHeightStyle.Trim.None
-                )
+                ),
+                color = colorScheme.onSurface,
             ),
+            cursorBrush = SolidColor(colorScheme.onSurface),
             modifier = Modifier
+                .background(colorScheme.surface)
                 .onFocusChanged(onFocusChange)
                 .padding(start = dimensions.tiny)
                 .weight(weight = 1f, fill = false)
@@ -136,8 +136,11 @@ actual fun TextEditor(
 
                     matchBoxes.forEach { (_, rect) ->
                         drawRect(
-                            color = Blue100,
-                            topLeft = Offset(rect.left, y = rect.top - scrollState.offset),
+                            color = colorScheme.secondary,
+                            topLeft = Offset(
+                                x = rect.left,
+                                y = rect.top - scrollState.offset
+                            ),
                             size = Size(rect.width, rect.height)
                         )
                     }
@@ -151,8 +154,11 @@ actual fun TextEditor(
 
                         matchBox?.let { (match, rect) ->
                             drawRect(
-                                color = Color.DarkGray,
-                                topLeft = Offset(rect.left, y = rect.top - scrollState.offset),
+                                color = colorScheme.onSurface,
+                                topLeft = Offset(
+                                    x = rect.left,
+                                    y = rect.top - scrollState.offset
+                                ),
                                 size = Size(rect.width, rect.height),
                                 style = Stroke(
                                     width = 1f
@@ -173,10 +179,11 @@ actual fun TextEditor(
                                 measure = textMeasurer.measure(
                                     text = match.toText(),
                                     style = TextStyle(
-                                        color = Color.White,
-                                        fontFamily = FontFamily.Monospace
+                                        color = colorScheme.onSecondaryContainer,
+                                        fontFamily = FontFamily.Monospace,
                                     )
-                                )
+                                ),
+                                backgroundColor = colorScheme.secondaryContainer,
                             )
                         }
                     }

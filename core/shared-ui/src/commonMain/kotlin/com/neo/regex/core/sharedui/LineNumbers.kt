@@ -4,6 +4,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -19,6 +20,10 @@ fun LineNumbers(
     modifier: Modifier = Modifier
 ) {
 
+    val mergedTextStyle = typography.bodyMedium.copy(
+        textAlign = TextAlign.End,
+    ).merge(textStyle)
+
     val lines = remember(count) {
         // TODO(improve): isn't efficient, O(n)
         IntRange(1, count).joinToString(separator = "\n")
@@ -29,9 +34,7 @@ fun LineNumbers(
     // TODO(improve): it's not performant for a large number of lines
     BasicText(
         text = lines,
-        style = textStyle.copy(
-            textAlign = TextAlign.End,
-        ),
+        style = mergedTextStyle,
         modifier = modifier.verticalScroll(
             state = scrollState,
             enabled = false
