@@ -18,6 +18,9 @@ kotlin {
             // lifecycle
             implementation(catalog.androidx.multplatform.lifecycle.viewmodel.compose)
             implementation(catalog.androidx.multplatform.lifecycle.runtime.compose)
+
+            // data store
+            implementation(catalog.androidx.datastore.preferences.core)
         }
 
         androidMain.dependencies {
