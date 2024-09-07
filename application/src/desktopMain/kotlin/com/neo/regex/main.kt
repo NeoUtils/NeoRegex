@@ -1,12 +1,14 @@
 package com.neo.regex
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
+import com.neo.regex.designsystem.theme.NeoTheme
 import com.neo.regex.resources.Res
 import com.neo.regex.resources.app_name
 import com.neo.regex.ui.App
@@ -23,12 +25,16 @@ fun main() = application {
             )
         )
     ) {
-        App()
+        NeoTheme(darkMode = true) {
+            App()
+        }
     }
 }
 
 @Preview
 @Composable
-fun DefaultPreview() {
-    App()
+private fun DefaultPreview() {
+    NeoTheme {
+        App()
+    }
 }

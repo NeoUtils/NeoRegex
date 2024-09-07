@@ -6,7 +6,5 @@ import com.neo.regex.ui.screen.home.HomeScreen
 
 @Composable
 fun App() {
-    NeoTheme(darkMode = false) {
-        HomeScreen()
-    }
+    HomeScreen()
 }

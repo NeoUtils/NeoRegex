@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.VerticalDivider
@@ -111,7 +112,9 @@ private fun Footer(
 ) = Surface(
     modifier = modifier,
     shape = RectangleShape,
-    shadowElevation = dimensions.small
+    shadowElevation = dimensions.small,
+    color = colorScheme.surfaceContainer,
+    contentColor = colorScheme.onSurface,
 ) {
     Row(Modifier.fillMaxWidth()) {
         NeoTextField(
@@ -187,10 +190,12 @@ private fun HistoryControl(
         )
 ) {
 
+    val contentColor = LocalContentColor.current
+
     Icon(
         painter = painterResource(Res.drawable.ic_undo_24),
         contentDescription = null,
-        tint = colorScheme.onSurfaceVariant.copy(
+        tint = contentColor.copy(
             alpha = if (state.canUndo) 1f else 0.5f
         ),
         modifier = Modifier
@@ -229,7 +234,7 @@ private fun HistoryControl(
     Icon(
         painter = painterResource(Res.drawable.ic_redo_24),
         contentDescription = null,
-        tint = colorScheme.onSurfaceVariant.copy(
+        tint = contentColor.copy(
             alpha = if (state.canRedo) 1f else 0.5f
         ),
         modifier = Modifier

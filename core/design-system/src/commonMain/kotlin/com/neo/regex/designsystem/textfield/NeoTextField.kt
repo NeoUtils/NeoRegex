@@ -12,7 +12,7 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
@@ -32,7 +32,11 @@ fun NeoTextField(
     error: String = ""
 ) {
 
-    val mergedTextStyle = typography.bodyLarge.merge(textStyle)
+    val contentColor = LocalContentColor.current
+
+    val mergedTextStyle = typography.bodyLarge.copy(
+        color = contentColor
+    ).merge(textStyle)
 
     var focused by remember { mutableStateOf(false) }
 
@@ -43,6 +47,7 @@ fun NeoTextField(
         },
         singleLine = singleLine,
         textStyle = mergedTextStyle,
+        cursorBrush = SolidColor(contentColor),
         modifier = modifier.onFocusChanged {
             focused = it.isFocused
         },
@@ -60,20 +65,31 @@ fun NeoTextField(
                 placeholder = {
                     Text(
                         text = hint,
-                        style = typography.bodyLarge.copy(
-                            color = Color.Gray
+                        style = mergedTextStyle.copy(
+                            color = mergedTextStyle.color.copy(
+                                alpha = 0.5f
+                            )
                         )
                     )
                 },
                 trailingIcon = {
                     if (error.isNotEmpty()) {
 
+                        val colorScheme = colorScheme
+
                         val tooltipState = rememberTooltipState(isPersistent = true)
                         val scope = rememberCoroutineScope()
 
                         TooltipBox(
                             positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
-                            tooltip = { PlainTooltip { Text(error) } },
+                            tooltip = {
+                                PlainTooltip(
+                                    containerColor = colorScheme.secondaryContainer,
+                                    contentColor = colorScheme.onSecondaryContainer,
+                                ) {
+                                    Text(error)
+                                }
+                            },
                             state = tooltipState,
                             focusable = false,
                         ) {

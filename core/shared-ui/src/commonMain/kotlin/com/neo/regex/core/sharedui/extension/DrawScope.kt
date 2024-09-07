@@ -12,11 +12,10 @@ import androidx.compose.ui.text.drawText
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-
 fun DrawScope.tooltip(
     anchorRect: Rect,
     measure: TextLayoutResult,
-    backgroundColor: Color = Color.DarkGray,
+    backgroundColor: Color,
     padding: Dp = 8.dp,
     cornerRadius: Dp = 4.dp,
     triangleHeight: Dp = 8.dp
