@@ -29,5 +29,12 @@ kotlin {
             // lifecycle
             implementation(catalog.androidx.lifecycle.viewmodel.compose)
         }
+
+        desktopMain.dependencies {
+
+            // jewel
+            implementation(catalog.jewel)
+            implementation(catalog.jewel.decorated)
+        }
     }
 }
