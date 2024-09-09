@@ -1,7 +1,6 @@
 package com.neo.regex
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.text.selection.LocalTextSelectionColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.window.Window

@@ -1,7 +1,7 @@
 package com.neo.regex.ui.screen.home
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import cafe.adriel.voyager.core.model.ScreenModel
+import cafe.adriel.voyager.core.model.screenModelScope
 import com.neo.regex.core.domain.model.Input
 import com.neo.regex.core.domain.model.Target
 import com.neo.regex.core.domain.model.targeted
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.*
 import java.util.regex.PatternSyntaxException
 
 @OptIn(FlowPreview::class)
-class HomeViewModel : ViewModel() {
+class HomeViewModel : ScreenModel {
 
     private val target = MutableStateFlow<Target?>(value = null)
 
@@ -102,7 +102,7 @@ class HomeViewModel : ViewModel() {
             matchResult = matchResult
         )
     }.stateIn(
-        scope = viewModelScope,
+        scope = screenModelScope,
         started = SharingStarted.WhileSubscribed(),
         initialValue = HomeUiState()
     )
@@ -110,11 +110,11 @@ class HomeViewModel : ViewModel() {
     init {
         inputs[Target.TEXT].onEach {
             histories[Target.TEXT].push(it)
-        }.launchIn(viewModelScope)
+        }.launchIn(screenModelScope)
 
         inputs[Target.REGEX].onEach {
             histories[Target.REGEX].push(it)
-        }.launchIn(viewModelScope)
+        }.launchIn(screenModelScope)
     }
 
     fun onAction(action: HomeAction) {
