@@ -69,11 +69,13 @@ fun NeoTheme(
 fun NeoBackground(
     modifier: Modifier = Modifier,
     color: Color = colorScheme.background,
+    contentColor: Color = colorScheme.onBackground,
     content: @Composable () -> Unit
 ) {
     Surface(
         modifier = modifier,
         color = color,
+        contentColor = contentColor,
         content = content
     )
 }
