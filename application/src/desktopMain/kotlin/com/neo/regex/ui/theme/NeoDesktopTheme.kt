@@ -1,4 +1,4 @@
-package com.neo.regex.ui
+package com.neo.regex.ui.theme
 
 import androidx.compose.runtime.Composable
 import com.neo.regex.core.domain.model.Preferences

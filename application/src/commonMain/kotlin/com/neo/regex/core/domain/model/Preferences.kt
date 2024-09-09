@@ -7,6 +7,13 @@ data class Preferences(
         LIGHT(key = "light"),
         DARK(key = "dark");
 
+        fun toggle(): UiMode {
+            return when (this) {
+                LIGHT -> DARK
+                DARK -> LIGHT
+            }
+        }
+
         companion object {
             fun get(key: String): UiMode {
 

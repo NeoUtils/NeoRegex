@@ -1,6 +1,5 @@
 package com.neo.regex.ui.screen.home
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -49,9 +48,7 @@ class HomeScreen : Screen {
 
     @Composable
     override fun Content() = Column(
-        modifier = Modifier
-            .background(colorScheme.background)
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
 
         val viewModel = rememberScreenModel { HomeViewModel() }
