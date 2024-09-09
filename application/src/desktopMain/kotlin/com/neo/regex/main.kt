@@ -13,13 +13,13 @@ import com.neo.regex.common.Buttons
 import com.neo.regex.core.data.datasource.PreferencesDataSource
 import com.neo.regex.core.data.datastore.dataStore
 import com.neo.regex.core.domain.model.Preferences
+import com.neo.regex.designsystem.theme.NeoDesktopTheme
 import com.neo.regex.designsystem.theme.NeoTheme
 import com.neo.regex.designsystem.theme.NeoTheme.dimensions
 import com.neo.regex.designsystem.theme.NeoTheme.fontSizes
 import com.neo.regex.resources.*
 import com.neo.regex.ui.App
 import com.neo.regex.ui.navigation.HeaderNavigator
-import com.neo.regex.ui.theme.NeoDesktopTheme
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -39,7 +39,7 @@ fun main() = application {
         initial = preferencesDataSource.preferences
     )
 
-    NeoDesktopTheme(preferences.uiMode) {
+    NeoDesktopTheme(preferences.uiMode.isDark) {
 
         DecoratedWindow(onCloseRequest = ::exitApplication) {
 

@@ -33,12 +33,5 @@ kotlin {
             implementation(catalog.androidx.activity)
             implementation(catalog.androidx.activity.compose)
         }
-
-        desktopMain.dependencies {
-
-            // jewel
-            implementation(catalog.jewel)
-            implementation(catalog.jewel.decorated)
-        }
     }
 }

@@ -1,8 +1,6 @@
-package com.neo.regex.ui.theme
+package com.neo.regex.designsystem.theme
 
 import androidx.compose.runtime.Composable
-import com.neo.regex.core.domain.model.Preferences
-import com.neo.regex.designsystem.theme.NeoTheme
 import org.jetbrains.jewel.foundation.theme.JewelTheme
 import org.jetbrains.jewel.intui.standalone.theme.IntUiTheme
 import org.jetbrains.jewel.intui.standalone.theme.darkThemeDefinition
@@ -18,29 +16,26 @@ import org.jetbrains.jewel.window.styling.TitleBarStyle
 
 @Composable
 fun NeoDesktopTheme(
-    uiMode: Preferences.UiMode,
+    darkMode: Boolean,
     content: @Composable () -> Unit
 ) {
 
-    val jewelTheme = when (uiMode) {
-       Preferences.UiMode.LIGHT -> JewelTheme.lightThemeDefinition()
-       Preferences.UiMode.DARK -> JewelTheme.darkThemeDefinition()
+    val jewelTheme = if (darkMode) {
+        JewelTheme.darkThemeDefinition()
+    } else {
+        JewelTheme.lightThemeDefinition()
     }
 
-    val jewelStyling = when (uiMode) {
-        Preferences.UiMode.LIGHT -> {
-            ComponentStyling.default().decoratedWindow(
-                titleBarStyle = TitleBarStyle.lightWithLightHeader(),
-                windowStyle = DecoratedWindowStyle.light()
-            )
-        }
-
-        Preferences.UiMode.DARK -> {
-            ComponentStyling.default().decoratedWindow(
-                titleBarStyle = TitleBarStyle.dark(),
-                windowStyle = DecoratedWindowStyle.dark()
-            )
-        }
+    val jewelStyling = if (darkMode) {
+        ComponentStyling.default().decoratedWindow(
+            titleBarStyle = TitleBarStyle.dark(),
+            windowStyle = DecoratedWindowStyle.dark()
+        )
+    } else {
+        ComponentStyling.default().decoratedWindow(
+            titleBarStyle = TitleBarStyle.lightWithLightHeader(),
+            windowStyle = DecoratedWindowStyle.light()
+        )
     }
 
     IntUiTheme(

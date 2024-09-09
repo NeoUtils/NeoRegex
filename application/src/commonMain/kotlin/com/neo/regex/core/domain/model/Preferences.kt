@@ -7,6 +7,12 @@ data class Preferences(
         LIGHT(key = "light"),
         DARK(key = "dark");
 
+        val isLight: Boolean
+            get() = this == LIGHT
+
+        val isDark: Boolean
+            get() = this == DARK
+
         fun toggle(): UiMode {
             return when (this) {
                 LIGHT -> DARK
