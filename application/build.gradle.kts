@@ -16,8 +16,12 @@ kotlin {
             implementation(projects.core.sharedUi)
 
             // lifecycle
-            implementation(catalog.androidx.multplatform.lifecycle.viewmodel.compose)
             implementation(catalog.androidx.multplatform.lifecycle.runtime.compose)
+
+            // voyager
+            implementation(catalog.voyager.navigator)
+            implementation(catalog.voyager.screenModel)
+            implementation(catalog.voyager.transitions)
 
             // data store
             implementation(catalog.androidx.datastore.preferences.core)
