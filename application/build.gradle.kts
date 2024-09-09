@@ -32,6 +32,9 @@ kotlin {
             // activity
             implementation(catalog.androidx.activity)
             implementation(catalog.androidx.activity.compose)
+
+            // lifecycle
+            implementation(catalog.androidx.lifecycle.runtime.compose)
         }
     }
 }
