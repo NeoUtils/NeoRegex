@@ -18,8 +18,8 @@ android {
         minSdk = config.android.minSdk
         targetSdk = config.android.targetSdk
 
-        versionCode = config.app.code()
-        versionName = config.app.name()
+        versionCode = config.version.code()
+        versionName = config.version.name()
     }
 
     buildFeatures {

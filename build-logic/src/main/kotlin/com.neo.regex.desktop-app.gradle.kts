@@ -11,12 +11,19 @@ compose.desktop {
     application {
         mainClass = config.basePackage + ".MainKt"
 
+        buildTypes.release {
+            proguard {
+                isEnabled.set(false)
+            }
+        }
+
         nativeDistributions {
 
             targetFormats(TargetFormat.Exe, TargetFormat.Rpm)
 
-            packageName = config.basePackage
-            packageVersion = config.app.name(withPhase = false)
+            packageName = "NeoRegex"
+            description = "A simple regex tester"
+            packageVersion = config.version.name(withPhase = false)
         }
     }
 }

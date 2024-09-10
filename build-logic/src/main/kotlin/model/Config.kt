@@ -1,11 +1,11 @@
 package model
 
 data class Config(
-    val app: App,
+    val version: Version,
     val android: Android,
     val basePackage: String
 ) {
-    data class App(
+    data class Version(
         val major: Int,
         val minor: Int,
         val patch: Int,

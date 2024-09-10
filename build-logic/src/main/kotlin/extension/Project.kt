@@ -6,7 +6,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.the
 
 val config = Config(
-    app = Config.App(
+    version = Config.Version(
         major = 2,
         minor = 0,
         patch = 0,
