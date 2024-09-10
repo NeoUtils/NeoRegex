@@ -1,10 +1,7 @@
 import extension.catalog
 import extension.config
-import org.gradle.api.JavaVersion
-import org.gradle.kotlin.dsl.dependencies
 
 plugins {
-    id("org.jetbrains.kotlin.multiplatform")
     id("com.android.application")
 }
 

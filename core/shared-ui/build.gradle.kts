@@ -1,8 +1,6 @@
 plugins {
     id("com.neo.regex.android-library")
-    id("com.neo.regex.multiplatform")
-    id("org.jetbrains.kotlin.plugin.compose")
-    id("org.jetbrains.compose")
+    id("com.neo.regex.compose")
 }
 
 kotlin {

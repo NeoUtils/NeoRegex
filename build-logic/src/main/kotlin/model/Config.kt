@@ -39,6 +39,7 @@ data class Config(
     )
 
     enum class Phase(val value: String) {
+        DEVELOP(value = "dev"),
         ALPHA(value = "alpha"),
         BETA(value = "beta"),
         RELEASE_CANDIDATE(value = "rc"),

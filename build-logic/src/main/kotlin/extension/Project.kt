@@ -10,7 +10,7 @@ val config = Config(
         major = 2,
         minor = 0,
         patch = 0,
-        phase = Config.Phase.ALPHA
+        phase = Config.Phase.DEVELOP
     ),
     android = Config.Android(
         compileSdk = 34,
