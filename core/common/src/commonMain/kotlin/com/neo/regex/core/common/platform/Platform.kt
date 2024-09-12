@@ -7,4 +7,4 @@ enum class Platform {
     companion object
 }
 
-expect fun Platform.Companion.get(): Platform
+expect val Platform.Companion.Current: Platform

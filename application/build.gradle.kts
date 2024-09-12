@@ -20,6 +20,7 @@ kotlin {
             implementation(projects.feature.matcher)
             implementation(projects.core.designSystem)
             implementation(projects.core.resources)
+            implementation(projects.core.common)
 
             // voyager
             implementation(catalog.voyager.navigator)
