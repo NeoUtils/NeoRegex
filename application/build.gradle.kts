@@ -7,6 +7,12 @@ plugins {
 }
 
 kotlin {
+
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+        vendor.set(JvmVendorSpec.ORACLE) // Oracle OpenJDK
+    }
+
     sourceSets {
         commonMain.dependencies {
 
