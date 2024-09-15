@@ -3,7 +3,6 @@ import extension.catalog
 plugins {
     id("com.neo.regex.android-library")
     id("com.neo.regex.compose")
-    id("com.neo.regex.desktop-app")
 }
 
 kotlin {
