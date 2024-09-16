@@ -178,4 +178,3 @@ class MatcherViewModel : ScreenModel {
         private const val ERROR_DELAY = 500L
     }
 }
-

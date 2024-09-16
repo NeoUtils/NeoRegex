@@ -9,9 +9,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.neo.regex.core.designsystem.theme.NeoTheme
 import com.neo.regex.ui.App
 
@@ -46,13 +44,5 @@ class MainActivity : ComponentActivity() {
         }
 
         enableEdgeToEdge(style, style)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun DefaultPreview() {
-    NeoTheme {
-        App()
     }
 }

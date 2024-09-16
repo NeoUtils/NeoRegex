@@ -1,5 +1,6 @@
 import extension.catalog
 import extension.config
+import extension.properties
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -91,15 +92,24 @@ android {
         compose = true
     }
 
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
+    signingConfigs {
+        create("release") {
+            rootDir
+                .resolve("keystore.properties")
+                .properties()?.let {
+                    storeFile = it.storeFile
+                    storePassword = it.storePassword
+                    keyAlias = it.keyAlias
+                    keyPassword = it.keyPassword
+                }
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
+        }
     }
 
     packaging {

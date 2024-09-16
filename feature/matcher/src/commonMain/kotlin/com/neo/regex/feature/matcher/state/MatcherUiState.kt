@@ -38,9 +38,3 @@ val MatcherUiState.MatchResult.error
         is MatcherUiState.MatchResult.Failure -> error
         is MatcherUiState.MatchResult.Success -> ""
     }
-
-val MatcherUiState.MatchResult.isError: Boolean
-    get() = when(this) {
-        is MatcherUiState.MatchResult.Failure -> true
-        is MatcherUiState.MatchResult.Success -> false
-    }
