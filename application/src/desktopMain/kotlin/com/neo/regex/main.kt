@@ -8,6 +8,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import com.neo.regex.core.common.util.UiMode
 import com.neo.regex.core.common.util.isDark
+import com.neo.regex.core.common.util.resolve
 import com.neo.regex.core.designsystem.theme.NeoTheme
 import com.neo.regex.resources.Res
 import com.neo.regex.resources.app_name
