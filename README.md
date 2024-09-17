@@ -6,8 +6,9 @@ A cross-platform app to validate regular expressions.
 
 | Platform | Status |
 |----------|--------|
-| Android  | WIP    |
-| Desktop  | WIP    |
+| Android  | ✅      |
+| Windows  | ✅      |
+| Linux    | ✅      |
 
 ## Build
 
