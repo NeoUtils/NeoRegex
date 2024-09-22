@@ -29,6 +29,13 @@
     <color type="primary" scheme_preference="dark">#222222</color>
   </branding>
 
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/NeoUtils/NeoRegex/eb443861161e54f9f9878fdb5ba43b3ed9d177a8/screenshots/desktop-dark.png</image>
+      <caption>NeoRegex in Dark Mode</caption>
+    </screenshot>
+  </screenshots>
+
   <releases>
     <release version="2.0.0" date="2024-09-18">
       <description>

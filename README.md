@@ -2,6 +2,8 @@
 
 A cross-platform app to validate regular expressions.
 
+![desktop-dark.png](screenshots/desktop-dark.png)
+
 ## Platforms
 
 | Platform | Status |
@@ -9,7 +11,7 @@ A cross-platform app to validate regular expressions.
 | Android  | ✅      |
 | Windows  | ✅      |
 | Linux    | ✅      |
-
+ 
 ## Build
 
 To build this project, the JDK (Java Development Kit) and the Android SDK are required.
@@ -19,7 +21,6 @@ Compose** and **Compose Multiplatform** plugins installed.
 > You can get the **JDK** and **Android SDK** directly from **Intellij IDEA**.
 
 Use run configurations to get started. <br>
-
 ![run-android.png](screenshots/run-android.png)
 
 ## License
