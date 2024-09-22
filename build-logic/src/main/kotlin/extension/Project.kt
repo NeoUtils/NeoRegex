@@ -35,7 +35,8 @@ val config = Config(
         minSdk = 24,
         targetSdk = 34
     ),
-    basePackage = "com.neo.regex"
+    basePackage = "com.neo.regex",
+    name = "NeoRegex"
 )
 
 val Project.catalog

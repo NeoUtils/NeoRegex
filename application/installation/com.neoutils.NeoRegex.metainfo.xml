@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.neoutils.NeoRegex</id>
+
+  <name>NeoRegex</name>
+  <summary>An elegant regex validator.</summary>
+
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPL-3.0-only</project_license>
+
+  <description>
+    <p>
+      Create and validate regular expressions easily with NeoRegex.
+    </p>
+  </description>
+
+  <url type="homepage">https://github.com/NeoUtils/NeoRegex</url>
+  <url type="bugtracker">https://github.com/NeoUtils/NeoRegex/issues</url>
+  <url type="vcs-browser">https://github.com/NeoUtils/NeoRegex.git</url>
+
+  <launchable type="desktop-id">com.neoutils.NeoRegex.desktop</launchable>
+
+  <categories>
+    <category>Utility</category>
+  </categories>
+
+  <branding>
+    <color type="primary" scheme_preference="light">#ffffff</color>
+    <color type="primary" scheme_preference="dark">#222222</color>
+  </branding>
+
+  <releases>
+    <release version="2.0.0" date="2024-09-18">
+      <description>
+        <p>Desktop version debuts.</p>
+        <ul>
+          <li>Visualize the regular expression matches in a text editor.</li>
+          <li>Visualize capture groups while interacting with the match.</li>
+          <li>An individual undo and redo system for both the visual expression and the text editor.</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+
+  <developer id="com.neoutils">
+    <name>NeoUtils</name>
+  </developer>
+
+  <content_rating type="oars-1.1"/>
+
+</component>

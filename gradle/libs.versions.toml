@@ -1,7 +1,7 @@
 [versions]
 agp = "8.2.2" # Kotlin Plugin 1.9.22 support APG 7.0 ~ 8.2
 cmp = "1.6.11" # Jetpack Compose 1.6.7
-kotlin = "2.0.0"
+kotlin = "2.0.10"
 voyager = "1.0.0"
 
 # androix

@@ -19,10 +19,16 @@
 package model
 
 data class Config(
+    val name: String,
     val version: Version,
     val android: Android,
     val basePackage: String
 ) {
+
+    fun distName(): String {
+        return "$name-${version.name()}"
+    }
+
     data class Version(
         val major: Int,
         val minor: Int,

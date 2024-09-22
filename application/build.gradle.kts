@@ -137,3 +137,20 @@ android {
     }
 }
 
+tasks.register<Tar>("createTarGz") {
+
+    group = "distribution"
+    description = "create a zipped genetic distribution"
+
+    dependsOn("createReleaseDistributable")
+
+    compression = Compression.GZIP
+    archiveExtension.set("tar.gz")
+    archiveFileName.set(config.distName() + ".tar.gz")
+    destinationDirectory.set(layout.buildDirectory.dir("distribution"))
+
+    into("NeoRegex") {
+        from(layout.projectDirectory.dir("installation"))
+        from(layout.buildDirectory.dir("compose/binaries/main-release/app/NeoRegex"))
+    }
+}
