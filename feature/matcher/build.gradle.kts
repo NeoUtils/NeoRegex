@@ -16,9 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import extension.config
+
 plugins {
     id("com.neo.regex.feature")
 }
+
+group = config.basePackage + ".feature.matcher"
+version = config.version.name()
 
 kotlin {
     sourceSets {

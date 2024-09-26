@@ -16,10 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import extension.config
+
 plugins {
     id("com.neo.regex.android-library")
     id("com.neo.regex.compose")
 }
+
+group = config.basePackage + ".core.sharedui"
+version = config.version.name()
 
 kotlin {
     sourceSets {

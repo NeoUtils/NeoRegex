@@ -26,6 +26,9 @@ plugins {
     id("com.neo.regex.compose")
 }
 
+group = config.basePackage
+version = config.version.name()
+
 kotlin {
 
     jvmToolchain {
@@ -57,7 +60,7 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = config.basePackage + ".MainKt"
+        mainClass = config.basePackage + ".Main_desktopKt"
 
         buildTypes.release {
             proguard {
