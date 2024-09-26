@@ -26,6 +26,9 @@ plugins {
     id("com.neo.regex.compose")
 }
 
+group = config.basePackage
+version = config.version.name()
+
 kotlin {
 
     jvmToolchain {
@@ -57,7 +60,7 @@ kotlin {
 
 compose.desktop {
     application {
-        mainClass = config.basePackage + ".MainKt"
+        mainClass = config.basePackage + ".Main_desktopKt"
 
         buildTypes.release {
             proguard {
@@ -112,14 +115,16 @@ android {
 
     signingConfigs {
         create("release") {
-            rootDir
+            val properties = rootDir
                 .resolve("keystore.properties")
-                .properties()?.let {
-                    storeFile = it.storeFile
-                    storePassword = it.storePassword
-                    keyAlias = it.keyAlias
-                    keyPassword = it.keyPassword
-                }
+                .properties()
+
+            properties?.let {
+                storeFile = it.storeFile
+                storePassword = it.storePassword
+                keyAlias = it.keyAlias
+                keyPassword = it.keyPassword
+            }
         }
     }
 
