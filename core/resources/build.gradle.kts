@@ -23,6 +23,9 @@ plugins {
     id("com.neo.regex.compose")
 }
 
+group = config.basePackage + ".core.resources"
+version = config.version.name()
+
 kotlin {
     sourceSets {
         commonMain.dependencies {
