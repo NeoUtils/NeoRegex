@@ -16,22 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
-
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     id("org.jetbrains.kotlin.multiplatform")
 }
 
 kotlin {
+    js("web", IR) {
 
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+        moduleName = "app"
+
+        browser {
+            commonWebpackConfig {
+                outputFileName = "app.js"
+            }
         }
-    }
 
-    jvm("desktop")
+        binaries.executable()
+    }
 }

@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2024 <AUTHOR>.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,12 +18,5 @@
 
 package com.neo.regex.core.common.platform
 
-enum class Platform {
-    DESKTOP,
-    ANDROID,
-    WEB;
-
-    companion object
-}
-
-expect val Platform.Companion.Current: Platform
+actual val Platform.Companion.Current: Platform
+    get() = Platform.WEB
