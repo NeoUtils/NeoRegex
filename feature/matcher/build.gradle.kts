@@ -16,10 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import extension.catalog
 import extension.config
 
 plugins {
-    id("com.neo.regex.feature")
+    id("com.neo.regex.core")
 }
 
 group = config.basePackage + ".feature.matcher"
@@ -28,6 +29,11 @@ version = config.version.name()
 kotlin {
     sourceSets {
         commonMain.dependencies {
+
+            // voyager
+            implementation(catalog.voyager.navigator)
+            implementation(catalog.voyager.screenModel)
+            implementation(catalog.voyager.transitions)
 
             // modules
             implementation(projects.core.designSystem)

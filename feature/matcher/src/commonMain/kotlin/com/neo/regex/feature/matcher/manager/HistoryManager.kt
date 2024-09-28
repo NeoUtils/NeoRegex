@@ -21,7 +21,6 @@ package com.neo.regex.feature.matcher.manager
 import com.neo.regex.feature.matcher.model.TextState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.util.concurrent.atomic.AtomicBoolean
 
 class HistoryManager {
 
@@ -31,11 +30,11 @@ class HistoryManager {
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
 
-    private var lock = AtomicBoolean(false)
+    private var lock = false
 
     fun push(value: TextState) {
 
-        if (lock.get()) return
+        if (lock) return
 
         if (shouldPush(value)) {
 
@@ -70,7 +69,7 @@ class HistoryManager {
 
         updateState()
 
-        lock.set(true)
+        lock = true
 
         return undoStack?.value
     }
@@ -83,13 +82,13 @@ class HistoryManager {
 
         updateState()
 
-        lock.set(true)
+        lock = true
 
         return entry.value
     }
 
     fun unlock() {
-        lock.set(false)
+        lock = false
     }
 
     private fun updateState() {

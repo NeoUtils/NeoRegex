@@ -19,8 +19,7 @@
 import extension.config
 
 plugins {
-    id("com.neo.regex.android-library")
-    id("com.neo.regex.compose")
+    id("com.neo.regex.core")
 }
 
 group = config.basePackage + ".core.designsystem"

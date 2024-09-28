@@ -30,7 +30,6 @@ import com.neo.regex.feature.matcher.model.TextState
 import com.neo.regex.feature.matcher.state.MatcherUiState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
-import java.util.regex.PatternSyntaxException
 
 @OptIn(FlowPreview::class)
 class MatcherViewModel : ScreenModel {
@@ -54,9 +53,9 @@ class MatcherViewModel : ScreenModel {
 
         val regex = try {
             Regex(pattern)
-        } catch (exception: PatternSyntaxException) {
+        } catch (exception: Throwable) {
             return@combine MatcherUiState.MatchResult.Failure(
-                exception.description
+                error = exception.message ?: "Invalid regex pattern"
             )
         }
 

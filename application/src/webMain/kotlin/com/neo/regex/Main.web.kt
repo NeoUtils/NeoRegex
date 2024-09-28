@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2024 <AUTHOR>.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,24 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.catalog
+package com.neo.regex
 
-plugins {
-    id("com.neo.regex.android-library")
-    id("com.neo.regex.compose")
-}
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.window.ComposeViewport
+import com.neo.regex.core.designsystem.theme.NeoTheme
+import com.neo.regex.ui.App
+import kotlinx.browser.document
 
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-
-            // lifecycle
-            implementation(catalog.androidx.multplatform.lifecycle.runtime.compose)
-
-            // voyager
-            implementation(catalog.voyager.navigator)
-            implementation(catalog.voyager.screenModel)
-            implementation(catalog.voyager.transitions)
+@OptIn(ExperimentalComposeUiApi::class)
+fun main() {
+    ComposeViewport(document.body!!) {
+        NeoTheme {
+            App()
         }
     }
 }
