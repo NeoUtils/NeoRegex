@@ -56,7 +56,7 @@ fun Match.toText(): AnnotatedString {
         }
     }
 
-    val separator = "\u2500".repeat(
+    val separator = "-".repeat(
         listOf(
             range,
             *groups.split("\n").toTypedArray()

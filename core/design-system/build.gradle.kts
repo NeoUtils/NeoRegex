@@ -24,3 +24,11 @@ plugins {
 
 group = config.basePackage + ".core.designsystem"
 version = config.version.name()
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(projects.core.resources)
+        }
+    }
+}

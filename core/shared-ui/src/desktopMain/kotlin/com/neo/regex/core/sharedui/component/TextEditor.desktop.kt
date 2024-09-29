@@ -45,7 +45,6 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.LineHeightStyle
@@ -68,9 +67,7 @@ actual fun TextEditor(
     textStyle: TextStyle,
 ) {
 
-    val mergedTextStyle = typography.bodyMedium.copy(
-        fontFamily = FontFamily.Monospace,
-    ).merge(textStyle)
+    val mergedTextStyle = typography.bodyMedium.merge(textStyle)
 
     val scrollState = rememberTextFieldVerticalScrollState()
 
@@ -195,7 +192,6 @@ actual fun TextEditor(
                                     text = match.toText(),
                                     style = mergedTextStyle.copy(
                                         color = colorScheme.onSecondaryContainer,
-                                        fontFamily = FontFamily.Monospace,
                                     )
                                 ),
                                 backgroundColor = colorScheme.secondaryContainer,

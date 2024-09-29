@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.rememberTextFieldVerticalScrollState
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.*
@@ -42,7 +41,6 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.LineHeightStyle
@@ -52,7 +50,6 @@ import com.neo.regex.core.sharedui.extension.toText
 import com.neo.regex.core.sharedui.extension.tooltip
 import com.neo.regex.core.sharedui.model.Match
 import com.neo.regex.core.sharedui.model.MatchBox
-import kotlin.math.roundToInt
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -65,9 +62,7 @@ actual fun TextEditor(
     textStyle: TextStyle
 ) {
 
-    val mergedTextStyle = typography.bodyMedium.copy(
-        fontFamily = FontFamily.Monospace,
-    ).merge(textStyle)
+    val mergedTextStyle = typography.bodyMedium.merge(textStyle)
 
     val scrollState = rememberScrollState()
 
@@ -184,7 +179,7 @@ actual fun TextEditor(
                                 ).let {
                                     Rect(
                                         left = offset.x,
-                                        top = it.top ,
+                                        top = it.top,
                                         right = offset.x,
                                         bottom = it.bottom
                                     )
@@ -193,7 +188,6 @@ actual fun TextEditor(
                                     text = match.toText(),
                                     style = mergedTextStyle.copy(
                                         color = colorScheme.onSecondaryContainer,
-                                        fontFamily = FontFamily.Monospace,
                                     )
                                 ),
                                 backgroundColor = colorScheme.secondaryContainer,
@@ -202,7 +196,7 @@ actual fun TextEditor(
                     }
                 },
             onTextLayout = {
-               textLayout = it
+                textLayout = it
             },
         )
 
