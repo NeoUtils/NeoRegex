@@ -121,6 +121,7 @@ actual fun TextEditor(
                 .weight(weight = 1f, fill = false)
                 .fillMaxSize()
                 .verticalScroll(scrollState) // TODO(improve): https://github.com/NeoUtils/NeoRegex/issues/15
+                .onFocusChanged(onFocusChange)
                 .onPointerEvent(PointerEventType.Move) { event ->
                     hoverOffset = event.changes.first().position.let {
                         it.copy(y = it.y)
