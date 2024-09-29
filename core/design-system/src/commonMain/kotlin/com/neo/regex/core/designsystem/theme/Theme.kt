@@ -64,7 +64,7 @@ fun NeoTheme(
     darkMode: Boolean = isSystemInDarkTheme(),
     fontSizes: FontSizes = FontSizes(),
     dimensions: Dimensions = Dimensions(),
-    typography: Typography = NeoTypography,
+    typography: Typography = NeoTypography(),
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
