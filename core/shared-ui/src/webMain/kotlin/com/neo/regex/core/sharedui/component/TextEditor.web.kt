@@ -191,7 +191,7 @@ actual fun TextEditor(
                                 },
                                 measure = textMeasurer.measure(
                                     text = match.toText(),
-                                    style = TextStyle(
+                                    style = mergedTextStyle.copy(
                                         color = colorScheme.onSecondaryContainer,
                                         fontFamily = FontFamily.Monospace,
                                     )
