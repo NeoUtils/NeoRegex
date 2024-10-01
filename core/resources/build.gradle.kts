@@ -20,8 +20,6 @@ import extension.config
 
 plugins {
     id("com.neo.regex.core")
-    id("org.jetbrains.kotlin.plugin.compose")
-    id("org.jetbrains.compose")
 }
 
 group = config.basePackage + ".core.resources"

@@ -16,19 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
-
 plugins {
-    id("com.neo.regex.core")
+    id("org.jetbrains.kotlin.multiplatform")
 }
 
-group = config.basePackage + ".core.sharedui"
-version = config.version.name()
-
 kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation(projects.core.designSystem)
+    js("web", IR) {
+
+        moduleName = "app"
+
+        browser {
+            commonWebpackConfig {
+                outputFileName = "app.js"
+            }
         }
+
+        binaries.executable()
     }
 }

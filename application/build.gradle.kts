@@ -16,19 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
-
 import extension.catalog
 import extension.config
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("com.neo.regex.android-app")
-    id("org.jetbrains.kotlin.multiplatform")
-    id("org.jetbrains.kotlin.plugin.compose")
-    id("org.jetbrains.compose")
+    id("com.neo.regex.desktop-app")
+    id("com.neo.regex.web-app")
 }
 
 group = config.basePackage
@@ -39,27 +33,6 @@ kotlin {
     jvmToolchain {
         languageVersion.set(JavaLanguageVersion.of(17))
         vendor.set(JvmVendorSpec.ORACLE) // Oracle OpenJDK
-    }
-
-    androidTarget {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
-        }
-    }
-
-    jvm(name = "desktop")
-
-    js(name = "web", IR) {
-
-        moduleName = "app"
-
-        browser {
-            commonWebpackConfig {
-                outputFileName = "app.js"
-            }
-        }
-
-        binaries.executable()
     }
 
     sourceSets {
@@ -82,52 +55,6 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
-        }
-
-        val desktopMain by getting {
-            dependencies {
-
-                // compose
-                implementation(compose.desktop.currentOs)
-            }
-        }
-    }
-}
-
-// TODO: extract to build-logic 
-compose.desktop {
-    application {
-        mainClass = config.basePackage + ".Main_desktopKt"
-
-        buildTypes.release {
-            proguard {
-                isEnabled.set(false)
-            }
-        }
-
-        nativeDistributions {
-
-            targetFormats(TargetFormat.Exe, TargetFormat.Rpm)
-
-            packageName = "NeoRegex"
-            description = "A simple regex tester"
-            packageVersion = config.version.name(withPhase = false)
-
-            linux {
-                iconFile.set(file("assets/ic_launcher.png"))
-                appCategory = "Utility"
-            }
-
-            // TODO: not tested on MacOS
-            macOS {
-                iconFile.set(file("assets/ic_launcher.icns"))
-            }
-
-            windows {
-                iconFile.set(file("assets/ic_launcher.ico"))
-                menu = true
-                perUserInstall = true
-            }
         }
     }
 }

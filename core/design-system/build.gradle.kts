@@ -20,8 +20,6 @@ import extension.config
 
 plugins {
     id("com.neo.regex.core")
-    id("org.jetbrains.kotlin.plugin.compose")
-    id("org.jetbrains.compose")
 }
 
 group = config.basePackage + ".core.designsystem"
@@ -31,14 +29,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.resources)
-
-            // compose
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.ui)
-            implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.components.resources)
         }
     }
 }
