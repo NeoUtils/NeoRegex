@@ -19,14 +19,13 @@
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
 import extension.catalog
+import extension.config
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     id("org.jetbrains.kotlin.multiplatform")
-    id("com.neo.regex.android-library")
-    id("org.jetbrains.kotlin.plugin.compose")
-    id("org.jetbrains.compose")
+    id("com.android.library")
 }
 
 kotlin {
@@ -48,24 +47,44 @@ kotlin {
 
             // lifecycle
             implementation(catalog.androidx.multplatform.lifecycle.runtime.compose)
-
-            // compose
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.ui)
-            implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
-            implementation(compose.components.resources)
         }
 
         val desktopMain by getting {
             dependencies {
-                // compose
-                implementation(compose.desktop.currentOs)
 
                 // coroutines
                 implementation(catalog.kotlinx.coroutines.swing)
             }
+        }
+    }
+}
+
+android {
+    namespace = config.basePackage
+    compileSdk = config.android.compileSdk
+
+    defaultConfig {
+        minSdk = config.android.minSdk
+    }
+
+    buildFeatures {
+        compose = true
+    }
+
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
 }

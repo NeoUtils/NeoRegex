@@ -21,6 +21,8 @@ import extension.config
 
 plugins {
     id("com.neo.regex.core")
+    id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.compose")
 }
 
 group = config.basePackage + ".feature.matcher"
@@ -40,6 +42,14 @@ kotlin {
             implementation(projects.core.resources)
             implementation(projects.core.sharedUi)
             implementation(projects.core.common)
+
+            // compose
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.ui)
+            implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.components.resources)
         }
     }
 }

@@ -20,6 +20,8 @@ import extension.config
 
 plugins {
     id("com.neo.regex.core")
+    id("org.jetbrains.kotlin.plugin.compose")
+    id("org.jetbrains.compose")
 }
 
 group = config.basePackage + ".core.sharedui"
@@ -28,7 +30,17 @@ version = config.version.name()
 kotlin {
     sourceSets {
         commonMain.dependencies {
+
+            // modules
             implementation(projects.core.designSystem)
+
+            // compose
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.ui)
+            implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.components.resources)
         }
     }
 }

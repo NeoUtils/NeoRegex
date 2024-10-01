@@ -21,7 +21,6 @@
 import extension.catalog
 import extension.config
 import extension.properties
-import gradle.kotlin.dsl.accessors._9d6accdeac6876c73060866945fb6d8c.sourceSets
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
