@@ -23,12 +23,15 @@ import androidx.compose.ui.window.ComposeViewport
 import com.neo.regex.core.designsystem.theme.NeoTheme
 import com.neo.regex.ui.App
 import kotlinx.browser.document
+import org.jetbrains.skiko.wasm.onWasmReady
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
-    ComposeViewport(document.body!!) {
-        NeoTheme {
-            App()
+    onWasmReady {
+        ComposeViewport(document.body!!) {
+            NeoTheme {
+                App()
+            }
         }
     }
 }
