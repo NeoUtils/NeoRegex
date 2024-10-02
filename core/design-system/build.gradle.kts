@@ -32,3 +32,6 @@ kotlin {
         }
     }
 }
+
+group = config.basePackage + ".core.designsystem"
+version = config.version.name()
