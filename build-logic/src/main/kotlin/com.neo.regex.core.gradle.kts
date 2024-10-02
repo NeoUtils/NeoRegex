@@ -16,19 +16,38 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+
 import extension.catalog
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id("com.neo.regex.multiplatform")
+    id("org.jetbrains.kotlin.multiplatform")
+    id("com.neo.regex.android-library")
     id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.compose")
 }
 
 kotlin {
 
-    sourceSets {
+    androidTarget {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
+    }
 
+    jvm("desktop")
+
+    js("web", IR) {
+        browser()
+    }
+
+    sourceSets {
         commonMain.dependencies {
+
+            // lifecycle
+            implementation(catalog.androidx.multplatform.lifecycle.runtime.compose)
 
             // compose
             implementation(compose.runtime)

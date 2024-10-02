@@ -18,7 +18,7 @@ A cross-platform app to validate regular expressions.
 </p>
 
 <p align="center">
-    You can download the latest version on <a href="https://github.com/NeoUtils/NeoRegex/releases">releases</a>.
+    You can also download the installer for your platform from the <a href="https://github.com/NeoUtils/NeoRegex/releases">releases</a>, or test it directly on the <a href="https://neoregex.neoutils.com/">web</a>.
 </p>
 
 ## Platforms
@@ -28,6 +28,7 @@ A cross-platform app to validate regular expressions.
 | Android  | ✅      |
 | Windows  | ✅      |
 | Linux    | ✅      |
+| Web      | ✅      |
 
 ## Build
 

@@ -20,7 +20,8 @@ package com.neo.regex.core.common.platform
 
 enum class Platform {
     DESKTOP,
-    ANDROID;
+    ANDROID,
+    WEB;
 
     companion object
 }
