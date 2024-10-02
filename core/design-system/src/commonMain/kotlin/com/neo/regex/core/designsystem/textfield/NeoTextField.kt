@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextOverflow
 import com.neo.regex.core.designsystem.theme.NeoTheme.dimensions
 import kotlinx.coroutines.launch
 
@@ -58,6 +59,42 @@ fun NeoTextField(
 
     var focused by remember { mutableStateOf(false) }
 
+    val errorUi = @Composable {
+        val colorScheme = colorScheme
+
+        val tooltipState = rememberTooltipState(isPersistent = true)
+        val scope = rememberCoroutineScope()
+
+        TooltipBox(
+            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+            tooltip = {
+                PlainTooltip(
+                    containerColor = colorScheme.secondaryContainer,
+                    contentColor = colorScheme.onSecondaryContainer,
+                ) {
+                    Text(error)
+                }
+            },
+            state = tooltipState,
+            focusable = false,
+        ) {
+            Icon(
+                imageVector = Icons.Rounded.Info,
+                contentDescription = error,
+                tint = colorScheme.error,
+                modifier = Modifier.clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = {
+                        scope.launch {
+                            tooltipState.show()
+                        }
+                    }
+                )
+            )
+        }
+    }
+
     BasicTextField(
         value = value,
         onValueChange = {
@@ -69,10 +106,10 @@ fun NeoTextField(
         modifier = modifier.onFocusChanged {
             focused = it.isFocused
         },
-        decorationBox = {
+        decorationBox = { innerTextField ->
             TextFieldDefaults.DecorationBox(
                 value = value.text,
-                innerTextField = it,
+                innerTextField = innerTextField,
                 enabled = true,
                 singleLine = singleLine,
                 visualTransformation = VisualTransformation.None,
@@ -87,47 +124,16 @@ fun NeoTextField(
                             color = mergedTextStyle.color.copy(
                                 alpha = 0.5f
                             )
-                        )
+                        ),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1
                     )
                 },
-                trailingIcon = {
-                    if (error.isNotEmpty()) {
-
-                        val colorScheme = colorScheme
-
-                        val tooltipState = rememberTooltipState(isPersistent = true)
-                        val scope = rememberCoroutineScope()
-
-                        TooltipBox(
-                            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
-                            tooltip = {
-                                PlainTooltip(
-                                    containerColor = colorScheme.secondaryContainer,
-                                    contentColor = colorScheme.onSecondaryContainer,
-                                ) {
-                                    Text(error)
-                                }
-                            },
-                            state = tooltipState,
-                            focusable = false,
-                        ) {
-                            Icon(
-                                imageVector = Icons.Rounded.Info,
-                                contentDescription = error,
-                                tint = colorScheme.error,
-                                modifier = Modifier.clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = null,
-                                    onClick = {
-                                        scope.launch {
-                                            tooltipState.show()
-                                        }
-                                    }
-                                )
-                            )
-                        }
-                    }
-                },
+                trailingIcon = error.takeIf {
+                    it.isNotEmpty()
+                }?.let {
+                    errorUi
+                }
             )
         },
     )
