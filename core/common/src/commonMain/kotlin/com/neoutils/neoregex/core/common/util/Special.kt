@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2024 <AUTHOR>.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex.core.common.util
 
-plugins {
-    id("com.neoutils.neoregex.core")
-}
+import androidx.compose.ui.input.key.KeyEvent
+import androidx.compose.ui.input.key.isAltPressed
+import androidx.compose.ui.input.key.isCtrlPressed
+import androidx.compose.ui.input.key.isShiftPressed
 
-group = config.basePackage + ".core.designsystem"
-version = config.version.name()
+enum class Special {
+    CTRL,
+    SHIFT,
+    ALT;
 
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation(projects.core.resources)
+    companion object {
+        fun from(keyEvent: KeyEvent) = buildList {
+            if (keyEvent.isCtrlPressed) {
+                add(CTRL)
+            }
+            if (keyEvent.isShiftPressed) {
+                add(SHIFT)
+            }
+            if (keyEvent.isAltPressed) {
+                add(ALT)
+            }
         }
     }
 }

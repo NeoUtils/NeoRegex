@@ -16,11 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex.feature.matcher.model
 
-plugins {
-    id("com.neoutils.neoregex.core")
+enum class Target {
+    TEXT,
+    REGEX
 }
-
-group = config.basePackage + ".core.common"
-version = config.version.name()

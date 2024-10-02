@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2024 <AUTHOR>.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex.core.designsystem.theme
 
-plugins {
-    id("com.neoutils.neoregex.core")
-}
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 
-group = config.basePackage + ".core.common"
-version = config.version.name()
+val LocalFontSizes = compositionLocalOf<FontSizes> { error("FontSizes not defined") }
+
+data class FontSizes(
+    val huge: TextUnit = 20.sp,
+    val big: TextUnit = 18.sp,
+    val medium: TextUnit = 16.sp,
+    val default: TextUnit = 14.sp,
+    val small: TextUnit = 12.sp,
+)

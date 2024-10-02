@@ -35,7 +35,7 @@ val config = Config(
         minSdk = 24,
         targetSdk = 34
     ),
-    basePackage = "com.neo.regex",
+    basePackage = "com.neoutils.neoregex",
     name = "NeoRegex"
 )
 

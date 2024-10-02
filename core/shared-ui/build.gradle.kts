@@ -19,7 +19,7 @@
 import extension.config
 
 plugins {
-    id("com.neo.regex.core")
+    id("com.neoutils.neoregex.core")
 }
 
 group = config.basePackage + ".core.sharedui"

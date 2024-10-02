@@ -16,11 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex
 
-plugins {
-    id("com.neoutils.neoregex.core")
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.window.ComposeViewport
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
+import kotlinx.browser.document
+import org.jetbrains.skiko.wasm.onWasmReady
+
+@OptIn(ExperimentalComposeUiApi::class)
+fun main() {
+    onWasmReady {
+        ComposeViewport(document.body!!) {
+            NeoTheme {
+                App()
+            }
+        }
+    }
 }
-
-group = config.basePackage + ".core.common"
-version = config.version.name()

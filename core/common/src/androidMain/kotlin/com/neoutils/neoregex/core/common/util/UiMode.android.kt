@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2024 <AUTHOR>.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex.core.common.util
 
-plugins {
-    id("com.neoutils.neoregex.core")
+import android.content.Context
+import android.content.res.Configuration.UI_MODE_NIGHT_MASK
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import com.neoutils.neoregex.core.common.util.UiMode
+
+fun UiMode.Companion.resolve(context: Context): UiMode {
+
+    return when (context.resources.configuration.uiMode and UI_MODE_NIGHT_MASK) {
+        UI_MODE_NIGHT_YES -> {
+            UiMode.DARK
+        }
+
+        else -> {
+            UiMode.LIGHT
+        }
+    }
 }
-
-group = config.basePackage + ".core.common"
-version = config.version.name()

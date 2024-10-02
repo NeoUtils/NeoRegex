@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2024 <AUTHOR>.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex.core.designsystem.theme
 
-plugins {
-    id("com.neoutils.neoregex.core")
-}
+import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
-group = config.basePackage + ".core.common"
-version = config.version.name()
+val LocalDimensions = compositionLocalOf<Dimensions> {  error("Dimensions not defined") }
+
+data class Dimensions(
+    val micro: Dp = 2.dp,
+    val tiny: Dp = 4.dp,
+    val small: Dp = 8.dp,
+    val medium: Dp = 12.dp,
+    val default: Dp = 16.dp,
+    val large: Dp = 24.dp,
+)

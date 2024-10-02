@@ -20,9 +20,9 @@ import extension.catalog
 import extension.config
 
 plugins {
-    id("com.neo.regex.android-app")
-    id("com.neo.regex.desktop-app")
-    id("com.neo.regex.web-app")
+    id("com.neoutils.neoregex.android-app")
+    id("com.neoutils.neoregex.desktop-app")
+    id("com.neoutils.neoregex.web-app")
 }
 
 group = config.basePackage

@@ -16,11 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex.feature.matcher.extension
 
-plugins {
-    id("com.neoutils.neoregex.core")
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+
+fun String.withSpanStyles(
+    spanStyles: List<AnnotatedString.Range<SpanStyle>>
+): AnnotatedString {
+    return AnnotatedString(
+        text = this,
+        spanStyles = spanStyles.filter {
+            it.start <= length && it.end <= length
+        }
+    )
 }
-
-group = config.basePackage + ".core.common"
-version = config.version.name()

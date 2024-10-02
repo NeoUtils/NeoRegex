@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2024 <AUTHOR>.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex.core.sharedui.component
 
-plugins {
-    id("com.neoutils.neoregex.core")
-}
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.TextFieldValue
+import com.neoutils.neoregex.core.sharedui.model.Match
 
-group = config.basePackage + ".core.common"
-version = config.version.name()
+@Composable
+expect fun TextEditor(
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
+    modifier: Modifier = Modifier,
+    onFocusChange: (FocusState) -> Unit = {},
+    matches: List<Match> = listOf(),
+    textStyle: TextStyle = TextStyle(),
+)

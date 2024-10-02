@@ -16,11 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex.feature.matcher.model
 
-plugins {
-    id("com.neoutils.neoregex.core")
-}
+import androidx.compose.ui.text.TextRange
 
-group = config.basePackage + ".core.common"
-version = config.version.name()
+data class TextState(
+    val text: String = "",
+    val selection: TextRange = TextRange.Zero
+)

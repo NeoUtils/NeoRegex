@@ -16,11 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex.feature.matcher.model
 
-plugins {
-    id("com.neoutils.neoregex.core")
+class Targeted<T>(
+    vararg pairs: Pair<Target, T>
+) {
+
+    private val map = pairs.toMap()
+
+    operator fun get(target: Target) = checkNotNull(map[target])
 }
-
-group = config.basePackage + ".core.common"
-version = config.version.name()

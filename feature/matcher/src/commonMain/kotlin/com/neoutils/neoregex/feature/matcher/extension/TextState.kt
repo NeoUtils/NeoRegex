@@ -16,11 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex.feature.matcher.extension
 
-plugins {
-    id("com.neoutils.neoregex.core")
-}
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.input.TextFieldValue
+import com.neoutils.neoregex.feature.matcher.model.TextState
 
-group = config.basePackage + ".core.common"
-version = config.version.name()
+fun TextState.toTextFieldValue(
+    spanStyles: List<AnnotatedString.Range<SpanStyle>> = listOf()
+) = TextFieldValue(
+    annotatedString = text.withSpanStyles(spanStyles),
+    selection = selection,
+    composition = null
+)

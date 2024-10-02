@@ -16,11 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex.core.common.platform
 
-plugins {
-    id("com.neoutils.neoregex.core")
-}
+import com.neoutils.neoregex.core.common.platform.Platform
 
-group = config.basePackage + ".core.common"
-version = config.version.name()
+actual val Platform.Companion.Current
+    get() = Platform.DESKTOP

@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2024 <AUTHOR>.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex.core.common.platform
 
-plugins {
-    id("com.neoutils.neoregex.core")
+enum class DesktopOS {
+    WINDOWS,
+    MAC_OS,
+    LINUX;
+
+    companion object {
+        val Current: DesktopOS by lazy {
+            val name = System.getProperty("os.name")
+            when {
+                name?.startsWith("Linux") == true -> LINUX
+                name?.startsWith("Win") == true -> WINDOWS
+                name?.startsWith("Mac") == true -> MAC_OS
+                else -> error("Unsupported desktop platform: $name")
+            }
+        }
+    }
 }
-
-group = config.basePackage + ".core.common"
-version = config.version.name()

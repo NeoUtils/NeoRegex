@@ -16,11 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex
 
-plugins {
-    id("com.neoutils.neoregex.core")
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.FadeTransition
+import com.neoutils.neoregex.core.designsystem.theme.NeoBackground
+import com.neoutils.neoregex.feature.matcher.MatcherScreen
+
+@Composable
+fun App(
+    modifier: Modifier = Modifier
+) = NeoBackground(modifier) {
+    Navigator(MatcherScreen()) { navigator ->
+        FadeTransition(navigator) {
+            it.Content()
+        }
+    }
 }
-
-group = config.basePackage + ".core.common"
-version = config.version.name()

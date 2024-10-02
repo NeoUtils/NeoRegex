@@ -16,11 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex.core.sharedui.extension
 
-plugins {
-    id("com.neoutils.neoregex.core")
+import androidx.compose.ui.geometry.Rect
+
+fun Rect.union(rect: Rect): Rect {
+    return Rect(
+        left = left.coerceAtMost(rect.left),
+        top = top.coerceAtMost(rect.top),
+        right = right.coerceAtLeast(rect.right),
+        bottom = bottom.coerceAtLeast(rect.bottom)
+    )
 }
-
-group = config.basePackage + ".core.common"
-version = config.version.name()

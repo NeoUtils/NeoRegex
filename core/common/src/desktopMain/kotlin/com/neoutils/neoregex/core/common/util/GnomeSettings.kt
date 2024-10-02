@@ -16,11 +16,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
+package com.neoutils.neoregex.core.common.util
 
-plugins {
-    id("com.neoutils.neoregex.core")
+import com.neoutils.neoregex.core.common.util.UiMode
+
+object GnomeSettings {
+
+    fun getUiMode(): UiMode {
+
+        val process = ProcessBuilder(
+            "gsettings",
+            "get",
+            "org.gnome.desktop.interface",
+            "color-scheme",
+        ).start().apply {
+            waitFor()
+        }
+
+        val theme = process.inputStream.bufferedReader().readText()
+
+        return when {
+            theme.contains("dark") -> UiMode.DARK
+            else -> UiMode.LIGHT
+        }
+    }
 }
-
-group = config.basePackage + ".core.common"
-version = config.version.name()
