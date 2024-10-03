@@ -18,7 +18,9 @@
 
 package com.neo.regex
 
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.ComposeViewport
 import com.neo.regex.core.designsystem.theme.NeoTheme
 import com.neo.regex.ui.App
@@ -30,8 +32,17 @@ fun main() {
     onWasmReady {
         ComposeViewport(document.body!!) {
             NeoTheme {
+                setBackgroundColor(colorScheme.background)
                 App()
             }
         }
     }
+}
+
+fun setBackgroundColor(background: Color) {
+    document.body?.style?.backgroundColor = background.toCss()
+}
+
+private fun Color.toCss(): String {
+    return "rgba(${(red * 255).toInt()}, ${(green * 255).toInt()}, ${(blue * 255).toInt()}, $alpha)"
 }
