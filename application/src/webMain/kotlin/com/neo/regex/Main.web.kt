@@ -20,8 +20,8 @@ package com.neo.regex
 
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.ComposeViewport
+import com.neo.regex.core.common.extension.toCss
 import com.neo.regex.core.designsystem.theme.NeoTheme
 import com.neo.regex.ui.App
 import kotlinx.browser.document
@@ -30,19 +30,16 @@ import org.jetbrains.skiko.wasm.onWasmReady
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     onWasmReady {
-        ComposeViewport(document.body!!) {
+        val body = checkNotNull(document.body)
+
+        ComposeViewport(body) {
             NeoTheme {
-                setBackgroundColor(colorScheme.background)
+
+                body.style.backgroundColor =
+                    colorScheme.background.toCss()
+
                 App()
             }
         }
     }
-}
-
-fun setBackgroundColor(background: Color) {
-    document.body?.style?.backgroundColor = background.toCss()
-}
-
-private fun Color.toCss(): String {
-    return "rgba(${(red * 255).toInt()}, ${(green * 255).toInt()}, ${(blue * 255).toInt()}, $alpha)"
 }
