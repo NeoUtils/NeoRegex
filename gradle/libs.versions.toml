@@ -51,3 +51,9 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kmp-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kmp-compose = { id = "org.jetbrains.compose", version.ref = "cmp" }
+
+# internal
+neoutils-neoregex-core = { id = "com.neoutils.neoregex.core", version = "undefined" }
+neoutils-neoregex-web = { id = "com.neoutils.neoregex.web-app", version = "undefined" }
+neoutils-neoregex-desktop = { id = "com.neoutils.neoregex.desktop-app", version = "undefined" }
+neoutils-neoregex-android = { id = "com.neoutils.neoregex.android-app", version = "undefined" }

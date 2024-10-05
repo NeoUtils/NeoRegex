@@ -17,12 +17,14 @@
  */
 
 import extension.config
+import extension.module
+import extension.name
 
 plugins {
-    id("com.neoutils.neoregex.core")
+    alias(libs.plugins.neoutils.neoregex.core)
 }
 
-group = config.basePackage + ".core.resources"
+group = config.module(name = "core")
 version = config.version.name()
 
 kotlin {
@@ -35,6 +37,6 @@ kotlin {
 
 compose.resources {
     publicResClass = true
-    packageOfResClass = config.basePackage + ".resources"
+    packageOfResClass = config.module(name = "core.resources")
     generateResClass = always
 }

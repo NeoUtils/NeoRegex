@@ -21,7 +21,7 @@ plugins {
 }
 
 kotlin {
-    js("web", IR) {
+    js(name = "web", IR) {
 
         moduleName = "app"
 

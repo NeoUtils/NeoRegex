@@ -20,16 +20,12 @@ package com.neoutils.neoregex
 
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.window.CanvasBasedWindow
 import com.neoutils.neoregex.core.common.extension.toCss
+import com.neoutils.neoregex.core.common.util.SizeManager
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import kotlinx.browser.document
-import kotlinx.browser.window
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.receiveAsFlow
 import org.jetbrains.skiko.wasm.onWasmReady
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -56,26 +52,5 @@ fun main() {
                 App()
             }
         }
-    }
-}
-
-class SizeManager {
-
-    private val _changes = Channel<IntSize>(CONFLATED)
-    val changes get() = _changes.receiveAsFlow()
-
-    init {
-        window.asDynamic()
-            .visualViewport
-            .onresize = ::resize
-    }
-
-    fun resize() {
-        _changes.trySend(
-            IntSize(
-                window.innerWidth,
-                window.asDynamic().visualViewport.height as Int
-            )
-        )
     }
 }

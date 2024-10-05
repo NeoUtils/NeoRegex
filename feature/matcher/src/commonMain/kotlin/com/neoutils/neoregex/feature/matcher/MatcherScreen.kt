@@ -56,10 +56,10 @@ import com.neoutils.neoregex.feature.matcher.model.Target
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
 import com.neoutils.neoregex.feature.matcher.state.error
 import com.neoutils.neoregex.feature.matcher.state.matches
-import com.neoutils.neoregex.resources.Res
-import com.neoutils.neoregex.resources.ic_redo_24
-import com.neoutils.neoregex.resources.ic_undo_24
-import com.neoutils.neoregex.resources.insert_regex_hint
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.ic_redo_24
+import com.neoutils.neoregex.core.resources.ic_undo_24
+import com.neoutils.neoregex.core.resources.insert_regex_hint
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

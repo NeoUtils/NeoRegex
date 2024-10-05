@@ -16,13 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.catalog
-import extension.config
+import extension.*
 
 plugins {
-    id("com.neoutils.neoregex.android-app")
-    id("com.neoutils.neoregex.desktop-app")
-    id("com.neoutils.neoregex.web-app")
+    alias(libs.plugins.neoutils.neoregex.android)
+    alias(libs.plugins.neoutils.neoregex.desktop)
+    alias(libs.plugins.neoutils.neoregex.web)
 }
 
 group = config.basePackage
@@ -68,7 +67,7 @@ tasks.register<Tar>("createTarGz") {
 
     compression = Compression.GZIP
     archiveExtension.set("tar.gz")
-    archiveFileName.set(config.distName() + ".tar.gz")
+    archiveFileName.set(config.distribution() + ".tar.gz")
     destinationDirectory.set(layout.buildDirectory.dir("distribution"))
 
     into("NeoRegex") {

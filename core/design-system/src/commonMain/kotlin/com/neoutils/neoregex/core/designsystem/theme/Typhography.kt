@@ -24,8 +24,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.neoutils.neoregex.resources.Res
-import com.neoutils.neoregex.resources.roboto_mono
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.roboto_mono
 import org.jetbrains.compose.resources.Font
 
 @Composable

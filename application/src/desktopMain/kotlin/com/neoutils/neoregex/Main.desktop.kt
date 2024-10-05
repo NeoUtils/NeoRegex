@@ -28,9 +28,9 @@ import com.neoutils.neoregex.core.common.util.UiMode
 import com.neoutils.neoregex.core.common.util.isDark
 import com.neoutils.neoregex.core.common.util.resolve
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
-import com.neoutils.neoregex.resources.Res
-import com.neoutils.neoregex.resources.app_name
-import com.neoutils.neoregex.resources.flavicon
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.app_name
+import com.neoutils.neoregex.core.resources.flavicon
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

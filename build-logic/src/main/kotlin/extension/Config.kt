@@ -16,25 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.catalog
-import extension.config
-import extension.module
-import extension.name
+package extension
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
-}
+import model.Config
 
-group = config.module(name = "core")
-version = config.version.name()
+fun Config.module(name: String) = "$basePackage.$name"
 
-kotlin {
-    sourceSets {
-
-        webTest.dependencies {
-
-            // junit
-            implementation(catalog.kotlin.test)
-        }
-    }
-}
+fun Config.distribution() = "$name-${version.name()}"

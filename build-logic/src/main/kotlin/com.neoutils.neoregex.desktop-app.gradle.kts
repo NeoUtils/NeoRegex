@@ -17,6 +17,7 @@
  */
 
 import extension.config
+import extension.name
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 
 plugins {
@@ -26,7 +27,7 @@ plugins {
 }
 
 kotlin {
-    jvm("desktop")
+    jvm(name = "desktop")
 }
 
 compose.desktop {

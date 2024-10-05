@@ -16,25 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.catalog
-import extension.config
-import extension.module
-import extension.name
+package extension
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
+import model.Config
+import model.Config.Phase
+
+fun Config.Version.name(
+    withPhase: Boolean = true
+): String {
+
+    if (withPhase && phase != Phase.RELEASE) {
+        return "$major.$minor.$patch-${phase.value}"
+    }
+
+    return "$major.$minor.$patch"
 }
 
-group = config.module(name = "core")
-version = config.version.name()
+fun Config.Version.code(): Int {
 
-kotlin {
-    sourceSets {
+    require(patch in 0..9)
+    require(minor in 0..9)
 
-        webTest.dependencies {
-
-            // junit
-            implementation(catalog.kotlin.test)
-        }
-    }
+    return major * 100 + minor * 10 + patch
 }
