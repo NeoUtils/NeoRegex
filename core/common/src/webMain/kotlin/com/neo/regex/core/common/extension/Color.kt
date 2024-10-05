@@ -16,28 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package extension
+package com.neo.regex.core.common.extension
 
-import model.Config
-import org.gradle.accessors.dm.LibrariesForLibs
-import org.gradle.api.Project
-import org.gradle.kotlin.dsl.the
+import androidx.compose.ui.graphics.Color
 
-val config = Config(
-    version = Config.Version(
-        major = 2,
-        minor = 1,
-        patch = 2,
-        phase = Config.Phase.RELEASE
-    ),
-    android = Config.Android(
-        compileSdk = 34,
-        minSdk = 24,
-        targetSdk = 34
-    ),
-    basePackage = "com.neo.regex",
-    name = "NeoRegex"
-)
+fun Color.toCss(): String {
 
-val Project.catalog
-    get() = the<LibrariesForLibs>()
+    val red = (red * 255).toInt()
+    val green = (green * 255).toInt()
+    val blue = (blue * 255).toInt()
+
+    return "rgba($red, $green, $blue, $alpha)"
+}

@@ -20,5 +20,8 @@ jobs:
         with:
           java-version: 17
 
+      - name: Unit test 🧪
+        run: ./gradlew webTest
+
       - name: Build 🏗️
         run: ./gradlew application:webBrowserDistribution

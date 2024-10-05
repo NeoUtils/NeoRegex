@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import extension.catalog
 import extension.config
 
 plugins {
@@ -24,3 +25,14 @@ plugins {
 
 group = config.basePackage + ".core.common"
 version = config.version.name()
+
+kotlin {
+    sourceSets {
+
+        webTest.dependencies {
+
+            // junit
+            implementation(catalog.kotlin.test)
+        }
+    }
+}
