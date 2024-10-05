@@ -16,23 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.catalog
-import extension.config
+package com.neoutils.neoregex.core.common.extension
 
-plugins {
-    id("com.neoutils.neoregex.core")
-}
+import androidx.compose.ui.graphics.Color
 
-group = config.basePackage + ".core.common"
-version = config.version.name()
+fun Color.toCss(): String {
 
-kotlin {
-    sourceSets {
+    val red = (red * 255).toInt()
+    val green = (green * 255).toInt()
+    val blue = (blue * 255).toInt()
 
-        webTest.dependencies {
-
-            // junit
-            implementation(catalog.kotlin.test)
-        }
-    }
+    return "rgba($red, $green, $blue, $alpha)"
 }
