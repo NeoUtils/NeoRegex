@@ -20,11 +20,17 @@ package com.neo.regex
 
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.window.ComposeViewport
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.window.CanvasBasedWindow
 import com.neo.regex.core.common.extension.toCss
 import com.neo.regex.core.designsystem.theme.NeoTheme
 import com.neo.regex.ui.App
 import kotlinx.browser.document
+import kotlinx.browser.window
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.receiveAsFlow
 import org.jetbrains.skiko.wasm.onWasmReady
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -32,7 +38,17 @@ fun main() {
     onWasmReady {
         val body = checkNotNull(document.body)
 
-        ComposeViewport(body) {
+        val sizeManager = SizeManager().apply {
+            resize()
+        }
+
+        CanvasBasedWindow(
+            canvasElementId = "viewport-container",
+            applyDefaultStyles = false,
+            requestResize = {
+                sizeManager.changes.first()
+            }
+        ) {
             NeoTheme {
 
                 body.style.backgroundColor =
@@ -41,5 +57,26 @@ fun main() {
                 App()
             }
         }
+    }
+}
+
+class SizeManager {
+
+    private val _changes = Channel<IntSize>(CONFLATED)
+    val changes get() = _changes.receiveAsFlow()
+
+    init {
+        window.asDynamic()
+            .visualViewport
+            .onresize = ::resize
+    }
+
+    fun resize() {
+        _changes.trySend(
+            IntSize(
+                window.innerWidth,
+                window.asDynamic().visualViewport.height as Int
+            )
+        )
     }
 }
