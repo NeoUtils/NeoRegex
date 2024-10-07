@@ -28,7 +28,7 @@ val config = Config(
         major = 2,
         minor = 1,
         patch = 3,
-        phase = Config.Phase.DEVELOP
+        phase = Config.Phase.RELEASE
     ),
     android = Config.Android(
         compileSdk = 34,
