@@ -16,22 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
-import extension.module
-import extension.name
+package com.neoutils.neoregex.core.common.util
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
-}
+import kotlinx.browser.window
 
-group = config.module("core.sharedui")
-version = config.version.name()
+enum class InteractionMode {
+    MOUSE,
+    TOUCH;
 
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation(projects.core.designSystem)
-            implementation(projects.core.common)
+    companion object {
+        val Current by lazy {
+            when {
+                window.matchMedia("(pointer: coarse)").matches -> TOUCH
+                window.matchMedia("(pointer: fine)").matches -> MOUSE
+                else -> error("no support for your device")
+            }
         }
     }
 }
