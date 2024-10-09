@@ -25,21 +25,40 @@ import kotlin.test.assertEquals
 class ColorTest {
 
     @Test
-    fun toCss_test() {
+    fun toRgbaString_test() {
 
         // primary colors
-        assertEquals("rgba(255, 0, 0, 1)", Color.Red.toCss())
-        assertEquals("rgba(0, 255, 0, 1)", Color.Green.toCss())
-        assertEquals("rgba(0, 0, 255, 1)", Color.Blue.toCss())
+        assertEquals("rgba(255, 0, 0, 1)", Color.Red.toRgbaString())
+        assertEquals("rgba(0, 255, 0, 1)", Color.Green.toRgbaString())
+        assertEquals("rgba(0, 0, 255, 1)", Color.Blue.toRgbaString())
 
         // secondary colors
-        assertEquals("rgba(255, 0, 255, 1)", Color.Magenta.toCss())
-        assertEquals("rgba(0, 255, 255, 1)", Color.Cyan.toCss())
-        assertEquals("rgba(255, 255, 0, 1)", Color.Yellow.toCss())
+        assertEquals("rgba(255, 0, 255, 1)", Color.Magenta.toRgbaString())
+        assertEquals("rgba(0, 255, 255, 1)", Color.Cyan.toRgbaString())
+        assertEquals("rgba(255, 255, 0, 1)", Color.Yellow.toRgbaString())
 
         // other colors
-        assertEquals("rgba(0, 0, 0, 0)", Color.Transparent.toCss())
-        assertEquals("rgba(0, 0, 0, 1)", Color.Black.toCss())
-        assertEquals("rgba(255, 255, 255, 1)", Color.White.toCss())
+        assertEquals("rgba(0, 0, 0, 0)", Color.Transparent.toRgbaString())
+        assertEquals("rgba(0, 0, 0, 1)", Color.Black.toRgbaString())
+        assertEquals("rgba(255, 255, 255, 1)", Color.White.toRgbaString())
+    }
+
+    @Test
+    fun toHexString_test() {
+
+        // primary colors
+        assertEquals("#FFFF0000", Color.Red.toHexString())
+        assertEquals("#FF00FF00", Color.Green.toHexString())
+        assertEquals("#FF0000FF", Color.Blue.toHexString())
+
+        // secondary colors
+        assertEquals("#FFFF00FF", Color.Magenta.toHexString())
+        assertEquals("#FF00FFFF", Color.Cyan.toHexString())
+        assertEquals("#FFFFFF00", Color.Yellow.toHexString())
+
+        // other colors
+        assertEquals("#00000000", Color.Transparent.toHexString())
+        assertEquals("#FF000000", Color.Black.toHexString())
+        assertEquals("#FFFFFFFF", Color.White.toHexString())
     }
 }

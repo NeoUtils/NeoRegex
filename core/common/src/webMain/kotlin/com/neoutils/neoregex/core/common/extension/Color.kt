@@ -20,7 +20,7 @@ package com.neoutils.neoregex.core.common.extension
 
 import androidx.compose.ui.graphics.Color
 
-fun Color.toCss(): String {
+fun Color.toRgbaString(): String {
 
     val red = (red * 255).toInt()
     val green = (green * 255).toInt()
@@ -28,3 +28,14 @@ fun Color.toCss(): String {
 
     return "rgba($red, $green, $blue, $alpha)"
 }
+
+@OptIn(ExperimentalStdlibApi::class)
+fun Color.toHexString() = value.toHexString(
+    format = HexFormat {
+        number {
+            upperCase = true
+            prefix = "#"
+        }
+    },
+
+).substring(0, 9)

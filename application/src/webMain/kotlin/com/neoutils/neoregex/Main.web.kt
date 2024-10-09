@@ -21,7 +21,7 @@ package com.neoutils.neoregex
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.CanvasBasedWindow
-import com.neoutils.neoregex.core.common.extension.toCss
+import com.neoutils.neoregex.core.common.extension.toHexString
 import com.neoutils.neoregex.core.common.util.SizeManager
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import kotlinx.browser.document
@@ -47,7 +47,7 @@ fun main() {
             NeoTheme {
 
                 body.style.backgroundColor =
-                    colorScheme.background.toCss()
+                    colorScheme.background.toHexString()
 
                 App()
             }
