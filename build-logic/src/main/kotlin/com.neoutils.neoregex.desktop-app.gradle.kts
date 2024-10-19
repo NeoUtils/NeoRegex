@@ -35,6 +35,7 @@ kotlin {
             dependencies {
                 // coroutines
                 implementation(catalog.kotlinx.coroutines.swing)
+                implementation(catalog.jewel.decorated)
             }
         }
     }

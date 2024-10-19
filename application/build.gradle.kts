@@ -42,6 +42,7 @@ kotlin {
             implementation(projects.core.designSystem)
             implementation(projects.core.resources)
             implementation(projects.core.common)
+            implementation(projects.core.sharedUi)
 
             // voyager
             implementation(catalog.voyager.navigator)
