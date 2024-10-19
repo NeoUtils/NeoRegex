@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import extension.catalog
 import extension.config
 import extension.name
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
@@ -28,6 +29,15 @@ plugins {
 
 kotlin {
     jvm(name = "desktop")
+
+    sourceSets {
+        val desktopMain by getting {
+            dependencies {
+                // coroutines
+                implementation(catalog.kotlinx.coroutines.swing)
+            }
+        }
+    }
 }
 
 compose.desktop {

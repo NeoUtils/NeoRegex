@@ -1,16 +1,16 @@
 [versions]
-agp = "8.2.2" # Kotlin Plugin 1.9.22 support APG 7.0 ~ 8.2
-cmp = "1.7.0-rc01" # Jetpack Compose 1.7.0
-kotlin = "2.0.10"
-voyager = "1.1.0-beta02" # 1.1.0+ is required for web support
+agp = "8.5.2"
+cmp = "1.7.0" # Jetpack Compose 1.7.0 & APG 8.1+
+kotlin = "2.0.20" # Gradle 7.5 ~ 8.8 & AGP 7.4.2 ~ 8.5
+voyager = "1.1.0-beta03" # 1.1.0+ is required for web support
 
 # androix
-androidx-compose = "1.6.8"
-androidx-activity = "1.9.1"
-androidx-lifecycle = "2.8.0" # update later to 2.8.3+
+androidx-compose = "1.7.4"
+androidx-activity = "1.9.3"
+androidx-lifecycle = "2.8.3"
 
 # kotlinx
-kotlinx-coroutines = "1.8.1"
+kotlinx-coroutines = "1.9.0"
 
 [libraries]
 
@@ -37,6 +37,8 @@ voyager-screenModel = { module = "cafe.adriel.voyager:voyager-screenmodel", vers
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
+
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 
 # desktop
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }

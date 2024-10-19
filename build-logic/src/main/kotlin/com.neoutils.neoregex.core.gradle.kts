@@ -62,9 +62,6 @@ kotlin {
             dependencies {
                 // compose
                 implementation(compose.desktop.currentOs)
-
-                // coroutines
-                implementation(catalog.kotlinx.coroutines.swing)
             }
         }
     }
