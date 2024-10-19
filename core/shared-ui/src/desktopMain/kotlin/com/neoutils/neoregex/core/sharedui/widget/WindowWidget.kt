@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2024 <AUTHOR>.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,20 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.designsystem.theme
+package com.neoutils.neoregex.core.sharedui.widget
 
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.window.WindowScope
 
-val LocalDimensions = compositionLocalOf<Dimensions> { error("Dimensions not defined") }
+interface WindowWidget {
 
-data class Dimensions(
-    val micro: Dp = 2.dp,
-    val tiny: Dp = 4.dp,
-    val small: Dp = 8.dp,
-    val medium: Dp = 6.dp,
-    val default: Dp = 16.dp,
-    val large: Dp = 24.dp,
-    val huge: Dp = 32.dp,
-)
+    @Composable
+    fun WindowScope.Content()
+}
+

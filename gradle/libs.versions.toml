@@ -3,6 +3,7 @@ agp = "8.5.2"
 cmp = "1.7.0" # Jetpack Compose 1.7.0 & APG 8.1+
 kotlin = "2.0.20" # Gradle 7.5 ~ 8.8 & AGP 7.4.2 ~ 8.5
 voyager = "1.1.0-beta03" # 1.1.0+ is required for web support
+jewel = "0.19.3"
 
 # androix
 androidx-compose = "1.7.4"
@@ -36,12 +37,15 @@ voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.
 voyager-screenModel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 
-kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
-
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+
+kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 
 # desktop
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+
+jewel = { group = "org.jetbrains.jewel", name = "jewel-int-ui-standalone-241", version.ref = "jewel" }
+jewel-decorated = { group = "org.jetbrains.jewel", name = "jewel-int-ui-decorated-window-241", version.ref = "jewel" }
 
 [plugins]
 

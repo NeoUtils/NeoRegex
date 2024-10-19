@@ -19,37 +19,19 @@
 package com.neoutils.neoregex
 
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
-import androidx.compose.ui.window.rememberWindowState
 import com.neoutils.neoregex.core.common.util.UiMode
 import com.neoutils.neoregex.core.common.util.isDark
 import com.neoutils.neoregex.core.common.util.resolve
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
-import com.neoutils.neoregex.core.resources.Res
-import com.neoutils.neoregex.core.resources.app_name
-import com.neoutils.neoregex.core.resources.flavicon
-import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.stringResource
+import com.neoutils.neoregex.core.sharedui.component.NeoWindow
 
 fun main() = application {
 
-    Window(
-        icon = painterResource(Res.drawable.flavicon),
-        onCloseRequest = ::exitApplication,
-        title = stringResource(Res.string.app_name),
-        state = rememberWindowState(
-            position = WindowPosition.Aligned(
-                Alignment.Center
-            )
-        )
-    ) {
+    val uiMode = remember { UiMode.resolve() }
 
-        val uiMode = remember { UiMode.resolve() }
-
-        NeoTheme(uiMode.isDark) {
+    NeoTheme(uiMode.isDark) {
+        NeoWindow {
             App()
         }
     }
