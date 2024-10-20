@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 <AUTHOR>.
+ * Copyright (C) 2024 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,11 +19,12 @@
 package com.neoutils.neoregex.core.sharedui.widget
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.WindowScope
 
 interface WindowWidget {
 
     @Composable
-    fun WindowScope.Content()
+    fun FrameWindowScope.Content()
 }
 

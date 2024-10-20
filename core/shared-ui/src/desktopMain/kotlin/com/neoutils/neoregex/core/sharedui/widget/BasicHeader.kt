@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 <AUTHOR>.
+ * Copyright (C) 2024 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,8 +33,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.WindowScope
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
+import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
 import java.awt.event.WindowEvent
 
 data class BasicHeader(
@@ -42,9 +45,17 @@ data class BasicHeader(
 ) : WindowWidget {
 
     @Composable
-    override fun WindowScope.Content() {
+    override fun FrameWindowScope.Content() {
         WindowDraggableArea {
-            Surface(color = colorScheme.surfaceVariant) {
+
+            val focus = rememberWindowFocus()
+
+            Surface(
+                color = when (focus) {
+                    WindowFocus.FOCUSED -> colorScheme.surfaceVariant
+                    WindowFocus.UNFOCUSED ->  colorScheme.surfaceBright
+                },
+            ) {
                 Box(
                     modifier = Modifier
                         .height(40.dp)
