@@ -33,11 +33,12 @@ import androidx.compose.ui.window.*
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.resources.flavicon
+import com.neoutils.neoregex.core.sharedui.remember.CompleteWindowState
+import com.neoutils.neoregex.core.sharedui.remember.rememberCompleteWindowState
 import com.neoutils.neoregex.core.sharedui.widget.BasicHeader
 import com.neoutils.neoregex.core.sharedui.widget.WindowWidget
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
-import java.awt.Frame.MAXIMIZED_HORIZ
 
 @Composable
 fun ApplicationScope.NeoWindow(
@@ -60,10 +61,14 @@ fun ApplicationScope.NeoWindow(
         title = title,
         state = windowState
     ) {
+
+        val completeWindowState = rememberCompleteWindowState()
+
         Surface(
             color = colorScheme.background,
-            modifier = when (windowState.placement) {
-                WindowPlacement.Floating -> {
+            modifier = when (completeWindowState) {
+                CompleteWindowState.FLOATING,
+                CompleteWindowState.PINNED -> {
                     Modifier.border(
                         width = 1.dp,
                         color = colorScheme.outline,
@@ -71,21 +76,7 @@ fun ApplicationScope.NeoWindow(
                     )
                 }
 
-                WindowPlacement.Maximized -> {
-                    if (window.extendedState and MAXIMIZED_HORIZ != 0) {
-                        Modifier
-                    } else {
-                        Modifier.border(
-                            width = 1.dp,
-                            color = colorScheme.outline,
-                            shape = RectangleShape,
-                        )
-                    }
-                }
-
-                WindowPlacement.Fullscreen -> {
-                    Modifier
-                }
+                else -> Modifier
             }
         ) {
             Column {
