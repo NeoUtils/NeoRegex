@@ -30,46 +30,67 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.WindowScope
+import com.jetbrains.JBR
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
 import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
+import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent
 
+@OptIn(ExperimentalComposeUiApi::class)
 data class BasicHeader(
     val title: String
 ) : WindowWidget {
 
     @Composable
     override fun FrameWindowScope.Content() {
+
+        if (JBR.available) {
+            Header()
+            return
+        }
+
         WindowDraggableArea {
+            Header()
+        }
+    }
 
-            val focus = rememberWindowFocus()
+    @Composable
+    fun FrameWindowScope.Header() {
 
-            Surface(
-                color = when (focus) {
-                    WindowFocus.FOCUSED -> colorScheme.surfaceVariant
-                    WindowFocus.UNFOCUSED ->  colorScheme.surfaceBright
-                },
+        val focus = rememberWindowFocus()
+
+        Surface(
+            color = when (focus) {
+                WindowFocus.FOCUSED -> colorScheme.surfaceVariant
+                WindowFocus.UNFOCUSED -> colorScheme.surfaceBright
+            },
+            modifier = Modifier.onPointerEvent(PointerEventType.Press) {
+                JBR.windowMove?.startMovingTogetherWithMouse(window, MouseEvent.BUTTON1)
+            }
+        ) {
+            Box(
+                modifier = Modifier
+                    .height(40.dp)
+                    .padding(6.dp)
+                    .fillMaxWidth(),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .height(40.dp)
-                        .padding(6.dp)
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(text = title)
+                Text(text = title)
 
-                    Buttons(
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
+                Buttons(
+                    modifier = Modifier.align(
+                        Alignment.CenterEnd
                     )
-                }
+                )
             }
         }
     }
