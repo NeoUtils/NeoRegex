@@ -37,6 +37,7 @@ import com.neoutils.neoregex.core.sharedui.widget.BasicHeader
 import com.neoutils.neoregex.core.sharedui.widget.WindowWidget
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import java.awt.Frame.MAXIMIZED_HORIZ
 
 @Composable
 fun ApplicationScope.NeoWindow(
@@ -48,7 +49,7 @@ fun ApplicationScope.NeoWindow(
     val windowState = rememberWindowState(
         position = WindowPosition.Aligned(
             Alignment.Center
-        )
+        ),
     )
 
     Window(
@@ -70,7 +71,18 @@ fun ApplicationScope.NeoWindow(
                     )
                 }
 
-                WindowPlacement.Maximized,
+                WindowPlacement.Maximized -> {
+                    if (window.extendedState and MAXIMIZED_HORIZ != 0) {
+                        Modifier
+                    } else {
+                        Modifier.border(
+                            width = 1.dp,
+                            color = colorScheme.outline,
+                            shape = RectangleShape,
+                        )
+                    }
+                }
+
                 WindowPlacement.Fullscreen -> {
                     Modifier
                 }
