@@ -98,7 +98,9 @@ data class BasicHeader(
                     }
                 )
             }.onPointerEvent(PointerEventType.Press) {
-                JBR.windowMove?.startMovingTogetherWithMouse(window, MouseEvent.BUTTON1)
+                if (it.changes.any { changed -> !changed.isConsumed }) {
+                    JBR.windowMove?.startMovingTogetherWithMouse(window, MouseEvent.BUTTON1)
+                }
             }
         ) {
             Box(
