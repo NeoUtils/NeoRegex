@@ -24,7 +24,7 @@ import androidx.compose.ui.window.FrameWindowScope
 import com.neoutils.neoregex.core.sharedui.extension.isFloating
 import com.neoutils.neoregex.core.sharedui.extension.isFullMaximized
 import com.neoutils.neoregex.core.sharedui.extension.isFullscreen
-import com.neoutils.neoregex.core.sharedui.extension.isMaximized
+import com.neoutils.neoregex.core.sharedui.extension.isHalfMaximized
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 
@@ -65,7 +65,7 @@ enum class CompleteWindowState {
             return when {
                 state.isFloating -> FLOATING
                 state.isFullMaximized -> MAXIMIZED
-                state.isMaximized -> PINNED
+                state.isHalfMaximized -> PINNED
                 state.isFullscreen -> FULLSCREEN
                 state.isMinimized -> MINIMIZED
                 else -> error("Unknown window state")

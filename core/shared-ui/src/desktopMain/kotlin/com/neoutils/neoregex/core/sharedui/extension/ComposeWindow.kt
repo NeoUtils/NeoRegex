@@ -20,17 +20,16 @@ package com.neoutils.neoregex.core.sharedui.extension
 
 import androidx.compose.ui.awt.ComposeWindow
 import androidx.compose.ui.window.WindowPlacement
-import java.awt.Frame.MAXIMIZED_HORIZ
+import java.awt.Frame.*
 
 val ComposeWindow.isFloating
     get() = placement == WindowPlacement.Floating
 
 val ComposeWindow.isFullMaximized
-    get() = placement == WindowPlacement.Maximized &&
-            extendedState and MAXIMIZED_HORIZ != 0
+    get() = extendedState == MAXIMIZED_BOTH
 
-val ComposeWindow.isMaximized
-    get() = placement == WindowPlacement.Maximized
+val ComposeWindow.isHalfMaximized
+    get() = extendedState == MAXIMIZED_VERT || MAXIMIZED_HORIZ == extendedState
 
 val ComposeWindow.isFullscreen
     get() = placement == WindowPlacement.Fullscreen
