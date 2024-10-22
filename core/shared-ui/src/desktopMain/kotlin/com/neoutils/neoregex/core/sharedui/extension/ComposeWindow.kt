@@ -16,20 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.designsystem.theme
+package com.neoutils.neoregex.core.sharedui.extension
 
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.awt.ComposeWindow
+import androidx.compose.ui.window.WindowPlacement
+import java.awt.Frame.*
 
-val LocalDimensions = compositionLocalOf<Dimensions> { error("Dimensions not defined") }
+val ComposeWindow.isFloating
+    get() = placement == WindowPlacement.Floating
 
-data class Dimensions(
-    val micro: Dp = 2.dp,
-    val tiny: Dp = 4.dp,
-    val small: Dp = 8.dp,
-    val medium: Dp = 6.dp,
-    val default: Dp = 16.dp,
-    val large: Dp = 24.dp,
-    val huge: Dp = 32.dp,
-)
+val ComposeWindow.isFullMaximized
+    get() = extendedState == MAXIMIZED_BOTH
+
+val ComposeWindow.isHalfMaximized
+    get() = extendedState == MAXIMIZED_VERT || MAXIMIZED_HORIZ == extendedState
+
+val ComposeWindow.isFullscreen
+    get() = placement == WindowPlacement.Fullscreen
