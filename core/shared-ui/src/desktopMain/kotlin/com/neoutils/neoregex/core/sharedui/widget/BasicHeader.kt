@@ -19,6 +19,7 @@
 package com.neoutils.neoregex.core.sharedui.widget
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.window.WindowDraggableArea
@@ -35,13 +36,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.WindowScope
 import com.jetbrains.JBR
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.sharedui.remember.CompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
+import com.neoutils.neoregex.core.sharedui.remember.rememberCompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
+import java.awt.Frame
 import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent
 
@@ -67,13 +72,32 @@ data class BasicHeader(
     fun FrameWindowScope.Header() {
 
         val focus = rememberWindowFocus()
+        val state = rememberCompleteWindowState()
 
         Surface(
             color = when (focus) {
                 WindowFocus.FOCUSED -> colorScheme.surfaceVariant
                 WindowFocus.UNFOCUSED -> colorScheme.surfaceBright
             },
-            modifier = Modifier.onPointerEvent(PointerEventType.Press) {
+            modifier = Modifier.pointerInput(state) {
+                detectTapGestures(
+                    onDoubleTap = {
+                        when (state) {
+                            CompleteWindowState.FLOATING -> {
+                                window.extendedState = Frame.MAXIMIZED_BOTH
+                            }
+
+                            CompleteWindowState.MAXIMIZED,
+                            CompleteWindowState.PINNED -> {
+                                window.extendedState = Frame.NORMAL
+                            }
+
+                            CompleteWindowState.FULLSCREEN,
+                            CompleteWindowState.MINIMIZED -> error("Not supported")
+                        }
+                    }
+                )
+            }.onPointerEvent(PointerEventType.Press) {
                 JBR.windowMove?.startMovingTogetherWithMouse(window, MouseEvent.BUTTON1)
             }
         ) {
