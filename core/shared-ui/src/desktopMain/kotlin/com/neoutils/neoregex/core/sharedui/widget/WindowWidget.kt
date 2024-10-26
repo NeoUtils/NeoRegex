@@ -27,4 +27,3 @@ interface WindowWidget {
     @Composable
     fun FrameWindowScope.Content()
 }
-

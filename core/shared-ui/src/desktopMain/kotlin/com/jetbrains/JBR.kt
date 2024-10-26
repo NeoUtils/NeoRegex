@@ -31,10 +31,10 @@ object JBR {
     }
 
     val windowMove by lazy {
-        service?.getService(WindowMove::class.java)
+        runCatching {
+            service?.getService(WindowMove::class.java)
+        }.getOrNull()
     }
-
-    val available by lazy { service != null }
 
     interface ServiceApi {
         fun <T> getService(interFace: Class<T>?): T

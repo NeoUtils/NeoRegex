@@ -22,7 +22,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.window.WindowDraggableArea
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Icon
@@ -30,17 +29,17 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.WindowScope
 import com.jetbrains.JBR
+import com.neoutils.neoregex.core.common.platform.DesktopOS
+import com.neoutils.neoregex.core.common.util.DragHandler
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.sharedui.remember.CompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
@@ -50,7 +49,6 @@ import java.awt.Frame
 import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent
 
-@OptIn(ExperimentalComposeUiApi::class)
 data class BasicHeader(
     val title: String
 ) : WindowWidget {
@@ -58,21 +56,10 @@ data class BasicHeader(
     @Composable
     override fun FrameWindowScope.Content() {
 
-        if (JBR.available) {
-            Header()
-            return
-        }
-
-        WindowDraggableArea {
-            Header()
-        }
-    }
-
-    @Composable
-    fun FrameWindowScope.Header() {
-
         val focus = rememberWindowFocus()
         val state = rememberCompleteWindowState()
+
+        val dragHandler = remember { DragHandler(window) }
 
         Surface(
             color = when (focus) {
@@ -93,14 +80,26 @@ data class BasicHeader(
                             }
 
                             CompleteWindowState.FULLSCREEN,
-                            CompleteWindowState.MINIMIZED -> error("Not supported")
+                            CompleteWindowState.MINIMIZED -> error("Invalid")
+                        }
+                    },
+                    onPress = {
+                        when (DesktopOS.Current) {
+                            DesktopOS.WINDOWS, DesktopOS.MAC_OS -> {
+                                dragHandler.onDragStarted()
+                            }
+
+                            DesktopOS.LINUX -> {
+                                JBR.windowMove?.startMovingTogetherWithMouse(
+                                    window,
+                                    MouseEvent.BUTTON1
+                                ) ?: run {
+                                    dragHandler.onDragStarted()
+                                }
+                            }
                         }
                     }
                 )
-            }.onPointerEvent(PointerEventType.Press) {
-                if (it.changes.any { changed -> !changed.isConsumed }) {
-                    JBR.windowMove?.startMovingTogetherWithMouse(window, MouseEvent.BUTTON1)
-                }
             }
         ) {
             Box(
