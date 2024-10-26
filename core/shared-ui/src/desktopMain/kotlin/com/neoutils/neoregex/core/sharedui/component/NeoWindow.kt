@@ -34,11 +34,11 @@ import com.neoutils.neoregex.core.common.platform.DesktopOS
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.resources.flavicon
+import com.neoutils.neoregex.core.sharedui.extension.applyIf
 import com.neoutils.neoregex.core.sharedui.remember.CompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.rememberCompleteWindowState
 import com.neoutils.neoregex.core.sharedui.widget.BasicHeader
 import com.neoutils.neoregex.core.sharedui.widget.WindowWidget
-import com.neoutils.neoregex.core.sharedui.widget.applyIf
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 

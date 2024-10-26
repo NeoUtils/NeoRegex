@@ -143,7 +143,7 @@ data class BasicHeader(
             Box(
                 modifier = Modifier
                     .height(height)
-                    .padding(6.dp)
+                    .padding(dimensions.medium)
                     .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
@@ -188,13 +188,4 @@ data class BasicHeader(
                 .aspectRatio(ratio = 1f)
         )
     }
-}
-
-inline fun Modifier.applyIf(
-    mustApply: Boolean,
-    apply: Modifier. () -> Modifier
-): Modifier {
-    return if (mustApply) {
-        apply()
-    } else this
 }

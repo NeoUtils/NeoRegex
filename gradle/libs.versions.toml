@@ -44,9 +44,6 @@ kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.re
 # desktop
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 
-jewel = { group = "org.jetbrains.jewel", name = "jewel-int-ui-standalone-241", version.ref = "jewel" }
-jewel-decorated = { group = "org.jetbrains.jewel", name = "jewel-int-ui-decorated-window-241", version.ref = "jewel" }
-
 [plugins]
 
 # android

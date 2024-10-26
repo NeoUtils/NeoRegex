@@ -16,10 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.jetbrains
+package com.neoutils.neoregex.core.sharedui.extension
 
-import java.awt.Window
+import androidx.compose.ui.Modifier
 
-interface WindowMove {
-    fun startMovingTogetherWithMouse(window: Window?, mouseButton: Int)
+inline fun Modifier.applyIf(
+    mustApply: Boolean,
+    apply: Modifier. () -> Modifier
+): Modifier {
+    return if (mustApply) {
+        apply()
+    } else this
 }
