@@ -21,6 +21,7 @@
 package com.neoutils.neoregex.core.sharedui.widget
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -36,8 +37,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -88,11 +89,29 @@ data class BasicHeader(
                 WindowFocus.UNFOCUSED -> colorScheme.surfaceBright
             },
             modifier = customTitleBar?.let {
-                Modifier.onPointerEvent(PointerEventType.Move) {
-                    customTitleBar.forceHitTest(false)
-                }.onPointerEvent(PointerEventType.Exit) {
-                    customTitleBar.forceHitTest(true)
+                Modifier.pointerInput(Unit) {
+
+                    var inUserControl = false
+
+                    awaitEachGesture {
+                        awaitPointerEvent(PointerEventPass.Main).let { event ->
+                            event.changes.forEach {
+                                if (!it.isConsumed && !inUserControl) {
+                                    customTitleBar.forceHitTest(false)
+                                } else {
+                                    if (event.type == PointerEventType.Press) {
+                                        inUserControl = true
+                                    }
+                                    if (event.type == PointerEventType.Release) {
+                                        inUserControl = false
+                                    }
+                                    customTitleBar.forceHitTest(true)
+                                }
+                            }
+                        }
+                    }
                 }
+
             } ?: Modifier.pointerInput(state) {
                 detectTapGestures(
                     onDoubleTap = {
