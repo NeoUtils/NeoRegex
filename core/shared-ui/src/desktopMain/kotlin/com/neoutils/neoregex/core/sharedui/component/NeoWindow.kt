@@ -30,6 +30,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
+import com.neoutils.neoregex.core.common.platform.DesktopOS
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.resources.flavicon
@@ -37,6 +38,7 @@ import com.neoutils.neoregex.core.sharedui.remember.CompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.rememberCompleteWindowState
 import com.neoutils.neoregex.core.sharedui.widget.BasicHeader
 import com.neoutils.neoregex.core.sharedui.widget.WindowWidget
+import com.neoutils.neoregex.core.sharedui.widget.applyIf
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -53,9 +55,11 @@ fun ApplicationScope.NeoWindow(
         ),
     )
 
+    val undecorated = DesktopOS.Current == DesktopOS.LINUX
+
     Window(
-        undecorated = true,
-        transparent = true,
+        undecorated = undecorated,
+        transparent = undecorated,
         icon = icon,
         onCloseRequest = ::exitApplication,
         title = title,
@@ -69,11 +73,13 @@ fun ApplicationScope.NeoWindow(
             modifier = when (completeWindowState) {
                 CompleteWindowState.FLOATING,
                 CompleteWindowState.PINNED -> {
-                    Modifier.border(
-                        width = 1.dp,
-                        color = colorScheme.outline,
-                        shape = RectangleShape,
-                    )
+                    Modifier.applyIf(undecorated) {
+                        border(
+                            width = 1.dp,
+                            color = colorScheme.outline,
+                            shape = RectangleShape,
+                        )
+                    }
                 }
 
                 else -> Modifier

@@ -36,6 +36,12 @@ object JBR {
         }.getOrNull()
     }
 
+    val windowDecorations by lazy {
+        runCatching {
+            service?.getService(WindowDecorations::class.java)
+        }.getOrNull()
+    }
+
     interface ServiceApi {
         fun <T> getService(interFace: Class<T>?): T
     }
@@ -43,7 +49,8 @@ object JBR {
     object Metadata {
         private val KNOWN_SERVICES = arrayOf(
             "com.jetbrains.JBR\$ServiceApi",
-            "com.jetbrains.WindowMove"
+            "com.jetbrains.WindowMove",
+            "com.jetbrains.WindowDecorations"
         )
         private val KNOWN_PROXIES = emptyArray<String>()
     }
