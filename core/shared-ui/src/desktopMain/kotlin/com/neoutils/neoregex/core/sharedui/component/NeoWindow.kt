@@ -47,6 +47,7 @@ fun ApplicationScope.NeoWindow(
     icon: Painter = painterResource(Res.drawable.flavicon),
     title: String = stringResource(Res.string.app_name),
     header: WindowWidget? = BasicHeader(title),
+    undecorated: Boolean = DesktopOS.Current == DesktopOS.LINUX,
     content: @Composable FrameWindowScope.() -> Unit
 ) {
     val windowState = rememberWindowState(
@@ -54,8 +55,6 @@ fun ApplicationScope.NeoWindow(
             Alignment.Center
         ),
     )
-
-    val undecorated = DesktopOS.Current == DesktopOS.LINUX
 
     Window(
         undecorated = undecorated,

@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.WindowScope
 import com.jetbrains.JBR
-import com.neoutils.neoregex.core.common.platform.DesktopOS
 import com.neoutils.neoregex.core.common.util.DragHandler
 import com.neoutils.neoregex.core.common.util.UiMode
 import com.neoutils.neoregex.core.common.util.isDark
@@ -75,7 +74,7 @@ data class BasicHeader(
 
         val density = LocalDensity.current
 
-        val titleBar = remember {
+        val customTitleBar = remember {
             JBR.windowDecorations?.createCustomTitleBar()?.also {
                 it.height = density.run { height.toPx() }
                 it.putProperty("controls.dark", uiMode.isDark)
@@ -88,48 +87,39 @@ data class BasicHeader(
                 WindowFocus.FOCUSED -> colorScheme.surfaceVariant
                 WindowFocus.UNFOCUSED -> colorScheme.surfaceBright
             },
-            modifier = Modifier
-                .onPointerEvent(PointerEventType.Move) {
-                    titleBar?.forceHitTest(false)
+            modifier = customTitleBar?.let {
+                Modifier.onPointerEvent(PointerEventType.Move) {
+                    customTitleBar.forceHitTest(false)
                 }.onPointerEvent(PointerEventType.Exit) {
-                    titleBar?.forceHitTest(true)
-                }.applyIf(mustApply = titleBar == null) {
-                    pointerInput(state) {
-                        detectTapGestures(
-                            onDoubleTap = {
-                                when (state) {
-                                    CompleteWindowState.FLOATING -> {
-                                        window.extendedState = Frame.MAXIMIZED_BOTH
-                                    }
-
-                                    CompleteWindowState.MAXIMIZED,
-                                    CompleteWindowState.PINNED -> {
-                                        window.extendedState = Frame.NORMAL
-                                    }
-
-                                    CompleteWindowState.FULLSCREEN,
-                                    CompleteWindowState.MINIMIZED -> error("Invalid")
-                                }
-                            },
-                            onPress = {
-                                when (DesktopOS.Current) {
-                                    DesktopOS.WINDOWS, DesktopOS.MAC_OS -> {
-                                        dragHandler.onDragStarted()
-                                    }
-
-                                    DesktopOS.LINUX -> {
-                                        JBR.windowMove?.startMovingTogetherWithMouse(
-                                            window,
-                                            MouseEvent.BUTTON1
-                                        ) ?: run {
-                                            dragHandler.onDragStarted()
-                                        }
-                                    }
-                                }
-                            }
-                        )
-                    }
+                    customTitleBar.forceHitTest(true)
                 }
+            } ?: Modifier.pointerInput(state) {
+                detectTapGestures(
+                    onDoubleTap = {
+                        when (state) {
+                            CompleteWindowState.FLOATING -> {
+                                window.extendedState = Frame.MAXIMIZED_BOTH
+                            }
+
+                            CompleteWindowState.MAXIMIZED,
+                            CompleteWindowState.PINNED -> {
+                                window.extendedState = Frame.NORMAL
+                            }
+
+                            CompleteWindowState.FULLSCREEN,
+                            CompleteWindowState.MINIMIZED -> error("Invalid")
+                        }
+                    },
+                    onPress = {
+                        JBR.windowMove?.startMovingTogetherWithMouse(
+                            window,
+                            MouseEvent.BUTTON1
+                        ) ?: run {
+                            dragHandler.onDragStarted()
+                        }
+                    }
+                )
+            }
         ) {
             Box(
                 modifier = Modifier
@@ -140,7 +130,7 @@ data class BasicHeader(
             ) {
                 Text(text = title)
 
-                if (titleBar == null) {
+                if (customTitleBar == null) {
                     Buttons(
                         modifier = Modifier.align(
                             Alignment.CenterEnd
