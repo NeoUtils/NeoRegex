@@ -1,0 +1,44 @@
+name: Release packaging
+
+on:
+  pull_request:
+    branches:
+      - develop # To test
+      - master
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'jetbrains'
+
+      - name: Linux packages
+        run: |
+          ./gradlew application:createTarGz
+          ./gradlew application:packageReleaseDeb
+          ./gradlew application:packageReleaseRpm
+
+      - name: Upload .deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: NeoRegex
+          path: application/build/compose/binaries/main-release/deb/*.deb
+
+      - name: Upload .rpm
+        uses: actions/upload-artifact@v4
+        with:
+          name: NeoRegex
+          path: application/build/compose/binaries/main-release/rpm/*.rpm
+
+      - name: Upload .tar.gz
+        uses: actions/upload-artifact@v4
+        with:
+          name: NeoRegex
+          path: application/build/distribution/*.tar.gz
