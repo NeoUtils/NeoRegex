@@ -16,23 +16,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
-import extension.module
-import extension.name
+package com.jetbrains
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
-}
+import java.awt.Dialog
+import java.awt.Frame
+import java.awt.Window
 
-group = config.module("core.sharedui")
-version = config.version.name()
+interface WindowDecorations {
 
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation(projects.core.designSystem)
-            implementation(projects.core.common)
-            implementation(projects.core.resources)
-        }
+    fun setCustomTitleBar(frame: Frame?, customTitleBar: CustomTitleBar?)
+
+    fun setCustomTitleBar(dialog: Dialog?, customTitleBar: CustomTitleBar?)
+
+    fun createCustomTitleBar(): CustomTitleBar?
+
+    interface CustomTitleBar {
+
+        var height: Float
+
+        val properties: Map<String?, Any?>?
+
+        fun putProperties(m: Map<String?, *>?)
+
+        fun putProperty(key: String?, value: Any?)
+
+        val leftInset: Float
+
+        val rightInset: Float
+
+        fun forceHitTest(client: Boolean)
+
+        val containingWindow: Window?
     }
 }

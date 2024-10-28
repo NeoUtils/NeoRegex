@@ -45,6 +45,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun setupSystemBars() {
+
         val style = when (UiMode.resolve(context = this)) {
             UiMode.DARK -> {
                 SystemBarStyle.dark(

@@ -16,23 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
-import extension.module
-import extension.name
+package com.neoutils.neoregex.core.sharedui.extension
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
-}
+import androidx.compose.ui.Modifier
 
-group = config.module("core.sharedui")
-version = config.version.name()
-
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation(projects.core.designSystem)
-            implementation(projects.core.common)
-            implementation(projects.core.resources)
-        }
-    }
+inline fun Modifier.applyIf(
+    mustApply: Boolean,
+    apply: Modifier. () -> Modifier
+): Modifier {
+    return if (mustApply) {
+        apply()
+    } else this
 }

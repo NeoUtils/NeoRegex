@@ -16,23 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
-import extension.module
-import extension.name
+package com.neoutils.neoregex.core.sharedui.widget
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
-}
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.window.FrameWindowScope
+import androidx.compose.ui.window.WindowScope
 
-group = config.module("core.sharedui")
-version = config.version.name()
+interface WindowWidget {
 
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation(projects.core.designSystem)
-            implementation(projects.core.common)
-            implementation(projects.core.resources)
-        }
-    }
+    @Composable
+    fun FrameWindowScope.Content()
 }

@@ -16,23 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
-import extension.module
-import extension.name
+package com.neoutils.neoregex.core.sharedui.extension
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
-}
+import androidx.compose.ui.awt.ComposeWindow
+import androidx.compose.ui.window.WindowPlacement
+import java.awt.Frame.*
 
-group = config.module("core.sharedui")
-version = config.version.name()
+val ComposeWindow.isFloating
+    get() = placement == WindowPlacement.Floating
 
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation(projects.core.designSystem)
-            implementation(projects.core.common)
-            implementation(projects.core.resources)
-        }
-    }
-}
+val ComposeWindow.isFullMaximized
+    get() = extendedState == MAXIMIZED_BOTH
+
+val ComposeWindow.isHalfMaximized
+    get() = extendedState == MAXIMIZED_VERT || MAXIMIZED_HORIZ == extendedState
+
+val ComposeWindow.isFullscreen
+    get() = placement == WindowPlacement.Fullscreen
