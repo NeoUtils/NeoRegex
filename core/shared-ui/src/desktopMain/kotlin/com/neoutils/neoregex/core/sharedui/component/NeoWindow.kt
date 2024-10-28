@@ -30,14 +30,14 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
-import com.neoutils.neoregex.core.common.platform.DesktopOS
+import com.jetbrains.JBR
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.resources.flavicon
 import com.neoutils.neoregex.core.sharedui.extension.applyIf
 import com.neoutils.neoregex.core.sharedui.remember.CompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.rememberCompleteWindowState
-import com.neoutils.neoregex.core.sharedui.widget.BasicHeader
+import com.neoutils.neoregex.core.sharedui.widget.DefaultHeader
 import com.neoutils.neoregex.core.sharedui.widget.WindowWidget
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -46,8 +46,8 @@ import org.jetbrains.compose.resources.stringResource
 fun ApplicationScope.NeoWindow(
     icon: Painter = painterResource(Res.drawable.flavicon),
     title: String = stringResource(Res.string.app_name),
-    header: WindowWidget? = BasicHeader(title),
-    undecorated: Boolean = DesktopOS.Current == DesktopOS.LINUX,
+    header: WindowWidget? = DefaultHeader(title),
+    undecorated: Boolean = JBR.windowDecorations == null,
     content: @Composable FrameWindowScope.() -> Unit
 ) {
     val windowState = rememberWindowState(
@@ -57,11 +57,10 @@ fun ApplicationScope.NeoWindow(
     )
 
     Window(
-        undecorated = undecorated,
-        transparent = undecorated,
         icon = icon,
-        onCloseRequest = ::exitApplication,
         title = title,
+        undecorated = undecorated,
+        onCloseRequest = ::exitApplication,
         state = windowState
     ) {
 
