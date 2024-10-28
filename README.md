@@ -26,8 +26,10 @@ A cross-platform app to validate regular expressions.
 | Platform | Status |
 |----------|--------|
 | Android  | ✅      |
+| iOS      | ❌      |
 | Windows  | ✅      |
 | Linux    | ✅      |
+| macOS    | ✅      |
 | Web      | ✅      |
 
 ## Build

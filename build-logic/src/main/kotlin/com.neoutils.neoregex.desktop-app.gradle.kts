@@ -52,7 +52,7 @@ compose.desktop {
 
         nativeDistributions {
 
-            targetFormats(TargetFormat.Exe, TargetFormat.Rpm)
+            targetFormats(TargetFormat.Exe, TargetFormat.Rpm, TargetFormat.Dmg)
 
             packageName = "NeoRegex"
             description = "A simple regex tester"
@@ -63,9 +63,9 @@ compose.desktop {
                 appCategory = "Utility"
             }
 
-            // TODO: not tested on MacOS
             macOS {
                 iconFile.set(file("assets/ic_launcher.icns"))
+                bundleID = config.basePackage + ".NeoRegex"
             }
 
             windows {
