@@ -37,8 +37,9 @@ I recommend using [Intellij IDEA](https://www.jetbrains.com/idea/download) as th
 Compose** and **Compose Multiplatform** plugins installed.
 
 > [!TIP]
-> - You can get the **JDK** and **Android SDK** directly from **Intellij IDEA**. <br>
-> - Use run configurations to get started. <br>
+> - You can obtain the **JDK** and **Android SDK** directly from **IntelliJ IDEA**.
+> - Use **JBR** (JetBrains Runtime) for better window integration.
+> - Use run configurations to get started.
 
 ## License
 

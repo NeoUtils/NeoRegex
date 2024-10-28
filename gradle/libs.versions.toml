@@ -3,7 +3,6 @@ agp = "8.5.2"
 cmp = "1.7.0" # Jetpack Compose 1.7.0 & APG 8.1+
 kotlin = "2.0.20" # Gradle 7.5 ~ 8.8 & AGP 7.4.2 ~ 8.5
 voyager = "1.1.0-beta03" # 1.1.0+ is required for web support
-jewel = "0.19.3"
 
 # androix
 androidx-compose = "1.7.4"
