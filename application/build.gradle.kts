@@ -59,7 +59,7 @@ kotlin {
     }
 }
 
-tasks.register<Tar>("createTarGz") {
+tasks.register<Tar>("packageReleaseTarGz") {
 
     group = "distribution"
     description = "create a zipped genetic distribution"

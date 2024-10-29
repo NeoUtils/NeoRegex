@@ -52,7 +52,12 @@ compose.desktop {
 
         nativeDistributions {
 
-            targetFormats(TargetFormat.Exe, TargetFormat.Rpm, TargetFormat.Dmg)
+            targetFormats(
+                TargetFormat.Exe,
+                TargetFormat.Rpm,
+                TargetFormat.Dmg,
+                TargetFormat.Deb
+            )
 
             packageName = "NeoRegex"
             description = "A simple regex tester"
