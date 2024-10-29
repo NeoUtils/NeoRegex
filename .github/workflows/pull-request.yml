@@ -26,11 +26,15 @@ jobs:
           ./gradlew application:packageReleaseDeb
           ./gradlew application:packageReleaseRpm
 
+      - name: Prepare Artifacts
+        run: |
+          mkdir -p binaries
+          mv application/build/distribution/*.tar.gz binaries/
+          mv application/build/compose/binaries/main-release/deb/*.deb binaries/
+          mv application/build/compose/binaries/main-release/rpm/*.rpm binaries/
+
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: NeoRegex-linux-packages
-          path: | 
-            application/build/distribution/*.tar.gz
-            application/build/compose/binaries/main-release/deb/*.deb
-            application/build/compose/binaries/main-release/rpm/*.rpm
+          path: binaries/*
