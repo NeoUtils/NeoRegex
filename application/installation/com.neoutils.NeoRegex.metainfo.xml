@@ -1,58 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>com.neoutils.NeoRegex</id>
+    <id>com.neoutils.NeoRegex</id>
 
-  <name>NeoRegex</name>
-  <summary>An elegant regex validator.</summary>
+    <name>NeoRegex</name>
+    <summary>Create and validate regular expressions.</summary>
 
-  <metadata_license>FSFAP</metadata_license>
-  <project_license>GPL-3.0-only</project_license>
+    <metadata_license>FSFAP</metadata_license>
+    <project_license>GPL-3.0-only</project_license>
 
-  <description>
-    <p>
-      Create and validate regular expressions easily with NeoRegex.
-    </p>
-  </description>
+    <description>
+        <p>
+            Visualize the functioning of your regular expressions in real-time with a useful and intuitive tool. With support for capture groups, undo, and redo.
+        </p>
+    </description>
 
-  <url type="homepage">https://github.com/NeoUtils/NeoRegex</url>
-  <url type="bugtracker">https://github.com/NeoUtils/NeoRegex/issues</url>
-  <url type="vcs-browser">https://github.com/NeoUtils/NeoRegex.git</url>
+    <url type="homepage">https://github.com/NeoUtils/NeoRegex</url>
+    <url type="bugtracker">https://github.com/NeoUtils/NeoRegex/issues</url>
+    <url type="vcs-browser">https://github.com/NeoUtils/NeoRegex.git</url>
 
-  <launchable type="desktop-id">com.neoutils.NeoRegex.desktop</launchable>
+    <launchable type="desktop-id">com.neoutils.NeoRegex.desktop</launchable>
 
-  <categories>
-    <category>Utility</category>
-  </categories>
+    <categories>
+        <category>Utility</category>
+    </categories>
 
-  <branding>
-    <color type="primary" scheme_preference="light">#ffffff</color>
-    <color type="primary" scheme_preference="dark">#222222</color>
-  </branding>
+    <branding>
+        <color type="primary" scheme_preference="light">#ffffff</color>
+        <color type="primary" scheme_preference="dark">#222222</color>
+    </branding>
 
-  <screenshots>
-    <screenshot type="default">
-      <image>https://raw.githubusercontent.com/NeoUtils/NeoRegex/eb443861161e54f9f9878fdb5ba43b3ed9d177a8/screenshots/desktop-dark.png</image>
-      <caption>NeoRegex in Dark Mode</caption>
-    </screenshot>
-  </screenshots>
+    <screenshots>
+        <screenshot type="default">
+            <image>
+                https://raw.githubusercontent.com/NeoUtils/NeoRegex/1bd2a74185c302e8776edfadb41615955c393be5/images/linux-dark-mode.png
+            </image>
+            <caption>NeoRegex in Dark Mode</caption>
+        </screenshot>
 
-  <releases>
-    <release version="2.0.0" date="2024-09-18">
-      <description>
-        <p>Desktop version debuts.</p>
-        <ul>
-          <li>Visualize the regular expression matches in a text editor.</li>
-          <li>Visualize capture groups while interacting with the match.</li>
-          <li>An individual undo and redo system for both the visual expression and the text editor.</li>
-        </ul>
-      </description>
-    </release>
-  </releases>
+        <screenshot type="default">
+            <image>
+                https://raw.githubusercontent.com/NeoUtils/NeoRegex/1bd2a74185c302e8776edfadb41615955c393be5/images/linux-light-mode.png
+            </image>
+            <caption>NeoRegex in Light Mode</caption>
+        </screenshot>
+    </screenshots>
 
-  <developer id="com.neoutils">
-    <name>NeoUtils</name>
-  </developer>
+    <releases>
+        <release version="2.2.0" date="2024-10-29">
+            <description>
+                <p>Version 2.2.0 introduces several enhancements:</p>
+                <ul>
+                    <li>Small improvements across the application.</li>
+                    <li>Customized window for a personalized experience.</li>
+                    <li>Enhanced touchscreen support for better usability on touch devices.</li>
+                </ul>
+            </description>
+        </release>
 
-  <content_rating type="oars-1.1"/>
+        <release version="2.0.0" date="2024-09-18">
+            <description>
+                <p>Desktop version debuts.</p>
+                <ul>
+                    <li>Visualize the regular expression matches in a text editor.</li>
+                    <li>Visualize capture groups while interacting with the match.</li>
+                    <li>An individual undo and redo system for both the visual expression and the text editor.</li>
+                </ul>
+            </description>
+        </release>
+    </releases>
+
+    <developer id="com.neoutils">
+        <name>NeoUtils</name>
+    </developer>
+
+    <content_rating type="oars-1.1"/>
 
 </component>
