@@ -1,10 +1,12 @@
-name: Release packaging
+name: Release packages
 
 on:
   pull_request:
     branches:
-      - develop # To test
+      - develop
       - master
+
+  workflow_dispatch:
 
 jobs:
   build-linux:
@@ -81,7 +83,7 @@ jobs:
           distribution: 'jetbrains'
           cache: 'gradle'
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Package dmg
         run: ./gradlew application:packageReleaseDmg
