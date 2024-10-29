@@ -14,7 +14,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup JDK
-        uses: actions/setup-java@v4
+        # TODO: replace this once https://github.com/actions/setup-java/pull/637 gets merged.
+        uses: gmitch215/setup-java@6d2c5e1f82f180ae79f799f0ed6e3e5efb4e664d
         with:
           java-version: '17'
           distribution: 'jetbrains'
