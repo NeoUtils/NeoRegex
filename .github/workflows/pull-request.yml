@@ -20,6 +20,8 @@ jobs:
           java-version: '17'
           distribution: 'jetbrains'
           cache: 'gradle'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Package
         run: |
@@ -53,6 +55,8 @@ jobs:
           java-version: '17'
           distribution: 'jetbrains'
           cache: 'gradle'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Package exe
         run: ./gradlew application:packageReleaseExe
@@ -76,6 +80,8 @@ jobs:
           java-version: '17'
           distribution: 'jetbrains'
           cache: 'gradle'
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Package dmg
         run: ./gradlew application:packageReleaseDmg
