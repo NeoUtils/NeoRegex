@@ -19,6 +19,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'jetbrains'
+          cache: 'gradle'
 
       - name: Package
         run: |
@@ -26,17 +27,17 @@ jobs:
           ./gradlew application:packageReleaseDeb
           ./gradlew application:packageReleaseRpm
 
-      - name: Prepare Artifacts
+      - name: Prepare packages
         run: |
           mkdir -p binaries
           mv application/build/distribution/*.tar.gz binaries/
           mv application/build/compose/binaries/main-release/deb/*.deb binaries/
           mv application/build/compose/binaries/main-release/rpm/*.rpm binaries/
 
-      - name: Upload
+      - name: Upload packages
         uses: actions/upload-artifact@v4
         with:
-          name: NeoRegex-linux-packages
+          name: NeoRegex-linux
           path: binaries/*
 
   build-windows:
@@ -51,6 +52,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'jetbrains'
+          cache: 'gradle'
 
       - name: Package exe
         run: ./gradlew application:packageReleaseExe
@@ -58,7 +60,7 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: NeoRegex-windows-packages
+          name: NeoRegex-windows
           path: application/build/compose/binaries/main-release/exe/*.exe
 
   build-macos:
@@ -73,12 +75,38 @@ jobs:
         with:
           java-version: '17'
           distribution: 'jetbrains'
+          cache: 'gradle'
 
       - name: Package dmg
         run: ./gradlew application:packageReleaseDmg
 
-      - name: Upload
+      - name: Upload dmg
         uses: actions/upload-artifact@v4
         with:
-          name: NeoRegex-macos-packages
+          name: NeoRegex-macos
           path: application/build/compose/binaries/main-release/dmg/*.dmg
+
+  build-android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+          cache: 'gradle'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Build apk
+        run: ./gradlew assembleDebug
+
+      - name: Upload apk
+        uses: actions/upload-artifact@v4
+        with:
+          name: NeoRegex-android
+          path: application/build/outputs/apk/debug/*.apk
