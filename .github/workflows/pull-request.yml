@@ -26,20 +26,11 @@ jobs:
           ./gradlew application:packageReleaseDeb
           ./gradlew application:packageReleaseRpm
 
-      - name: Upload .tar.gz
+      - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: NeoRegex
-          path: application/build/distribution/*.tar.gz
-
-      - name: Upload .deb
-        uses: actions/upload-artifact@v4
-        with:
-          name: NeoRegex
-          path: application/build/compose/binaries/main-release/deb/*.deb
-
-      - name: Upload .rpm
-        uses: actions/upload-artifact@v4
-        with:
-          name: NeoRegex
-          path: application/build/compose/binaries/main-release/rpm/*.rpm
+          name: NeoRegex-linux-packages
+          path: | 
+            application/build/distribution/*.tar.gz
+            application/build/compose/binaries/main-release/deb/*.deb
+            application/build/compose/binaries/main-release/rpm/*.rpm
