@@ -20,6 +20,7 @@ package com.neoutils.neoregex.core.sharedui.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
@@ -37,8 +38,6 @@ import com.neoutils.neoregex.core.resources.flavicon
 import com.neoutils.neoregex.core.sharedui.extension.applyIf
 import com.neoutils.neoregex.core.sharedui.remember.CompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.rememberCompleteWindowState
-import com.neoutils.neoregex.core.sharedui.widget.DefaultHeader
-import com.neoutils.neoregex.core.sharedui.widget.WindowWidget
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -46,8 +45,13 @@ import org.jetbrains.compose.resources.stringResource
 fun ApplicationScope.NeoWindow(
     icon: Painter = painterResource(Res.drawable.flavicon),
     title: String = stringResource(Res.string.app_name),
-    header: WindowWidget? = DefaultHeader(title),
     undecorated: Boolean = JBR.windowDecorations == null,
+    header: @Composable FrameWindowScope.() -> Unit = {
+        DefaultHeader(
+            title = title,
+            modifier = Modifier.height(40.dp)
+        )
+    },
     content: @Composable FrameWindowScope.() -> Unit
 ) {
     val windowState = rememberWindowState(
@@ -85,8 +89,7 @@ fun ApplicationScope.NeoWindow(
         ) {
             Column {
 
-                // TODO: improve with context parameters
-                header?.run { Content() }
+                header()
 
                 HorizontalDivider()
 

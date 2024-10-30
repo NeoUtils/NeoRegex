@@ -18,7 +18,7 @@
 
 @file:OptIn(ExperimentalComposeUiApi::class)
 
-package com.neoutils.neoregex.core.sharedui.widget
+package com.neoutils.neoregex.core.sharedui.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -32,6 +32,7 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -40,9 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.WindowScope
 import com.jetbrains.JBR
@@ -59,38 +58,38 @@ import java.awt.Frame
 import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent
 
-data class DefaultHeader(
-    val title: String,
-    val height: Dp = 40.dp,
-    val uiMode: UiMode = UiMode.resolve()
-) : WindowWidget {
+@Composable
+fun FrameWindowScope.DefaultHeader(
+    title: String,
+    modifier: Modifier = Modifier,
+    uiMode: UiMode = UiMode.resolve(),
+) {
 
-    @Composable
-    override fun FrameWindowScope.Content() {
+    val focus = rememberWindowFocus()
+    val state = rememberCompleteWindowState()
 
-        val focus = rememberWindowFocus()
-        val state = rememberCompleteWindowState()
+    val dragHandler = remember { DragHandler(window) }
 
-        val dragHandler = remember { DragHandler(window) }
+    // only macOS and Windows supports
+    val customTitleBar = remember {
+        JBR.windowDecorations?.createCustomTitleBar()
+    }
 
-        val density = LocalDensity.current
+    LaunchedEffect(window, uiMode) {
+        customTitleBar?.putProperty("controls.dark", uiMode.isDark)
+        JBR.windowDecorations?.setCustomTitleBar(window, customTitleBar)
+    }
 
-        // only macOS and Windows supports
-        val customTitleBar = remember {
-            JBR.windowDecorations?.createCustomTitleBar()?.also {
-                it.height = density.run { height.toPx() }
-                it.putProperty("controls.dark", uiMode.isDark)
-                JBR.windowDecorations?.setCustomTitleBar(window, it)
-            }
-        }
-
-        Surface(
-            color = when (focus) {
-                WindowFocus.FOCUSED -> colorScheme.surfaceVariant
-                WindowFocus.UNFOCUSED -> colorScheme.surfaceBright
-            },
-            modifier = customTitleBar?.let {
-                Modifier.pointerInput(Unit) {
+    Surface(
+        color = when (focus) {
+            WindowFocus.FOCUSED -> colorScheme.surfaceVariant
+            WindowFocus.UNFOCUSED -> colorScheme.surfaceBright
+        },
+        modifier = modifier.onSizeChanged {
+            customTitleBar?.height = it.height.toFloat()
+        }.run {
+            customTitleBar?.let {
+                pointerInput(Unit) {
 
                     var inUserControl = false
 
@@ -112,7 +111,7 @@ data class DefaultHeader(
                         }
                     }
                 }
-            } ?: Modifier.pointerInput(state) {
+            } ?: pointerInput(state) {
                 detectTapGestures(
                     onDoubleTap = {
                         when (state) {
@@ -139,53 +138,53 @@ data class DefaultHeader(
                     }
                 )
             }
-        ) {
-            Box(
-                modifier = Modifier
-                    .height(height)
-                    .padding(dimensions.medium)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = title)
+        }
 
-                if (customTitleBar == null) {
-                    Buttons(
-                        modifier = Modifier.align(
-                            Alignment.CenterEnd
-                        )
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(dimensions.medium)
+                .fillMaxWidth(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = title)
+
+            if (customTitleBar == null) {
+                Buttons(
+                    modifier = Modifier.align(
+                        Alignment.CenterEnd
                     )
-                }
+                )
             }
         }
     }
+}
 
-    @Composable
-    fun WindowScope.Buttons(modifier: Modifier) = Row(
-        modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(
-            space = dimensions.tiny,
-            alignment = Alignment.CenterHorizontally
-        )
-    ) {
-        Icon(
-            imageVector = Icons.Rounded.Close,
-            contentDescription = null,
-            modifier = Modifier
-                .clip(CircleShape)
-                .clickable(
-                    onClick = {
-                        window.dispatchEvent(
-                            WindowEvent(
-                                window,
-                                WindowEvent.WINDOW_CLOSING
-                            )
+@Composable
+private fun WindowScope.Buttons(modifier: Modifier) = Row(
+    modifier = modifier,
+    verticalAlignment = Alignment.CenterVertically,
+    horizontalArrangement = Arrangement.spacedBy(
+        space = dimensions.tiny,
+        alignment = Alignment.CenterHorizontally
+    )
+) {
+    Icon(
+        imageVector = Icons.Rounded.Close,
+        contentDescription = null,
+        modifier = Modifier
+            .clip(CircleShape)
+            .clickable(
+                onClick = {
+                    window.dispatchEvent(
+                        WindowEvent(
+                            window,
+                            WindowEvent.WINDOW_CLOSING
                         )
-                    }
-                )
-                .padding(dimensions.medium)
-                .aspectRatio(ratio = 1f)
-        )
-    }
+                    )
+                }
+            )
+            .padding(dimensions.medium)
+            .aspectRatio(ratio = 1f)
+    )
 }
