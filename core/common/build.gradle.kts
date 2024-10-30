@@ -36,5 +36,11 @@ kotlin {
             // junit
             implementation(catalog.kotlin.test)
         }
+
+        desktopMain.dependencies {
+            implementation(libs.dbus.java.core)
+            implementation(libs.dbus.java.transport.native.unixsocket)
+            implementation(libs.slf4j.nop)
+        }
     }
 }

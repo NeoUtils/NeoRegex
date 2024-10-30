@@ -18,26 +18,26 @@
 
 package com.neoutils.neoregex.core.common.util
 
-import com.neoutils.neoregex.core.common.platform.DesktopOS
-import com.neoutils.neoregex.core.common.platform.LinuxUI
-import com.neoutils.neoregex.core.common.util.UiMode
 import com.neoutils.neoregex.core.common.util.UiMode.DARK
 import com.neoutils.neoregex.core.common.util.UiMode.LIGHT
+import org.jetbrains.skiko.OS
 import org.jetbrains.skiko.SystemTheme
 import org.jetbrains.skiko.currentSystemTheme
+import org.jetbrains.skiko.hostOs
 
 fun UiMode.Companion.resolve(): UiMode {
-    return when (DesktopOS.Current) {
-        DesktopOS.WINDOWS,
-        DesktopOS.MAC_OS -> when (currentSystemTheme) {
+
+    return when (hostOs) {
+        OS.Linux -> {
+            XDGDesktopPortal().use {
+                it.getTheme()
+            }
+        }
+
+        else -> when (currentSystemTheme) {
             SystemTheme.LIGHT -> LIGHT
             SystemTheme.DARK -> DARK
             SystemTheme.UNKNOWN -> LIGHT
-        }
-
-        DesktopOS.LINUX -> when (LinuxUI.Current) {
-            LinuxUI.GNOME -> GnomeSettings.getUiMode()
-            LinuxUI.OTHER -> LIGHT
         }
     }
 }

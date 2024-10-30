@@ -1,7 +1,9 @@
 [versions]
 agp = "8.5.2"
 cmp = "1.7.0" # Jetpack Compose 1.7.0 & APG 8.1+
+dbus-java-core = "5.1.0"
 kotlin = "2.0.20" # Gradle 7.5 ~ 8.8 & AGP 7.4.2 ~ 8.5
+slf4j-nop = "2.0.16"
 voyager = "1.1.0-beta03" # 1.1.0+ is required for web support
 
 # androix
@@ -42,6 +44,10 @@ kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.re
 
 # desktop
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
+slf4j-nop = { module = "org.slf4j:slf4j-nop", version.ref = "slf4j-nop" }
+
+dbus-java-core = { module = "com.github.hypfvieh:dbus-java-core", version.ref = "dbus-java-core" }
+dbus-java-transport-native-unixsocket = { module = "com.github.hypfvieh:dbus-java-transport-native-unixsocket", version.ref = "dbus-java-core" }
 
 [plugins]
 
