@@ -16,8 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:OptIn(ExperimentalComposeUiApi::class)
-
 package com.neoutils.neoregex.core.sharedui.component
 
 import androidx.compose.foundation.clickable
@@ -35,13 +33,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.WindowScope
 import com.jetbrains.JBR
@@ -54,14 +53,19 @@ import com.neoutils.neoregex.core.sharedui.remember.CompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
 import com.neoutils.neoregex.core.sharedui.remember.rememberCompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
+import org.jetbrains.skiko.OS
+import org.jetbrains.skiko.hostOs
 import java.awt.Frame
 import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent
+
+private val DefaultHeaderHeight = 40.dp
 
 @Composable
 fun FrameWindowScope.DefaultHeader(
     title: String,
     modifier: Modifier = Modifier,
+    options: @Composable RowScope.() -> Unit = {},
     uiMode: UiMode = UiMode.resolve(),
 ) {
 
@@ -75,7 +79,10 @@ fun FrameWindowScope.DefaultHeader(
         JBR.windowDecorations?.createCustomTitleBar()
     }
 
+    val density = LocalDensity.current
+
     LaunchedEffect(window, uiMode) {
+        customTitleBar?.height = density.run { DefaultHeaderHeight.toPx() }
         customTitleBar?.putProperty("controls.dark", uiMode.isDark)
         JBR.windowDecorations?.setCustomTitleBar(window, customTitleBar)
     }
@@ -85,7 +92,9 @@ fun FrameWindowScope.DefaultHeader(
             WindowFocus.FOCUSED -> colorScheme.surfaceVariant
             WindowFocus.UNFOCUSED -> colorScheme.surfaceBright
         },
-        modifier = modifier.onSizeChanged {
+        modifier = modifier.sizeIn(
+            maxHeight = DefaultHeaderHeight
+        ).onSizeChanged {
             customTitleBar?.height = it.height.toFloat()
         }.run {
             customTitleBar?.let {
@@ -155,6 +164,18 @@ fun FrameWindowScope.DefaultHeader(
                         Alignment.CenterEnd
                     )
                 )
+            }
+
+            Row(
+                modifier = Modifier.align(
+                    alignment = when (hostOs) {
+                        OS.Linux, OS.Windows -> Alignment.CenterStart
+                        OS.MacOS -> Alignment.CenterEnd
+                        else -> error("Invalid")
+                    }
+                )
+            ) {
+                options()
             }
         }
     }

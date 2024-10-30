@@ -49,7 +49,6 @@ fun ApplicationScope.NeoWindow(
     header: @Composable FrameWindowScope.() -> Unit = {
         DefaultHeader(
             title = title,
-            modifier = Modifier.height(40.dp)
         )
     },
     content: @Composable FrameWindowScope.() -> Unit
