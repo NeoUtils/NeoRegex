@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package com.neoutils.neoregex.core.sharedui.widget
 
 import androidx.compose.foundation.clickable
@@ -32,9 +34,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -85,12 +89,27 @@ data class DefaultHeader(
                 WindowFocus.FOCUSED -> colorScheme.surfaceVariant
                 WindowFocus.UNFOCUSED -> colorScheme.surfaceBright
             },
-            modifier = customTitleBar?.let { titleBar ->
-                Modifier.pointerInput(titleBar) {
+            modifier = customTitleBar?.let {
+                Modifier.pointerInput(Unit) {
+
+                    var inUserControl = false
+
                     awaitEachGesture {
-                        val event = awaitPointerEvent(PointerEventPass.Main)
-                        val isPressed = event.changes.any { it.pressed }
-                        titleBar.forceHitTest(!isPressed)
+                        awaitPointerEvent(PointerEventPass.Main).let { event ->
+                            event.changes.forEach {
+                                if (!it.isConsumed && !inUserControl) {
+                                    customTitleBar.forceHitTest(false)
+                                } else {
+                                    if (event.type == PointerEventType.Press) {
+                                        inUserControl = true
+                                    }
+                                    if (event.type == PointerEventType.Release) {
+                                        inUserControl = false
+                                    }
+                                    customTitleBar.forceHitTest(true)
+                                }
+                            }
+                        }
                     }
                 }
             } ?: Modifier.pointerInput(state) {
@@ -131,7 +150,7 @@ data class DefaultHeader(
                 Text(text = title)
 
                 if (customTitleBar == null) {
-                    Controls(
+                    Buttons(
                         modifier = Modifier.align(
                             Alignment.CenterEnd
                         )
@@ -142,7 +161,7 @@ data class DefaultHeader(
     }
 
     @Composable
-    fun WindowScope.Controls(modifier: Modifier) = Row(
+    fun WindowScope.Buttons(modifier: Modifier) = Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(
