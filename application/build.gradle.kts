@@ -16,13 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.catalog
-import extension.config
+import extension.*
 
 plugins {
-    id("com.neo.regex.android-app")
-    id("com.neo.regex.desktop-app")
-    id("com.neo.regex.web-app")
+    alias(libs.plugins.neoutils.neoregex.android)
+    alias(libs.plugins.neoutils.neoregex.desktop)
+    alias(libs.plugins.neoutils.neoregex.web)
 }
 
 group = config.basePackage
@@ -43,6 +42,7 @@ kotlin {
             implementation(projects.core.designSystem)
             implementation(projects.core.resources)
             implementation(projects.core.common)
+            implementation(projects.core.sharedUi)
 
             // voyager
             implementation(catalog.voyager.navigator)
@@ -59,7 +59,7 @@ kotlin {
     }
 }
 
-tasks.register<Tar>("createTarGz") {
+tasks.register<Tar>("packageReleaseTarGz") {
 
     group = "distribution"
     description = "create a zipped genetic distribution"
@@ -68,7 +68,7 @@ tasks.register<Tar>("createTarGz") {
 
     compression = Compression.GZIP
     archiveExtension.set("tar.gz")
-    archiveFileName.set(config.distName() + ".tar.gz")
+    archiveFileName.set(config.distribution() + ".tar.gz")
     destinationDirectory.set(layout.buildDirectory.dir("distribution"))
 
     into("NeoRegex") {

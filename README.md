@@ -9,7 +9,7 @@ A cross-platform app to validate regular expressions.
 </p>
 
 <p align="center">
-    <img src="images/desktop-dark.png" alt="NeoRegex desktop app"/>
+    <img src="images/linux-dark-mode.png" alt="NeoRegex desktop app"/>
 </p>
 
 <p align="center"> 
@@ -26,8 +26,10 @@ A cross-platform app to validate regular expressions.
 | Platform | Status |
 |----------|--------|
 | Android  | ✅      |
+| iOS      | ❌      |
 | Windows  | ✅      |
 | Linux    | ✅      |
+| macOS    | ✅      |
 | Web      | ✅      |
 
 ## Build
@@ -37,8 +39,9 @@ I recommend using [Intellij IDEA](https://www.jetbrains.com/idea/download) as th
 Compose** and **Compose Multiplatform** plugins installed.
 
 > [!TIP]
-> - You can get the **JDK** and **Android SDK** directly from **Intellij IDEA**. <br>
-> - Use run configurations to get started. <br>
+> - You can obtain the **JDK** and **Android SDK** directly from **IntelliJ IDEA**.
+> - Use **JBR** (JetBrains Runtime) for better window integration.
+> - Use run configurations to get started.
 
 ## License
 

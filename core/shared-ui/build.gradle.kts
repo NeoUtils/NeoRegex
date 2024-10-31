@@ -17,18 +17,22 @@
  */
 
 import extension.config
+import extension.module
+import extension.name
 
 plugins {
-    id("com.neo.regex.core")
+    alias(libs.plugins.neoutils.neoregex.core)
 }
 
-group = config.basePackage + ".core.sharedui"
+group = config.module("core.sharedui")
 version = config.version.name()
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.core.designSystem)
+            implementation(projects.core.common)
+            implementation(projects.core.resources)
         }
     }
 }

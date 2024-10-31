@@ -24,37 +24,12 @@ data class Config(
     val android: Android,
     val basePackage: String
 ) {
-
-    fun distName(): String {
-        return "$name-${version.name()}"
-    }
-
     data class Version(
         val major: Int,
         val minor: Int,
         val patch: Int,
         val phase: Phase
-    ) {
-
-        fun name(
-            withPhase: Boolean = true
-        ): String {
-
-            if (withPhase && phase != Phase.RELEASE) {
-                return "$major.$minor.$patch-${phase.value}"
-            }
-
-            return "$major.$minor.$patch"
-        }
-
-        fun code(): Int {
-
-            require(patch in 0..9)
-            require(minor in 0..9)
-
-            return major * 100 + minor * 10 + patch
-        }
-    }
+    )
 
     data class Android(
         val compileSdk: Int,

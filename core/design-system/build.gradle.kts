@@ -17,12 +17,14 @@
  */
 
 import extension.config
+import extension.module
+import extension.name
 
 plugins {
-    id("com.neo.regex.core")
+    alias(libs.plugins.neoutils.neoregex.core)
 }
 
-group = config.basePackage + ".core.designsystem"
+group = config.module(name = "core")
 version = config.version.name()
 
 kotlin {
@@ -32,6 +34,3 @@ kotlin {
         }
     }
 }
-
-group = config.basePackage + ".core.designsystem"
-version = config.version.name()

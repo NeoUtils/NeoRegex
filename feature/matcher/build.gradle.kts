@@ -18,12 +18,14 @@
 
 import extension.catalog
 import extension.config
+import extension.module
+import extension.name
 
 plugins {
-    id("com.neo.regex.core")
+    alias(libs.plugins.neoutils.neoregex.core)
 }
 
-group = config.basePackage + ".feature.matcher"
+group = config.module(name = "feature")
 version = config.version.name()
 
 kotlin {

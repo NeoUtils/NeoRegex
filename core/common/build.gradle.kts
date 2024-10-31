@@ -18,12 +18,14 @@
 
 import extension.catalog
 import extension.config
+import extension.module
+import extension.name
 
 plugins {
-    id("com.neo.regex.core")
+    alias(libs.plugins.neoutils.neoregex.core)
 }
 
-group = config.basePackage + ".core.common"
+group = config.module(name = "core")
 version = config.version.name()
 
 kotlin {
@@ -33,6 +35,12 @@ kotlin {
 
             // junit
             implementation(catalog.kotlin.test)
+        }
+
+        desktopMain.dependencies {
+            implementation(libs.dbus.java.core)
+            implementation(libs.dbus.java.transport.native.unixsocket)
+            implementation(libs.slf4j.nop)
         }
     }
 }
