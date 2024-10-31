@@ -52,6 +52,8 @@ compose.desktop {
 
         nativeDistributions {
 
+            modules("jdk.security.auth")
+
             targetFormats(
                 TargetFormat.Exe,
                 TargetFormat.Rpm,
