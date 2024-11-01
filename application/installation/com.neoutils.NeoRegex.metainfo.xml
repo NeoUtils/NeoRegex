@@ -37,7 +37,7 @@
             <caption>NeoRegex in Dark Mode</caption>
         </screenshot>
 
-        <screenshot type="default">
+        <screenshot>
             <image>
                 https://raw.githubusercontent.com/NeoUtils/NeoRegex/1bd2a74185c302e8776edfadb41615955c393be5/images/linux-light-mode.png
             </image>
@@ -46,13 +46,14 @@
     </screenshots>
 
     <releases>
-        <release version="2.2.0" date="2024-10-29">
+        <release version="2.2.1" date="2024-11-01">
             <description>
-                <p>Version 2.2.0 introduces several enhancements:</p>
+                <p>Improvements in user experience.</p>
                 <ul>
                     <li>Small improvements across the application.</li>
                     <li>Customized window for a personalized experience.</li>
                     <li>Enhanced touchscreen support for better usability on touch devices.</li>
+                    <li>Improved theme detection.</li>
                 </ul>
             </description>
         </release>
