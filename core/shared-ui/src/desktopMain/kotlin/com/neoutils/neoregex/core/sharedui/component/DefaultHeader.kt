@@ -167,11 +167,18 @@ fun FrameWindowScope.DefaultHeader(
 
                 content(
                     PaddingValues(
-                        end = width.value + dimensions.medium,
+                        end = width.value + dimensions.short,
                     )
                 )
             } else {
-                // TODO: implement
+                content(
+                    density.run {
+                        PaddingValues(
+                            start = customTitleBar.leftInset.toDp(),
+                            end = customTitleBar.rightInset.toDp()
+                        )
+                    }
+                )
             }
         }
     }

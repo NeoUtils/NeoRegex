@@ -18,6 +18,7 @@
 
 package com.neoutils.neoregex.core.sharedui.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.HorizontalDivider
@@ -27,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
@@ -35,7 +35,6 @@ import com.jetbrains.JBR
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.resources.flavicon
-import com.neoutils.neoregex.core.sharedui.extension.applyIf
 import com.neoutils.neoregex.core.sharedui.remember.CompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.rememberCompleteWindowState
 import org.jetbrains.compose.resources.painterResource
@@ -46,6 +45,7 @@ fun ApplicationScope.NeoWindow(
     icon: Painter = painterResource(Res.drawable.flavicon),
     title: String = stringResource(Res.string.app_name),
     undecorated: Boolean = JBR.windowDecorations == null,
+    border: BorderStroke = BorderStroke(1.dp, colorScheme.outline),
     header: @Composable FrameWindowScope.() -> Unit = {
         DefaultHeader {
             Text(
@@ -79,12 +79,10 @@ fun ApplicationScope.NeoWindow(
             modifier = when (completeWindowState) {
                 CompleteWindowState.FLOATING,
                 CompleteWindowState.PINNED -> {
-                    Modifier.applyIf(undecorated) {
-                        border(
-                            width = 1.dp,
-                            color = colorScheme.outline,
-                            shape = RectangleShape,
-                        )
+                    if (undecorated) {
+                        Modifier.border(border)
+                    } else {
+                        Modifier
                     }
                 }
 

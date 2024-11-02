@@ -29,6 +29,7 @@ data class Dimensions(
     val tiny: Dp = 4.dp,
     val medium: Dp = 6.dp,
     val small: Dp = 8.dp,
+    val short: Dp = 12.dp,
     val default: Dp = 16.dp,
     val large: Dp = 24.dp,
     val huge: Dp = 32.dp,

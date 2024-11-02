@@ -54,7 +54,7 @@ fun main() = application {
     NeoTheme(uiMode.isDark) {
         NeoWindow(
             header = {
-                TitleBar()
+                Header()
             }
         ) {
             App()
@@ -63,7 +63,7 @@ fun main() = application {
 }
 
 @Composable
-private fun FrameWindowScope.TitleBar(
+private fun FrameWindowScope.Header(
     title: String = stringResource(Res.string.app_name),
     uiMode: UiMode = remember { UiMode.resolve() }
 ) = DefaultHeader { padding ->
