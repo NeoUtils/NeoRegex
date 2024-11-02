@@ -30,6 +30,7 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -62,7 +63,7 @@ private val DefaultHeaderHeight = 40.dp
 fun FrameWindowScope.DefaultHeader(
     modifier: Modifier = Modifier,
     uiMode: UiMode = remember { UiMode.resolve() },
-    content: @Composable BoxScope.() -> Unit = {},
+    content: @Composable BoxScope.(padding: PaddingValues) -> Unit = {},
 ) {
 
     val focus = rememberWindowFocus()
@@ -148,19 +149,30 @@ fun FrameWindowScope.DefaultHeader(
         Box(
             modifier = Modifier
                 .padding(dimensions.medium)
-                .fillMaxWidth(),
+                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
 
             if (customTitleBar == null) {
+
+                val width = remember { mutableStateOf(0.dp) }
+
                 Buttons(
-                    modifier = Modifier.align(
-                        Alignment.CenterEnd
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .onSizeChanged {
+                            width.value = it.width.dp
+                        }
+                )
+
+                content(
+                    PaddingValues(
+                        end = width.value + dimensions.medium,
                     )
                 )
+            } else {
+                // TODO: implement
             }
-
-            content()
         }
     }
 }

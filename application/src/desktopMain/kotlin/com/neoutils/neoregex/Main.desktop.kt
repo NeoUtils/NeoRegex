@@ -34,8 +34,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.application
-import com.neoutils.neoregex.core.common.platform.Platform
-import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.common.util.UiMode
 import com.neoutils.neoregex.core.common.util.isDark
 import com.neoutils.neoregex.core.common.util.resolve
@@ -68,7 +66,7 @@ fun main() = application {
 private fun FrameWindowScope.TitleBar(
     title: String = stringResource(Res.string.app_name),
     uiMode: UiMode = remember { UiMode.resolve() }
-) = DefaultHeader {
+) = DefaultHeader { padding ->
 
     Text(
         text = title,
@@ -78,13 +76,10 @@ private fun FrameWindowScope.TitleBar(
     )
 
     Row(
-        modifier = Modifier.align(
-            alignment = when (platform) {
-                is Platform.Desktop.MacOS -> Alignment.CenterEnd
-                is Platform.Desktop.Linux -> Alignment.CenterStart
-                else -> error("Invalid")
-            }
-        )
+        modifier = Modifier
+            .padding(padding)
+            .padding(horizontal = dimensions.medium)
+            .align(Alignment.CenterEnd)
     ) {
         val uriHandler = LocalUriHandler.current
 

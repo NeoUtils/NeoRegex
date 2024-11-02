@@ -27,8 +27,8 @@ val LocalDimensions = compositionLocalOf<Dimensions> { error("Dimensions not def
 data class Dimensions(
     val micro: Dp = 2.dp,
     val tiny: Dp = 4.dp,
-    val small: Dp = 8.dp,
     val medium: Dp = 6.dp,
+    val small: Dp = 8.dp,
     val default: Dp = 16.dp,
     val large: Dp = 24.dp,
     val huge: Dp = 32.dp,
