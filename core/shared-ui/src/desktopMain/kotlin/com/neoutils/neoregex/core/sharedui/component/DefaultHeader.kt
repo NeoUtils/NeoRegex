@@ -28,7 +28,6 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -44,8 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.WindowScope
 import com.jetbrains.JBR
-import com.neoutils.neoregex.core.common.platform.Platform
-import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.common.util.DragHandler
 import com.neoutils.neoregex.core.common.util.UiMode
 import com.neoutils.neoregex.core.common.util.isDark
@@ -63,10 +60,9 @@ private val DefaultHeaderHeight = 40.dp
 
 @Composable
 fun FrameWindowScope.DefaultHeader(
-    title: String,
     modifier: Modifier = Modifier,
-    options: @Composable RowScope.() -> Unit = {},
     uiMode: UiMode = remember { UiMode.resolve() },
+    content: @Composable BoxScope.() -> Unit = {},
 ) {
 
     val focus = rememberWindowFocus()
@@ -148,7 +144,6 @@ fun FrameWindowScope.DefaultHeader(
                 )
             }
         }
-
     ) {
         Box(
             modifier = Modifier
@@ -156,7 +151,6 @@ fun FrameWindowScope.DefaultHeader(
                 .fillMaxWidth(),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = title)
 
             if (customTitleBar == null) {
                 Buttons(
@@ -166,17 +160,7 @@ fun FrameWindowScope.DefaultHeader(
                 )
             }
 
-            Row(
-                modifier = Modifier.align(
-                    alignment = when (platform) {
-                        is Platform.Desktop.MacOS -> Alignment.CenterEnd
-                        is Platform.Desktop.Linux -> Alignment.CenterStart
-                        else -> error("Invalid")
-                    }
-                )
-            ) {
-                options()
-            }
+            content()
         }
     }
 }

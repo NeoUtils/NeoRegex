@@ -20,10 +20,10 @@ package com.neoutils.neoregex.core.sharedui.component
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.height
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,7 +47,14 @@ fun ApplicationScope.NeoWindow(
     title: String = stringResource(Res.string.app_name),
     undecorated: Boolean = JBR.windowDecorations == null,
     header: @Composable FrameWindowScope.() -> Unit = {
-        DefaultHeader(title = title)
+        DefaultHeader {
+            Text(
+                text = title,
+                modifier = Modifier.align(
+                    Alignment.Center
+                )
+            )
+        }
     },
     content: @Composable FrameWindowScope.() -> Unit
 ) {

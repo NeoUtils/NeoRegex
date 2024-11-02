@@ -19,18 +19,23 @@
 package com.neoutils.neoregex
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.application
+import com.neoutils.neoregex.core.common.platform.Platform
+import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.common.util.UiMode
 import com.neoutils.neoregex.core.common.util.isDark
 import com.neoutils.neoregex.core.common.util.resolve
@@ -63,31 +68,44 @@ fun main() = application {
 private fun FrameWindowScope.TitleBar(
     title: String = stringResource(Res.string.app_name),
     uiMode: UiMode = remember { UiMode.resolve() }
-) {
-    DefaultHeader(
-        title = title,
-        options = {
-            val uriHandler = LocalUriHandler.current
+) = DefaultHeader {
 
-            Icon(
-                painter = painterResource(Res.drawable.github),
-                contentDescription = null,
-                tint = when (uiMode) {
-                    UiMode.LIGHT -> colorScheme.onSurface
-                    UiMode.DARK -> colorScheme.onSurface
-                },
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .clickable(
-                        onClick = {
-                            uriHandler.openUri(
-                                uri = "https://github.com/NeoUtils/NeoRegex"
-                            )
-                        }
-                    )
-                    .padding(dimensions.medium)
-                    .aspectRatio(ratio = 1f)
-            )
-        }
+    Text(
+        text = title,
+        modifier = Modifier.align(
+            Alignment.Center
+        )
     )
+
+    Row(
+        modifier = Modifier.align(
+            alignment = when (platform) {
+                is Platform.Desktop.MacOS -> Alignment.CenterEnd
+                is Platform.Desktop.Linux -> Alignment.CenterStart
+                else -> error("Invalid")
+            }
+        )
+    ) {
+        val uriHandler = LocalUriHandler.current
+
+        Icon(
+            painter = painterResource(Res.drawable.github),
+            contentDescription = null,
+            tint = when (uiMode) {
+                UiMode.LIGHT -> colorScheme.onSurface
+                UiMode.DARK -> colorScheme.onSurface
+            },
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable(
+                    onClick = {
+                        uriHandler.openUri(
+                            uri = "https://github.com/NeoUtils/NeoRegex"
+                        )
+                    }
+                )
+                .padding(dimensions.medium)
+                .aspectRatio(ratio = 1f)
+        )
+    }
 }
