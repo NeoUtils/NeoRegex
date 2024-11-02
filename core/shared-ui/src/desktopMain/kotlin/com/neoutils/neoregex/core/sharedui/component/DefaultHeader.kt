@@ -44,6 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.WindowScope
 import com.jetbrains.JBR
+import com.neoutils.neoregex.core.common.platform.Platform
+import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.common.util.DragHandler
 import com.neoutils.neoregex.core.common.util.UiMode
 import com.neoutils.neoregex.core.common.util.isDark
@@ -53,8 +55,6 @@ import com.neoutils.neoregex.core.sharedui.remember.CompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
 import com.neoutils.neoregex.core.sharedui.remember.rememberCompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
-import org.jetbrains.skiko.OS
-import org.jetbrains.skiko.hostOs
 import java.awt.Frame
 import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent
@@ -66,7 +66,7 @@ fun FrameWindowScope.DefaultHeader(
     title: String,
     modifier: Modifier = Modifier,
     options: @Composable RowScope.() -> Unit = {},
-    uiMode: UiMode = UiMode.resolve(),
+    uiMode: UiMode = remember { UiMode.resolve() },
 ) {
 
     val focus = rememberWindowFocus()
@@ -168,9 +168,9 @@ fun FrameWindowScope.DefaultHeader(
 
             Row(
                 modifier = Modifier.align(
-                    alignment = when (hostOs) {
-                        OS.Linux, OS.Windows -> Alignment.CenterStart
-                        OS.MacOS -> Alignment.CenterEnd
+                    alignment = when (platform) {
+                        is Platform.Desktop.MacOS -> Alignment.CenterEnd
+                        is Platform.Desktop.Linux -> Alignment.CenterStart
                         else -> error("Invalid")
                     }
                 )

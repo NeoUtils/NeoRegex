@@ -18,7 +18,4 @@
 
 package com.neoutils.neoregex.core.common.platform
 
-import com.neoutils.neoregex.core.common.platform.Platform
-
-actual val Platform.Companion.Current: Platform
-    get() = Platform.ANDROID
+actual val platform: Platform = Platform.Android

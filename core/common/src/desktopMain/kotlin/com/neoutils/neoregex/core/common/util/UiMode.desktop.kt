@@ -18,17 +18,17 @@
 
 package com.neoutils.neoregex.core.common.util
 
+import com.neoutils.neoregex.core.common.platform.Platform
+import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.common.util.UiMode.DARK
 import com.neoutils.neoregex.core.common.util.UiMode.LIGHT
-import org.jetbrains.skiko.OS
 import org.jetbrains.skiko.SystemTheme
 import org.jetbrains.skiko.currentSystemTheme
-import org.jetbrains.skiko.hostOs
 
 fun UiMode.Companion.resolve(): UiMode {
 
-    return when (hostOs) {
-        OS.Linux -> {
+    return when (platform) {
+        Platform.Desktop.Linux -> {
             XDGDesktopPortal().use {
                 it.getTheme()
             }

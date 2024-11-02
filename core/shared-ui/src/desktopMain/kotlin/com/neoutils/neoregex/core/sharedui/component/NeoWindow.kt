@@ -47,9 +47,7 @@ fun ApplicationScope.NeoWindow(
     title: String = stringResource(Res.string.app_name),
     undecorated: Boolean = JBR.windowDecorations == null,
     header: @Composable FrameWindowScope.() -> Unit = {
-        DefaultHeader(
-            title = title,
-        )
+        DefaultHeader(title = title)
     },
     content: @Composable FrameWindowScope.() -> Unit
 ) {

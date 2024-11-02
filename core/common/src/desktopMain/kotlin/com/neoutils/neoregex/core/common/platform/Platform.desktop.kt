@@ -18,7 +18,12 @@
 
 package com.neoutils.neoregex.core.common.platform
 
-import com.neoutils.neoregex.core.common.platform.Platform
+import org.jetbrains.skiko.OS
+import org.jetbrains.skiko.hostOs
 
-actual val Platform.Companion.Current
-    get() = Platform.DESKTOP
+actual val platform: Platform = when (hostOs) {
+    OS.Linux -> Platform.Desktop.Linux
+    OS.Windows -> Platform.Desktop.Windows
+    OS.MacOS -> Platform.Desktop.MacOS
+    else -> error("Unsupported platform ${hostOs.name}")
+}
