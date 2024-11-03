@@ -10,7 +10,8 @@
 
     <description>
         <p>
-            Visualize the functioning of your regular expressions in real-time with a useful and intuitive tool. With support for capture groups, undo, and redo.
+            Visualize the functioning of your regular expressions in real-time with a useful and intuitive tool. With
+            support for capture groups, undo, and redo.
         </p>
     </description>
 
@@ -50,10 +51,9 @@
             <description>
                 <p>Improvements in user experience.</p>
                 <ul>
-                    <li>Small improvements across the application.</li>
                     <li>Customized window for a personalized experience.</li>
-                    <li>Enhanced touchscreen support for better usability on touch devices.</li>
                     <li>Improved theme detection.</li>
+                    <li>Small improvements.</li>
                 </ul>
             </description>
         </release>
