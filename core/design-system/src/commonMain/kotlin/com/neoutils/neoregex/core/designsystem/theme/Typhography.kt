@@ -29,8 +29,8 @@ import com.neoutils.neoregex.core.resources.roboto_mono
 import org.jetbrains.compose.resources.Font
 
 @Composable
-internal fun NeoTypography(
-    fontFamily: FontFamily = FontFamily(Font(Res.font.roboto_mono))
+fun NeoTypography(
+    fontFamily: FontFamily = FontFamily.Default
 ) = Typography(
     displayLarge = TextStyle(
         fontFamily = fontFamily,

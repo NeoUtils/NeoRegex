@@ -31,7 +31,7 @@ class XDGDesktopPortal(
         .build()
 ) : AutoCloseable {
 
-    fun getTheme(): UiMode {
+    fun getTheme(): ColorTheme {
 
         val settings = connection.getRemoteObject(
             BUS,
@@ -45,9 +45,9 @@ class XDGDesktopPortal(
         )
 
         return when (theme.value.value) {
-            Theme.LIGHT.value -> UiMode.LIGHT
-            Theme.DARK.value -> UiMode.DARK
-            else -> UiMode.LIGHT
+            Theme.LIGHT.value -> ColorTheme.LIGHT
+            Theme.DARK.value -> ColorTheme.DARK
+            else -> ColorTheme.LIGHT
         }
     }
 

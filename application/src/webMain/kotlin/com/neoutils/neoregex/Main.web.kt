@@ -23,6 +23,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.CanvasBasedWindow
 import com.neoutils.neoregex.core.common.extension.toCss
 import com.neoutils.neoregex.core.common.util.SizeManager
+import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import kotlinx.browser.document
 import kotlinx.coroutines.flow.first
@@ -44,7 +45,7 @@ fun main() {
                 sizeManager.changes.first()
             }
         ) {
-            NeoTheme {
+            NeoTheme(ColorTheme) {
 
                 body.style.backgroundColor =
                     colorScheme.background.toCss()

@@ -26,8 +26,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.ui.Modifier
-import com.neoutils.neoregex.core.common.util.UiMode
-import com.neoutils.neoregex.core.common.util.resolve
+import com.neoutils.neoregex.core.common.util.ColorTheme
+import com.neoutils.neoregex.core.common.util.colorTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 
 class MainActivity : ComponentActivity() {
@@ -38,6 +38,7 @@ class MainActivity : ComponentActivity() {
         setupSystemBars()
 
         setContent {
+
             NeoTheme {
                 App(Modifier.safeDrawingPadding())
             }
@@ -46,14 +47,14 @@ class MainActivity : ComponentActivity() {
 
     private fun setupSystemBars() {
 
-        val style = when (UiMode.resolve(context = this)) {
-            UiMode.DARK -> {
+        val style = when (colorTheme) {
+            ColorTheme.DARK -> {
                 SystemBarStyle.dark(
                     Color.BLACK,
                 )
             }
 
-            UiMode.LIGHT -> {
+            ColorTheme.LIGHT -> {
                 SystemBarStyle.light(
                     Color.WHITE,
                     Color.BLACK,

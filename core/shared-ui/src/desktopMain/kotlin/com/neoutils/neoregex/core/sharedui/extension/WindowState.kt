@@ -16,22 +16,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
-import extension.module
-import extension.name
+package com.neoutils.neoregex.core.sharedui.extension
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
-}
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.window.WindowPosition
+import androidx.compose.ui.window.WindowState
 
-group = config.module(name = "core")
-version = config.version.name()
+fun WindowState.updateSize(newSize: DpSize) {
 
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation(projects.core.resources)
-            implementation(projects.core.common)
-        }
-    }
+    val diff = size - newSize
+
+    val newPosition = WindowPosition.Absolute(
+        x = position.x + diff.width / 2,
+        y = position.y + diff.height / 2
+    )
+
+    size = newSize
+    position = newPosition
 }

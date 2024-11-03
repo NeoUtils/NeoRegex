@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2024 <AUTHOR>.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,26 +18,29 @@
 
 package com.neoutils.neoregex.core.common.util
 
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import com.neoutils.neoregex.core.common.platform.Platform
 import com.neoutils.neoregex.core.common.platform.platform
-import com.neoutils.neoregex.core.common.util.UiMode.DARK
-import com.neoutils.neoregex.core.common.util.UiMode.LIGHT
 import org.jetbrains.skiko.SystemTheme
 import org.jetbrains.skiko.currentSystemTheme
 
-fun UiMode.Companion.resolve(): UiMode {
+@Composable
+actual fun rememberColorTheme(): ColorTheme {
 
-    return when (platform) {
-        Platform.Desktop.Linux -> {
-            XDGDesktopPortal().use {
-                it.getTheme()
+    return remember {
+        when (platform) {
+            Platform.Desktop.Linux -> {
+                XDGDesktopPortal().use {
+                    it.getTheme()
+                }
             }
-        }
 
-        else -> when (currentSystemTheme) {
-            SystemTheme.LIGHT -> LIGHT
-            SystemTheme.DARK -> DARK
-            SystemTheme.UNKNOWN -> LIGHT
+            else -> when (currentSystemTheme) {
+                SystemTheme.LIGHT -> ColorTheme.LIGHT
+                SystemTheme.DARK -> ColorTheme.DARK
+                SystemTheme.UNKNOWN -> ColorTheme.LIGHT
+            }
         }
     }
 }
