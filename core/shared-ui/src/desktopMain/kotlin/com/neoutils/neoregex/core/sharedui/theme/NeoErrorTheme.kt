@@ -35,6 +35,7 @@ private val LightColors = lightColorScheme(
     surfaceTint = Color.White,
     surfaceContainer = Gray100,
     surfaceBright = Gray300,
+    inverseSurface = Gray800,
     secondary = Blue100,
     secondaryContainer = Gray300,
     onSecondaryContainer = Color.Black,

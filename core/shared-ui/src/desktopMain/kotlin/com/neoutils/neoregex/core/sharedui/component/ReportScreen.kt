@@ -18,14 +18,15 @@
 
 package com.neoutils.neoregex.core.sharedui.component
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ErrorOutline
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -35,65 +36,108 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.*
+import kotlinx.coroutines.delay
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun ReportScreen(
     throwable: Throwable,
     modifier: Modifier = Modifier
-) = Column(
-    modifier = modifier.padding(dimensions.default),
-    horizontalAlignment = Alignment.CenterHorizontally,
-    verticalArrangement = Arrangement.spacedBy(
-        space = dimensions.small,
-        alignment = Alignment.Top
-    )
+) = Scaffold(
+    modifier = modifier,
+    bottomBar = {
+        BottomButtons(
+            throwable = throwable,
+            modifier = Modifier
+                .padding(bottom = dimensions.default)
+                .fillMaxWidth()
+        )
+    }
+) { contentPadding ->
+    Column(
+        modifier = Modifier
+            .padding(contentPadding)
+            .padding(dimensions.default)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(
+            space = dimensions.small,
+            alignment = Alignment.CenterVertically
+        )
+    ) {
+        Icon(
+            Icons.Rounded.ErrorOutline,
+            contentDescription = null,
+            modifier = Modifier.size(40.dp),
+            tint = MaterialTheme.colorScheme.error
+        )
+
+        Text(
+            text = stringResource(Res.string.error_title),
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        Text(
+            text = stringResource(Res.string.error_message),
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+private fun BottomButtons(
+    throwable: Throwable,
+    modifier: Modifier = Modifier
+) = Row(
+    modifier = modifier,
+    horizontalArrangement = Arrangement.SpaceAround
 ) {
-
-    Icon(
-        Icons.Rounded.ErrorOutline,
-        contentDescription = null,
-        modifier = Modifier.size(40.dp),
-        tint = MaterialTheme.colorScheme.error
-    )
-
-    Text(
-        text = stringResource(Res.string.error_title),
-        textAlign = TextAlign.Center,
-        style = MaterialTheme.typography.titleMedium
-    )
-
-    Text(
-        text = stringResource(Res.string.error_message),
-        textAlign = TextAlign.Center,
-    )
-
-    Spacer(Modifier.weight(weight = 1f))
 
     val uriHandler = LocalUriHandler.current
     val clipboard = LocalClipboardManager.current
 
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceAround
-    ) {
-        Button(
-            onClick = {
-                clipboard.setText(
-                    AnnotatedString(throwable.stackTraceToString())
-                )
-            },
-        ) {
-            Text(stringResource(Res.string.copy_error))
-        }
+    var copied by remember { mutableStateOf(false) }
 
-        Button(
-            onClick = {
-                val title = "Crash:%20${throwable::class.java.name}"
-                uriHandler.openUri("https://github.com/NeoUtils/NeoRegex/issues/new?title=$title")
-            },
-        ) {
-            Text(stringResource(Res.string.report_error))
+    LaunchedEffect(copied) {
+        if (copied) {
+            delay(timeMillis = 1_000)
+            copied = false
         }
+    }
+
+    Button(
+        onClick = {
+            clipboard.setText(
+                AnnotatedString(
+                    throwable.stackTraceToString()
+                )
+            )
+            copied = true
+        },
+        modifier = Modifier.width(120.dp)
+    ) {
+        AnimatedContent(
+            targetState = copied,
+            transitionSpec = {
+                fadeIn() togetherWith fadeOut()
+            }
+        ) { copied ->
+            if (copied) {
+                Text(stringResource(Res.string.copied))
+            } else {
+                Text(stringResource(Res.string.copy_error))
+            }
+        }
+    }
+
+    Button(
+        onClick = {
+            uriHandler.openUri(
+                uri = "https://github.com/NeoUtils/NeoRegex/issues/new?template=bug_report.md"
+            )
+        },
+    ) {
+        Text(stringResource(Res.string.report_error))
     }
 }

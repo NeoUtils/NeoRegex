@@ -22,6 +22,7 @@
     <string name="error_title">Oops! Something went wrong.</string>
     <string name="error_message">We'd love to fix this! If possible, please share what happened.</string>
     <string name="copy_error">Copy error</string>
+    <string name="copied">Copied!</string>
     <string name="report_error">Report error</string>
     <string name="stack_trace">Stack trace</string>
     <string name="fatal_error_title">Fatal error: %1$s</string>

@@ -28,15 +28,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.ApplicationScope
-import androidx.compose.ui.window.Window
-import androidx.compose.ui.window.WindowPosition
-import androidx.compose.ui.window.rememberWindowState
+import androidx.compose.ui.window.*
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.fatal_error_title
 import com.neoutils.neoregex.core.resources.report_error
 import com.neoutils.neoregex.core.resources.stack_trace
-import com.neoutils.neoregex.core.sharedui.extension.updateSize
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -44,48 +40,34 @@ import org.jetbrains.compose.resources.stringResource
 fun ApplicationScope.FatalErrorWindow(
     throwable: Throwable
 ) {
-    val state = rememberWindowState(
+    val state = rememberDialogState(
         position = WindowPosition.Aligned(Alignment.Center),
-        size = DpSize(400.dp, 320.dp),
+        size = DpSize(500.dp, 400.dp)
     )
 
-    Window(
+    DialogWindow(
         onCloseRequest = ::exitApplication,
         title = stringResource(
             Res.string.fatal_error_title,
             throwable::class.java.name
         ),
         state = state,
-        resizable = false,
     ) {
-
-        Column {
+        Column(Modifier.fillMaxSize()) {
 
             var current by remember { mutableStateOf(Tab.REPORT_ERROR) }
-
-            LaunchedEffect(current) {
-                when (current) {
-                    Tab.REPORT_ERROR -> {
-                        state.updateSize(DpSize(400.dp, 320.dp))
-                    }
-
-                    Tab.STACK_TRACE -> {
-                        state.updateSize(DpSize(800.dp, 600.dp))
-                    }
-                }
-            }
 
             val selectedTabIndex = remember(current) { Tab.entries.indexOf(current) }
 
             TabRow(
                 selectedTabIndex = selectedTabIndex,
             ) {
-                Tab.entries.forEach {
+                Tab.entries.forEach { tab ->
                     Tab(
-                        text = { Text(stringResource(it.title)) },
-                        selected = current == it,
+                        text = { Text(stringResource(tab.title)) },
+                        selected = current == tab,
                         onClick = {
-                            current = it
+                            current = tab
                         }
                     )
                 }

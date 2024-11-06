@@ -39,7 +39,7 @@ import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.resources.flavicon
 import com.neoutils.neoregex.core.sharedui.remember.CompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.rememberCompleteWindowState
-import com.neoutils.neoregex.core.sharedui.util.NeoWindowExceptionHandlerFactory
+import com.neoutils.neoregex.core.sharedui.util.NeoRegexWindowExceptionHandlerFactory
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -50,7 +50,7 @@ fun ApplicationScope.NeoWindow(
     title: String = stringResource(Res.string.app_name),
     undecorated: Boolean = JBR.windowDecorations == null,
     border: BorderStroke = BorderStroke(1.dp, colorScheme.outline),
-    exceptionHandlerFactory: WindowExceptionHandlerFactory = NeoWindowExceptionHandlerFactory,
+    exceptionHandlerFactory: WindowExceptionHandlerFactory = NeoRegexWindowExceptionHandlerFactory,
     header: @Composable FrameWindowScope.() -> Unit = {
         NeoHeader {
             Text(

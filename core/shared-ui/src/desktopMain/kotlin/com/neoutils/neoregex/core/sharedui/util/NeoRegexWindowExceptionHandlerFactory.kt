@@ -19,7 +19,9 @@
 package com.neoutils.neoregex.core.sharedui.util
 
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.window.*
+import androidx.compose.ui.window.WindowExceptionHandler
+import androidx.compose.ui.window.WindowExceptionHandlerFactory
+import androidx.compose.ui.window.launchApplication
 import com.neoutils.neoregex.core.sharedui.component.FatalErrorWindow
 import com.neoutils.neoregex.core.sharedui.theme.NeoErrorTheme
 import kotlinx.coroutines.CoroutineScope
@@ -28,17 +30,18 @@ import java.awt.event.WindowEvent
 import javax.swing.SwingUtilities
 import java.awt.Window as AwtWindows
 
-private val mainScope = CoroutineScope(MainUIDispatcher)
-
 @OptIn(ExperimentalComposeUiApi::class)
-object NeoWindowExceptionHandlerFactory : WindowExceptionHandlerFactory {
+object NeoRegexWindowExceptionHandlerFactory : WindowExceptionHandlerFactory {
 
     override fun exceptionHandler(window: AwtWindows) = WindowExceptionHandler { throwable ->
 
         SwingUtilities.invokeLater {
-            mainScope.launchApplication {
-                NeoErrorTheme {
-                    FatalErrorWindow(throwable)
+
+            with(CoroutineScope(MainUIDispatcher)) {
+                launchApplication {
+                    NeoErrorTheme {
+                        FatalErrorWindow(throwable)
+                    }
                 }
             }
 
