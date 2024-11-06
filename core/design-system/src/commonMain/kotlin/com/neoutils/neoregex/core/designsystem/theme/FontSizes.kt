@@ -30,4 +30,5 @@ data class FontSizes(
     val medium: TextUnit = 16.sp,
     val default: TextUnit = 14.sp,
     val small: TextUnit = 12.sp,
+    val tiny: TextUnit = 10.sp,
 )

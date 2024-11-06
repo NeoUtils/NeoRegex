@@ -30,6 +30,8 @@ import com.neoutils.neoregex.feature.matcher.model.TextState
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
+import kotlin.time.Duration
+import kotlin.time.measureTime
 
 @OptIn(FlowPreview::class)
 class MatcherViewModel : ScreenModel {
@@ -51,27 +53,40 @@ class MatcherViewModel : ScreenModel {
         inputs[Target.REGEX].map { it.text }
     ) { text, pattern ->
 
+        if (pattern.isEmpty()) {
+            return@combine MatcherUiState.MatchResult.Success()
+        }
+
         val regex = try {
             Regex(pattern)
-        } catch (exception: Throwable) {
+        } catch (t: Throwable) {
             return@combine MatcherUiState.MatchResult.Failure(
-                error = exception.message ?: "Invalid regex pattern"
+                error = t.message ?: "Invalid regex pattern"
             )
+        }
+
+        val duration: Duration
+        val result: Sequence<MatchResult>
+
+        // TODO: don't support web target
+        duration = measureTime {
+            result = regex.findAll(text)
         }
 
         MatcherUiState.MatchResult.Success(
             matches = buildList {
-                regex.findAll(text).forEachIndexed { index, match ->
+                result.forEachIndexed { index, match ->
                     add(
                         Match(
                             text = match.value,
                             range = match.range,
                             groups = match.groupValues.drop(n = 1),
-                            number = index.inc()
+                            number = index.inc(),
                         )
                     )
                 }
-            }
+            },
+            duration = duration
         )
     }
 

@@ -21,13 +21,14 @@ package com.neoutils.neoregex.feature.matcher.state
 import androidx.compose.ui.text.input.TextFieldValue
 import com.neoutils.neoregex.core.sharedui.model.Match
 import com.neoutils.neoregex.feature.matcher.model.Target
+import kotlin.time.Duration
 
 data class MatcherUiState(
     val target: Target? = null,
     val text: TextFieldValue = TextFieldValue(),
     val regex: TextFieldValue = TextFieldValue(),
     val history: History = History(),
-    val matchResult: MatchResult = MatchResult.Success(listOf()),
+    val matchResult: MatchResult = MatchResult.Success(),
 ) {
     data class History(
         val canUndo: Boolean = false,
@@ -35,8 +36,10 @@ data class MatcherUiState(
     )
 
     sealed class MatchResult {
+
         data class Success(
-            val matches: List<Match>
+            val matches: List<Match> = listOf(),
+            val duration: Duration = Duration.ZERO
         ) : MatchResult()
 
         data class Failure(
@@ -55,4 +58,10 @@ val MatcherUiState.MatchResult.error
     get() = when (this) {
         is MatcherUiState.MatchResult.Failure -> error
         is MatcherUiState.MatchResult.Success -> ""
+    }
+
+val MatcherUiState.MatchResult.duration
+    get() = when (this) {
+        is MatcherUiState.MatchResult.Failure -> Duration.ZERO
+        is MatcherUiState.MatchResult.Success -> duration
     }
