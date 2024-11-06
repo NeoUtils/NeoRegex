@@ -49,8 +49,8 @@ class MatcherViewModel : ScreenModel {
     )
 
     private val matchResult = combine(
-        inputs[Target.TEXT].map { it.text },
-        inputs[Target.REGEX].map { it.text }
+        inputs[Target.TEXT].map { it.text }.distinctUntilChanged(),
+        inputs[Target.REGEX].map { it.text }.distinctUntilChanged()
     ) { text, pattern ->
 
         if (pattern.isEmpty()) {
