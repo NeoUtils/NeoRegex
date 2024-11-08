@@ -73,13 +73,13 @@ fun ReportScreen(
         )
 
         Text(
-            text = stringResource(Res.string.error_title),
+            text = stringResource(Res.string.fatal_error_subtitle),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleMedium
         )
 
         Text(
-            text = stringResource(Res.string.error_message),
+            text = stringResource(Res.string.fatal_error_message),
             textAlign = TextAlign.Center,
         )
     }
@@ -115,6 +115,7 @@ private fun BottomButtons(
             )
             copied = true
         },
+        enabled = !copied,
         modifier = Modifier.width(120.dp)
     ) {
         AnimatedContent(
@@ -124,9 +125,9 @@ private fun BottomButtons(
             }
         ) { copied ->
             if (copied) {
-                Text(stringResource(Res.string.copied))
+                Text(stringResource(Res.string.fatal_error_copied_label))
             } else {
-                Text(stringResource(Res.string.copy_error))
+                Text(stringResource(Res.string.fatal_error_copy_btn))
             }
         }
     }
@@ -138,6 +139,6 @@ private fun BottomButtons(
             )
         },
     ) {
-        Text(stringResource(Res.string.report_error))
+        Text(stringResource(Res.string.fatal_error_report_btn))
     }
 }

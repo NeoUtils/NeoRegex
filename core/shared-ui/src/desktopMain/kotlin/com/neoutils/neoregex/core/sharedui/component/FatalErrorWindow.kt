@@ -20,19 +20,22 @@ package com.neoutils.neoregex.core.sharedui.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.Error
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
 import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.fatal_error_report_tab
+import com.neoutils.neoregex.core.resources.fatal_error_stack_trace_tab
 import com.neoutils.neoregex.core.resources.fatal_error_title
-import com.neoutils.neoregex.core.resources.report_error
-import com.neoutils.neoregex.core.resources.stack_trace
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -47,11 +50,12 @@ fun ApplicationScope.FatalErrorWindow(
 
     DialogWindow(
         onCloseRequest = ::exitApplication,
+        state = state,
         title = stringResource(
             Res.string.fatal_error_title,
             throwable::class.java.name
         ),
-        state = state,
+        icon = rememberVectorPainter(Icons.TwoTone.Error)
     ) {
         Column(Modifier.fillMaxSize()) {
 
@@ -93,6 +97,6 @@ fun ApplicationScope.FatalErrorWindow(
 }
 
 enum class Tab(val title: StringResource) {
-    REPORT_ERROR(title = Res.string.report_error),
-    STACK_TRACE(title = Res.string.stack_trace);
+    REPORT_ERROR(title = Res.string.fatal_error_report_tab),
+    STACK_TRACE(title = Res.string.fatal_error_stack_trace_tab);
 }

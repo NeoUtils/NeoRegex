@@ -60,7 +60,7 @@ import com.neoutils.neoregex.feature.matcher.state.matches
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.ic_redo_24
 import com.neoutils.neoregex.core.resources.ic_undo_24
-import com.neoutils.neoregex.core.resources.insert_regex_hint
+import com.neoutils.neoregex.core.resources.matcher_footer_insert_regex_hint
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -178,7 +178,7 @@ class MatcherScreen : Screen {
                             else -> false
                         }
                     },
-                hint = stringResource(Res.string.insert_regex_hint),
+                hint = stringResource(Res.string.matcher_footer_insert_regex_hint),
                 error = uiState.matchResult.error
             )
 

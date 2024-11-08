@@ -45,7 +45,7 @@ fun main() {
                 sizeManager.changes.first()
             }
         ) {
-            NeoTheme(ColorTheme) {
+            NeoTheme {
 
                 body.style.backgroundColor =
                     colorScheme.background.toCss()
