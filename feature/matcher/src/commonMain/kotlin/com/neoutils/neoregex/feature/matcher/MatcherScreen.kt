@@ -46,7 +46,7 @@ import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.*
-import com.neoutils.neoregex.core.sharedui.component.MatchesResult
+import com.neoutils.neoregex.core.sharedui.component.MatchesInfos
 import com.neoutils.neoregex.core.sharedui.component.TextEditor
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
 import com.neoutils.neoregex.feature.matcher.extension.onLongHold
@@ -114,7 +114,7 @@ class MatcherScreen : Screen {
                 },
             )
 
-            MatchesResult(
+            MatchesInfos(
                 duration = uiState.matchResult.duration,
                 matches = uiState.matchResult.matches.size,
             )

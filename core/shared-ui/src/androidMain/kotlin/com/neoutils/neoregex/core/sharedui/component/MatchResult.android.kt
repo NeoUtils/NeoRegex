@@ -38,7 +38,7 @@ import kotlin.time.Duration
 import kotlin.time.DurationUnit
 
 @Composable
-actual fun BoxScope.MatchesResult(
+actual fun BoxScope.MatchesInfos(
     duration: Duration,
     matches: Int,
     modifier: Modifier

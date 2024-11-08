@@ -24,7 +24,7 @@ import androidx.compose.ui.Modifier
 import kotlin.time.Duration
 
 @Composable
-expect fun BoxScope.MatchesResult(
+expect fun BoxScope.MatchesInfos(
     duration: Duration,
     matches: Int,
     modifier: Modifier = Modifier
