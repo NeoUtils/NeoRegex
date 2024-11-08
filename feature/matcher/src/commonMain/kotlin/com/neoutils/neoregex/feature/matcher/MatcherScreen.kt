@@ -27,7 +27,6 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,13 +42,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
-import com.neoutils.neoregex.core.common.platform.Platform
-import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
 import com.neoutils.neoregex.core.resources.*
+import com.neoutils.neoregex.core.sharedui.component.MatchesResult
 import com.neoutils.neoregex.core.sharedui.component.TextEditor
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
 import com.neoutils.neoregex.feature.matcher.extension.onLongHold
@@ -60,9 +57,7 @@ import com.neoutils.neoregex.feature.matcher.state.duration
 import com.neoutils.neoregex.feature.matcher.state.error
 import com.neoutils.neoregex.feature.matcher.state.matches
 import org.jetbrains.compose.resources.painterResource
-import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
-import kotlin.time.DurationUnit
 
 class MatcherScreen : Screen {
 
@@ -119,28 +114,10 @@ class MatcherScreen : Screen {
                 },
             )
 
-            if (platform != Platform.Web) {
-                Text(
-                    text = pluralStringResource(
-                        Res.plurals.match_result_infos,
-                        uiState.matchResult.matches.size,
-                        uiState.matchResult.matches.size,
-                        uiState.matchResult.duration.toString(
-                            unit = DurationUnit.MILLISECONDS,
-                            decimals = 3
-                        )
-                    ),
-                    fontSize = fontSizes.tiny,
-                    style = typography.labelSmall,
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(4.dp)
-                        .background(
-                            color = colorScheme.surfaceVariant,
-                            shape = RoundedCornerShape(dimensions.tiny)
-                        ).padding(2.dp)
-                )
-            }
+            MatchesResult(
+                duration = uiState.matchResult.duration,
+                matches = uiState.matchResult.matches.size,
+            )
         }
 
         Footer(
