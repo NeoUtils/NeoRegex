@@ -23,20 +23,20 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.onDrag
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -53,14 +53,12 @@ import org.jetbrains.compose.resources.pluralStringResource
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 actual fun BoxScope.MatchesInfos(
     duration: Duration,
     matches: Int,
     modifier: Modifier
 ) {
-
     val density = LocalDensity.current
 
     var isRunning by remember { mutableStateOf(false) }
@@ -103,15 +101,17 @@ actual fun BoxScope.MatchesInfos(
                         shape = RoundedCornerShape(dimensions.tiny)
                     )
                     .run {
-                        rectMap[alignment]?.takeIf {
-                            !it.intersect(targetRect).isEmpty
-                        }?.let {
-                            border(
-                                width = 1.dp,
-                                color = colorScheme.primary,
-                                shape = RoundedCornerShape(dimensions.tiny)
-                            )
-                        } ?: this
+                        rectMap[alignment]
+                            ?.takeIf {
+                                !it.intersect(targetRect).isEmpty
+                            }
+                            ?.let {
+                                border(
+                                    width = 1.dp,
+                                    color = colorScheme.primary,
+                                    shape = RoundedCornerShape(dimensions.tiny)
+                                )
+                            } ?: this
                     }
                     .onGloballyPositioned {
                         rectMap = rectMap + mapOf(
@@ -122,8 +122,6 @@ actual fun BoxScope.MatchesInfos(
             )
         }
     }
-
-    val hover = remember { MutableInteractionSource() }
 
     Text(
         text = pluralStringResource(
@@ -145,48 +143,61 @@ actual fun BoxScope.MatchesInfos(
                 shape = RoundedCornerShape(dimensions.tiny)
             )
             .onGloballyPositioned {
-                targetSize = density.run { it.size.toSize().toDpSize() }
+                targetSize = density.run {
+                    it.size
+                        .toSize()
+                        .toDpSize()
+                }
+
                 targetRect = it.boundsInRoot()
             }
-            .hoverable(hover)
-            .indication(
-                interactionSource = hover,
-                indication = ripple()
-            )
-            .onDrag(
-                onDragStart = {
-                    isRunning = true
-                },
-                onDragEnd = {
-                    rectMap.entries.find {
-                        !it.value.intersect(targetRect).isEmpty
-                    }?.let {
+            .pointerInput(Unit) {
+                detectDragGestures(
+                    onDragStart = {
+                        isRunning = true
+                    },
+                    onDragEnd = {
+                        rectMap.entries
+                            .find {
+                                !it.value.intersect(targetRect).isEmpty
+                            }
+                            ?.let {
+                                scope.launch {
+
+                                    currentAlignment = it.key
+
+                                    animateOffset.snapTo(
+                                        targetValue = targetRect.topLeft - it.value.topLeft
+                                    )
+
+                                    animateOffset.animateTo(Offset.Zero)
+                                }
+                            } ?: run {
+                            scope.launch {
+                                animateOffset.animateTo(Offset.Zero)
+                            }
+                        }
+
+                        isRunning = false
+                    },
+                    onDrag = { change, dragAmount ->
+                        change.consume()
+
                         scope.launch {
-
-                            currentAlignment = it.key
-
                             animateOffset.snapTo(
-                                targetValue = targetRect.topLeft - it.value.topLeft
+                                targetValue = animateOffset.value + dragAmount
                             )
-
-                            animateOffset.animateTo(Offset.Zero)
                         }
-                    } ?: run {
+                    },
+                    onDragCancel = {
                         scope.launch {
                             animateOffset.animateTo(Offset.Zero)
                         }
-                    }
 
-                    isRunning = false
-                },
-                onDrag = { dragAmount ->
-                    scope.launch {
-                        animateOffset.snapTo(
-                            targetValue = animateOffset.value + dragAmount
-                        )
+                        isRunning = false
                     }
-                },
-            )
+                )
+            }
             .padding(dimensions.micro) // internal
     )
 }

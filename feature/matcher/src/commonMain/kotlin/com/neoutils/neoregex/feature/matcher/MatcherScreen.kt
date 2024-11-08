@@ -25,8 +25,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -45,7 +48,10 @@ import cafe.adriel.voyager.core.screen.Screen
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.resources.*
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.ic_redo_24
+import com.neoutils.neoregex.core.resources.ic_undo_24
+import com.neoutils.neoregex.core.resources.insert_regex_hint
 import com.neoutils.neoregex.core.sharedui.component.MatchesInfos
 import com.neoutils.neoregex.core.sharedui.component.TextEditor
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
