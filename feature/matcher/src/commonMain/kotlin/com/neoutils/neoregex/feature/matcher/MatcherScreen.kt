@@ -58,10 +58,7 @@ import com.neoutils.neoregex.feature.matcher.action.MatcherAction
 import com.neoutils.neoregex.feature.matcher.extension.onLongHold
 import com.neoutils.neoregex.feature.matcher.extension.toTextState
 import com.neoutils.neoregex.feature.matcher.model.Target
-import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
-import com.neoutils.neoregex.feature.matcher.state.duration
-import com.neoutils.neoregex.feature.matcher.state.error
-import com.neoutils.neoregex.feature.matcher.state.matches
+import com.neoutils.neoregex.feature.matcher.state.*
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -78,7 +75,7 @@ class MatcherScreen : Screen {
 
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        Box(modifier = Modifier.weight(weight = 1f)) {
+        BoxWithConstraints(modifier = Modifier.weight(weight = 1f)) {
 
             TextEditor(
                 value = uiState.text,
@@ -120,10 +117,11 @@ class MatcherScreen : Screen {
                 },
             )
 
-            MatchesInfos(
-                duration = uiState.matchResult.duration,
-                matches = uiState.matchResult.matches.size,
-            )
+            uiState.matchResult.infos?.let { infos ->
+                MatchesInfos(
+                    infos = infos,
+                )
+            }
         }
 
         Footer(
