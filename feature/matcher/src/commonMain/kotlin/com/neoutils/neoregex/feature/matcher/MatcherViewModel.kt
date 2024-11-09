@@ -20,8 +20,6 @@ package com.neoutils.neoregex.feature.matcher
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.neoutils.neoregex.core.common.platform.Platform
-import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.sharedui.component.MatchesInfos
 import com.neoutils.neoregex.core.sharedui.model.Match
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction

@@ -54,7 +54,6 @@ import com.neoutils.neoregex.core.sharedui.extension.toText
 import com.neoutils.neoregex.core.sharedui.extension.tooltip
 import com.neoutils.neoregex.core.sharedui.model.Match
 import com.neoutils.neoregex.core.sharedui.model.MatchBox
-import com.neoutils.neoregex.core.sharedui.component.LineNumbers
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)

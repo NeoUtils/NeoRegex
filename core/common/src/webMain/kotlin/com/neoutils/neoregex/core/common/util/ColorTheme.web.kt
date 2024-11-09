@@ -16,22 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
-import extension.module
-import extension.name
+package com.neoutils.neoregex.core.common.util
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
-}
+import androidx.compose.runtime.Composable
+import org.jetbrains.skiko.SystemTheme
+import org.jetbrains.skiko.currentSystemTheme
 
-group = config.module(name = "core")
-version = config.version.name()
+@Composable
+actual fun rememberColorTheme(): ColorTheme {
 
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation(projects.core.resources)
-            implementation(projects.core.common)
-        }
+    return when (currentSystemTheme) {
+        SystemTheme.LIGHT -> ColorTheme.LIGHT
+        SystemTheme.DARK -> ColorTheme.DARK
+        SystemTheme.UNKNOWN -> ColorTheme.LIGHT
     }
 }

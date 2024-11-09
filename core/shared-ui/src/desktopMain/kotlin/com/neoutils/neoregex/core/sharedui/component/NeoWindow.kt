@@ -26,7 +26,9 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
@@ -37,17 +39,20 @@ import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.resources.flavicon
 import com.neoutils.neoregex.core.sharedui.remember.CompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.rememberCompleteWindowState
+import com.neoutils.neoregex.core.sharedui.util.NeoRegexWindowExceptionHandlerFactory
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ApplicationScope.NeoWindow(
     icon: Painter = painterResource(Res.drawable.flavicon),
     title: String = stringResource(Res.string.app_name),
     undecorated: Boolean = JBR.windowDecorations == null,
     border: BorderStroke = BorderStroke(1.dp, colorScheme.outline),
+    exceptionHandlerFactory: WindowExceptionHandlerFactory = NeoRegexWindowExceptionHandlerFactory,
     header: @Composable FrameWindowScope.() -> Unit = {
-        DefaultHeader {
+        NeoHeader {
             Text(
                 text = title,
                 modifier = Modifier.align(
@@ -64,38 +69,43 @@ fun ApplicationScope.NeoWindow(
         ),
     )
 
-    Window(
-        icon = icon,
-        title = title,
-        undecorated = undecorated,
-        onCloseRequest = ::exitApplication,
-        state = windowState
+    CompositionLocalProvider(
+        LocalWindowExceptionHandlerFactory
+            .provides(exceptionHandlerFactory)
     ) {
-
-        val completeWindowState = rememberCompleteWindowState()
-
-        Surface(
-            color = colorScheme.background,
-            modifier = when (completeWindowState) {
-                CompleteWindowState.FLOATING,
-                CompleteWindowState.PINNED -> {
-                    if (undecorated) {
-                        Modifier.border(border)
-                    } else {
-                        Modifier
-                    }
-                }
-
-                else -> Modifier
-            }
+        Window(
+            icon = icon,
+            title = title,
+            undecorated = undecorated,
+            onCloseRequest = ::exitApplication,
+            state = windowState
         ) {
-            Column {
 
-                header()
+            val completeWindowState = rememberCompleteWindowState()
 
-                HorizontalDivider()
+            Surface(
+                color = colorScheme.background,
+                modifier = when (completeWindowState) {
+                    CompleteWindowState.FLOATING,
+                    CompleteWindowState.PINNED -> {
+                        if (undecorated) {
+                            Modifier.border(border)
+                        } else {
+                            Modifier
+                        }
+                    }
 
-                content()
+                    else -> Modifier
+                }
+            ) {
+                Column {
+
+                    header()
+
+                    HorizontalDivider()
+
+                    content()
+                }
             }
         }
     }

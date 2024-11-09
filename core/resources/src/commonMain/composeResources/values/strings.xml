@@ -18,6 +18,17 @@
 
 <resources>
     <string name="app_name">NeoRegex</string>
+
+    <string name="matcher_footer_insert_regex_hint">Enter regular expression</string>
+
+    <string name="fatal_error_title">Fatal error: %1$s</string>
+    <string name="fatal_error_subtitle">Oops! Something went wrong.</string>
+    <string name="fatal_error_message">We'd love to fix this! If possible, please share what happened.</string>
+    <string name="fatal_error_copy_btn">Copy error</string>
+    <string name="fatal_error_copied_label">Copied!</string>
+    <string name="fatal_error_report_tab">Report error</string>
+    <string name="fatal_error_report_btn">Report error</string>
+    <string name="fatal_error_stack_trace_tab">Stack trace</string>
     <string name="insert_regex_hint">Enter regular expression</string>
 
     <plurals name="match_result_infos">

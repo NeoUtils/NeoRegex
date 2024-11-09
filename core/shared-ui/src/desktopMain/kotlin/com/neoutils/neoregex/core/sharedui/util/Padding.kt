@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2024 Irineu . Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,22 +16,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.common.util
+package com.neoutils.neoregex.core.sharedui.util
 
-import android.content.Context
-import android.content.res.Configuration.UI_MODE_NIGHT_MASK
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import com.neoutils.neoregex.core.common.util.UiMode
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 
-fun UiMode.Companion.resolve(context: Context): UiMode {
-
-    return when (context.resources.configuration.uiMode and UI_MODE_NIGHT_MASK) {
-        UI_MODE_NIGHT_YES -> {
-            UiMode.DARK
-        }
-
-        else -> {
-            UiMode.LIGHT
-        }
-    }
+data class Padding(
+    val start: Dp = 0.dp,
+    val top: Dp = 0.dp,
+    val end: Dp = 0.dp,
+    val bottom: Dp = 0.dp
+) {
+    val values = PaddingValues(
+        top = top,
+        start = start,
+        end = end,
+        bottom = bottom,
+    )
 }

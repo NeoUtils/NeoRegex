@@ -16,22 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
-import extension.module
-import extension.name
+package com.neoutils.neoregex.core.common.util
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
+import androidx.compose.runtime.Composable
+
+enum class ColorTheme {
+    LIGHT,
+    DARK;
+
+    val isLight: Boolean
+        get() = this == LIGHT
+
+    val isDark: Boolean
+        get() = this == DARK
 }
 
-group = config.module(name = "core")
-version = config.version.name()
-
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            implementation(projects.core.resources)
-            implementation(projects.core.common)
-        }
-    }
-}
+@Composable
+expect fun rememberColorTheme(): ColorTheme
