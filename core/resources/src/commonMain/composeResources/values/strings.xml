@@ -19,4 +19,9 @@
 <resources>
     <string name="app_name">NeoRegex</string>
     <string name="insert_regex_hint">Enter regular expression</string>
+
+    <plurals name="match_result_infos">
+        <item quantity="one">%1$s match (%2$s)</item>
+        <item quantity="other">%1$s matches (%2$s)</item>
+    </plurals>
 </resources>
