@@ -19,6 +19,7 @@
 package com.neoutils.neoregex.feature.matcher.state
 
 import androidx.compose.ui.text.input.TextFieldValue
+import com.neoutils.neoregex.core.sharedui.component.MatchesInfos
 import com.neoutils.neoregex.core.sharedui.model.Match
 import com.neoutils.neoregex.feature.matcher.model.Target
 
@@ -27,7 +28,7 @@ data class MatcherUiState(
     val text: TextFieldValue = TextFieldValue(),
     val regex: TextFieldValue = TextFieldValue(),
     val history: History = History(),
-    val matchResult: MatchResult = MatchResult.Success(listOf()),
+    val matchResult: MatchResult = MatchResult.Success(),
 ) {
     data class History(
         val canUndo: Boolean = false,
@@ -35,12 +36,17 @@ data class MatcherUiState(
     )
 
     sealed class MatchResult {
+
+        abstract val infos: MatchesInfos?
+
         data class Success(
-            val matches: List<Match>
+            val matches: List<Match> = listOf(),
+            override val infos: MatchesInfos? = MatchesInfos.create(),
         ) : MatchResult()
 
         data class Failure(
-            val error: String
+            val error: String,
+            override val infos: MatchesInfos? = MatchesInfos.create()
         ) : MatchResult()
     }
 }

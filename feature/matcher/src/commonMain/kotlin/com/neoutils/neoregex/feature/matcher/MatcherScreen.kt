@@ -31,7 +31,6 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +48,11 @@ import cafe.adriel.voyager.core.screen.Screen
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.ic_redo_24
+import com.neoutils.neoregex.core.resources.ic_undo_24
+import com.neoutils.neoregex.core.resources.matcher_footer_insert_regex_hint
+import com.neoutils.neoregex.core.sharedui.component.MatchesInfos
 import com.neoutils.neoregex.core.sharedui.component.TextEditor
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
 import com.neoutils.neoregex.feature.matcher.extension.onLongHold
@@ -57,10 +61,6 @@ import com.neoutils.neoregex.feature.matcher.model.Target
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
 import com.neoutils.neoregex.feature.matcher.state.error
 import com.neoutils.neoregex.feature.matcher.state.matches
-import com.neoutils.neoregex.core.resources.Res
-import com.neoutils.neoregex.core.resources.ic_redo_24
-import com.neoutils.neoregex.core.resources.ic_undo_24
-import com.neoutils.neoregex.core.resources.matcher_footer_insert_regex_hint
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -77,27 +77,28 @@ class MatcherScreen : Screen {
 
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        TextEditor(
-            value = uiState.text,
-            onValueChange = {
-                viewModel.onAction(
-                    MatcherAction.Input.UpdateText(it.toTextState())
-                )
-            },
-            onFocusChange = {
-                if (it.isFocused) {
+        BoxWithConstraints(modifier = Modifier.weight(weight = 1f)) {
+
+            TextEditor(
+                value = uiState.text,
+                onValueChange = {
                     viewModel.onAction(
-                        MatcherAction.TargetChange(Target.TEXT)
+                        MatcherAction.Input.UpdateText(it.toTextState())
                     )
-                }
-            },
-            textStyle = TextStyle(
-                letterSpacing = 1.sp,
-                fontSize = 16.sp,
-            ),
-            modifier = Modifier
-                .weight(weight = 1f)
-                .onPreviewKeyEvent {
+                },
+                onFocusChange = {
+                    if (it.isFocused) {
+                        viewModel.onAction(
+                            MatcherAction.TargetChange(Target.TEXT)
+                        )
+                    }
+                },
+                textStyle = TextStyle(
+                    letterSpacing = 1.sp,
+                    fontSize = 16.sp,
+                ),
+                matches = uiState.matchResult.matches,
+                modifier = Modifier.onPreviewKeyEvent {
                     when (Command.from(it)) {
                         Command.UNDO -> {
                             viewModel.onAction(
@@ -116,8 +117,14 @@ class MatcherScreen : Screen {
                         else -> false
                     }
                 },
-            matches = uiState.matchResult.matches,
-        )
+            )
+
+            uiState.matchResult.infos?.let { infos ->
+                MatchesInfos(
+                    infos = infos,
+                )
+            }
+        }
 
         Footer(
             uiState = uiState,
