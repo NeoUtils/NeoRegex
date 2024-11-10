@@ -28,9 +28,9 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,17 +44,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.WindowScope
 import com.jetbrains.JBR
+import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.DragHandler
-import com.neoutils.neoregex.core.common.util.UiMode
-import com.neoutils.neoregex.core.common.util.isDark
-import com.neoutils.neoregex.core.common.util.resolve
+import com.neoutils.neoregex.core.common.util.rememberColorTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.sharedui.remember.CompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
 import com.neoutils.neoregex.core.sharedui.remember.rememberCompleteWindowState
 import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
-import org.jetbrains.skiko.OS
-import org.jetbrains.skiko.hostOs
 import java.awt.Frame
 import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent
@@ -62,11 +59,10 @@ import java.awt.event.WindowEvent
 private val DefaultHeaderHeight = 40.dp
 
 @Composable
-fun FrameWindowScope.DefaultHeader(
-    title: String,
+fun FrameWindowScope.NeoHeader(
     modifier: Modifier = Modifier,
-    options: @Composable RowScope.() -> Unit = {},
-    uiMode: UiMode = UiMode.resolve(),
+    colorTheme: ColorTheme = rememberColorTheme(),
+    content: @Composable BoxScope.(padding: PaddingValues) -> Unit = {},
 ) {
 
     val focus = rememberWindowFocus()
@@ -81,9 +77,9 @@ fun FrameWindowScope.DefaultHeader(
 
     val density = LocalDensity.current
 
-    LaunchedEffect(window, uiMode) {
+    LaunchedEffect(window, colorTheme) {
         customTitleBar?.height = density.run { DefaultHeaderHeight.toPx() }
-        customTitleBar?.putProperty("controls.dark", uiMode.isDark)
+        customTitleBar?.putProperty("controls.dark", colorTheme.isDark)
         JBR.windowDecorations?.setCustomTitleBar(window, customTitleBar)
     }
 
@@ -148,34 +144,40 @@ fun FrameWindowScope.DefaultHeader(
                 )
             }
         }
-
     ) {
         Box(
             modifier = Modifier
                 .padding(dimensions.medium)
-                .fillMaxWidth(),
+                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = title)
 
             if (customTitleBar == null) {
+
+                val width = remember { mutableStateOf(0.dp) }
+
                 Buttons(
-                    modifier = Modifier.align(
-                        Alignment.CenterEnd
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .onSizeChanged {
+                            width.value = it.width.dp
+                        }
+                )
+
+                content(
+                    PaddingValues(
+                        end = width.value + dimensions.short,
                     )
                 )
-            }
-
-            Row(
-                modifier = Modifier.align(
-                    alignment = when (hostOs) {
-                        OS.Linux, OS.Windows -> Alignment.CenterStart
-                        OS.MacOS -> Alignment.CenterEnd
-                        else -> error("Invalid")
+            } else {
+                content(
+                    density.run {
+                        PaddingValues(
+                            start = customTitleBar.leftInset.toDp(),
+                            end = customTitleBar.rightInset.toDp()
+                        )
                     }
                 )
-            ) {
-                options()
             }
         }
     }

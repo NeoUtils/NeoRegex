@@ -18,5 +18,4 @@
 
 package com.neoutils.neoregex.core.common.platform
 
-actual val Platform.Companion.Current: Platform
-    get() = Platform.WEB
+actual val platform: Platform = Platform.Web

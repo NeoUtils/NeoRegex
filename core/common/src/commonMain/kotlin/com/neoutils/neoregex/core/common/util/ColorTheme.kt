@@ -16,19 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.designsystem.theme
+package com.neoutils.neoregex.core.common.util
 
-import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.Composable
 
-val LocalFontSizes = compositionLocalOf<FontSizes> { error("FontSizes not defined") }
+enum class ColorTheme {
+    LIGHT,
+    DARK;
 
-data class FontSizes(
-    val huge: TextUnit = 20.sp,
-    val big: TextUnit = 18.sp,
-    val medium: TextUnit = 16.sp,
-    val default: TextUnit = 14.sp,
-    val small: TextUnit = 12.sp,
-    val tiny: TextUnit = 10.sp,
-)
+    val isLight: Boolean
+        get() = this == LIGHT
+
+    val isDark: Boolean
+        get() = this == DARK
+}
+
+@Composable
+expect fun rememberColorTheme(): ColorTheme

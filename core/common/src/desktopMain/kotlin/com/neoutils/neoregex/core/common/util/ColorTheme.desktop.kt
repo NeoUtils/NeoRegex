@@ -18,26 +18,29 @@
 
 package com.neoutils.neoregex.core.common.util
 
-import com.neoutils.neoregex.core.common.util.UiMode.DARK
-import com.neoutils.neoregex.core.common.util.UiMode.LIGHT
-import org.jetbrains.skiko.OS
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import com.neoutils.neoregex.core.common.platform.Platform
+import com.neoutils.neoregex.core.common.platform.platform
 import org.jetbrains.skiko.SystemTheme
 import org.jetbrains.skiko.currentSystemTheme
-import org.jetbrains.skiko.hostOs
 
-fun UiMode.Companion.resolve(): UiMode {
+@Composable
+actual fun rememberColorTheme(): ColorTheme {
 
-    return when (hostOs) {
-        OS.Linux -> {
-            XDGDesktopPortal().use {
-                it.getTheme()
+    return remember {
+        when (platform) {
+            Platform.Desktop.Linux -> {
+                XDGDesktopPortal().use {
+                    it.getTheme()
+                }
             }
-        }
 
-        else -> when (currentSystemTheme) {
-            SystemTheme.LIGHT -> LIGHT
-            SystemTheme.DARK -> DARK
-            SystemTheme.UNKNOWN -> LIGHT
+            else -> when (currentSystemTheme) {
+                SystemTheme.LIGHT -> ColorTheme.LIGHT
+                SystemTheme.DARK -> ColorTheme.DARK
+                SystemTheme.UNKNOWN -> ColorTheme.LIGHT
+            }
         }
     }
 }

@@ -16,7 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.*
+import extension.catalog
+import extension.config
+import extension.distribution
+import extension.name
 
 plugins {
     alias(libs.plugins.neoutils.neoregex.android)

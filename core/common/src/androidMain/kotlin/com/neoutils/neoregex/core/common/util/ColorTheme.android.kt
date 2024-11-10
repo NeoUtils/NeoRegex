@@ -18,12 +18,29 @@
 
 package com.neoutils.neoregex.core.common.util
 
-enum class UiMode {
-    LIGHT,
-    DARK;
+import android.content.Context
+import android.content.res.Configuration.UI_MODE_NIGHT_MASK
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.Composable
 
-    companion object
+@Composable
+actual fun rememberColorTheme(): ColorTheme {
+
+    return if (isSystemInDarkTheme()) {
+        ColorTheme.DARK
+    } else {
+        ColorTheme.LIGHT
+    }
 }
 
-val UiMode.isDark: Boolean
-    get() = this == UiMode.DARK
+val Context.colorTheme
+    get() = when (resources.configuration.uiMode and UI_MODE_NIGHT_MASK) {
+        UI_MODE_NIGHT_YES -> {
+            ColorTheme.DARK
+        }
+
+        else -> {
+            ColorTheme.LIGHT
+        }
+    }

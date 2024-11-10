@@ -20,6 +20,7 @@ package com.neoutils.neoregex.feature.matcher
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.neoutils.neoregex.core.sharedui.component.MatchesInfos
 import com.neoutils.neoregex.core.sharedui.model.Match
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
 import com.neoutils.neoregex.feature.matcher.extension.toTextFieldValue
@@ -30,6 +31,8 @@ import com.neoutils.neoregex.feature.matcher.model.TextState
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
+import kotlin.time.Duration
+import kotlin.time.measureTime
 
 @OptIn(FlowPreview::class)
 class MatcherViewModel : ScreenModel {
@@ -47,31 +50,47 @@ class MatcherViewModel : ScreenModel {
     )
 
     private val matchResult = combine(
-        inputs[Target.TEXT].map { it.text },
-        inputs[Target.REGEX].map { it.text }
+        inputs[Target.TEXT].map { it.text }.distinctUntilChanged(),
+        inputs[Target.REGEX].map { it.text }.distinctUntilChanged()
     ) { text, pattern ->
+
+        if (pattern.isEmpty()) {
+            return@combine MatcherUiState.MatchResult.Success()
+        }
 
         val regex = try {
             Regex(pattern)
-        } catch (exception: Throwable) {
+        } catch (t: Throwable) {
             return@combine MatcherUiState.MatchResult.Failure(
-                error = exception.message ?: "Invalid regex pattern"
+                error = t.message ?: "Invalid regex pattern"
             )
+        }
+
+        val duration: Duration
+        val result: Sequence<MatchResult>
+
+        // TODO: don't support web target
+        duration = measureTime {
+            result = regex.findAll(text)
         }
 
         MatcherUiState.MatchResult.Success(
             matches = buildList {
-                regex.findAll(text).forEachIndexed { index, match ->
+                result.forEachIndexed { index, match ->
                     add(
                         Match(
                             text = match.value,
                             range = match.range,
                             groups = match.groupValues.drop(n = 1),
-                            number = index.inc()
+                            number = index.inc(),
                         )
                     )
                 }
-            }
+            },
+            infos = MatchesInfos.create(
+                duration = duration,
+                matches = result.count()
+            )
         )
     }
 

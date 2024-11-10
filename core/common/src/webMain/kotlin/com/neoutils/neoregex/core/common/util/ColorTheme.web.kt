@@ -16,15 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.sharedui.extension
+package com.neoutils.neoregex.core.common.util
 
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.Composable
+import org.jetbrains.skiko.SystemTheme
+import org.jetbrains.skiko.currentSystemTheme
 
-inline fun Modifier.applyIf(
-    mustApply: Boolean,
-    apply: Modifier. () -> Modifier
-): Modifier {
-    return if (mustApply) {
-        apply()
-    } else this
+@Composable
+actual fun rememberColorTheme(): ColorTheme {
+
+    return when (currentSystemTheme) {
+        SystemTheme.LIGHT -> ColorTheme.LIGHT
+        SystemTheme.DARK -> ColorTheme.DARK
+        SystemTheme.UNKNOWN -> ColorTheme.LIGHT
+    }
 }

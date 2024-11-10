@@ -18,7 +18,6 @@
 
 package com.neoutils.neoregex.core.designsystem.theme
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
@@ -26,6 +25,12 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontFamily
+import com.neoutils.neoregex.core.common.util.ColorTheme
+import com.neoutils.neoregex.core.common.util.rememberColorTheme
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.roboto_mono
+import org.jetbrains.compose.resources.Font
 
 private val LightColors = lightColorScheme(
     primary = Blue700,
@@ -63,18 +68,33 @@ private val DarkColors = darkColorScheme(
 
 @Composable
 fun NeoTheme(
-    darkMode: Boolean = isSystemInDarkTheme(),
+    colorTheme: ColorTheme = rememberColorTheme(),
+    content: @Composable () -> Unit
+) {
+    NeoBaseTheme(
+        colorScheme = when (colorTheme) {
+            ColorTheme.LIGHT -> LightColors
+            ColorTheme.DARK -> DarkColors
+        },
+        fontSizes = FontSizes(),
+        dimensions = Dimensions(),
+        typography = NeoTypography(
+            fontFamily = FontFamily(Font(Res.font.roboto_mono))
+        ),
+        content = content
+    )
+}
+
+@Composable
+fun NeoBaseTheme(
+    colorScheme: ColorScheme,
     fontSizes: FontSizes = FontSizes(),
     dimensions: Dimensions = Dimensions(),
     typography: Typography = NeoTypography(),
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
-        colorScheme = if (darkMode) {
-            DarkColors
-        } else {
-            LightColors
-        },
+        colorScheme = colorScheme,
         typography = typography,
     ) {
         CompositionLocalProvider(

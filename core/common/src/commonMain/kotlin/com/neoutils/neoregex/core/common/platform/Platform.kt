@@ -18,12 +18,18 @@
 
 package com.neoutils.neoregex.core.common.platform
 
-enum class Platform {
-    DESKTOP,
-    ANDROID,
-    WEB;
+sealed class Platform {
 
-    companion object
+    sealed class Desktop : Platform() {
+        data object Windows : Desktop()
+        data object Linux : Desktop()
+        data object MacOS : Desktop()
+    }
+
+    data object Android : Platform()
+
+    // Experimental
+    data object Web : Platform()
 }
 
-expect val Platform.Companion.Current: Platform
+expect val platform: Platform
