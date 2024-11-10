@@ -33,20 +33,30 @@
     <screenshots>
         <screenshot type="default">
             <image>
-                https://raw.githubusercontent.com/NeoUtils/NeoRegex/1bd2a74185c302e8776edfadb41615955c393be5/images/linux-dark-mode.png
+                https://raw.githubusercontent.com/NeoUtils/NeoRegex/521b95a1943408573ad782a2efcada1d79f78b60/images/linux-dark-mode.png
             </image>
             <caption>NeoRegex in Dark Mode</caption>
         </screenshot>
 
         <screenshot>
             <image>
-                https://raw.githubusercontent.com/NeoUtils/NeoRegex/1bd2a74185c302e8776edfadb41615955c393be5/images/linux-light-mode.png
+                https://raw.githubusercontent.com/NeoUtils/NeoRegex/521b95a1943408573ad782a2efcada1d79f78b60/images/linux-light-mode.png
             </image>
             <caption>NeoRegex in Light Mode</caption>
         </screenshot>
     </screenshots>
 
     <releases>
+        <release version="2.3.0" date="2024-11-09">
+            <description>
+                <p>Small improvements</p>
+                <ul>
+                    <li>Performance information label</li>
+                    <li>Custom fatal error window</li>
+                </ul>
+            </description>
+        </release>
+
         <release version="2.2.1" date="2024-11-01">
             <description>
                 <p>Improvements in user experience.</p>
