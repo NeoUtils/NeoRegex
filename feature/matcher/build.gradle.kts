@@ -42,6 +42,8 @@ kotlin {
             implementation(projects.core.resources)
             implementation(projects.core.sharedUi)
             implementation(projects.core.common)
+
+            implementation("com.neoutils.highlight:highlight-compose:2.2.0-rc2")
         }
     }
 }

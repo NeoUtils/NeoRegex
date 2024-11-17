@@ -45,6 +45,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import com.neoutils.highlight.compose.remember.rememberTextFieldValue
+import com.neoutils.highlight.core.Highlight
+import com.neoutils.highlight.core.extension.textColor
+import com.neoutils.highlight.core.util.UiColor
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
@@ -137,6 +141,7 @@ class MatcherScreen : Screen {
     private fun Footer(
         uiState: MatcherUiState,
         onAction: (MatcherAction) -> Unit,
+        syntax: Syntax.Regex = Syntax.Regex.Default,
         modifier: Modifier = Modifier
     ) = Surface(
         modifier = modifier,
@@ -145,9 +150,10 @@ class MatcherScreen : Screen {
         color = colorScheme.surfaceContainer,
         contentColor = colorScheme.onSurface,
     ) {
+
         Row(Modifier.fillMaxWidth()) {
             NeoTextField(
-                value = uiState.regex,
+                value = syntax.highlight.rememberTextFieldValue(uiState.regex),
                 onValueChange = {
                     onAction(
                         MatcherAction.Input.UpdateRegex(
@@ -288,5 +294,42 @@ class MatcherScreen : Screen {
                     horizontal = dimensions.small,
                 )
         )
+    }
+}
+
+interface Syntax {
+
+    val highlight: Highlight
+
+    class Regex(
+        private val quantifierColor: UiColor,
+        private val escapedReservedColor: UiColor,
+        private val escapedCharColor: UiColor,
+        private val anchorsColor: UiColor,
+        private val charSetColor: UiColor,
+        private val groupColor: UiColor
+    ) : Syntax {
+
+        private val escapedSlash = """\\{2}""".toRegex()
+
+        override val highlight = Highlight {
+            textColor {
+                fully(
+                    regex = escapedSlash,
+                    escapedReservedColor
+                )
+            }
+        }
+
+        companion object {
+            val Default = Regex(
+                quantifierColor = UiColor.Hex("#0077ff"),
+                escapedReservedColor = UiColor.Hex("#b700ff"),
+                escapedCharColor = UiColor.Hex("#f5cd05"),
+                anchorsColor = UiColor.Hex("#b06100"),
+                charSetColor = UiColor.Hex("#e39b00"),
+                groupColor = UiColor.Hex("#18d100")
+            )
+        }
     }
 }
