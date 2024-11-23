@@ -307,14 +307,16 @@ interface Syntax {
         private val escapedCharColor: UiColor,
         private val anchorsColor: UiColor,
         private val charSetColor: UiColor,
-        private val groupColor: UiColor
+        private val groupColor: UiColor,
+        private val literalColor: UiColor
     ) : Syntax {
 
         private val charSetRegex = """(\\{2})|(\\\[)|(\[)(.*?)(\])""".toRegex()
+        private val groupRegex = """(\\{2})|(\\\()|(\()(.*?)(\))""".toRegex()
 
         override val highlight = Highlight {
             textColor {
-                charSetRegex.match {
+                charSetRegex.match(level = 0) {
 
                     // escape
                     put(1, escapedReservedColor)
@@ -322,7 +324,19 @@ interface Syntax {
 
                     // charset
                     put(3, charSetColor)
+                    put(4, literalColor)
                     put(5, charSetColor)
+                }
+
+                groupRegex.match(level = 1) {
+
+                    // escape
+                    put(1, escapedReservedColor)
+                    put(2, escapedReservedColor)
+
+                    // charset
+                    put(3, groupColor)
+                    put(5, groupColor)
                 }
             }
         }
@@ -334,7 +348,8 @@ interface Syntax {
                 escapedCharColor = UiColor.Hex(hex = "#f5cd05"),
                 anchorsColor = UiColor.Hex(hex = "#b06100"),
                 charSetColor = UiColor.Hex(hex = "#e39b00"),
-                groupColor = UiColor.Hex(hex = "#18d100")
+                groupColor = UiColor.Hex(hex = "#18d100"),
+                literalColor = UiColor.White
             )
         }
     }
