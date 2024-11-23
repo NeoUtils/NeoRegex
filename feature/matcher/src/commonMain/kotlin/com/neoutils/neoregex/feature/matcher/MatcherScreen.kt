@@ -311,8 +311,9 @@ interface Syntax {
         private val literalColor: UiColor
     ) : Syntax {
 
-        private val charSetRegex = """(\\{2})|(\\\[)|(\[)(.*?)(\])""".toRegex()
-        private val groupRegex = """(\\{2})|(\\\()|(\()(.*?)(\))""".toRegex()
+        private val charSetRegex = """(\\{2})|(\\\[)|(\[)((?:\\{2}|\\\]|[^\]])*)(\]?)""".toRegex()
+        private val groupRegex = """(\\{2})|(\\\()|(\((?:\?[:=!])?)((?:\\{2}|\\\)|[^\)])*)(\)?)""".toRegex()
+        private val escapedCharRegex = """(\\{2})|\\[(\[\])]""".toRegex()
 
         override val highlight = Highlight {
             textColor {
@@ -337,6 +338,10 @@ interface Syntax {
                     // charset
                     put(3, groupColor)
                     put(5, groupColor)
+                }
+
+                escapedCharRegex.match {
+                    put(0, escapedReservedColor)
                 }
             }
         }
