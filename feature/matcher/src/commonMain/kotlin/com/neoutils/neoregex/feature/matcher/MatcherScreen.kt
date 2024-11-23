@@ -310,25 +310,31 @@ interface Syntax {
         private val groupColor: UiColor
     ) : Syntax {
 
-        private val escapedSlash = """\\{2}""".toRegex()
+        private val charSetRegex = """(\\{2})|(\\\[)|(\[)(.*?)(\])""".toRegex()
 
         override val highlight = Highlight {
             textColor {
-                fully(
-                    regex = escapedSlash,
-                    escapedReservedColor
-                )
+                charSetRegex.match {
+
+                    // escape
+                    put(1, escapedReservedColor)
+                    put(2, escapedReservedColor)
+
+                    // charset
+                    put(3, charSetColor)
+                    put(5, charSetColor)
+                }
             }
         }
 
         companion object {
             val Default = Regex(
-                quantifierColor = UiColor.Hex("#0077ff"),
-                escapedReservedColor = UiColor.Hex("#b700ff"),
-                escapedCharColor = UiColor.Hex("#f5cd05"),
-                anchorsColor = UiColor.Hex("#b06100"),
-                charSetColor = UiColor.Hex("#e39b00"),
-                groupColor = UiColor.Hex("#18d100")
+                quantifierColor = UiColor.Hex(hex = "#0077ff"),
+                escapedReservedColor = UiColor.Hex(hex = "#b700ff"),
+                escapedCharColor = UiColor.Hex(hex = "#f5cd05"),
+                anchorsColor = UiColor.Hex(hex = "#b06100"),
+                charSetColor = UiColor.Hex(hex = "#e39b00"),
+                groupColor = UiColor.Hex(hex = "#18d100")
             )
         }
     }
