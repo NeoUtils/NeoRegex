@@ -302,7 +302,7 @@ interface Syntax {
     val highlight: Highlight
 
     class Regex(
-        private val quantifierColor: UiColor,
+        private val modifierColor: UiColor,
         private val escapeReservedColor: UiColor,
         private val escapedCharColor: UiColor,
         private val anchorsColor: UiColor,
@@ -314,10 +314,11 @@ interface Syntax {
 
         private val charSetRegex = """(\\{2})|(\\\[)|(\[\^?)((?:\\{2}|\\\]|[^\]])*)(\]?)""".toRegex()
         private val groupRegex = """(\\{2})|(\\\()|(\((?:\?[:=!])?)((?:\\{2}|\\\)|[^\)])*)(\)?)""".toRegex()
-        private val escapeReservedRegex = """(\\{2})|(\\[()\[\]$^])""".toRegex()
+        private val escapeReservedRegex = """(\\{2})|(\\[()\[\]$^+*?])""".toRegex()
         private val escapedCharRegex = """(\\{2})|(\\[DdWwSsHhVvR])""".toRegex()
         private val anchorsRegex = """(\\{2})|(\\[$^])|(\\[AZzBbG])|([$^])""".toRegex()
         private val controlsRegex = """(\\{2})|(\\[tnfrae])""".toRegex()
+        private val modifierRegex = """(\\{2})|(\\[+*?])|([+*?])""".toRegex()
 
         override val highlight = Highlight {
             textColor {
@@ -361,12 +362,17 @@ interface Syntax {
                     put(4, anchorsColor)
                 }
 
+                modifierRegex.match(level = 2) {
+
+                    // modifier
+                    put(3, modifierColor)
+                }
             }
         }
 
         companion object {
             val Default = Regex(
-                quantifierColor = UiColor.Hex(hex = "#0077ff"),
+                modifierColor = UiColor.Hex(hex = "#0077ff"),
                 escapeReservedColor = UiColor.Hex(hex = "#b700ff"),
                 escapedCharColor = UiColor.Hex(hex = "#f5cd05"),
                 anchorsColor = UiColor.Hex(hex = "#b06100"),
