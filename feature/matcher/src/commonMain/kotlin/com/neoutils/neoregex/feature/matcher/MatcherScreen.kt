@@ -308,14 +308,16 @@ interface Syntax {
         private val anchorsColor: UiColor,
         private val charSetColor: UiColor,
         private val groupColor: UiColor,
-        private val literalColor: UiColor
+        private val literalColor: UiColor,
+        private val controlsColor: UiColor
     ) : Syntax {
 
         private val charSetRegex = """(\\{2})|(\\\[)|(\[\^?)((?:\\{2}|\\\]|[^\]])*)(\]?)""".toRegex()
         private val groupRegex = """(\\{2})|(\\\()|(\((?:\?[:=!])?)((?:\\{2}|\\\)|[^\)])*)(\)?)""".toRegex()
         private val escapeReservedRegex = """(\\{2})|(\\[()\[\]$^])""".toRegex()
         private val escapedCharRegex = """(\\{2})|(\\[DdWwSsHhVvR])""".toRegex()
-        private val anchors = """(\\{2})|(\\[$^])|(\\[AZzBbG])|([$^])""".toRegex()
+        private val anchorsRegex = """(\\{2})|(\\[$^])|(\\[AZzBbG])|([$^])""".toRegex()
+        private val controlsRegex = """(\\{2})|(\\[tnfrae])""".toRegex()
 
         override val highlight = Highlight {
             textColor {
@@ -333,6 +335,12 @@ interface Syntax {
                     put(2, escapedCharColor)
                 }
 
+                controlsRegex.match(level = 0) {
+
+                    // controls
+                    put(2, controlsColor)
+                }
+
                 escapeReservedRegex.match(level = 0) {
 
                     // full match
@@ -346,12 +354,13 @@ interface Syntax {
                     put(5, groupColor)
                 }
 
-                anchors.match(level = 1) {
+                anchorsRegex.match(level = 1) {
 
                     // anchors
                     put(3, anchorsColor)
                     put(4, anchorsColor)
                 }
+
             }
         }
 
@@ -363,7 +372,8 @@ interface Syntax {
                 anchorsColor = UiColor.Hex(hex = "#b06100"),
                 charSetColor = UiColor.Hex(hex = "#e39b00"),
                 groupColor = UiColor.Hex(hex = "#18d100"),
-                literalColor = UiColor.White
+                literalColor = UiColor.White,
+                controlsColor =  UiColor.Hex(hex = "#ff00c9"),
             )
         }
     }
