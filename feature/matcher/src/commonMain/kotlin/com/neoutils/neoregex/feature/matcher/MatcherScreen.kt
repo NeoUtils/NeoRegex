@@ -313,7 +313,8 @@ interface Syntax {
 
         private val charSetRegex = """(\\{2})|(\\\[)|(\[)((?:\\{2}|\\\]|[^\]])*)(\]?)""".toRegex()
         private val groupRegex = """(\\{2})|(\\\()|(\((?:\?[:=!])?)((?:\\{2}|\\\)|[^\)])*)(\)?)""".toRegex()
-        private val escapedCharRegex = """(\\{2})|\\[(\[\])]""".toRegex()
+        private val escapedReservedRegex = """(\\{2})|(\\[(\[\])])""".toRegex()
+        private val escapedCharRegex = """(\\{2})|(\\[DdWwSsHhVvR])""".toRegex()
 
         override val highlight = Highlight {
             textColor {
@@ -329,6 +330,21 @@ interface Syntax {
                     put(5, charSetColor)
                 }
 
+                escapedCharRegex.match(level = 0) {
+                    
+                    // escape slash
+                    put(1, escapedReservedColor)
+
+                    // escaped char
+                    put(2, escapedCharColor)
+                }
+
+                escapedReservedRegex.match(level = 0) {
+
+                    // full match
+                    put(0, escapedReservedColor)
+                }
+
                 groupRegex.match(level = 1) {
 
                     // escape
@@ -338,10 +354,6 @@ interface Syntax {
                     // charset
                     put(3, groupColor)
                     put(5, groupColor)
-                }
-
-                escapedCharRegex.match {
-                    put(0, escapedReservedColor)
                 }
             }
         }
