@@ -303,7 +303,7 @@ interface Syntax {
 
     class Regex(
         private val quantifierColor: UiColor,
-        private val escapedReservedColor: UiColor,
+        private val escapeReservedColor: UiColor,
         private val escapedCharColor: UiColor,
         private val anchorsColor: UiColor,
         private val charSetColor: UiColor,
@@ -313,17 +313,13 @@ interface Syntax {
 
         private val charSetRegex = """(\\{2})|(\\\[)|(\[\^?)((?:\\{2}|\\\]|[^\]])*)(\]?)""".toRegex()
         private val groupRegex = """(\\{2})|(\\\()|(\((?:\?[:=!])?)((?:\\{2}|\\\)|[^\)])*)(\)?)""".toRegex()
-        private val escapedReservedRegex = """(\\{2})|(\\[(\[\])])""".toRegex()
+        private val escapeReservedRegex = """(\\{2})|(\\[()\[\]$^])""".toRegex()
         private val escapedCharRegex = """(\\{2})|(\\[DdWwSsHhVvR])""".toRegex()
         private val anchors = """(\\{2})|(\\[$^])|(\\[AZzBbG])|([$^])""".toRegex()
 
         override val highlight = Highlight {
             textColor {
                 charSetRegex.match(level = 0) {
-
-                    // escape
-                    put(1, escapedReservedColor)
-                    put(2, escapedReservedColor)
 
                     // charset
                     put(3, charSetColor)
@@ -333,24 +329,17 @@ interface Syntax {
 
                 escapedCharRegex.match(level = 0) {
 
-                    // escape slash
-                    put(1, escapedReservedColor)
-
                     // escaped char
                     put(2, escapedCharColor)
                 }
 
-                escapedReservedRegex.match(level = 0) {
+                escapeReservedRegex.match(level = 0) {
 
                     // full match
-                    put(0, escapedReservedColor)
+                    put(0, escapeReservedColor)
                 }
 
                 groupRegex.match(level = 1) {
-
-                    // escape
-                    put(1, escapedReservedColor)
-                    put(2, escapedReservedColor)
 
                     // charset
                     put(3, groupColor)
@@ -358,10 +347,6 @@ interface Syntax {
                 }
 
                 anchors.match(level = 1) {
-
-                    // escape
-                    put(1, escapedReservedColor)
-                    put(2, escapedReservedColor)
 
                     // anchors
                     put(3, anchorsColor)
@@ -373,7 +358,7 @@ interface Syntax {
         companion object {
             val Default = Regex(
                 quantifierColor = UiColor.Hex(hex = "#0077ff"),
-                escapedReservedColor = UiColor.Hex(hex = "#b700ff"),
+                escapeReservedColor = UiColor.Hex(hex = "#b700ff"),
                 escapedCharColor = UiColor.Hex(hex = "#f5cd05"),
                 anchorsColor = UiColor.Hex(hex = "#b06100"),
                 charSetColor = UiColor.Hex(hex = "#e39b00"),
