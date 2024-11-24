@@ -308,7 +308,6 @@ interface Syntax {
         private val anchorsColor: UiColor,
         private val charSetColor: UiColor,
         private val groupColor: UiColor,
-        private val literalColor: UiColor,
         private val controlsColor: UiColor
     ) : Syntax {
 
@@ -326,7 +325,7 @@ interface Syntax {
 
                     // charset
                     put(3, charSetColor)
-                    put(4, literalColor)
+                    put(4, null)
                     put(5, charSetColor)
                 }
 
@@ -378,7 +377,6 @@ interface Syntax {
                 anchorsColor = UiColor.Hex(hex = "#b06100"),
                 charSetColor = UiColor.Hex(hex = "#e39b00"),
                 groupColor = UiColor.Hex(hex = "#18d100"),
-                literalColor = UiColor.White,
                 controlsColor =  UiColor.Hex(hex = "#ff00c9"),
             )
         }

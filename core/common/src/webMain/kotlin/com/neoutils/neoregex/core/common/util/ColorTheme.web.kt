@@ -28,6 +28,6 @@ actual fun rememberColorTheme(): ColorTheme {
     return when (currentSystemTheme) {
         SystemTheme.LIGHT -> ColorTheme.LIGHT
         SystemTheme.DARK -> ColorTheme.DARK
-        SystemTheme.UNKNOWN -> ColorTheme.LIGHT
+        SystemTheme.UNKNOWN -> ColorTheme.DARK
     }
 }
