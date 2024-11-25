@@ -314,7 +314,7 @@ interface Syntax {
     ) : Syntax {
 
         private val charSetRegex = """(\\{2})|(\\\[)|(\[\^?)((?:\\{2}|\\\]|[^\]])*)(\]?)""".toRegex()
-        private val groupRegex = """(\\{2})|(\\\()|(\((?:\?[:=!])?)((?:\\{2}|\\\)|[^\)])*)(\)?)""".toRegex()
+        private val groupRegex = """(\\{2})|(\\\()|(\((?:\?[:=!])?)((?:\\{2}|\\\)|\\\[|\[.*\]|[^\)])*)(\)?)""".toRegex()
         private val quantifierRegex = """(\\{2})|(\\\{)|(\{\w,?\w?\})""".toRegex()
         private val escapeReservedRegex = """(\\{2})|(\\[{}()\[\]$^+*?])""".toRegex()
         private val escapedCharRegex = """(\\{2})|(\\[DdWwSsHhVvR])""".toRegex()
