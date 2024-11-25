@@ -37,18 +37,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import com.neoutils.highlight.compose.extension.spanStyle
 import com.neoutils.highlight.compose.remember.rememberTextFieldValue
 import com.neoutils.highlight.core.Highlight
-import com.neoutils.highlight.core.extension.textColor
-import com.neoutils.highlight.core.util.UiColor
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
@@ -302,13 +303,13 @@ interface Syntax {
     val highlight: Highlight
 
     class Regex(
-        private val modifierColor: UiColor,
-        private val escapeReservedColor: UiColor,
-        private val escapedCharColor: UiColor,
-        private val anchorsColor: UiColor,
-        private val charSetColor: UiColor,
-        private val groupColor: UiColor,
-        private val controlsColor: UiColor
+        private val modifierColor: Color,
+        private val escapeReservedColor: Color,
+        private val escapedCharColor: Color,
+        private val anchorsColor: Color,
+        private val charSetColor: Color,
+        private val groupColor: Color,
+        private val controlsColor: Color
     ) : Syntax {
 
         private val charSetRegex = """(\\{2})|(\\\[)|(\[\^?)((?:\\{2}|\\\]|[^\]])*)(\]?)""".toRegex()
@@ -320,71 +321,86 @@ interface Syntax {
         private val controlsRegex = """(\\{2})|(\\[tnfrae])""".toRegex()
         private val modifierRegex = """(\\{2})|(\\[+*?])|([+*?])""".toRegex()
 
+        private val charSetSpanStyle = SpanStyle(
+            color = charSetColor,
+            background = charSetColor.copy(
+                alpha = 0.2f
+            )
+        )
+
+        private val groupSpanStyle = SpanStyle(
+            color = groupColor,
+            background = groupColor.copy(
+                alpha = 0.2f
+            )
+        )
+
         override val highlight = Highlight {
-            textColor {
+            spanStyle {
                 charSetRegex.match(level = 0) {
 
                     // charset
-                    put(3, charSetColor)
-                    put(4, null)
-                    put(5, charSetColor)
+                    put(3, charSetSpanStyle)
+                    put(4, charSetSpanStyle.copy(color = Color.Unspecified))
+                    put(5, charSetSpanStyle)
                 }
 
                 escapedCharRegex.match(level = 0) {
 
                     // escaped char
-                    put(2, escapedCharColor)
+                    put(2, SpanStyle(color = escapedCharColor))
                 }
 
                 controlsRegex.match(level = 0) {
 
                     // controls
-                    put(2, controlsColor)
+                    put(2, SpanStyle(color = controlsColor))
                 }
 
                 escapeReservedRegex.match(level = 0) {
 
                     // full match
-                    put(0, escapeReservedColor)
+                    put(0, SpanStyle(color = escapeReservedColor))
                 }
 
                 groupRegex.match(level = 1) {
 
                     // charset
-                    put(3, groupColor)
-                    put(5, groupColor)
+                    put(3, groupSpanStyle)
+                    put(4, groupSpanStyle.copy(color = Color.Unspecified))
+                    put(5, groupSpanStyle)
                 }
 
                 anchorsRegex.match(level = 1) {
 
                     // anchors
-                    put(3, anchorsColor)
-                    put(4, anchorsColor)
+                    put(3, SpanStyle(color = anchorsColor))
+                    put(4, SpanStyle(color = anchorsColor))
                 }
 
                 modifierRegex.match(level = 2) {
 
                     // modifier
-                    put(3, modifierColor)
+                    put(3, SpanStyle(color = modifierColor))
                 }
 
                 quantifierRegex.match(level = 2) {
 
                     // modifier
-                    put(3, modifierColor)
+                    put(3, SpanStyle(color = modifierColor))
                 }
             }
         }
 
         companion object {
             val Default = Regex(
-                modifierColor = UiColor.Hex(hex = "#0077ff"),
-                escapeReservedColor = UiColor.Hex(hex = "#b700ff"),
-                escapedCharColor = UiColor.Hex(hex = "#f5cd05"),
-                anchorsColor = UiColor.Hex(hex = "#b06100"),
-                charSetColor = UiColor.Hex(hex = "#e39b00"),
-                groupColor = UiColor.Hex(hex = "#18d100"),
-                controlsColor =  UiColor.Hex(hex = "#ff00c9"),
+                modifierColor = Color(0xff0077ff),
+                escapeReservedColor = Color(0xffb700ff),
+                escapedCharColor = Color(0xfff5cd05),
+                anchorsColor = Color(0xffb06100),
+                charSetColor = Color(0xffe39b00),
+                groupColor = Color(0xff038d00),
+                controlsColor = Color(0xffff00c9),
             )
         }
     }
