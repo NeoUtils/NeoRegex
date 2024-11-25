@@ -313,7 +313,8 @@ interface Syntax {
 
         private val charSetRegex = """(\\{2})|(\\\[)|(\[\^?)((?:\\{2}|\\\]|[^\]])*)(\]?)""".toRegex()
         private val groupRegex = """(\\{2})|(\\\()|(\((?:\?[:=!])?)((?:\\{2}|\\\)|[^\)])*)(\)?)""".toRegex()
-        private val escapeReservedRegex = """(\\{2})|(\\[()\[\]$^+*?])""".toRegex()
+        private val quantifierRegex = """(\\{2})|(\\\{)|(\{\w,?\w?\})""".toRegex()
+        private val escapeReservedRegex = """(\\{2})|(\\[{}()\[\]$^+*?])""".toRegex()
         private val escapedCharRegex = """(\\{2})|(\\[DdWwSsHhVvR])""".toRegex()
         private val anchorsRegex = """(\\{2})|(\\[$^])|(\\[AZzBbG])|([$^])""".toRegex()
         private val controlsRegex = """(\\{2})|(\\[tnfrae])""".toRegex()
@@ -362,6 +363,12 @@ interface Syntax {
                 }
 
                 modifierRegex.match(level = 2) {
+
+                    // modifier
+                    put(3, modifierColor)
+                }
+
+                quantifierRegex.match(level = 2) {
 
                     // modifier
                     put(3, modifierColor)
