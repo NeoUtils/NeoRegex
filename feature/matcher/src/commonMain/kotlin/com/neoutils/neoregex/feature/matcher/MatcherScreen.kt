@@ -336,31 +336,40 @@ interface Syntax {
         )
 
         override val highlight = Highlight {
+
             spanStyle {
+
+                controlsRegex.match {
+
+                    // controls
+                    put(2, SpanStyle(color = controlsColor))
+                }
+
+                escapedCharRegex.match {
+
+                    // escaped char
+                    put(2, SpanStyle(color = escapedCharColor))
+                }
+
+                escapeReservedRegex.match {
+
+                    // full match
+                    put(0, SpanStyle(color = escapeReservedColor))
+                }
+
+                anchorsRegex.match {
+
+                    // anchors
+                    put(3, SpanStyle(color = anchorsColor))
+                    put(4, SpanStyle(color = anchorsColor))
+                }
+
                 charSetRegex.match(level = 0) {
 
                     // charset
                     put(3, charSetSpanStyle)
                     put(4, charSetSpanStyle.copy(color = Color.Unspecified))
                     put(5, charSetSpanStyle)
-                }
-
-                escapedCharRegex.match(level = 0) {
-
-                    // escaped char
-                    put(2, SpanStyle(color = escapedCharColor))
-                }
-
-                controlsRegex.match(level = 0) {
-
-                    // controls
-                    put(2, SpanStyle(color = controlsColor))
-                }
-
-                escapeReservedRegex.match(level = 0) {
-
-                    // full match
-                    put(0, SpanStyle(color = escapeReservedColor))
                 }
 
                 groupRegex.match(level = 1) {
@@ -371,20 +380,13 @@ interface Syntax {
                     put(5, groupSpanStyle)
                 }
 
-                anchorsRegex.match(level = 1) {
-
-                    // anchors
-                    put(3, SpanStyle(color = anchorsColor))
-                    put(4, SpanStyle(color = anchorsColor))
-                }
-
-                modifierRegex.match(level = 2) {
+                modifierRegex.match(level = 1) {
 
                     // modifier
                     put(3, SpanStyle(color = modifierColor))
                 }
 
-                quantifierRegex.match(level = 2) {
+                quantifierRegex.match(level = 1) {
 
                     // modifier
                     put(3, SpanStyle(color = modifierColor))
