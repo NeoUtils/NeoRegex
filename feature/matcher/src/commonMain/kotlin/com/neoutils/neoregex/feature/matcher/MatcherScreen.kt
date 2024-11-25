@@ -309,7 +309,8 @@ interface Syntax {
         private val anchorsColor: Color,
         private val charSetColor: Color,
         private val groupColor: Color,
-        private val controlsColor: Color
+        private val controlsColor: Color,
+        private val literalColor: Color
     ) : Syntax {
 
         private val charSetRegex = """(\\{2})|(\\\[)|(\[\^?)((?:\\{2}|\\\]|[^\]])*)(\]?)""".toRegex()
@@ -339,6 +340,34 @@ interface Syntax {
 
             spanStyle {
 
+                groupRegex.match {
+
+                    // charset
+                    put(3, groupSpanStyle)
+                    put(4, groupSpanStyle.copy(color = Color.Unspecified))
+                    put(5, groupSpanStyle)
+                }
+
+                modifierRegex.match {
+
+                    // modifier
+                    put(3, SpanStyle(color = modifierColor))
+                }
+
+                quantifierRegex.match {
+
+                    // modifier
+                    put(3, SpanStyle(color = modifierColor))
+                }
+
+                charSetRegex.match {
+
+                    // charset
+                    put(3, charSetSpanStyle)
+                    put(4, charSetSpanStyle.copy(color = literalColor))
+                    put(5, charSetSpanStyle)
+                }
+
                 controlsRegex.match {
 
                     // controls
@@ -363,34 +392,6 @@ interface Syntax {
                     put(3, SpanStyle(color = anchorsColor))
                     put(4, SpanStyle(color = anchorsColor))
                 }
-
-                charSetRegex.match(level = 0) {
-
-                    // charset
-                    put(3, charSetSpanStyle)
-                    put(4, charSetSpanStyle.copy(color = Color.Unspecified))
-                    put(5, charSetSpanStyle)
-                }
-
-                groupRegex.match(level = 1) {
-
-                    // charset
-                    put(3, groupSpanStyle)
-                    put(4, groupSpanStyle.copy(color = Color.Unspecified))
-                    put(5, groupSpanStyle)
-                }
-
-                modifierRegex.match(level = 1) {
-
-                    // modifier
-                    put(3, SpanStyle(color = modifierColor))
-                }
-
-                quantifierRegex.match(level = 1) {
-
-                    // modifier
-                    put(3, SpanStyle(color = modifierColor))
-                }
             }
         }
 
@@ -403,6 +404,7 @@ interface Syntax {
                 charSetColor = Color(0xffe39b00),
                 groupColor = Color(0xff038d00),
                 controlsColor = Color(0xffff00c9),
+                literalColor = Color.White
             )
         }
     }
