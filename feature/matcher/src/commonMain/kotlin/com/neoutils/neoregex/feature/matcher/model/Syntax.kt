@@ -37,15 +37,17 @@ interface Syntax {
         private val controlsColor: Color,
     ) : Syntax {
 
-        private val charSetRegex = """(\\{2})|(\\\[)|(\[\^?)((?:\\{2}|\\\]|[^\]])*)(\]?)""".toRegex()
-        private val groupRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\()|(\((?:\?[:=!])?)((?:\\{2}|\\\)|\\\[|\[.*\]|[^\)])*)(\)?)""".toRegex()
+        private val charSetRegex = """(\\{2})|(\\\[)|(\[\^?)((?:\\{2}|\\\]|[^\]])*)(\])?""".toRegex()
+        private val groupRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\()|(\((?:\?[:=!])?)((?:\\{2}|\\\)|\\\[|\[.*\]|[^\)])*)(\))?""".toRegex()
         private val quantifierRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\{)|(\{\w,?\w?\})""".toRegex()
-        private val escapeReservedRegex = """(\\{2})|(\\[{}()\[\]$^+*?|])""".toRegex()
+        private val escapeReservedRegex = """(\\{2})|(\\[{}()\[\]$^+*?|\w])""".toRegex()
         private val escapedCharRegex = """(\\{2})|(\\[DdWwSsHhVvR])""".toRegex()
         private val anchorsRegex = """(\\{2})|(\\[$^])|(\\[AZzBbG])|([$^])""".toRegex()
         private val controlsRegex = """(\\{2})|(\\[tnfrae])""".toRegex()
         private val modifierRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\[+*?])|([+*?])""".toRegex()
         private val alternationRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\|)|(\|)""".toRegex()
+
+        private fun referenceGroupRegex(number: Int) = """(\\{2})|(\\$number)""".toRegex()
 
         private val charSetSpanStyle = SpanStyle(
             color = charSetColor,
@@ -62,7 +64,6 @@ interface Syntax {
         )
 
         override val highlight = Highlight {
-
             spanStyle {
 
                 groupRegex.match {
@@ -99,6 +100,12 @@ interface Syntax {
                     put(5, charSetSpanStyle)
                 }
 
+                escapeReservedRegex.match {
+
+                    // full match
+                    put(0, SpanStyle(color = escapeReservedColor))
+                }
+
                 controlsRegex.match {
 
                     // controls
@@ -111,17 +118,23 @@ interface Syntax {
                     put(2, SpanStyle(color = escapedCharColor))
                 }
 
-                escapeReservedRegex.match {
-
-                    // full match
-                    put(0, SpanStyle(color = escapeReservedColor))
-                }
-
                 anchorsRegex.match {
 
                     // anchors
                     put(3, SpanStyle(color = anchorsColor))
                     put(4, SpanStyle(color = anchorsColor))
+                }
+            }
+
+            groupRegex.script { match ->
+                if (match.groups.getOrNull(index = 7) != null) {
+                    spanStyle {
+                        referenceGroupRegex(
+                            number = match.index.inc()
+                        ).match {
+                            put(2, SpanStyle(color = groupColor))
+                        }
+                    }
                 }
             }
         }
