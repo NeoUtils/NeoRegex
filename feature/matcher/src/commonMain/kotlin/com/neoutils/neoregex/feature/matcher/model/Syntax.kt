@@ -38,7 +38,7 @@ interface Syntax {
     ) : Syntax {
 
         private val charSetRegex = """(\\{2})|(\\\[)|(\[\^?)((?:\\{2}|\\\]|[^\]])*)(\])?""".toRegex()
-        private val groupRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\()|(\((?:\?[:=!])?)((?:\\{2}|\\\)|\\\[|\[.*\]|[^\)])*)(\))?""".toRegex()
+        private val groupRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\()|(\((?:\?[:=!])?)((?:\\{2}|\\\)|\\\[|\[.*\]|\([^\)]*\)|[^\)])*)(\))?""".toRegex()
         private val quantifierRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\{)|(\{\w,?\w?\})""".toRegex()
         private val escapeReservedRegex = """(\\{2})|(\\[{}()\[\]$^+*?|\w])""".toRegex()
         private val escapedCharRegex = """(\\{2})|(\\[DdWwSsHhVvR])""".toRegex()
@@ -127,7 +127,7 @@ interface Syntax {
             }
 
             groupRegex.script { match ->
-                if (match.groups.getOrNull(index = 7) != null) {
+                match.groups.getOrNull(index = 7)?.let {
                     spanStyle {
                         referenceGroupRegex(
                             number = match.index.inc()
