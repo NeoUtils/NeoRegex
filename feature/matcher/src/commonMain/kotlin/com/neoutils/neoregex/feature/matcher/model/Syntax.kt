@@ -66,12 +66,10 @@ interface Syntax {
         override val highlight = Highlight {
             spanStyle {
 
-                groupRegex.match {
+                escapeReservedRegex.match {
 
-                    // charset
-                    put(5, groupSpanStyle)
-                    put(6, groupSpanStyle.copy(color = Color.Unspecified))
-                    put(7, groupSpanStyle)
+                    // full match
+                    put(0, SpanStyle(color = escapeReservedColor))
                 }
 
                 modifierRegex.match {
@@ -92,19 +90,6 @@ interface Syntax {
                     put(5, SpanStyle(color = groupColor))
                 }
 
-                charSetRegex.match {
-
-                    // charset
-                    put(3, charSetSpanStyle)
-                    put(4, charSetSpanStyle.copy(color = Color.Unspecified))
-                    put(5, charSetSpanStyle)
-                }
-
-                escapeReservedRegex.match {
-
-                    // full match
-                    put(0, SpanStyle(color = escapeReservedColor))
-                }
 
                 controlsRegex.match {
 
@@ -123,6 +108,22 @@ interface Syntax {
                     // anchors
                     put(3, SpanStyle(color = anchorsColor))
                     put(4, SpanStyle(color = anchorsColor))
+                }
+
+                groupRegex.match {
+
+                    // charset
+                    put(5, groupSpanStyle)
+                    put(6, groupSpanStyle.copy(color = Color.Unspecified))
+                    put(7, groupSpanStyle)
+                }
+
+                charSetRegex.match {
+
+                    // charset
+                    put(3, charSetSpanStyle)
+                    put(4, charSetSpanStyle.copy(color = Color.Unspecified))
+                    put(5, charSetSpanStyle)
                 }
             }
 
