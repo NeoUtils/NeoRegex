@@ -46,6 +46,7 @@ interface Syntax {
         private val controlsRegex = """(\\{2})|(\\[tnfrae])""".toRegex()
         private val modifierRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\[+*?])|([+*?])""".toRegex()
         private val alternationRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\|)|(\|)""".toRegex()
+        private val charSetRangeRegex = """\w(-)\w""".toRegex()
 
         private fun referenceGroupRegex(number: Int) = """(\\{2})|(\\$number)""".toRegex()
 
@@ -134,6 +135,17 @@ interface Syntax {
                         ).match {
                             put(2, SpanStyle(color = groupColor))
                         }
+                    }
+                }
+            }
+
+            charSetRegex.script { match ->
+                match.groups.getOrNull(index = 4)?.let { group ->
+                    spanStyle {
+                        charSetRangeRegex.groups(
+                            SpanStyle(color = charSetColor),
+                            range = group.range
+                        )
                     }
                 }
             }
