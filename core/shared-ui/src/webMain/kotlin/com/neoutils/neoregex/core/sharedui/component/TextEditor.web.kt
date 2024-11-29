@@ -65,7 +65,7 @@ actual fun TextEditor(
     onFocusChange: (FocusState) -> Unit,
     matches: List<Match>,
     textStyle: TextStyle
-) {
+) = Column(modifier) {
 
     val mergedTextStyle = typography.bodyMedium.merge(textStyle)
 
@@ -122,8 +122,7 @@ actual fun TextEditor(
         }
     }
 
-    Row(modifier) {
-
+    Row(Modifier.weight(weight = 1f, fill = true)) {
         LineNumbers(
             count = textLayout?.lineCount ?: 1,
             offset = scrollState.value,
