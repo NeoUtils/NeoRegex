@@ -34,5 +34,5 @@ dependencies {
     implementation(libs.plugin.compose)
 
     // TODO: remove when safe-typed version catalog for plugin script is available
-    implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
+    implementation(files(libs::class.java.superclass.protectionDomain.codeSource.location))
 }
