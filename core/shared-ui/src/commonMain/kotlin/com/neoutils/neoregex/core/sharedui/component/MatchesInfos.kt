@@ -47,6 +47,8 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.neoutils.neoregex.core.common.datasource.PreferencesDataSourceImpl
 import com.neoutils.neoregex.core.common.platform.Platform
 import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
@@ -58,8 +60,14 @@ import org.jetbrains.compose.resources.pluralStringResource
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 
+
 @Composable
 fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
+
+    val preferencesDataSource = remember { PreferencesDataSourceImpl() }
+    val preferences by preferencesDataSource.preferences.collectAsStateWithLifecycle()
+
+    val current = preferences.matchesInfosAlignment
 
     val density = LocalDensity.current
 
@@ -68,8 +76,6 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
     val animateOffset = remember { Animatable(Offset.Zero, Offset.VectorConverter) }
 
     var alignments by remember { mutableStateOf<Map<Alignment, Rect>>(mapOf()) }
-
-    var current by remember { mutableStateOf(Alignment.BottomEnd) }
 
     // It needs to be a state to update the reference in pointerInput()
     val halfHeight by rememberUpdatedState(density.run { maxHeight.toPx() / 2f })
@@ -144,7 +150,11 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
                                 )
                             }
 
-                            current = destination
+                            preferencesDataSource.update {
+                                it.copy(
+                                    matchesInfosAlignment = destination
+                                )
+                            }
 
                             animateOffset.animateTo(Offset.Zero)
                         }

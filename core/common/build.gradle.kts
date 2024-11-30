@@ -42,5 +42,9 @@ kotlin {
             implementation(libs.dbus.java.transport.native.unixsocket)
             implementation(libs.slf4j.nop)
         }
+
+        commonMain.dependencies {
+            api("com.russhwolf:multiplatform-settings-no-arg:1.2.0")
+        }
     }
 }
