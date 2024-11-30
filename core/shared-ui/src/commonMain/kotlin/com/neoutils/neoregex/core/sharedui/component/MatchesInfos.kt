@@ -38,6 +38,7 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.input.pointer.pointerInput
@@ -98,6 +99,8 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
         )
     }
 
+    val hover = remember { MutableInteractionSource() }
+
     Text(
         text = pluralStringResource(
             Res.plurals.match_result_infos,
@@ -118,17 +121,14 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
                 color = colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(dimensions.tiny)
             )
+            .clip(shape = RoundedCornerShape(dimensions.tiny))
+            .hoverable(hover)
+            .indication(
+                interactionSource = hover,
+                indication = ripple()
+            )
             .onGloballyPositioned {
                 targetRect = it.boundsInParent()
-            }
-            .run {
-                val hover = remember { MutableInteractionSource() }
-
-                hoverable(hover)
-                    .indication(
-                        interactionSource = hover,
-                        indication = ripple()
-                    )
             }
             .pointerInput(Unit) {
                 detectDragGestures(
@@ -179,7 +179,10 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
                     }
                 )
             }
-            .padding(dimensions.micro) // internal
+            .padding(
+                vertical = dimensions.micro,
+                horizontal = dimensions.tiny
+            ) // internal
     )
 }
 
@@ -198,15 +201,13 @@ private fun BoxScope.AlignmentTarget(
     Box(
         modifier = Modifier
             .background(
-                color = colorScheme.primary.copy(
-                    alpha = 0.2f
-                ),
+                color = colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(dimensions.tiny)
             ).run {
                 if (isTarget) {
                     border(
                         width = 1.dp,
-                        color = colorScheme.primary,
+                        color = colorScheme.outline,
                         shape = RoundedCornerShape(dimensions.tiny)
                     )
                 } else this

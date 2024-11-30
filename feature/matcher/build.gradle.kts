@@ -43,7 +43,7 @@ kotlin {
             implementation(projects.core.sharedUi)
             implementation(projects.core.common)
 
-            implementation("com.neoutils.highlight:highlight-compose:2.3.0-snapshot10")
+            implementation(libs.highlight.compose)
         }
     }
 }
