@@ -64,7 +64,7 @@ import kotlin.time.DurationUnit
 fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
 
     val preferencesDataSource = remember { PreferencesDataSourceImpl() }
-    val preferences by preferencesDataSource.preferences.collectAsStateWithLifecycle()
+    val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
 
     val current = rememberUpdatedState(preferences.matchesInfosAlignment)
 

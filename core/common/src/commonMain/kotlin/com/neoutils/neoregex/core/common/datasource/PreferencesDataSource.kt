@@ -19,6 +19,7 @@
 package com.neoutils.neoregex.core.common.datasource
 
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.IntOffset
 import com.neoutils.neoregex.core.common.model.Preferences
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.get
@@ -29,7 +30,9 @@ import kotlinx.coroutines.flow.asStateFlow
 
 interface PreferencesDataSource {
 
-    val preferences: StateFlow<Preferences>
+    val flow: StateFlow<Preferences>
+
+    val value: Preferences
 
     fun update(block: (Preferences) -> Preferences): Preferences
 }
@@ -39,13 +42,14 @@ class PreferencesDataSourceImpl(
 ) : PreferencesDataSource {
 
     private val _preferences = MutableStateFlow(settings.toPreferences())
-    override val preferences = _preferences.asStateFlow()
+    override val flow = _preferences.asStateFlow()
+    override val value: Preferences get() = flow.value
 
     override fun update(
         block: (Preferences) -> Preferences
     ): Preferences {
 
-        val preferences = block(preferences.value)
+        val preferences = block(flow.value)
 
         settings.apply(preferences)
         _preferences.value = preferences
@@ -56,11 +60,11 @@ class PreferencesDataSourceImpl(
 
 sealed class PreferencesTokens<T>(
     val key: String,
-    val pairs: Map<String, T>
+    val values: Map<String, T>
 ) {
     data object InfosAlignment : PreferencesTokens<Alignment>(
         key = "MATCHES_INFOS_ALIGNMENT",
-        pairs = mapOf(
+        values = mapOf(
             "BOTTOM_END" to Alignment.BottomEnd,
             "TOP_END" to Alignment.TopEnd
         )
@@ -68,18 +72,18 @@ sealed class PreferencesTokens<T>(
 
     fun get(key: String?): T {
 
-        val pair = pairs.entries.find {
+        val pair = values.entries.find {
             it.key == key
-        } ?: pairs.entries.first()
+        } ?: values.entries.first()
 
         return pair.value
     }
 
     fun keyOf(value: T?): String {
 
-        val pair = pairs.entries.find {
+        val pair = values.entries.find {
             it.value == value
-        } ?: pairs.entries.first()
+        } ?: values.entries.first()
 
         return pair.key
     }
@@ -90,7 +94,13 @@ private fun Settings.toPreferences(): Preferences {
     return Preferences(
         matchesInfosAlignment = PreferencesTokens.InfosAlignment.get(
             get<String>(PreferencesTokens.InfosAlignment.key)
-        )
+        ),
+        windowPosition = if (hasKey("window_position_y") && hasKey("window_position_x")) {
+            IntOffset(
+                x = getInt("window_position_x", 0),
+                y = getInt("window_position_y", 0),
+            )
+        } else null
     )
 }
 
@@ -99,4 +109,12 @@ private fun Settings.apply(preferences: Preferences) {
         PreferencesTokens.InfosAlignment.key,
         PreferencesTokens.InfosAlignment.keyOf(preferences.matchesInfosAlignment)
     )
+
+    preferences.windowPosition?.let {
+        set("window_position_x", it.x)
+        set("window_position_y", it.y)
+    } ?: run {
+        remove("window_position_x")
+        remove("window_position_y")
+    }
 }

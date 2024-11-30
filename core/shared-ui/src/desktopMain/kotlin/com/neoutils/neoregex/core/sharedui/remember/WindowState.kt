@@ -40,6 +40,7 @@ fun FrameWindowScope.rememberCompleteWindowState(): CompleteWindowState {
             override fun windowStateChanged(e: WindowEvent) {
                 state = CompleteWindowState.of(window)
             }
+
         }
 
         window.addWindowStateListener(stateListener)

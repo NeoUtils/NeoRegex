@@ -49,6 +49,7 @@ fun ApplicationScope.NeoWindow(
     icon: Painter = painterResource(Res.drawable.flavicon),
     title: String = stringResource(Res.string.app_name),
     undecorated: Boolean = JBR.windowDecorations == null,
+    windowState: WindowState = rememberWindowState(),
     border: BorderStroke = BorderStroke(1.dp, colorScheme.outline),
     exceptionHandlerFactory: WindowExceptionHandlerFactory = NeoRegexWindowExceptionHandlerFactory,
     header: @Composable FrameWindowScope.() -> Unit = {
@@ -63,12 +64,6 @@ fun ApplicationScope.NeoWindow(
     },
     content: @Composable FrameWindowScope.() -> Unit
 ) {
-    val windowState = rememberWindowState(
-        position = WindowPosition.Aligned(
-            Alignment.Center
-        ),
-    )
-
     CompositionLocalProvider(
         LocalWindowExceptionHandlerFactory
             .provides(exceptionHandlerFactory)

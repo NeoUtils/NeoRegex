@@ -19,7 +19,9 @@
 package com.neoutils.neoregex.core.common.model
 
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.IntOffset
 
 data class Preferences(
-    val matchesInfosAlignment: Alignment
+    val matchesInfosAlignment: Alignment,
+    val windowPosition: IntOffset?
 )

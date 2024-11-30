@@ -29,13 +29,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.window.FrameWindowScope
+import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.launchApplication
+import androidx.compose.ui.window.rememberWindowState
+import com.neoutils.neoregex.core.common.datasource.PreferencesDataSourceImpl
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
@@ -49,16 +55,64 @@ import kotlinx.coroutines.CoroutineScope
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.skiko.MainUIDispatcher
+import java.awt.event.ComponentAdapter
+import java.awt.event.ComponentEvent
 
 fun main() {
+
+    val prefDataSource = PreferencesDataSourceImpl()
+
     with(CoroutineScope(MainUIDispatcher)) {
+
         launchApplication {
+
+            val density = LocalDensity.current
+
+            val windowState = rememberWindowState(
+                position = when (val windowsPosition = prefDataSource.value.windowPosition) {
+                    is IntOffset -> {
+                        density.run {
+                            WindowPosition.Absolute(
+                                x = windowsPosition.x.toDp(),
+                                y = windowsPosition.y.toDp()
+                            )
+                        }
+                    }
+
+                    else -> {
+                        WindowPosition.Aligned(Alignment.Center)
+                    }
+                },
+            )
+
             NeoTheme {
                 NeoWindow(
-                    header = {
-                        Header()
-                    }
+                    windowState = windowState,
+                    header = { Header() }
                 ) {
+
+                    DisposableEffect(window) {
+
+                        val listener = object : ComponentAdapter() {
+                            override fun componentMoved(e: ComponentEvent) {
+                                prefDataSource.update {
+                                    it.copy(
+                                        windowPosition = IntOffset(
+                                            x = window.x,
+                                            y = window.y
+                                        )
+                                    )
+                                }
+                            }
+                        }
+
+                        window.addComponentListener(listener)
+
+                        onDispose {
+                            window.removeComponentListener(listener)
+                        }
+                    }
+
                     App()
                 }
             }
