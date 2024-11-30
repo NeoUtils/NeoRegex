@@ -40,11 +40,12 @@ interface Syntax {
         private val charSetRegex = """(\\{2})|(\\\[)|(\[\^?)((?:\\{2}|\\\]|[^\]])*)(\])?""".toRegex()
         private val groupRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\()|(\((?:\?[:=!])?)((?:\\{2}|\\\)|\\\[|\[(?:\\{2}|\\\]|[^\]])*\]?|[^\)])*)(\))?""".toRegex()
         private val quantifierRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\{)|(\{\w,?\w?\})""".toRegex()
-        private val escapeReservedRegex = """(\\{2})|(\\[{}()\[\]$^+*?|\w])""".toRegex()
+        private val escapeReservedRegex = """(\\{2})|(\\[{}()\[\]$^+*?|.\w])""".toRegex()
         private val escapedCharRegex = """(\\{2})|(\\[DdWwSsHhVvR])""".toRegex()
         private val anchorsRegex = """(\\{2})|(\\[$^])|(\\[AZzBbG])|([$^])""".toRegex()
         private val controlsRegex = """(\\{2})|(\\[tnfrae])""".toRegex()
         private val modifierRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\[+*?])|([+*?])""".toRegex()
+        private val dotRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\.)|(\.)""".toRegex()
         private val alternationRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\|)|(\|)""".toRegex()
         private val charSetRangeRegex = """\w(-)\w""".toRegex()
 
@@ -124,6 +125,10 @@ interface Syntax {
                     put(3, charSetSpanStyle)
                     put(4, charSetSpanStyle.copy(color = Color.Unspecified))
                     put(5, charSetSpanStyle)
+                }
+
+                dotRegex.match {
+                    put(5, SpanStyle(color = escapedCharColor))
                 }
             }
 
