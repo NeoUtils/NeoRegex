@@ -29,7 +29,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.ExperimentalSerializationApi
 
 @OptIn(ExperimentalSerializationApi::class, ExperimentalSettingsApi::class)
-class MultiplatformSettings(
+internal class MultiplatformSettings(
     private val settings: Settings = Settings()
 ) : PreferencesDataSource {
 

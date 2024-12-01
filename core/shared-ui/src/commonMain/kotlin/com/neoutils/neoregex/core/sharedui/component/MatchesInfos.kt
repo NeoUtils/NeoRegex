@@ -50,7 +50,7 @@ import androidx.compose.ui.unit.round
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.common.platform.Platform
 import com.neoutils.neoregex.core.common.platform.platform
-import com.neoutils.neoregex.core.datasource.settings.MultiplatformSettings
+import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
@@ -58,13 +58,14 @@ import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.match_result_infos
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.pluralStringResource
+import org.koin.compose.koinInject
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 
 @Composable
 fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
 
-    val preferencesDataSource = remember { MultiplatformSettings() }
+    val preferencesDataSource: PreferencesDataSource = koinInject()
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
 
     val current = rememberUpdatedState(

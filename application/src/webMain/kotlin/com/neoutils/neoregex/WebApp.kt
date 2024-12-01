@@ -28,7 +28,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -36,32 +35,56 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.CanvasBasedWindow
 import com.neoutils.neoregex.core.common.extension.toCss
-import com.neoutils.neoregex.core.common.util.SizeManager
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import kotlinx.browser.document
-import kotlinx.coroutines.flow.first
-import org.jetbrains.skiko.wasm.onWasmReady
 
-@OptIn(ExperimentalComposeUiApi::class)
-fun main() {
-    onWasmReady {
+@Composable
+fun WebApp() = WithKoin {
+    NeoTheme {
 
-        val sizeManager = SizeManager().apply {
-            resize()
+        val background = colorScheme.background.toCss()
+
+        LaunchedEffect(Unit) {
+            val body = checkNotNull(document.body)
+            body.style.backgroundColor = background
         }
 
-        CanvasBasedWindow(
-            canvasElementId = "viewport-container",
-            applyDefaultStyles = false,
-            requestResize = {
-                sizeManager.changes.first()
-            }
-        ) {
-            WebApp()
+        Experimental {
+            App()
         }
     }
 }
 
+@Composable
+fun Experimental(
+    content: @Composable () -> Unit
+) = Box {
+    content()
+
+    Box(
+        modifier = Modifier
+            .size(200.dp)
+            .align(Alignment.TopEnd)
+    ) {
+        Text(
+            text = "experimental",
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.Center)
+                .graphicsLayer(
+                    rotationZ = 45f,
+                    translationX = 50f,
+                    translationY = -50f
+                )
+                .background(Color.Yellow)
+                .padding(
+                    vertical = 8.dp
+                ),
+        )
+    }
+}

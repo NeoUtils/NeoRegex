@@ -8,6 +8,7 @@ kotlinx-serialization = "1.7.3"
 multiplatform-settings = "1.2.0"
 slf4j-nop = "2.0.16"
 voyager = "1.1.0-beta03" # 1.1.0+ is required for web support
+koin = "4.0.0"
 
 # androix
 androidx-compose = "1.7.4"
@@ -48,6 +49,9 @@ voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", vers
 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 

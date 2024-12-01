@@ -60,6 +60,8 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
 
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
         }
     }
 }

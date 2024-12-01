@@ -16,16 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex
+package com.neoutils.neoregex.core.datasource.di
 
-import androidx.compose.ui.window.launchApplication
-import kotlinx.coroutines.CoroutineScope
-import org.jetbrains.skiko.MainUIDispatcher
+import com.neoutils.neoregex.core.datasource.PreferencesDataSource
+import com.neoutils.neoregex.core.datasource.settings.MultiplatformSettings
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
-fun main() {
-    with(CoroutineScope(MainUIDispatcher)) {
-        launchApplication {
-            DesktopApp()
-        }
-    }
+val preferencesModule = module {
+    single { MultiplatformSettings() } bind PreferencesDataSource::class
 }

@@ -18,14 +18,17 @@
 
 package com.neoutils.neoregex
 
-import androidx.compose.ui.window.launchApplication
-import kotlinx.coroutines.CoroutineScope
-import org.jetbrains.skiko.MainUIDispatcher
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
+import com.neoutils.neoregex.core.sharedui.di.WithKoin
 
-fun main() {
-    with(CoroutineScope(MainUIDispatcher)) {
-        launchApplication {
-            DesktopApp()
+@Composable
+fun AndroidApp() {
+    WithKoin {
+        NeoTheme {
+            App(Modifier.safeDrawingPadding())
         }
     }
 }

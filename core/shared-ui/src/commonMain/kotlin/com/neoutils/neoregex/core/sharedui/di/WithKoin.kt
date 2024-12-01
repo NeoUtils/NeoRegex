@@ -16,16 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex
+package com.neoutils.neoregex.core.sharedui.di
 
-import androidx.compose.ui.window.launchApplication
-import kotlinx.coroutines.CoroutineScope
-import org.jetbrains.skiko.MainUIDispatcher
+import androidx.compose.runtime.Composable
+import com.neoutils.neoregex.core.datasource.di.preferencesModule
+import org.koin.compose.KoinApplication
 
-fun main() {
-    with(CoroutineScope(MainUIDispatcher)) {
-        launchApplication {
-            DesktopApp()
-        }
-    }
-}
+@Composable
+fun WithKoin(
+    content: @Composable () -> Unit
+) = KoinApplication(
+    application = {
+        modules(
+            preferencesModule
+        )
+    },
+    content = content
+)
