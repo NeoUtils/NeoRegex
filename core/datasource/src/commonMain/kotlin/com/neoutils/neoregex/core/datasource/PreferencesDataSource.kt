@@ -16,18 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
-    kotlin("plugin.serialization") version "2.0.20"
+
+package com.neoutils.neoregex.core.datasource
+
+import com.neoutils.neoregex.core.datasource.model.Preferences
+import kotlinx.coroutines.flow.StateFlow
+
+interface PreferencesDataSource {
+
+    val flow: StateFlow<Preferences>
+    val current: Preferences
+
+    fun update(block: (Preferences) -> Preferences): Preferences
 }
 
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            api(projects.core.common)
-            api(libs.multiplatform.settings.noArg)
-            api(libs.multiplatform.settings.serialization)
-            api(libs.kotlinx.serialization.json)
-        }
-    }
-}

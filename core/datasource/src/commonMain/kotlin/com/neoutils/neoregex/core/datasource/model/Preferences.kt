@@ -18,10 +18,23 @@
 
 package com.neoutils.neoregex.core.datasource.model
 
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.unit.IntOffset
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Preferences(
-    val matchesInfosAlignment: Alignment,
-    val windowPosition: IntOffset?
-)
+    val infosAlignment: InfosAlignment = InfosAlignment.BOTTOM_END,
+    val windowPosition: WindowPosition? = null
+) {
+    @Serializable
+    data class WindowPosition(
+        val x: Int,
+        val y: Int
+    )
+
+    @Serializable
+    enum class InfosAlignment {
+        TOP_END,
+        BOTTOM_END;
+    }
+}
+

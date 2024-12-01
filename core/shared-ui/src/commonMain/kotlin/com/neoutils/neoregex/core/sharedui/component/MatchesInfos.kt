@@ -50,7 +50,8 @@ import androidx.compose.ui.unit.round
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.common.platform.Platform
 import com.neoutils.neoregex.core.common.platform.platform
-import com.neoutils.neoregex.core.datasource.impl.PreferencesDataSourceImpl
+import com.neoutils.neoregex.core.datasource.settings.MultiplatformSettings
+import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
 import com.neoutils.neoregex.core.resources.Res
@@ -63,10 +64,15 @@ import kotlin.time.DurationUnit
 @Composable
 fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
 
-    val preferencesDataSource = remember { PreferencesDataSourceImpl() }
+    val preferencesDataSource = remember { MultiplatformSettings() }
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
 
-    val current = rememberUpdatedState(preferences.matchesInfosAlignment)
+    val current = rememberUpdatedState(
+        when (preferences.infosAlignment) {
+            Preferences.InfosAlignment.TOP_END -> Alignment.TopEnd
+            Preferences.InfosAlignment.BOTTOM_END -> Alignment.BottomEnd
+        }
+    )
 
     val density = LocalDensity.current
 
@@ -151,7 +157,11 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
 
                                 preferencesDataSource.update {
                                     it.copy(
-                                        matchesInfosAlignment = destination
+                                        infosAlignment = when (destination) {
+                                            Alignment.TopEnd -> Preferences.InfosAlignment.TOP_END
+                                            Alignment.BottomEnd -> Preferences.InfosAlignment.BOTTOM_END
+                                            else -> error("Invalid alignment $destination")
+                                        }
                                     )
                                 }
                             }

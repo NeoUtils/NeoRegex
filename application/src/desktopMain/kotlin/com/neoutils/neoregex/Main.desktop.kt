@@ -36,14 +36,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.launchApplication
 import androidx.compose.ui.window.rememberWindowState
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
-import com.neoutils.neoregex.core.datasource.impl.PreferencesDataSourceImpl
+import com.neoutils.neoregex.core.datasource.settings.MultiplatformSettings
+import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
@@ -60,7 +60,7 @@ import java.awt.event.ComponentEvent
 
 fun main() {
 
-    val prefDataSource = PreferencesDataSourceImpl()
+    val prefDataSource = MultiplatformSettings()
 
     with(CoroutineScope(MainUIDispatcher)) {
 
@@ -69,20 +69,14 @@ fun main() {
             val density = LocalDensity.current
 
             val windowState = rememberWindowState(
-                position = when (val windowsPosition = prefDataSource.current.windowPosition) {
-                    is IntOffset -> {
-                        density.run {
-                            WindowPosition.Absolute(
-                                x = windowsPosition.x.toDp(),
-                                y = windowsPosition.y.toDp()
-                            )
-                        }
+                position = prefDataSource.current.windowPosition?.let {
+                    density.run {
+                        WindowPosition.Absolute(
+                            x = it.x.toDp(),
+                            y = it.y.toDp()
+                        )
                     }
-
-                    else -> {
-                        WindowPosition.Aligned(Alignment.Center)
-                    }
-                },
+                } ?: WindowPosition.Aligned(Alignment.Center)
             )
 
             NeoTheme {
@@ -97,7 +91,7 @@ fun main() {
                             override fun componentMoved(e: ComponentEvent) {
                                 prefDataSource.update {
                                     it.copy(
-                                        windowPosition = IntOffset(
+                                        windowPosition = Preferences.WindowPosition(
                                             x = window.x,
                                             y = window.y
                                         )
