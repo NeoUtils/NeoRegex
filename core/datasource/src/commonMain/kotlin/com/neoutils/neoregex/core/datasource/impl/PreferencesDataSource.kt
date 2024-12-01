@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2024 <AUTHOR>.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.common.datasource
+package com.neoutils.neoregex.core.datasource.impl
 
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.IntOffset
-import com.neoutils.neoregex.core.common.model.Preferences
+import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.russhwolf.settings.Settings
 import com.russhwolf.settings.get
 import com.russhwolf.settings.set
@@ -31,8 +31,7 @@ import kotlinx.coroutines.flow.asStateFlow
 interface PreferencesDataSource {
 
     val flow: StateFlow<Preferences>
-
-    val value: Preferences
+    val current: Preferences
 
     fun update(block: (Preferences) -> Preferences): Preferences
 }
@@ -43,7 +42,7 @@ class PreferencesDataSourceImpl(
 
     private val _preferences = MutableStateFlow(settings.toPreferences())
     override val flow = _preferences.asStateFlow()
-    override val value: Preferences get() = flow.value
+    override val current: Preferences get() = flow.value
 
     override fun update(
         block: (Preferences) -> Preferences

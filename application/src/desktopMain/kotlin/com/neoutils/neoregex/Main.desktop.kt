@@ -41,9 +41,9 @@ import androidx.compose.ui.window.FrameWindowScope
 import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.launchApplication
 import androidx.compose.ui.window.rememberWindowState
-import com.neoutils.neoregex.core.common.datasource.PreferencesDataSourceImpl
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
+import com.neoutils.neoregex.core.datasource.impl.PreferencesDataSourceImpl
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
@@ -69,7 +69,7 @@ fun main() {
             val density = LocalDensity.current
 
             val windowState = rememberWindowState(
-                position = when (val windowsPosition = prefDataSource.value.windowPosition) {
+                position = when (val windowsPosition = prefDataSource.current.windowPosition) {
                     is IntOffset -> {
                         density.run {
                             WindowPosition.Absolute(

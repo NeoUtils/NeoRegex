@@ -4,6 +4,7 @@ cmp = "1.7.0" # Jetpack Compose 1.7.0 & APG 8.1+
 dbus-java-core = "5.1.0"
 highlight = "2.3.0-snapshot10"
 kotlin = "2.0.20" # Gradle 7.5 ~ 8.8 & AGP 7.4.2 ~ 8.5
+multiplatform-settings = "1.2.0"
 slf4j-nop = "2.0.16"
 voyager = "1.1.0-beta03" # 1.1.0+ is required for web support
 
@@ -18,6 +19,7 @@ kotlinx-coroutines = "1.9.0"
 [libraries]
 
 # plugins
+multiplatform-settings-noArg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatform-settings" }
 plugin-android-gradle = { module = "com.android.tools.build:gradle", version.ref = "agp" }
 plugin-kotlin-gradle = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 plugin-compose = { group = "org.jetbrains.compose", name = "compose-gradle-plugin", version.ref = "cmp" }

@@ -16,12 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.common.model
+plugins {
+    alias(libs.plugins.neoutils.neoregex.core)
+}
 
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.unit.IntOffset
-
-data class Preferences(
-    val matchesInfosAlignment: Alignment,
-    val windowPosition: IntOffset?
-)
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            implementation(projects.core.common)
+            api(libs.multiplatform.settings.noArg)
+        }
+    }
+}

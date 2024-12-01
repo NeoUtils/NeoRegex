@@ -16,25 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.catalog
+package com.neoutils.neoregex.core.datasource.model
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
-}
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.IntOffset
 
-kotlin {
-    sourceSets {
-
-        webTest.dependencies {
-
-            // junit
-            implementation(catalog.kotlin.test)
-        }
-
-        desktopMain.dependencies {
-            implementation(libs.dbus.java.core)
-            implementation(libs.dbus.java.transport.native.unixsocket)
-            implementation(libs.slf4j.nop)
-        }
-    }
-}
+data class Preferences(
+    val matchesInfosAlignment: Alignment,
+    val windowPosition: IntOffset?
+)

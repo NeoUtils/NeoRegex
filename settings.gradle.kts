@@ -42,11 +42,14 @@ dependencyResolutionManagement {
     }
 }
 
-include(":application")
-include(":core:design-system")
-include(":core:resources")
-include(":core:shared-ui")
-include(":core:common")
-include(":feature:matcher")
+include(
+    ":application",
+    ":core:design-system",
+    ":core:resources",
+    ":core:shared-ui",
+    ":core:common",
+    ":core:datasource",
+    ":feature:matcher"
+)
 
 rootProject.name = "NeoRegex"

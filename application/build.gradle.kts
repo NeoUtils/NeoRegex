@@ -46,6 +46,7 @@ kotlin {
             implementation(projects.core.resources)
             implementation(projects.core.common)
             implementation(projects.core.sharedUi)
+            implementation(projects.core.datasource)
 
             // voyager
             implementation(catalog.voyager.navigator)
@@ -58,6 +59,7 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
+
         }
     }
 }

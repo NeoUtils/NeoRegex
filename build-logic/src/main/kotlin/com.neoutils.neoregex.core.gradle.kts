@@ -19,6 +19,9 @@
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 
 import extension.catalog
+import extension.config
+import extension.module
+import extension.name
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -28,6 +31,9 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.compose")
 }
+
+group = config.module(name = "core")
+version = config.version.name()
 
 kotlin {
 

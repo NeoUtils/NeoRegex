@@ -48,9 +48,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.neoutils.neoregex.core.common.datasource.PreferencesDataSourceImpl
 import com.neoutils.neoregex.core.common.platform.Platform
 import com.neoutils.neoregex.core.common.platform.platform
+import com.neoutils.neoregex.core.datasource.impl.PreferencesDataSourceImpl
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
 import com.neoutils.neoregex.core.resources.Res
