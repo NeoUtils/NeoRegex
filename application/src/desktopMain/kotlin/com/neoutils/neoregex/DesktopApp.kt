@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -39,12 +40,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.FrameWindowScope
-import androidx.compose.ui.window.WindowPosition
-import androidx.compose.ui.window.rememberWindowState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource
+import com.neoutils.neoregex.core.datasource.WindowStateDataSource
+import com.neoutils.neoregex.core.datasource.extension.observe
 import com.neoutils.neoregex.core.datasource.model.Preferences
+import com.neoutils.neoregex.core.datasource.remember.rememberWindowState
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.*
@@ -60,6 +63,9 @@ fun ApplicationScope.DesktopApp() = WithKoin {
     val preferencesDataSource = koinInject<PreferencesDataSource>()
     val preferences by preferencesDataSource.flow.collectAsState()
 
+    val windowStateDataSource = koinInject<WindowStateDataSource>()
+    val windowState by windowStateDataSource.flow.collectAsState()
+
     NeoTheme(
         colorTheme = when (preferences.colorTheme) {
             Preferences.ColorTheme.SYSTEM -> rememberColorTheme()
@@ -69,10 +75,11 @@ fun ApplicationScope.DesktopApp() = WithKoin {
     ) {
         NeoWindow(
             header = { HeaderImpl() },
-            windowState = rememberWindowState(
-                position = WindowPosition.Aligned(Alignment.Center)
-            )
+            windowState = rememberWindowState(windowState)
         ) {
+
+            windowStateDataSource.observe(window)
+
             App()
         }
     }
@@ -82,7 +89,7 @@ fun ApplicationScope.DesktopApp() = WithKoin {
 private fun FrameWindowScope.HeaderImpl() = NeoHeader { padding ->
 
     val preferencesDataSource = koinInject<PreferencesDataSource>()
-    val preferences by preferencesDataSource.flow.collectAsState()
+    val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
 
     Text(
         text = stringResource(Res.string.app_name),

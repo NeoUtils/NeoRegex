@@ -29,16 +29,20 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.serialization.ExperimentalSerializationApi
 
 @OptIn(ExperimentalSerializationApi::class, ExperimentalSettingsApi::class)
-internal class MultiplatformSettings(
+internal class PreferencesSettings(
     private val settings: Settings = Settings()
 ) : PreferencesDataSource {
 
-    private val _preferences = MutableStateFlow(
-        settings.decodeValue(Preferences.serializer(), KEY, Preferences())
+    private val _flow = MutableStateFlow(
+        settings.decodeValue(
+            serializer = Preferences.serializer(),
+            defaultValue = Preferences.Default,
+            key = KEY,
+        )
     )
 
-    override val flow = _preferences.asStateFlow()
-    override val current: Preferences get() = flow.value
+    override val flow = _flow.asStateFlow()
+    override val current get() = flow.value
 
     override fun update(
         block: (Preferences) -> Preferences
@@ -47,7 +51,7 @@ internal class MultiplatformSettings(
         val preferences = block(flow.value)
 
         settings.encodeValue(Preferences.serializer(), KEY, preferences)
-        _preferences.value = preferences
+        _flow.value = preferences
 
         return preferences
     }

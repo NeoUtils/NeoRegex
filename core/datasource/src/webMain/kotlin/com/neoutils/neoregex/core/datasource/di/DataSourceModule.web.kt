@@ -16,20 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.sharedui.di
+package com.neoutils.neoregex.core.datasource.di
 
-import androidx.compose.runtime.Composable
-import com.neoutils.neoregex.core.datasource.di.dataSourceModule
-import org.koin.compose.KoinApplication
+import com.neoutils.neoregex.core.datasource.PreferencesDataSource
+import com.neoutils.neoregex.core.datasource.settings.PreferencesSettings
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
-@Composable
-fun WithKoin(
-    content: @Composable () -> Unit
-) = KoinApplication(
-    application = {
-        modules(
-            dataSourceModule
-        )
-    },
-    content = content
-)
+actual val dataSourceModule = module {
+    single { PreferencesSettings() } bind PreferencesDataSource::class
+}

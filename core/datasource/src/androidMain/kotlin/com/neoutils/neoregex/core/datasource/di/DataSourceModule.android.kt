@@ -19,10 +19,10 @@
 package com.neoutils.neoregex.core.datasource.di
 
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource
-import com.neoutils.neoregex.core.datasource.settings.MultiplatformSettings
+import com.neoutils.neoregex.core.datasource.settings.PreferencesSettings
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-val preferencesModule = module {
-    single { MultiplatformSettings() } bind PreferencesDataSource::class
+actual val dataSourceModule = module {
+    single { PreferencesSettings() } bind PreferencesDataSource::class
 }

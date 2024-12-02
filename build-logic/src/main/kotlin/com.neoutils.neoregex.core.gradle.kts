@@ -63,6 +63,7 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
 
+            // koin
             implementation(catalog.koin.core)
             implementation(catalog.koin.compose)
         }

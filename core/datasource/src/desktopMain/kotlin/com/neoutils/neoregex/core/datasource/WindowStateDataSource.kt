@@ -16,20 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.sharedui.di
+package com.neoutils.neoregex.core.datasource
 
-import androidx.compose.runtime.Composable
-import com.neoutils.neoregex.core.datasource.di.dataSourceModule
-import org.koin.compose.KoinApplication
+import com.neoutils.neoregex.core.datasource.model.WindowStateData
+import kotlinx.coroutines.flow.StateFlow
 
-@Composable
-fun WithKoin(
-    content: @Composable () -> Unit
-) = KoinApplication(
-    application = {
-        modules(
-            dataSourceModule
-        )
-    },
-    content = content
-)
+interface WindowStateDataSource {
+    val flow: StateFlow<WindowStateData>
+    val current: WindowStateData
+
+    fun update(block: (WindowStateData) -> WindowStateData): WindowStateData
+}
