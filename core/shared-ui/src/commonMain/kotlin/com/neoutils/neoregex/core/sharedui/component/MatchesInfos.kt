@@ -69,9 +69,9 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
 
     val current = rememberUpdatedState(
-        when (preferences.infosAlignment) {
-            Preferences.InfosAlignment.TOP_END -> Alignment.TopEnd
-            Preferences.InfosAlignment.BOTTOM_END -> Alignment.BottomEnd
+        when (preferences.performanceLabelAlign) {
+            Preferences.Alignment.TOP_END -> Alignment.TopEnd
+            Preferences.Alignment.BOTTOM_END -> Alignment.BottomEnd
         }
     )
 
@@ -158,9 +158,9 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
 
                                 preferencesDataSource.update {
                                     it.copy(
-                                        infosAlignment = when (destination) {
-                                            Alignment.TopEnd -> Preferences.InfosAlignment.TOP_END
-                                            Alignment.BottomEnd -> Preferences.InfosAlignment.BOTTOM_END
+                                        performanceLabelAlign = when (destination) {
+                                            Alignment.TopEnd -> Preferences.Alignment.TOP_END
+                                            Alignment.BottomEnd -> Preferences.Alignment.BOTTOM_END
                                             else -> error("Invalid alignment $destination")
                                         }
                                     )

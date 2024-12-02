@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package com.neoutils.neoregex
 
 import androidx.compose.foundation.clickable
@@ -28,14 +30,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.FrameWindowScope
@@ -54,27 +54,11 @@ import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import java.awt.event.ComponentAdapter
-import java.awt.event.ComponentEvent
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ApplicationScope.DesktopApp() = WithKoin {
     val preferencesDataSource = koinInject<PreferencesDataSource>()
     val preferences by preferencesDataSource.flow.collectAsState()
-
-    val density = LocalDensity.current
-
-    val windowState = rememberWindowState(
-        position = preferencesDataSource.current.windowPosition?.let {
-            density.run {
-                WindowPosition.Absolute(
-                    x = it.x.toDp(),
-                    y = it.y.toDp()
-                )
-            }
-        } ?: WindowPosition.Aligned(Alignment.Center)
-    )
 
     NeoTheme(
         colorTheme = when (preferences.colorTheme) {
@@ -84,32 +68,11 @@ fun ApplicationScope.DesktopApp() = WithKoin {
         }
     ) {
         NeoWindow(
-            windowState = windowState,
-            header = { HeaderImpl() }
+            header = { HeaderImpl() },
+            windowState = rememberWindowState(
+                position = WindowPosition.Aligned(Alignment.Center)
+            )
         ) {
-
-            DisposableEffect(window) {
-
-                val listener = object : ComponentAdapter() {
-                    override fun componentMoved(e: ComponentEvent) {
-                        preferencesDataSource.update {
-                            it.copy(
-                                windowPosition = Preferences.WindowPosition(
-                                    x = window.x,
-                                    y = window.y
-                                )
-                            )
-                        }
-                    }
-                }
-
-                window.addComponentListener(listener)
-
-                onDispose {
-                    window.removeComponentListener(listener)
-                }
-            }
-
             App()
         }
     }

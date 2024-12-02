@@ -22,18 +22,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Preferences(
-    val infosAlignment: InfosAlignment = InfosAlignment.BOTTOM_END,
-    val windowPosition: WindowPosition? = null,
+    val performanceLabelAlign: Alignment = Alignment.BOTTOM_END,
     val colorTheme: ColorTheme = ColorTheme.SYSTEM
 ) {
     @Serializable
-    data class WindowPosition(
-        val x: Int,
-        val y: Int
-    )
-
-    @Serializable
-    enum class InfosAlignment {
+    enum class Alignment {
         TOP_END,
         BOTTOM_END;
     }
