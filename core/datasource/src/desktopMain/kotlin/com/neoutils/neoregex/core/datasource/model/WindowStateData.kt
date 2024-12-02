@@ -21,28 +21,39 @@ package com.neoutils.neoregex.core.datasource.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Preferences(
-    val performanceLabelAlign: Alignment,
-    val colorTheme: ColorTheme
+data class WindowStateData(
+    val position: Position?,
+    val size: Size,
+    val placement: Placement
 ) {
-    @Serializable
-    enum class Alignment {
-        TOP_END,
-        BOTTOM_END;
-    }
 
     @Serializable
-    enum class ColorTheme {
-        SYSTEM,
-        LIGHT,
-        DARK
+    data class Position(
+        val x: Int,
+        val y: Int
+    )
+
+    @Serializable
+    data class Size(
+        val width: Int,
+        val height: Int
+    )
+
+    @Serializable
+    enum class Placement {
+        FLOATING,
+        MAXIMIZED,
+        FULLSCREEN
     }
 
     companion object {
-        val Default = Preferences(
-            performanceLabelAlign = Alignment.BOTTOM_END,
-            colorTheme = ColorTheme.SYSTEM
+        val Default = WindowStateData(
+            position = null,
+            size = Size(
+                width = 800,
+                height = 600
+            ),
+            placement = Placement.FLOATING
         )
     }
 }
-

@@ -16,20 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.sharedui.di
+package com.neoutils.neoregex.core.datasource.di
 
-import androidx.compose.runtime.Composable
-import com.neoutils.neoregex.core.datasource.di.dataSourceModule
-import org.koin.compose.KoinApplication
+import org.koin.core.module.Module
 
-@Composable
-fun WithKoin(
-    content: @Composable () -> Unit
-) = KoinApplication(
-    application = {
-        modules(
-            dataSourceModule
-        )
-    },
-    content = content
-)
+expect val dataSourceModule: Module

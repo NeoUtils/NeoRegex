@@ -25,8 +25,7 @@ import com.neoutils.neoregex.core.sharedui.extension.isFloating
 import com.neoutils.neoregex.core.sharedui.extension.isFullMaximized
 import com.neoutils.neoregex.core.sharedui.extension.isFullscreen
 import com.neoutils.neoregex.core.sharedui.extension.isHalfMaximized
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
+import java.awt.event.WindowStateListener
 
 
 @Composable
@@ -36,11 +35,8 @@ fun FrameWindowScope.rememberCompleteWindowState(): CompleteWindowState {
 
     DisposableEffect(window) {
 
-        val stateListener = object : WindowAdapter() {
-            override fun windowStateChanged(e: WindowEvent) {
-                state = CompleteWindowState.of(window)
-            }
-
+        val stateListener = WindowStateListener {
+            state = CompleteWindowState.of(window)
         }
 
         window.addWindowStateListener(stateListener)

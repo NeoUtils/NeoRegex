@@ -54,6 +54,9 @@ kotlin {
             implementation(catalog.voyager.navigator)
             implementation(catalog.voyager.transitions)
 
+            // lifecycle
+            implementation(catalog.androidx.multplatform.lifecycle.runtime.compose)
+
             // compose
             implementation(compose.runtime)
             implementation(compose.foundation)
@@ -62,6 +65,7 @@ kotlin {
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
 
+            // koin
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
         }
