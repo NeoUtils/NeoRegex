@@ -24,13 +24,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.colorTheme
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
-import com.neoutils.neoregex.core.sharedui.di.WithKoin
 
 class MainActivity : ComponentActivity() {
 

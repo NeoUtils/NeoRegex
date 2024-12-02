@@ -19,6 +19,7 @@
 package com.neoutils.neoregex
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
@@ -28,6 +29,8 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -44,9 +47,7 @@ import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.resources.Res
-import com.neoutils.neoregex.core.resources.app_name
-import com.neoutils.neoregex.core.resources.github
+import com.neoutils.neoregex.core.resources.*
 import com.neoutils.neoregex.core.sharedui.component.NeoHeader
 import com.neoutils.neoregex.core.sharedui.component.NeoWindow
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
@@ -59,7 +60,8 @@ import java.awt.event.ComponentEvent
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ApplicationScope.DesktopApp() = WithKoin {
-    val preferencesDataSource: PreferencesDataSource = koinInject()
+    val preferencesDataSource = koinInject<PreferencesDataSource>()
+    val preferences by preferencesDataSource.flow.collectAsState()
 
     val density = LocalDensity.current
 
@@ -74,10 +76,16 @@ fun ApplicationScope.DesktopApp() = WithKoin {
         } ?: WindowPosition.Aligned(Alignment.Center)
     )
 
-    NeoTheme {
+    NeoTheme(
+        colorTheme = when (preferences.colorTheme) {
+            Preferences.ColorTheme.SYSTEM -> rememberColorTheme()
+            Preferences.ColorTheme.LIGHT -> ColorTheme.LIGHT
+            Preferences.ColorTheme.DARK -> ColorTheme.DARK
+        }
+    ) {
         NeoWindow(
             windowState = windowState,
-            header = { Header() }
+            header = { HeaderImpl() }
         ) {
 
             DisposableEffect(window) {
@@ -108,13 +116,13 @@ fun ApplicationScope.DesktopApp() = WithKoin {
 }
 
 @Composable
-private fun FrameWindowScope.Header(
-    title: String = stringResource(Res.string.app_name),
-    colorTheme: ColorTheme = rememberColorTheme()
-) = NeoHeader { padding ->
+private fun FrameWindowScope.HeaderImpl() = NeoHeader { padding ->
+
+    val preferencesDataSource = koinInject<PreferencesDataSource>()
+    val preferences by preferencesDataSource.flow.collectAsState()
 
     Text(
-        text = title,
+        text = stringResource(Res.string.app_name),
         modifier = Modifier.align(
             Alignment.Center
         )
@@ -124,17 +132,15 @@ private fun FrameWindowScope.Header(
         modifier = Modifier
             .padding(padding)
             .padding(horizontal = dimensions.medium)
-            .align(Alignment.CenterEnd)
+            .align(Alignment.CenterEnd),
+        horizontalArrangement = Arrangement.spacedBy(dimensions.medium)
     ) {
         val uriHandler = LocalUriHandler.current
 
         Icon(
             painter = painterResource(Res.drawable.github),
             contentDescription = null,
-            tint = when (colorTheme) {
-                ColorTheme.LIGHT -> colorScheme.onSurface
-                ColorTheme.DARK -> colorScheme.onSurface
-            },
+            tint = colorScheme.onSurface,
             modifier = Modifier
                 .clip(CircleShape)
                 .clickable(
@@ -142,6 +148,32 @@ private fun FrameWindowScope.Header(
                         uriHandler.openUri(
                             uri = "https://github.com/NeoUtils/NeoRegex"
                         )
+                    }
+                )
+                .padding(dimensions.medium)
+                .aspectRatio(ratio = 1f)
+        )
+
+        Icon(
+            painter = when (preferences.colorTheme) {
+                Preferences.ColorTheme.SYSTEM -> painterResource(Res.drawable.contrast)
+                Preferences.ColorTheme.LIGHT -> painterResource(Res.drawable.light_theme)
+                Preferences.ColorTheme.DARK -> painterResource(Res.drawable.dark_theme)
+            },
+            contentDescription = null,
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable(
+                    onClick = {
+                        preferencesDataSource.update {
+                            it.copy(
+                                colorTheme = when (it.colorTheme) {
+                                    Preferences.ColorTheme.SYSTEM -> Preferences.ColorTheme.LIGHT
+                                    Preferences.ColorTheme.LIGHT -> Preferences.ColorTheme.DARK
+                                    Preferences.ColorTheme.DARK -> Preferences.ColorTheme.SYSTEM
+                                }
+                            )
+                        }
                     }
                 )
                 .padding(dimensions.medium)

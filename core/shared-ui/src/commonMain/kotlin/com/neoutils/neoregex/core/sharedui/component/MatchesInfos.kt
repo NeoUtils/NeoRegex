@@ -65,7 +65,7 @@ import kotlin.time.DurationUnit
 @Composable
 fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
 
-    val preferencesDataSource: PreferencesDataSource = koinInject()
+    val preferencesDataSource = koinInject<PreferencesDataSource>()
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
 
     val current = rememberUpdatedState(

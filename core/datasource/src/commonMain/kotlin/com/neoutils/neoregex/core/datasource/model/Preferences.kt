@@ -23,7 +23,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Preferences(
     val infosAlignment: InfosAlignment = InfosAlignment.BOTTOM_END,
-    val windowPosition: WindowPosition? = null
+    val windowPosition: WindowPosition? = null,
+    val colorTheme: ColorTheme = ColorTheme.SYSTEM
 ) {
     @Serializable
     data class WindowPosition(
@@ -35,6 +36,13 @@ data class Preferences(
     enum class InfosAlignment {
         TOP_END,
         BOTTOM_END;
+    }
+
+    @Serializable
+    enum class ColorTheme {
+        SYSTEM,
+        LIGHT,
+        DARK
     }
 }
 
