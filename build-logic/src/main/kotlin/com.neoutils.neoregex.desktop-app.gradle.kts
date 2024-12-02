@@ -61,9 +61,11 @@ compose.desktop {
                 TargetFormat.Deb
             )
 
-            packageName = "NeoRegex"
+            packageName = config.name
             description = "A simple regex tester"
             packageVersion = config.version.name(withPhase = false)
+            licenseFile.set(rootProject.file("LICENSE"))
+            vendor = "NeoUtils"
 
             linux {
                 iconFile.set(file("assets/ic_launcher.png"))
@@ -79,6 +81,7 @@ compose.desktop {
                 iconFile.set(file("assets/ic_launcher.ico"))
                 menu = true
                 perUserInstall = true
+                upgradeUuid = "096befc2-42a6-4460-8e55-570b617e263b"
             }
         }
     }

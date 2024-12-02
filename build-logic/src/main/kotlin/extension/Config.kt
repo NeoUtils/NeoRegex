@@ -21,5 +21,3 @@ package extension
 import model.Config
 
 fun Config.module(name: String) = "$basePackage.$name"
-
-fun Config.distribution() = "$name-${version.name()}"

@@ -16,10 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import com.android.utils.jvmArchitecture
+import com.android.utils.osArchitecture
 import extension.catalog
 import extension.config
-import extension.distribution
 import extension.name
+import org.jetbrains.kotlin.konan.util.visibleName
 
 plugins {
     alias(libs.plugins.neoutils.neoregex.android)
@@ -74,8 +76,12 @@ tasks.register<Tar>("packageReleaseTarGz") {
     dependsOn("createReleaseDistributable")
 
     compression = Compression.GZIP
+
+    archiveBaseName.set(config.name)
     archiveExtension.set("tar.gz")
-    archiveFileName.set(config.distribution() + ".tar.gz")
+    archiveVersion.set(config.version.name())
+    archiveClassifier.set(osArchitecture.visibleName)
+
     destinationDirectory.set(layout.buildDirectory.dir("distribution"))
 
     into("NeoRegex") {
