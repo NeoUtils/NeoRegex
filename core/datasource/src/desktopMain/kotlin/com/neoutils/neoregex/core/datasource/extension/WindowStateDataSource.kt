@@ -26,8 +26,6 @@ import com.neoutils.neoregex.core.datasource.WindowStateDataSource
 import com.neoutils.neoregex.core.datasource.model.WindowStateData
 import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
 import java.awt.event.WindowStateListener
 
 @Composable
@@ -36,28 +34,24 @@ fun WindowStateDataSource.observe(window: ComposeWindow) {
     DisposableEffect(window) {
         val componentListener = object : ComponentAdapter() {
             override fun componentMoved(e: ComponentEvent) {
-                if (window.placement == WindowPlacement.Floating) {
-                    update {
-                        it.copy(
-                            position = WindowStateData.Position(
-                                x = window.x,
-                                y = window.y
-                            )
+                update {
+                    it.copy(
+                        position = WindowStateData.Position(
+                            x = window.x,
+                            y = window.y
                         )
-                    }
+                    )
                 }
             }
 
             override fun componentResized(e: ComponentEvent) {
-                if (window.placement == WindowPlacement.Floating) {
-                    update {
-                        it.copy(
-                            size = WindowStateData.Size(
-                                width = window.width,
-                                height = window.height
-                            )
+                update {
+                    it.copy(
+                        size = WindowStateData.Size(
+                            width = window.width,
+                            height = window.height
                         )
-                    }
+                    )
                 }
             }
         }

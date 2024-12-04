@@ -37,8 +37,8 @@ import com.jetbrains.JBR
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.resources.flavicon
-import com.neoutils.neoregex.core.sharedui.remember.CompleteWindowState
-import com.neoutils.neoregex.core.sharedui.remember.rememberCompleteWindowState
+import com.neoutils.neoregex.core.sharedui.remember.NeoWindowState
+import com.neoutils.neoregex.core.sharedui.remember.rememberNeoWindowState
 import com.neoutils.neoregex.core.sharedui.util.NeoRegexWindowExceptionHandlerFactory
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
@@ -76,13 +76,12 @@ fun ApplicationScope.NeoWindow(
             state = windowState
         ) {
 
-            val completeWindowState = rememberCompleteWindowState()
+            val completeWindowState = rememberNeoWindowState()
 
             Surface(
                 color = colorScheme.background,
                 modifier = when (completeWindowState) {
-                    CompleteWindowState.FLOATING,
-                    CompleteWindowState.PINNED -> {
+                    NeoWindowState.FLOATING -> {
                         if (undecorated) {
                             Modifier.border(border)
                         } else {

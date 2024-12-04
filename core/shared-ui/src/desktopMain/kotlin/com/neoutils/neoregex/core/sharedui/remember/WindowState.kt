@@ -24,19 +24,18 @@ import androidx.compose.ui.window.FrameWindowScope
 import com.neoutils.neoregex.core.sharedui.extension.isFloating
 import com.neoutils.neoregex.core.sharedui.extension.isFullMaximized
 import com.neoutils.neoregex.core.sharedui.extension.isFullscreen
-import com.neoutils.neoregex.core.sharedui.extension.isHalfMaximized
 import java.awt.event.WindowStateListener
 
 
 @Composable
-fun FrameWindowScope.rememberCompleteWindowState(): CompleteWindowState {
+fun FrameWindowScope.rememberNeoWindowState(): NeoWindowState {
 
-    var state by remember { mutableStateOf(CompleteWindowState.of(window)) }
+    var state by remember { mutableStateOf(NeoWindowState.of(window)) }
 
     DisposableEffect(window) {
 
         val stateListener = WindowStateListener {
-            state = CompleteWindowState.of(window)
+            state = NeoWindowState.of(window)
         }
 
         window.addWindowStateListener(stateListener)
@@ -49,22 +48,20 @@ fun FrameWindowScope.rememberCompleteWindowState(): CompleteWindowState {
     return state
 }
 
-enum class CompleteWindowState {
+enum class NeoWindowState {
     FLOATING,
     MAXIMIZED,
     FULLSCREEN,
-    MINIMIZED,
-    PINNED;
+    MINIMIZED;
 
     companion object {
-        fun of(state: ComposeWindow): CompleteWindowState {
+        fun of(state: ComposeWindow): NeoWindowState {
 
             return when {
-                state.isFloating -> FLOATING
-                state.isFullMaximized -> MAXIMIZED
-                state.isHalfMaximized -> PINNED
                 state.isFullscreen -> FULLSCREEN
                 state.isMinimized -> MINIMIZED
+                state.isFullMaximized -> MAXIMIZED
+                state.isFloating -> FLOATING
                 else -> error("Unknown window state")
             }
         }

@@ -26,10 +26,7 @@ val ComposeWindow.isFloating
     get() = placement == WindowPlacement.Floating
 
 val ComposeWindow.isFullMaximized
-    get() = extendedState == MAXIMIZED_BOTH
-
-val ComposeWindow.isHalfMaximized
-    get() = extendedState == MAXIMIZED_VERT || MAXIMIZED_HORIZ == extendedState
+    get() = placement == WindowPlacement.Maximized
 
 val ComposeWindow.isFullscreen
     get() = placement == WindowPlacement.Fullscreen
