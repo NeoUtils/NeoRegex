@@ -22,34 +22,132 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import com.neoutils.highlight.compose.extension.spanStyle
 import com.neoutils.highlight.core.Highlight
+import com.neoutils.neoregex.core.common.platform.Platform
+import com.neoutils.neoregex.core.common.platform.platform
+import com.neoutils.xregex.Flavor
+import com.neoutils.xregex.extension.xRegex
 
 interface Syntax {
 
     val highlight: Highlight
 
     data class Regex(
-        private val modifierColor: Color,
-        private val escapeReservedColor: Color,
-        private val escapedCharColor: Color,
-        private val anchorsColor: Color,
-        private val charSetColor: Color,
-        private val groupColor: Color,
-        private val controlsColor: Color,
+        private val modifierColor: Color = Color(color = 0xff0077ff),
+        private val escapeReservedColor: Color = Color(color =0xffb700ff),
+        private val escapedCharColor: Color = Color(color =0xfff5cd05),
+        private val anchorsColor: Color = Color(color =0xffb06100),
+        private val charSetColor: Color = Color(color =0xffe39b00),
+        private val groupColor: Color = Color(color =0xff038d00),
+        private val controlsColor: Color = Color(color =0xffff00c9),
     ) : Syntax {
 
-        private val charSetRegex = """(\\{2})|(\\\[)|(\[\^?)((?:\\{2}|\\\]|[^\]])*)(\])?""".toRegex()
-        private val groupRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\()|(\((?:\?[:=!])?)((?:\\{2}|\\\)|\\\[|\[(?:\\{2}|\\\]|[^\]])*\]?|[^\)])*)(\))?""".toRegex()
-        private val quantifierRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\{)|(\{\w,?\w?\})""".toRegex()
-        private val escapeReservedRegex = """(\\{2})|(\\[{}()\[\]$^+*?|.\w])""".toRegex()
-        private val escapedCharRegex = """(\\{2})|(\\[DdWwSsHhVvR])""".toRegex()
-        private val anchorsRegex = """(\\{2})|(\\[$^])|(\\[AZzBbG])|([$^])""".toRegex()
-        private val controlsRegex = """(\\{2})|(\\[tnfrae])""".toRegex()
-        private val modifierRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\[+*?])|([+*?])""".toRegex()
-        private val dotRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\.)|(\.)""".toRegex()
-        private val alternationRegex = """(\\{2})|(\\\[)|(\[(?:\\{2}|\\\]|[^\]])*\]?)|(\\\|)|(\|)""".toRegex()
+        private val charSetRegex = listOf(
+            """(\\{2})""",
+            """(\\\[)""",
+            """(\[\^?)((?:\\{2}|\\\]|[^\]])*)(\])?"""
+        ).joinToString(
+            separator = "|"
+        ).toRegex()
+
+        private val groupRegex = listOf(
+            """(\\{2})""",
+            """(\\\[)""",
+            """(\[(?:\\{2}|\\\]|[^\]])*\]?)""",
+            """(\\\()""",
+            when (platform) {
+                Platform.Android,
+                is Platform.Desktop -> {
+                    """((\((?:\?[:=!])?)((?:\\{2}|\\\)|\\\[|\[(?:\\{2}|\\\]|[^\]])*\]?|(?5)|[^\)])*)(\))?)"""
+                }
+
+                Platform.Web -> {
+                    """((\((?:\?[:=!])?)((?:\\{2}|\\\)|\\\[|\[(?:\\{2}|\\\]|[^\]])*\]?|[^\)])*)(\))?)"""
+                }
+            }
+        ).joinToString(
+            separator = "|"
+        ).xRegex().apply {
+            flavors.jvm = Flavor.JVM.PCRE
+        }
+
+        private val quantifierRegex = listOf(
+            """(\\{2})""",
+            """(\\\[)""",
+            """(\[(?:\\{2}|\\\]|[^\]])*\]?)""",
+            """(\\\{)|(\{\w,?\w?\})"""
+        ).joinToString(
+            separator = "|"
+        ).toRegex()
+
+        private val escapeReservedRegex = listOf(
+            """(\\{2})""",
+            """(\\[{}()\[\]${'$'}^+*?|.\w])"""
+        ).joinToString(
+            separator = "|"
+        ).toRegex()
+
+        private val escapedCharRegex = listOf(
+            """(\\{2})""",
+            """(\\[DdWwSsHhVvR])"""
+        ).joinToString(
+            separator = "|"
+        ).toRegex()
+
+        private val anchorsRegex = listOf(
+            """(\\{2})""",
+            """(\\[$^])""",
+            """(\\[AZzBbG])""",
+            """([$^])"""
+        ).joinToString(
+            separator = "|"
+        ).toRegex()
+
+        private val controlsRegex = listOf(
+            """(\\{2})""",
+            """(\\[tnfrae])"""
+        ).joinToString(
+            separator = "|"
+        ).toRegex()
+
+        private val modifierRegex = listOf(
+            """(\\{2})""",
+            """(\\\[)""",
+            """(\[(?:\\{2}|\\\]|[^\]])*\]?)""",
+            """(\\[+*?])""",
+            """([+*?])"""
+        ).joinToString(
+            separator = "|"
+        ).toRegex()
+
+        private val dotRegex = listOf(
+            """(\\{2})""",
+            """(\\\[)""",
+            """(\[(?:\\{2}|\\\]|[^\]])*\]?)""",
+            """(\\\.)""",
+            """(\.)"""
+        ).joinToString(
+            separator = "|"
+        ).toRegex()
+
+        private val alternationRegex = listOf(
+            """(\\{2})""",
+            """(\\\[)""",
+            """(\[(?:\\{2}|\\\]|[^\]])*\]?)""",
+            """(\\\|)""",
+            """(\|)"""
+        ).joinToString(
+            separator = "|"
+        ).toRegex()
+
         private val charSetRangeRegex = """\w(-)\w""".toRegex()
 
-        private fun referenceGroupRegex(number: Int) = """(\\{2})|(\\$number)""".toRegex()
+        private val Int.referenceGroupRegex
+            get() = listOf(
+                """(\\{2})""",
+                """(\\$this)"""
+            ).joinToString(
+                separator = "|"
+            ).xRegex()
 
         private val charSetSpanStyle = SpanStyle(
             color = charSetColor,
@@ -114,9 +212,9 @@ interface Syntax {
                 groupRegex.match {
 
                     // charset
-                    put(5, groupSpanStyle)
-                    put(6, groupSpanStyle.copy(color = Color.Unspecified))
-                    put(7, groupSpanStyle)
+                    put(6, groupSpanStyle)
+                    put(7, groupSpanStyle.copy(color = Color.Unspecified))
+                    put(8, groupSpanStyle)
                 }
 
                 charSetRegex.match {
@@ -133,11 +231,9 @@ interface Syntax {
             }
 
             groupRegex.script { match ->
-                match.groups.getOrNull(index = 7)?.let {
+                match.groups.getOrNull(index = 8)?.let {
                     spanStyle {
-                        referenceGroupRegex(
-                            number = match.index.inc()
-                        ).match {
+                        match.index.inc().referenceGroupRegex.match {
                             put(2, SpanStyle(color = groupColor))
                         }
                     }
@@ -154,19 +250,6 @@ interface Syntax {
                     }
                 }
             }
-        }
-
-        companion object {
-
-            val Default = Regex(
-                modifierColor = Color(0xff0077ff),
-                escapeReservedColor = Color(0xffb700ff),
-                escapedCharColor = Color(0xfff5cd05),
-                anchorsColor = Color(0xffb06100),
-                charSetColor = Color(0xffe39b00),
-                groupColor = Color(0xff038d00),
-                controlsColor = Color(0xffff00c9),
-            )
         }
     }
 }

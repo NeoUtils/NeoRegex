@@ -16,7 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import com.android.utils.jvmArchitecture
+@file:Suppress("UnstableApiUsage")
+
 import com.android.utils.osArchitecture
 import extension.catalog
 import extension.config
@@ -33,11 +34,6 @@ group = config.basePackage
 version = config.version.name()
 
 kotlin {
-
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-        vendor.set(JvmVendorSpec.ORACLE) // Oracle OpenJDK
-    }
 
     sourceSets {
         commonMain.dependencies {

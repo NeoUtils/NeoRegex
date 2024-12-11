@@ -17,6 +17,7 @@
  */
 
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+@file:Suppress("UnstableApiUsage")
 
 import extension.catalog
 import extension.config
@@ -37,9 +38,14 @@ version = config.version.name()
 
 kotlin {
 
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+        vendor.set(JvmVendorSpec.JETBRAINS)
+    }
+
     androidTarget {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+            jvmTarget.set(JvmTarget.JVM_21)
         }
     }
 
@@ -47,6 +53,7 @@ kotlin {
 
     js("web", IR) {
         browser()
+        binaries.library()
     }
 
     sourceSets {

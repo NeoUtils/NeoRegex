@@ -16,36 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:Suppress("UnstableApiUsage")
+package com.neoutils.neoregex
 
-import extension.config
+import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
+import com.neoutils.neoregex.core.sharedui.di.WithKoin
 
-plugins {
-    id("com.android.library")
-}
-
-android {
-
-    namespace = config.basePackage
-    compileSdk = config.android.compileSdk
-
-    defaultConfig {
-        minSdk = config.android.minSdk
-    }
-
-    buildFeatures {
-        compose = true
-    }
-
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
-
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
+@Composable
+fun AndroidApp() = WithKoin {
+    NeoTheme {
+        App(Modifier.safeDrawingPadding())
     }
 }

@@ -19,13 +19,10 @@
 package com.neoutils.neoregex
 
 import androidx.compose.ui.window.launchApplication
-import kotlinx.coroutines.CoroutineScope
-import org.jetbrains.skiko.MainUIDispatcher
+import com.neoutils.neoregex.core.common.util.mainUIScope
 
 fun main() {
-    with(CoroutineScope(MainUIDispatcher)) {
-        launchApplication {
-            DesktopApp()
-        }
+    mainUIScope.launchApplication {
+        DesktopApp()
     }
 }

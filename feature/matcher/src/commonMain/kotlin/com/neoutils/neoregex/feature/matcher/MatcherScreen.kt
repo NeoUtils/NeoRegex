@@ -139,7 +139,7 @@ class MatcherScreen : Screen {
     private fun Footer(
         uiState: MatcherUiState,
         onAction: (MatcherAction) -> Unit,
-        syntax: Syntax.Regex = Syntax.Regex.Default,
+        syntax: Syntax.Regex = Syntax.Regex(),
         modifier: Modifier = Modifier
     ) = Surface(
         modifier = modifier,

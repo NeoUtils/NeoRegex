@@ -2,7 +2,7 @@
 agp = "8.5.2"
 cmp = "1.7.0" # Jetpack Compose 1.7.0 & APG 8.1+
 dbus-java-core = "5.1.0"
-highlight = "2.3.0-snapshot10"
+highlight = "2.3.0-snapshot14"
 kotlin = "2.0.20" # Gradle 7.5 ~ 8.8 & AGP 7.4.2 ~ 8.5
 kotlinx-serialization = "1.7.3"
 multiplatform-settings = "1.2.0"

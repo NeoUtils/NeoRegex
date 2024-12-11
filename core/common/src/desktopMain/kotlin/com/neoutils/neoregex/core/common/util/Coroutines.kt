@@ -16,19 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex
+package com.neoutils.neoregex.core.common.util
 
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
-import com.neoutils.neoregex.core.sharedui.di.WithKoin
+import kotlinx.coroutines.CoroutineScope
+import org.jetbrains.skiko.MainUIDispatcher
 
-@Composable
-fun AndroidApp() {
-    WithKoin {
-        NeoTheme {
-            App(Modifier.safeDrawingPadding())
-        }
-    }
-}
+val mainUIScope get() = CoroutineScope(MainUIDispatcher)
