@@ -18,20 +18,15 @@
 
 package com.neoutils.neoregex
 
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.CanvasBasedWindow
-import com.neoutils.neoregex.core.common.extension.toCss
 import com.neoutils.neoregex.core.common.util.SizeManager
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
-import kotlinx.browser.document
 import kotlinx.coroutines.flow.first
 import org.jetbrains.skiko.wasm.onWasmReady
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
     onWasmReady {
-        val body = checkNotNull(document.body)
 
         val sizeManager = SizeManager().apply {
             resize()
@@ -44,13 +39,8 @@ fun main() {
                 sizeManager.changes.first()
             }
         ) {
-            NeoTheme {
-
-                body.style.backgroundColor =
-                    colorScheme.background.toCss()
-
-                App()
-            }
+            WebApp()
         }
     }
 }
+

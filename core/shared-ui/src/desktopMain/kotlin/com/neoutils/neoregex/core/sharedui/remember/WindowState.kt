@@ -25,21 +25,18 @@ import com.neoutils.neoregex.core.sharedui.extension.isFloating
 import com.neoutils.neoregex.core.sharedui.extension.isFullMaximized
 import com.neoutils.neoregex.core.sharedui.extension.isFullscreen
 import com.neoutils.neoregex.core.sharedui.extension.isHalfMaximized
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
+import java.awt.event.WindowStateListener
 
 
 @Composable
-fun FrameWindowScope.rememberCompleteWindowState(): CompleteWindowState {
+fun FrameWindowScope.rememberNeoWindowState(): NeoWindowState {
 
-    var state by remember { mutableStateOf(CompleteWindowState.of(window)) }
+    var state by remember { mutableStateOf(NeoWindowState.of(window)) }
 
     DisposableEffect(window) {
 
-        val stateListener = object : WindowAdapter() {
-            override fun windowStateChanged(e: WindowEvent) {
-                state = CompleteWindowState.of(window)
-            }
+        val stateListener = WindowStateListener {
+            state = NeoWindowState.of(window)
         }
 
         window.addWindowStateListener(stateListener)
@@ -52,7 +49,7 @@ fun FrameWindowScope.rememberCompleteWindowState(): CompleteWindowState {
     return state
 }
 
-enum class CompleteWindowState {
+enum class NeoWindowState {
     FLOATING,
     MAXIMIZED,
     FULLSCREEN,
@@ -60,7 +57,7 @@ enum class CompleteWindowState {
     PINNED;
 
     companion object {
-        fun of(state: ComposeWindow): CompleteWindowState {
+        fun of(state: ComposeWindow): NeoWindowState {
 
             return when {
                 state.isFloating -> FLOATING

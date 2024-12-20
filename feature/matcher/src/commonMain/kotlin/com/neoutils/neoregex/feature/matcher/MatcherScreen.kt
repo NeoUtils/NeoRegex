@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import com.neoutils.highlight.compose.remember.rememberTextFieldValue
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
@@ -57,6 +58,7 @@ import com.neoutils.neoregex.core.sharedui.component.TextEditor
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
 import com.neoutils.neoregex.feature.matcher.extension.onLongHold
 import com.neoutils.neoregex.feature.matcher.extension.toTextState
+import com.neoutils.neoregex.feature.matcher.model.Syntax
 import com.neoutils.neoregex.feature.matcher.model.Target
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
 import com.neoutils.neoregex.feature.matcher.state.error
@@ -137,6 +139,7 @@ class MatcherScreen : Screen {
     private fun Footer(
         uiState: MatcherUiState,
         onAction: (MatcherAction) -> Unit,
+        syntax: Syntax.Regex = Syntax.Regex(),
         modifier: Modifier = Modifier
     ) = Surface(
         modifier = modifier,
@@ -145,9 +148,10 @@ class MatcherScreen : Screen {
         color = colorScheme.surfaceContainer,
         contentColor = colorScheme.onSurface,
     ) {
+
         Row(Modifier.fillMaxWidth()) {
             NeoTextField(
-                value = uiState.regex,
+                value = syntax.highlight.rememberTextFieldValue(uiState.regex),
                 onValueChange = {
                     onAction(
                         MatcherAction.Input.UpdateRegex(

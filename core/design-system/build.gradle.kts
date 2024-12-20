@@ -16,16 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
-import extension.module
-import extension.name
-
 plugins {
     alias(libs.plugins.neoutils.neoregex.core)
 }
-
-group = config.module(name = "core")
-version = config.version.name()
 
 kotlin {
     sourceSets {

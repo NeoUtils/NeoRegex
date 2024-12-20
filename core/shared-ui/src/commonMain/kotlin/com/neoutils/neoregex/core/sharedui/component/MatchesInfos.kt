@@ -38,6 +38,7 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.input.pointer.pointerInput
@@ -46,19 +47,33 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.common.platform.Platform
 import com.neoutils.neoregex.core.common.platform.platform
+import com.neoutils.neoregex.core.datasource.PreferencesDataSource
+import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.match_result_infos
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.pluralStringResource
+import org.koin.compose.koinInject
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 
 @Composable
 fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
+
+    val preferencesDataSource = koinInject<PreferencesDataSource>()
+    val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
+
+    val current = rememberUpdatedState(
+        when (preferences.performanceLabelAlign) {
+            Preferences.Alignment.TOP_END -> Alignment.TopEnd
+            Preferences.Alignment.BOTTOM_END -> Alignment.BottomEnd
+        }
+    )
 
     val density = LocalDensity.current
 
@@ -68,14 +83,12 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
 
     var alignments by remember { mutableStateOf<Map<Alignment, Rect>>(mapOf()) }
 
-    var current by remember { mutableStateOf(Alignment.BottomEnd) }
-
     // It needs to be a state to update the reference in pointerInput()
     val halfHeight by rememberUpdatedState(density.run { maxHeight.toPx() / 2f })
 
     var targetRect by remember { mutableStateOf(Rect.Zero) }
 
-    var destination by remember { mutableStateOf(current) }
+    val destination = remember { mutableStateOf<Alignment?>(null) }
 
     val scope = rememberCoroutineScope()
 
@@ -86,7 +99,7 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
         AlignmentTarget(
             alignment = alignment,
             isVisible = isRunning,
-            isTarget = alignment == destination,
+            isTarget = alignment == destination.value,
             modifier = Modifier
                 .padding(dimensions.tiny)
                 .size(density.run { targetRect.size.toDpSize() })
@@ -97,6 +110,8 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
                 }
         )
     }
+
+    val hover = remember { MutableInteractionSource() }
 
     Text(
         text = pluralStringResource(
@@ -111,24 +126,21 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
         fontSize = fontSizes.tiny,
         style = typography.labelSmall,
         modifier = Modifier
-            .align(current)
+            .align(current.value)
             .offset { animateOffset.value.round() }
             .padding(dimensions.tiny) // external
             .background(
                 color = colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(dimensions.tiny)
             )
+            .clip(shape = RoundedCornerShape(dimensions.tiny))
+            .hoverable(hover)
+            .indication(
+                interactionSource = hover,
+                indication = ripple()
+            )
             .onGloballyPositioned {
                 targetRect = it.boundsInParent()
-            }
-            .run {
-                val hover = remember { MutableInteractionSource() }
-
-                hoverable(hover)
-                    .indication(
-                        interactionSource = hover,
-                        indication = ripple()
-                    )
             }
             .pointerInput(Unit) {
                 detectDragGestures(
@@ -137,16 +149,27 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
                     },
                     onDragEnd = {
                         scope.launch {
+                            destination.value?.let { destination ->
+                                alignments[destination]?.let {
+                                    animateOffset.snapTo(
+                                        targetValue = targetRect.topLeft - it.topLeft
+                                    )
+                                }
 
-                            alignments[destination]?.let {
-                                animateOffset.snapTo(
-                                    targetValue = targetRect.topLeft - it.topLeft
-                                )
+                                preferencesDataSource.update {
+                                    it.copy(
+                                        performanceLabelAlign = when (destination) {
+                                            Alignment.TopEnd -> Preferences.Alignment.TOP_END
+                                            Alignment.BottomEnd -> Preferences.Alignment.BOTTOM_END
+                                            else -> error("Invalid alignment $destination")
+                                        }
+                                    )
+                                }
                             }
 
-                            current = destination
-
                             animateOffset.animateTo(Offset.Zero)
+
+                            destination.value = null
                         }
 
                         isRunning = false
@@ -160,14 +183,14 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
                             )
                         }
 
-                        destination = when {
-                            current == Alignment.TopEnd &&
+                        destination.value = when {
+                            current.value == Alignment.TopEnd &&
                                     targetRect.center.y > halfHeight -> Alignment.BottomEnd
 
-                            current == Alignment.BottomEnd &&
+                            current.value == Alignment.BottomEnd &&
                                     targetRect.center.y < halfHeight -> Alignment.TopEnd
 
-                            else -> current
+                            else -> current.value
                         }
                     },
                     onDragCancel = {
@@ -175,11 +198,15 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
                             animateOffset.animateTo(Offset.Zero)
                         }
 
+                        destination.value = null
                         isRunning = false
                     }
                 )
             }
-            .padding(dimensions.micro) // internal
+            .padding(
+                vertical = dimensions.micro,
+                horizontal = dimensions.tiny
+            ) // internal
     )
 }
 
@@ -198,15 +225,13 @@ private fun BoxScope.AlignmentTarget(
     Box(
         modifier = Modifier
             .background(
-                color = colorScheme.primary.copy(
-                    alpha = 0.2f
-                ),
+                color = colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(dimensions.tiny)
             ).run {
                 if (isTarget) {
                     border(
                         width = 1.dp,
-                        color = colorScheme.primary,
+                        color = colorScheme.outline,
                         shape = RoundedCornerShape(dimensions.tiny)
                     )
                 } else this

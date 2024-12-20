@@ -3,8 +3,11 @@ agp = "8.5.2"
 cmp = "1.7.0" # Jetpack Compose 1.7.0 & APG 8.1+
 dbus-java-core = "5.1.0"
 kotlin = "2.0.20" # Gradle 7.5 ~ 8.8 & AGP 7.4.2 ~ 8.5
+kotlinx-serialization = "1.7.3"
+multiplatform-settings = "1.2.0"
 slf4j-nop = "2.0.16"
 voyager = "1.1.0-beta03" # 1.1.0+ is required for web support
+koin = "4.0.0"
 
 # androix
 androidx-compose = "1.7.4"
@@ -13,6 +16,9 @@ androidx-lifecycle = "2.8.3"
 
 # kotlinx
 kotlinx-coroutines = "1.9.0"
+
+highlight = "2.3.0-snapshot16"
+xregex = "1.0.0-rc1"
 
 [libraries]
 
@@ -34,11 +40,21 @@ androidx-multplatform-lifecycle-viewmodel = { group = "org.jetbrains.androidx.li
 androidx-multplatform-lifecycle-viewmodel-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-multplatform-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 
+neoutils-xregex = { group = "com.neoutils.xregex", name = "xregex", version.ref = "xregex" }
+highlight-compose = { module = "com.neoutils.highlight:highlight-compose", version.ref = "highlight" }
+
+multiplatform-settings-noArg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatform-settings" }
+multiplatform-settings-serialization = { module = "com.russhwolf:multiplatform-settings-serialization", version.ref = "multiplatform-settings" }
+
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-screenModel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
 

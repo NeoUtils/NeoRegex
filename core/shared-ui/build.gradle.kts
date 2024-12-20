@@ -16,16 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
-import extension.module
-import extension.name
-
 plugins {
     alias(libs.plugins.neoutils.neoregex.core)
 }
-
-group = config.module("core.sharedui")
-version = config.version.name()
 
 kotlin {
     sourceSets {
@@ -33,6 +26,7 @@ kotlin {
             implementation(projects.core.designSystem)
             implementation(projects.core.common)
             implementation(projects.core.resources)
+            implementation(projects.core.datasource)
         }
     }
 }

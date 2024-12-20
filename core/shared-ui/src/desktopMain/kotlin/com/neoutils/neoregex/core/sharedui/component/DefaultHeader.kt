@@ -48,9 +48,9 @@ import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.DragHandler
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.sharedui.remember.CompleteWindowState
+import com.neoutils.neoregex.core.sharedui.remember.NeoWindowState
 import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
-import com.neoutils.neoregex.core.sharedui.remember.rememberCompleteWindowState
+import com.neoutils.neoregex.core.sharedui.remember.rememberNeoWindowState
 import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
 import java.awt.Frame
 import java.awt.event.MouseEvent
@@ -66,7 +66,7 @@ fun FrameWindowScope.NeoHeader(
 ) {
 
     val focus = rememberWindowFocus()
-    val state = rememberCompleteWindowState()
+    val state = rememberNeoWindowState()
 
     val dragHandler = remember { DragHandler(window) }
 
@@ -94,7 +94,7 @@ fun FrameWindowScope.NeoHeader(
             customTitleBar?.height = it.height.toFloat()
         }.run {
             customTitleBar?.let {
-                pointerInput(Unit) {
+                pointerInput(colorTheme) {
 
                     var inUserControl = false
 
@@ -120,17 +120,17 @@ fun FrameWindowScope.NeoHeader(
                 detectTapGestures(
                     onDoubleTap = {
                         when (state) {
-                            CompleteWindowState.FLOATING -> {
+                            NeoWindowState.FLOATING -> {
                                 window.extendedState = Frame.MAXIMIZED_BOTH
                             }
 
-                            CompleteWindowState.MAXIMIZED,
-                            CompleteWindowState.PINNED -> {
+                            NeoWindowState.MAXIMIZED,
+                            NeoWindowState.PINNED -> {
                                 window.extendedState = Frame.NORMAL
                             }
 
-                            CompleteWindowState.FULLSCREEN,
-                            CompleteWindowState.MINIMIZED -> error("Invalid")
+                            NeoWindowState.FULLSCREEN,
+                            NeoWindowState.MINIMIZED -> error("Invalid")
                         }
                     },
                     onPress = {

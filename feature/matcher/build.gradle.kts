@@ -19,14 +19,12 @@
 import extension.catalog
 import extension.config
 import extension.module
-import extension.name
 
 plugins {
     alias(libs.plugins.neoutils.neoregex.core)
 }
 
 group = config.module(name = "feature")
-version = config.version.name()
 
 kotlin {
     sourceSets {
@@ -42,6 +40,8 @@ kotlin {
             implementation(projects.core.resources)
             implementation(projects.core.sharedUi)
             implementation(projects.core.common)
+
+            implementation(libs.highlight.compose)
         }
     }
 }

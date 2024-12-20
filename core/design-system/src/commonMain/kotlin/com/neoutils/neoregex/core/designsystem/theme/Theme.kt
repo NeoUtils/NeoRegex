@@ -73,8 +73,8 @@ fun NeoTheme(
 ) {
     NeoBaseTheme(
         colorScheme = when (colorTheme) {
-            ColorTheme.LIGHT -> LightColors
-            ColorTheme.DARK -> DarkColors
+            ColorTheme.LIGHT, ColorTheme.LIGHT_SYSTEM -> LightColors
+            ColorTheme.DARK, ColorTheme.DARK_SYSTEM -> DarkColors
         },
         fontSizes = FontSizes(),
         dimensions = Dimensions(),

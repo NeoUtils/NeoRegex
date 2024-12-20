@@ -16,13 +16,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("UnstableApiUsage")
+
 import extension.config
+import gradle.kotlin.dsl.accessors._3c98c44ac979be75a1ef93311f530471.kotlin
 
 plugins {
     id("com.android.library")
 }
 
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+        vendor.set(JvmVendorSpec.JETBRAINS)
+    }
+}
+
 android {
+
     namespace = config.basePackage
     compileSdk = config.android.compileSdk
 
@@ -38,11 +49,6 @@ android {
         getByName("release") {
             isMinifyEnabled = false
         }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
     }
 
     packaging {

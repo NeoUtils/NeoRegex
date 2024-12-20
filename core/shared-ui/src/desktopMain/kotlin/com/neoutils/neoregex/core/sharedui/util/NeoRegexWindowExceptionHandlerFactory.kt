@@ -22,10 +22,9 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.WindowExceptionHandler
 import androidx.compose.ui.window.WindowExceptionHandlerFactory
 import androidx.compose.ui.window.launchApplication
+import com.neoutils.neoregex.core.common.util.mainUIScope
 import com.neoutils.neoregex.core.sharedui.component.FatalErrorWindow
 import com.neoutils.neoregex.core.sharedui.theme.NeoErrorTheme
-import kotlinx.coroutines.CoroutineScope
-import org.jetbrains.skiko.MainUIDispatcher
 import java.awt.event.WindowEvent
 import javax.swing.SwingUtilities
 import java.awt.Window as AwtWindows
@@ -37,11 +36,9 @@ object NeoRegexWindowExceptionHandlerFactory : WindowExceptionHandlerFactory {
 
         SwingUtilities.invokeLater {
 
-            with(CoroutineScope(MainUIDispatcher)) {
-                launchApplication {
-                    NeoErrorTheme {
-                        FatalErrorWindow(throwable)
-                    }
+            mainUIScope.launchApplication {
+                NeoErrorTheme {
+                    FatalErrorWindow(throwable)
                 }
             }
 

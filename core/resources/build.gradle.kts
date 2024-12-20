@@ -18,14 +18,10 @@
 
 import extension.config
 import extension.module
-import extension.name
 
 plugins {
     alias(libs.plugins.neoutils.neoregex.core)
 }
-
-group = config.module(name = "core")
-version = config.version.name()
 
 kotlin {
     sourceSets {

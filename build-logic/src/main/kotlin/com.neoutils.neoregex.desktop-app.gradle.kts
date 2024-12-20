@@ -16,6 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+@file:Suppress("UnstableApiUsage")
+
 import extension.catalog
 import extension.config
 import extension.name
@@ -28,6 +30,12 @@ plugins {
 }
 
 kotlin {
+
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+        vendor.set(JvmVendorSpec.JETBRAINS)
+    }
+
     jvm(name = "desktop")
 
     sourceSets {

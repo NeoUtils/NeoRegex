@@ -17,8 +17,12 @@
  */
 
 @file:OptIn(ExperimentalKotlinGradlePluginApi::class)
+@file:Suppress("UnstableApiUsage")
 
 import extension.catalog
+import extension.config
+import extension.module
+import extension.name
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -29,7 +33,15 @@ plugins {
     id("org.jetbrains.compose")
 }
 
+group = config.module(name = "core")
+version = config.version.name()
+
 kotlin {
+
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+        vendor.set(JvmVendorSpec.JETBRAINS)
+    }
 
     androidTarget {
         compilerOptions {
@@ -41,6 +53,7 @@ kotlin {
 
     js("web", IR) {
         browser()
+        binaries.library()
     }
 
     sourceSets {
@@ -56,6 +69,10 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
+
+            // koin
+            implementation(catalog.koin.core)
+            implementation(catalog.koin.compose)
         }
 
         val desktopMain by getting {

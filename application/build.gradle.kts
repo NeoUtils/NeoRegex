@@ -16,7 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import com.android.utils.jvmArchitecture
+@file:Suppress("UnstableApiUsage")
+
 import com.android.utils.osArchitecture
 import extension.catalog
 import extension.config
@@ -34,11 +35,6 @@ version = config.version.name()
 
 kotlin {
 
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-        vendor.set(JvmVendorSpec.ORACLE) // Oracle OpenJDK
-    }
-
     sourceSets {
         commonMain.dependencies {
 
@@ -48,10 +44,14 @@ kotlin {
             implementation(projects.core.resources)
             implementation(projects.core.common)
             implementation(projects.core.sharedUi)
+            implementation(projects.core.datasource)
 
             // voyager
             implementation(catalog.voyager.navigator)
             implementation(catalog.voyager.transitions)
+
+            // lifecycle
+            implementation(catalog.androidx.multplatform.lifecycle.runtime.compose)
 
             // compose
             implementation(compose.runtime)
@@ -60,6 +60,10 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
+
+            // koin
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
         }
     }
 }

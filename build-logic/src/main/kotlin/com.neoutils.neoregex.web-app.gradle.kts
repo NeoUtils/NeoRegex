@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 /*
  * NeoRegex.
  *
@@ -21,6 +23,12 @@ plugins {
 }
 
 kotlin {
+
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+        vendor.set(JvmVendorSpec.JETBRAINS)
+    }
+
     js(name = "web", IR) {
 
         moduleName = "app"
