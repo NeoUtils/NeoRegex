@@ -19,9 +19,17 @@
 @file:Suppress("UnstableApiUsage")
 
 import extension.config
+import gradle.kotlin.dsl.accessors._3c98c44ac979be75a1ef93311f530471.kotlin
 
 plugins {
     id("com.android.library")
+}
+
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+        vendor.set(JvmVendorSpec.JETBRAINS)
+    }
 }
 
 android {

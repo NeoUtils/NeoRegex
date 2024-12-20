@@ -17,8 +17,8 @@ androidx-lifecycle = "2.8.3"
 # kotlinx
 kotlinx-coroutines = "1.9.0"
 
-highlight = "2.3.0-snapshot15"
-xregex = "1.0.0-snapshot5"
+highlight = "2.3.0-snapshot16"
+xregex = "1.0.0-rc1"
 
 [libraries]
 
