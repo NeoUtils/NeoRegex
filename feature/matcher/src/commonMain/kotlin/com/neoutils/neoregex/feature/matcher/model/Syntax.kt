@@ -25,6 +25,7 @@ import com.neoutils.highlight.core.Highlight
 import com.neoutils.neoregex.core.common.platform.Platform
 import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.xregex.Flavor
+import com.neoutils.xregex.extension.isSupported
 import com.neoutils.xregex.extension.xRegex
 
 interface Syntax {
@@ -33,12 +34,12 @@ interface Syntax {
 
     data class Regex(
         private val modifierColor: Color = Color(color = 0xff0077ff),
-        private val escapeReservedColor: Color = Color(color =0xffb700ff),
-        private val escapedCharColor: Color = Color(color =0xfff5cd05),
-        private val anchorsColor: Color = Color(color =0xffb06100),
-        private val charSetColor: Color = Color(color =0xffe39b00),
-        private val groupColor: Color = Color(color =0xff038d00),
-        private val controlsColor: Color = Color(color =0xffff00c9),
+        private val escapeReservedColor: Color = Color(color = 0xffb700ff),
+        private val escapedCharColor: Color = Color(color = 0xfff5cd05),
+        private val anchorsColor: Color = Color(color = 0xffb06100),
+        private val charSetColor: Color = Color(color = 0xffe39b00),
+        private val groupColor: Color = Color(color = 0xff038d00),
+        private val controlsColor: Color = Color(color = 0xffff00c9),
     ) : Syntax {
 
         private val charSetRegex = listOf(
@@ -54,20 +55,17 @@ interface Syntax {
             """(\\\[)""",
             """(\[(?:\\{2}|\\\]|[^\]])*\]?)""",
             """(\\\()""",
-            when (platform) {
-                Platform.Android,
-                is Platform.Desktop -> {
-                    """((\((?:\?[:=!])?)((?:\\{2}|\\\)|\\\[|\[(?:\\{2}|\\\]|[^\]])*\]?|(?5)|[^\)])*)(\))?)"""
-                }
-
-                Platform.Web -> {
-                    """((\((?:\?[:=!])?)((?:\\{2}|\\\)|\\\[|\[(?:\\{2}|\\\]|[^\]])*\]?|[^\)])*)(\))?)"""
-                }
+            if(Flavor.JVM.PCRE.isSupported) {
+                """((\((?:\?[:=!])?)((?:\\{2}|\\\)|\\\[|\[(?:\\{2}|\\\]|[^\]])*\]?|(?5)|[^\)])*)(\))?)"""
+            } else {
+                """((\((?:\?[:=!])?)((?:\\{2}|\\\)|\\\[|\[(?:\\{2}|\\\]|[^\]])*\]?|[^\)])*)(\))?)"""
             }
         ).joinToString(
             separator = "|"
-        ).xRegex().apply {
-            flavors.jvm = Flavor.JVM.PCRE
+        ).xRegex {
+            jvm = Flavor.JVM.PCRE.takeIf {
+                it.isSupported
+            } ?: Flavor.JVM.Native
         }
 
         private val quantifierRegex = listOf(
