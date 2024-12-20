@@ -22,13 +22,15 @@ import androidx.compose.runtime.Composable
 
 enum class ColorTheme {
     LIGHT,
-    DARK;
+    DARK,
+    LIGHT_SYSTEM,
+    DARK_SYSTEM;
 
     val isLight: Boolean
-        get() = this == LIGHT
+        get() = this == LIGHT || this == LIGHT_SYSTEM
 
     val isDark: Boolean
-        get() = this == DARK
+        get() = this == DARK || this == DARK_SYSTEM
 }
 
 @Composable

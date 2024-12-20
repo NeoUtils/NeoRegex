@@ -42,13 +42,13 @@ class MainActivity : ComponentActivity() {
     private fun setupSystemBars() {
 
         val style = when (colorTheme) {
-            ColorTheme.DARK -> {
+            ColorTheme.DARK, ColorTheme.DARK_SYSTEM -> {
                 SystemBarStyle.dark(
                     Color.BLACK,
                 )
             }
 
-            ColorTheme.LIGHT -> {
+            ColorTheme.LIGHT, ColorTheme.LIGHT_SYSTEM -> {
                 SystemBarStyle.light(
                     Color.WHITE,
                     Color.BLACK,

@@ -94,7 +94,7 @@ fun FrameWindowScope.NeoHeader(
             customTitleBar?.height = it.height.toFloat()
         }.run {
             customTitleBar?.let {
-                pointerInput(Unit) {
+                pointerInput(colorTheme) {
 
                     var inUserControl = false
 

@@ -45,9 +45,9 @@ class XDGDesktopPortal(
         )
 
         return when (theme.value.value) {
-            Theme.LIGHT.value -> ColorTheme.LIGHT
-            Theme.DARK.value -> ColorTheme.DARK
-            else -> ColorTheme.LIGHT
+            Theme.LIGHT.value -> ColorTheme.LIGHT_SYSTEM
+            Theme.DARK.value -> ColorTheme.DARK_SYSTEM
+            else -> ColorTheme.LIGHT_SYSTEM
         }
     }
 

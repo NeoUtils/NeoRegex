@@ -26,8 +26,8 @@ import org.jetbrains.skiko.currentSystemTheme
 actual fun rememberColorTheme(): ColorTheme {
 
     return when (currentSystemTheme) {
-        SystemTheme.LIGHT -> ColorTheme.LIGHT
-        SystemTheme.DARK -> ColorTheme.DARK
-        SystemTheme.UNKNOWN -> ColorTheme.DARK
+        SystemTheme.LIGHT -> ColorTheme.LIGHT_SYSTEM
+        SystemTheme.DARK -> ColorTheme.DARK_SYSTEM
+        SystemTheme.UNKNOWN -> ColorTheme.DARK_SYSTEM
     }
 }

@@ -37,9 +37,9 @@ actual fun rememberColorTheme(): ColorTheme {
             }
 
             else -> when (currentSystemTheme) {
-                SystemTheme.LIGHT -> ColorTheme.LIGHT
-                SystemTheme.DARK -> ColorTheme.DARK
-                SystemTheme.UNKNOWN -> ColorTheme.LIGHT
+                SystemTheme.LIGHT -> ColorTheme.LIGHT_SYSTEM
+                SystemTheme.DARK -> ColorTheme.DARK_SYSTEM
+                SystemTheme.UNKNOWN -> ColorTheme.LIGHT_SYSTEM
             }
         }
     }

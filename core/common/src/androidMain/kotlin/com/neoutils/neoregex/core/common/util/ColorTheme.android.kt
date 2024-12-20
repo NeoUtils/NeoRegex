@@ -28,19 +28,19 @@ import androidx.compose.runtime.Composable
 actual fun rememberColorTheme(): ColorTheme {
 
     return if (isSystemInDarkTheme()) {
-        ColorTheme.DARK
+        ColorTheme.DARK_SYSTEM
     } else {
-        ColorTheme.LIGHT
+        ColorTheme.LIGHT_SYSTEM
     }
 }
 
 val Context.colorTheme
     get() = when (resources.configuration.uiMode and UI_MODE_NIGHT_MASK) {
         UI_MODE_NIGHT_YES -> {
-            ColorTheme.DARK
+            ColorTheme.DARK_SYSTEM
         }
 
         else -> {
-            ColorTheme.LIGHT
+            ColorTheme.LIGHT_SYSTEM
         }
     }
