@@ -50,7 +50,7 @@ import com.neoutils.neoregex.core.common.util.rememberColorTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.sharedui.remember.NeoWindowState
 import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
-import com.neoutils.neoregex.core.sharedui.remember.rememberCompleteWindowState
+import com.neoutils.neoregex.core.sharedui.remember.rememberNeoWindowState
 import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
 import java.awt.Frame
 import java.awt.event.MouseEvent
@@ -66,7 +66,7 @@ fun FrameWindowScope.NeoHeader(
 ) {
 
     val focus = rememberWindowFocus()
-    val state = rememberCompleteWindowState()
+    val state = rememberNeoWindowState()
 
     val dragHandler = remember { DragHandler(window) }
 

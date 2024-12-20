@@ -29,7 +29,7 @@ import java.awt.event.WindowStateListener
 
 
 @Composable
-fun FrameWindowScope.rememberCompleteWindowState(): NeoWindowState {
+fun FrameWindowScope.rememberNeoWindowState(): NeoWindowState {
 
     var state by remember { mutableStateOf(NeoWindowState.of(window)) }
 

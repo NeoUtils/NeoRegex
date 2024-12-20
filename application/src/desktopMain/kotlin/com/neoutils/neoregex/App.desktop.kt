@@ -59,6 +59,7 @@ import org.koin.compose.koinInject
 
 @Composable
 fun ApplicationScope.DesktopApp() = WithKoin {
+
     val preferencesDataSource = koinInject<PreferencesDataSource>()
     val preferences by preferencesDataSource.flow.collectAsState()
 
@@ -85,68 +86,77 @@ fun ApplicationScope.DesktopApp() = WithKoin {
 }
 
 @Composable
-private fun FrameWindowScope.HeaderImpl() = NeoHeader { padding ->
+private fun FrameWindowScope.HeaderImpl() {
 
     val preferencesDataSource = koinInject<PreferencesDataSource>()
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
 
-    Text(
-        text = stringResource(Res.string.app_name),
-        modifier = Modifier.align(
-            Alignment.Center
-        )
-    )
+    NeoHeader(
+        colorTheme = when (preferences.colorTheme) {
+            Preferences.ColorTheme.SYSTEM -> rememberColorTheme()
+            Preferences.ColorTheme.LIGHT -> ColorTheme.LIGHT
+            Preferences.ColorTheme.DARK -> ColorTheme.DARK
+        }
+    ) { padding ->
 
-    Row(
-        modifier = Modifier
-            .padding(padding)
-            .padding(horizontal = dimensions.medium)
-            .align(Alignment.CenterEnd),
-        horizontalArrangement = Arrangement.spacedBy(dimensions.medium)
-    ) {
-        val uriHandler = LocalUriHandler.current
-
-        Icon(
-            painter = painterResource(Res.drawable.github),
-            contentDescription = null,
-            tint = colorScheme.onSurface,
-            modifier = Modifier
-                .clip(CircleShape)
-                .clickable(
-                    onClick = {
-                        uriHandler.openUri(
-                            uri = "https://github.com/NeoUtils/NeoRegex"
-                        )
-                    }
-                )
-                .padding(dimensions.medium)
-                .aspectRatio(ratio = 1f)
+        Text(
+            text = stringResource(Res.string.app_name),
+            modifier = Modifier.align(
+                Alignment.Center
+            )
         )
 
-        Icon(
-            painter = when (preferences.colorTheme) {
-                Preferences.ColorTheme.SYSTEM -> painterResource(Res.drawable.contrast)
-                Preferences.ColorTheme.LIGHT -> painterResource(Res.drawable.light_theme)
-                Preferences.ColorTheme.DARK -> painterResource(Res.drawable.dark_theme)
-            },
-            contentDescription = null,
+        Row(
             modifier = Modifier
-                .clip(CircleShape)
-                .clickable(
-                    onClick = {
-                        preferencesDataSource.update {
-                            it.copy(
-                                colorTheme = when (it.colorTheme) {
-                                    Preferences.ColorTheme.SYSTEM -> Preferences.ColorTheme.LIGHT
-                                    Preferences.ColorTheme.LIGHT -> Preferences.ColorTheme.DARK
-                                    Preferences.ColorTheme.DARK -> Preferences.ColorTheme.SYSTEM
-                                }
+                .padding(padding)
+                .padding(horizontal = dimensions.medium)
+                .align(Alignment.CenterEnd),
+            horizontalArrangement = Arrangement.spacedBy(dimensions.medium)
+        ) {
+            val uriHandler = LocalUriHandler.current
+
+            Icon(
+                painter = painterResource(Res.drawable.github),
+                contentDescription = null,
+                tint = colorScheme.onSurface,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable(
+                        onClick = {
+                            uriHandler.openUri(
+                                uri = "https://github.com/NeoUtils/NeoRegex"
                             )
                         }
-                    }
-                )
-                .padding(dimensions.medium)
-                .aspectRatio(ratio = 1f)
-        )
+                    )
+                    .padding(dimensions.medium)
+                    .aspectRatio(ratio = 1f)
+            )
+
+            Icon(
+                painter = when (preferences.colorTheme) {
+                    Preferences.ColorTheme.SYSTEM -> painterResource(Res.drawable.contrast)
+                    Preferences.ColorTheme.LIGHT -> painterResource(Res.drawable.light_theme)
+                    Preferences.ColorTheme.DARK -> painterResource(Res.drawable.dark_theme)
+                },
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable(
+                        onClick = {
+                            preferencesDataSource.update {
+                                it.copy(
+                                    colorTheme = when (it.colorTheme) {
+                                        Preferences.ColorTheme.SYSTEM -> Preferences.ColorTheme.LIGHT
+                                        Preferences.ColorTheme.LIGHT -> Preferences.ColorTheme.DARK
+                                        Preferences.ColorTheme.DARK -> Preferences.ColorTheme.SYSTEM
+                                    }
+                                )
+                            }
+                        }
+                    )
+                    .padding(dimensions.medium)
+                    .aspectRatio(ratio = 1f)
+            )
+        }
     }
 }
