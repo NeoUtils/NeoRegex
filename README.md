@@ -34,7 +34,7 @@ A cross-platform app to validate regular expressions.
 
 ## Build
 
-To build this project, the JDK (Java Development Kit) and the Android SDK are required.
+To build this project, the JDK 21 and the Android SDK are required.
 I recommend using [Intellij IDEA](https://www.jetbrains.com/idea/download) as the IDE, with the **Android**, **Jetpack Compose** and **Compose Multiplatform** plugins installed.
 
 > [!TIP]
