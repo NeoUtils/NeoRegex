@@ -29,10 +29,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.neoutils.neoregex.core.common.extension.toCss
@@ -59,14 +62,30 @@ fun WebApp() = WithKoin {
 
 @Composable
 fun Experimental(
+    size: DpSize = DpSize(250.dp, 250.dp),
     content: @Composable () -> Unit
 ) = Box {
+
     content()
+
+    val density = LocalDensity.current
+
+    val translation = density.run {
+        Offset(
+            x = (size.width / 3.5f).toPx(),
+            y = (size.height / 3.5f).toPx().unaryMinus()
+        )
+    }
 
     Box(
         modifier = Modifier
-            .size(200.dp)
+            .size(size)
             .align(Alignment.TopEnd)
+            .graphicsLayer(
+                translationX = translation.x,
+                translationY = translation.y,
+                rotationZ = 45f
+            )
     ) {
         Text(
             text = "experimental",
@@ -76,15 +95,9 @@ fun Experimental(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Center)
-                .graphicsLayer(
-                    rotationZ = 45f,
-                    translationX = 50f,
-                    translationY = -50f
-                )
                 .background(Color.Yellow)
-                .padding(
-                    vertical = 8.dp
-                ),
+                .padding(vertical = 8.dp),
         )
     }
 }
+
