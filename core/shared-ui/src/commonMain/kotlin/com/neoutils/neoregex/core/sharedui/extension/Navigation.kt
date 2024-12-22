@@ -16,18 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.dispatcher
+package com.neoutils.neoregex.core.sharedui.extension
 
+import androidx.compose.runtime.Composable
 import com.neoutils.neoregex.core.dispatcher.event.Navigation
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
-interface NavigationDispatcher {
-
-    val flow: Flow<Navigation>
-    val current: StateFlow<Navigation>
-
-    fun setCurrent(navigation: Navigation)
-
-    suspend fun emit(navigation: Navigation)
-}
+val Navigation.name: String
+    @Composable
+    get() = when (this) {
+        Navigation.About -> "About"
+        Navigation.Matcher -> "Matcher"
+    }

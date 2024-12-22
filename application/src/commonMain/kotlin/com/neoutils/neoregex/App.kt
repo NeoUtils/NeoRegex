@@ -32,12 +32,25 @@ import org.koin.compose.koinInject
 
 @Composable
 fun App(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigation: NavigationDispatcher = koinInject()
 ) = NeoBackground(modifier) {
 
-    val navigation = koinInject<NavigationDispatcher>()
+    Navigator(
+        screen = MatcherScreen(),
+    ) { navigator ->
 
-    Navigator(MatcherScreen()) { navigator ->
+        LaunchedEffect(navigator.lastItem) {
+            when (navigator.lastItem) {
+                is MatcherScreen -> {
+                    navigation.setCurrent(Navigation.Matcher)
+                }
+
+                is AboutScreen -> {
+                    navigation.setCurrent(Navigation.About)
+                }
+            }
+        }
 
         LaunchedEffect(Unit) {
             navigation.flow.collect { event ->

@@ -38,6 +38,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -50,9 +52,11 @@ import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.datasource.remember.rememberWindowState
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
 import com.neoutils.neoregex.core.dispatcher.NavigationDispatcher
 import com.neoutils.neoregex.core.dispatcher.event.Navigation
 import com.neoutils.neoregex.core.resources.*
+import com.neoutils.neoregex.core.sharedui.component.Navigation
 import com.neoutils.neoregex.core.sharedui.component.NeoHeader
 import com.neoutils.neoregex.core.sharedui.component.NeoWindow
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
@@ -110,7 +114,10 @@ private fun FrameWindowScope.HeaderImpl(
             modifier = Modifier
                 .padding(padding)
                 .padding(horizontal = dimensions.medium)
-                .align(Alignment.CenterStart)
+                .align(Alignment.CenterStart),
+            textStyle = TextStyle(
+                fontSize = fontSizes.small
+            )
         )
 
         Text(
@@ -188,63 +195,3 @@ private fun Options(
             .aspectRatio(ratio = 1f)
     )
 }
-
-@Composable
-private fun Navigation(
-    modifier: Modifier = Modifier,
-    navigation: NavigationDispatcher = koinInject()
-) = Box(
-    modifier = modifier
-) {
-    val expanded = remember { mutableStateOf(false) }
-
-    Row(
-        modifier = Modifier
-            .clip(RoundedCornerShape(dimensions.tiny))
-            .clickable { expanded.value = true }
-            .padding(dimensions.tiny),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = navigation.current.name,
-            style = typography.labelMedium.copy(
-                fontFamily = null
-            )
-        )
-
-        Icon(
-            imageVector = Icons.Outlined.KeyboardArrowDown,
-            modifier = Modifier.size(dimensions.default),
-            contentDescription = null
-        )
-    }
-
-    val coroutine = rememberCoroutineScope()
-
-    DropdownMenu(
-        expanded = expanded.value,
-        onDismissRequest = { expanded.value = false }
-    ) {
-        listOf(
-            Navigation.Matcher,
-            Navigation.About,
-        ).forEach {
-            DropdownMenuItem(
-                text = { Text(it.name) },
-                onClick = {
-                    coroutine.launch {
-                        navigation.emit(it)
-                        expanded.value = false
-                    }
-                },
-            )
-        }
-    }
-}
-
-private val Navigation.name: String
-    @Composable
-    get() = when (this) {
-        Navigation.About -> "About"
-        Navigation.Matcher -> "Matcher"
-    }

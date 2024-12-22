@@ -21,8 +21,8 @@ package com.neoutils.neoregex.core.dispatcher.impl
 import com.neoutils.neoregex.core.dispatcher.NavigationDispatcher
 import com.neoutils.neoregex.core.dispatcher.event.Navigation
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class NavigationDispatcherImpl : NavigationDispatcher {
@@ -30,14 +30,14 @@ internal class NavigationDispatcherImpl : NavigationDispatcher {
     private val _flow = Channel<Navigation>(Channel.UNLIMITED)
     private val _current = MutableStateFlow<Navigation>(Navigation.Matcher)
 
-    override val flow: Flow<Navigation>
-        get() = _flow.receiveAsFlow()
+    override val current = _current.asStateFlow()
+    override val flow = _flow.receiveAsFlow()
 
-    override val current: Navigation
-        get() = _current.value
+    override fun setCurrent(navigation: Navigation) {
+        _current.value = navigation
+    }
 
     override suspend fun emit(navigation: Navigation) {
-        _current.value = navigation
         _flow.send(navigation)
     }
 }
