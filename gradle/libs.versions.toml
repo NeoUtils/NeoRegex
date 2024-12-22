@@ -8,6 +8,7 @@ multiplatform-settings = "1.2.0"
 slf4j-nop = "2.0.16"
 voyager = "1.1.0-beta03" # 1.1.0+ is required for web support
 koin = "4.0.0"
+buildkonfig = "0.15.2"
 
 # androix
 androidx-compose = "1.7.4"
@@ -75,6 +76,7 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kmp-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kmp-compose = { id = "org.jetbrains.compose", version.ref = "cmp" }
+buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 
 # internal
 neoutils-neoregex-core = { id = "com.neoutils.neoregex.core", version = "undefined" }

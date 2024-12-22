@@ -1,3 +1,6 @@
+import extension.config
+import extension.module
+
 /*
  * NeoRegex.
  *
@@ -19,6 +22,8 @@
 plugins {
     alias(libs.plugins.neoutils.neoregex.core)
 }
+
+group = config.module(name = "core")
 
 kotlin {
     sourceSets {

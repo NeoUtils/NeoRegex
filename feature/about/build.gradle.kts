@@ -1,6 +1,3 @@
-import extension.config
-import extension.module
-
 /*
  * NeoRegex.
  *
@@ -19,20 +16,32 @@ import extension.module
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+import extension.catalog
+import extension.config
+import extension.module
+
 plugins {
     alias(libs.plugins.neoutils.neoregex.core)
-    kotlin("plugin.serialization") version "2.0.20"
 }
 
-group = config.module(name = "core")
+group = config.module(name = "feature")
 
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(projects.core.common)
-            api(libs.multiplatform.settings.noArg)
-            api(libs.multiplatform.settings.serialization)
-            api(libs.kotlinx.serialization.json)
+
+            // voyager
+            implementation(catalog.voyager.navigator)
+            implementation(catalog.voyager.screenModel)
+            implementation(catalog.voyager.transitions)
+
+            // modules
+            implementation(projects.core.designSystem)
+            implementation(projects.core.resources)
+            implementation(projects.core.sharedUi)
+            implementation(projects.core.common)
+
+            implementation(libs.highlight.compose)
         }
     }
 }

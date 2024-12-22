@@ -21,6 +21,7 @@ package com.neoutils.neoregex.core.sharedui.component
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
@@ -91,7 +92,7 @@ fun ApplicationScope.NeoWindow(
                     }
 
                     else -> Modifier
-                }
+                }.fillMaxSize()
             ) {
                 Column {
 

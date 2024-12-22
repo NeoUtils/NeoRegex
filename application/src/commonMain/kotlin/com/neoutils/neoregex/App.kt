@@ -23,13 +23,14 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.FadeTransition
 import com.neoutils.neoregex.core.designsystem.theme.NeoBackground
+import com.neoutils.neoregex.feature.about.AboutScreen
 import com.neoutils.neoregex.feature.matcher.MatcherScreen
 
 @Composable
 fun App(
     modifier: Modifier = Modifier
 ) = NeoBackground(modifier) {
-    Navigator(MatcherScreen()) { navigator ->
+    Navigator(AboutScreen()) { navigator ->
         FadeTransition(navigator) {
             it.Content()
         }

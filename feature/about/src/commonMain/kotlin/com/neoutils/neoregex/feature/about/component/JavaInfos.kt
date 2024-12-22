@@ -1,6 +1,3 @@
-import extension.config
-import extension.module
-
 /*
  * NeoRegex.
  *
@@ -19,20 +16,12 @@ import extension.module
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
-    kotlin("plugin.serialization") version "2.0.20"
-}
+package com.neoutils.neoregex.feature.about.component
 
-group = config.module(name = "core")
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-            api(projects.core.common)
-            api(libs.multiplatform.settings.noArg)
-            api(libs.multiplatform.settings.serialization)
-            api(libs.kotlinx.serialization.json)
-        }
-    }
-}
+@Composable
+expect fun JavaInfos(
+    modifier: Modifier = Modifier
+)

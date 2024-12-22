@@ -30,21 +30,21 @@ plugins {
     alias(libs.plugins.neoutils.neoregex.web)
 }
 
-group = config.basePackage
-version = config.version.name()
-
 kotlin {
 
     sourceSets {
         commonMain.dependencies {
 
-            // modules
-            implementation(projects.feature.matcher)
+            // core
             implementation(projects.core.designSystem)
             implementation(projects.core.resources)
             implementation(projects.core.common)
             implementation(projects.core.sharedUi)
             implementation(projects.core.datasource)
+
+            // feature
+            implementation(projects.feature.matcher)
+            implementation(projects.feature.about)
 
             // voyager
             implementation(catalog.voyager.navigator)

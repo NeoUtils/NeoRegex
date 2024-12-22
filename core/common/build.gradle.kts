@@ -16,11 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.catalog
+import com.codingfeline.buildkonfig.compiler.FieldSpec
+import extension.*
 
 plugins {
     alias(libs.plugins.neoutils.neoregex.core)
+    alias(libs.plugins.buildkonfig)
 }
+
+group = config.module(name = "core")
 
 kotlin {
     sourceSets {
@@ -36,5 +40,15 @@ kotlin {
             implementation(libs.dbus.java.transport.native.unixsocket)
             implementation(libs.slf4j.nop)
         }
+    }
+}
+
+buildkonfig {
+    packageName = config.basePackage
+    exposeObjectWithName = "NeoConfig"
+
+    defaultConfigs {
+        buildConfigField(FieldSpec.Type.STRING, name = "version", value = config.version.name())
+        buildConfigField(FieldSpec.Type.INT, name = "code", value = config.version.code().toString())
     }
 }
