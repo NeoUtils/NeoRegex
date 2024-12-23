@@ -85,6 +85,8 @@ class AboutScreen : Screen {
                 ),
             )
 
+            Spacer(Modifier.height(dimensions.small))
+
             Column(
                 modifier = Modifier.sizeIn(
                     maxWidth = 450.dp

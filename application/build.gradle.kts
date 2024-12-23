@@ -42,6 +42,7 @@ kotlin {
             implementation(projects.core.common)
             implementation(projects.core.sharedUi)
             implementation(projects.core.datasource)
+            implementation(projects.core.dispatcher)
 
             // feature
             implementation(projects.feature.matcher)

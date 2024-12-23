@@ -19,17 +19,41 @@
 package com.neoutils.neoregex
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.FadeTransition
 import com.neoutils.neoregex.core.designsystem.theme.NeoBackground
+import com.neoutils.neoregex.core.dispatcher.NavigationDispatcher
+import com.neoutils.neoregex.core.dispatcher.event.Navigation
 import com.neoutils.neoregex.feature.about.screen.AboutScreen
+import com.neoutils.neoregex.feature.matcher.MatcherScreen
+import org.koin.compose.koinInject
 
 @Composable
 fun App(
     modifier: Modifier = Modifier
 ) = NeoBackground(modifier) {
-    Navigator(AboutScreen()) { navigator ->
+
+    val navigation = koinInject<NavigationDispatcher>()
+
+    Navigator(MatcherScreen()) { navigator ->
+
+        LaunchedEffect(Unit) {
+            navigation.flow.collect { event ->
+                when (event) {
+                    Navigation.Matcher -> {
+                        navigator.popUntilRoot()
+                    }
+
+                    Navigation.About -> {
+                        navigator.popUntilRoot()
+                        navigator.push(AboutScreen())
+                    }
+                }
+            }
+        }
+
         FadeTransition(navigator) {
             it.Content()
         }

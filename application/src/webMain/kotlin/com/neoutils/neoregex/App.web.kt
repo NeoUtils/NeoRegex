@@ -49,7 +49,7 @@ fun WebApp() = WithKoin {
 
         val background = colorScheme.background.toCss()
 
-        LaunchedEffect(Unit) {
+        LaunchedEffect(background) {
             val body = checkNotNull(document.body)
             body.style.backgroundColor = background
         }

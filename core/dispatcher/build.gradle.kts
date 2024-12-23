@@ -1,3 +1,6 @@
+import extension.config
+import extension.module
+
 /*
  * NeoRegex.
  *
@@ -16,42 +19,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:Suppress("UnstableApiUsage")
-
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
-pluginManagement {
-
-    includeBuild("build-logic")
-
-    repositories {
-        google()
-        gradlePluginPortal()
-        mavenCentral()
-    }
-}
-
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+    alias(libs.plugins.neoutils.neoregex.core)
 }
 
-dependencyResolutionManagement {
-    repositories {
-        google()
-        mavenCentral()
+group = config.module(name = "core")
+
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+            api(projects.core.common)
+        }
     }
 }
-
-include(
-    ":application",
-    ":core:design-system",
-    ":core:resources",
-    ":core:shared-ui",
-    ":core:common",
-    ":core:datasource",
-    ":core:dispatcher",
-    ":feature:matcher",
-    ":feature:about",
-)
-
-rootProject.name = "NeoRegex"

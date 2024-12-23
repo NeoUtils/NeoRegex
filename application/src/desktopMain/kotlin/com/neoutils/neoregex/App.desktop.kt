@@ -21,17 +21,18 @@
 package com.neoutils.neoregex
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -49,10 +50,13 @@ import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.datasource.remember.rememberWindowState
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.dispatcher.NavigationDispatcher
+import com.neoutils.neoregex.core.dispatcher.event.Navigation
 import com.neoutils.neoregex.core.resources.*
 import com.neoutils.neoregex.core.sharedui.component.NeoHeader
 import com.neoutils.neoregex.core.sharedui.component.NeoWindow
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -61,9 +65,9 @@ import org.koin.compose.koinInject
 fun ApplicationScope.DesktopApp() = WithKoin {
 
     val preferencesDataSource = koinInject<PreferencesDataSource>()
-    val preferences by preferencesDataSource.flow.collectAsState()
-
     val windowStateDataSource = koinInject<WindowStateDataSource>()
+
+    val preferences by preferencesDataSource.flow.collectAsState()
     val windowState by windowStateDataSource.flow.collectAsState()
 
     NeoTheme(
@@ -86,12 +90,15 @@ fun ApplicationScope.DesktopApp() = WithKoin {
 }
 
 @Composable
-private fun FrameWindowScope.HeaderImpl() {
+private fun FrameWindowScope.HeaderImpl(
+    modifier: Modifier = Modifier,
+    preferencesDataSource: PreferencesDataSource = koinInject()
+) {
 
-    val preferencesDataSource = koinInject<PreferencesDataSource>()
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
 
     NeoHeader(
+        modifier = modifier,
         colorTheme = when (preferences.colorTheme) {
             Preferences.ColorTheme.SYSTEM -> rememberColorTheme()
             Preferences.ColorTheme.LIGHT -> ColorTheme.LIGHT
@@ -99,64 +106,145 @@ private fun FrameWindowScope.HeaderImpl() {
         }
     ) { padding ->
 
+        Navigation(
+            modifier = Modifier
+                .padding(padding)
+                .padding(horizontal = dimensions.medium)
+                .align(Alignment.CenterStart)
+        )
+
         Text(
             text = stringResource(Res.string.app_name),
+            style = typography.titleSmall.copy(
+                fontFamily = null
+            ),
             modifier = Modifier.align(
                 Alignment.Center
             )
         )
 
-        Row(
+        Options(
             modifier = Modifier
                 .padding(padding)
                 .padding(horizontal = dimensions.medium)
-                .align(Alignment.CenterEnd),
-            horizontalArrangement = Arrangement.spacedBy(dimensions.medium)
-        ) {
-            val uriHandler = LocalUriHandler.current
+                .align(Alignment.CenterEnd)
+        )
+    }
+}
 
-            Icon(
-                painter = painterResource(Res.drawable.github),
-                contentDescription = null,
-                tint = colorScheme.onSurface,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .clickable(
-                        onClick = {
-                            uriHandler.openUri(
-                                uri = "https://github.com/NeoUtils/NeoRegex"
-                            )
-                        }
+@Composable
+private fun Options(
+    modifier: Modifier = Modifier,
+    preferencesDataSource: PreferencesDataSource = koinInject()
+) = Row(
+    modifier = modifier,
+    horizontalArrangement = Arrangement.spacedBy(dimensions.medium)
+) {
+
+    val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
+
+    val uriHandler = LocalUriHandler.current
+
+    Icon(
+        painter = painterResource(Res.drawable.github),
+        contentDescription = null,
+        tint = colorScheme.onSurface,
+        modifier = Modifier
+            .clip(CircleShape)
+            .clickable(
+                onClick = {
+                    uriHandler.openUri(
+                        uri = "https://github.com/NeoUtils/NeoRegex"
                     )
-                    .padding(dimensions.medium)
-                    .aspectRatio(ratio = 1f)
+                }
             )
+            .padding(dimensions.medium)
+            .aspectRatio(ratio = 1f)
+    )
 
-            Icon(
-                painter = when (preferences.colorTheme) {
-                    Preferences.ColorTheme.SYSTEM -> painterResource(Res.drawable.contrast)
-                    Preferences.ColorTheme.LIGHT -> painterResource(Res.drawable.light_theme)
-                    Preferences.ColorTheme.DARK -> painterResource(Res.drawable.dark_theme)
-                },
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .clickable(
-                        onClick = {
-                            preferencesDataSource.update {
-                                it.copy(
-                                    colorTheme = when (it.colorTheme) {
-                                        Preferences.ColorTheme.SYSTEM -> Preferences.ColorTheme.LIGHT
-                                        Preferences.ColorTheme.LIGHT -> Preferences.ColorTheme.DARK
-                                        Preferences.ColorTheme.DARK -> Preferences.ColorTheme.SYSTEM
-                                    }
-                                )
+    Icon(
+        painter = when (preferences.colorTheme) {
+            Preferences.ColorTheme.SYSTEM -> painterResource(Res.drawable.contrast)
+            Preferences.ColorTheme.LIGHT -> painterResource(Res.drawable.light_theme)
+            Preferences.ColorTheme.DARK -> painterResource(Res.drawable.dark_theme)
+        },
+        contentDescription = null,
+        modifier = Modifier
+            .clip(CircleShape)
+            .clickable(
+                onClick = {
+                    preferencesDataSource.update {
+                        it.copy(
+                            colorTheme = when (it.colorTheme) {
+                                Preferences.ColorTheme.SYSTEM -> Preferences.ColorTheme.LIGHT
+                                Preferences.ColorTheme.LIGHT -> Preferences.ColorTheme.DARK
+                                Preferences.ColorTheme.DARK -> Preferences.ColorTheme.SYSTEM
                             }
-                        }
-                    )
-                    .padding(dimensions.medium)
-                    .aspectRatio(ratio = 1f)
+                        )
+                    }
+                }
+            )
+            .padding(dimensions.medium)
+            .aspectRatio(ratio = 1f)
+    )
+}
+
+@Composable
+private fun Navigation(
+    modifier: Modifier = Modifier,
+    navigation: NavigationDispatcher = koinInject()
+) = Box(
+    modifier = modifier
+) {
+    val expanded = remember { mutableStateOf(false) }
+
+    Row(
+        modifier = Modifier
+            .clip(RoundedCornerShape(dimensions.tiny))
+            .clickable { expanded.value = true }
+            .padding(dimensions.tiny),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = navigation.current.name,
+            style = typography.labelMedium.copy(
+                fontFamily = null
+            )
+        )
+
+        Icon(
+            imageVector = Icons.Outlined.KeyboardArrowDown,
+            modifier = Modifier.size(dimensions.default),
+            contentDescription = null
+        )
+    }
+
+    val coroutine = rememberCoroutineScope()
+
+    DropdownMenu(
+        expanded = expanded.value,
+        onDismissRequest = { expanded.value = false }
+    ) {
+        listOf(
+            Navigation.Matcher,
+            Navigation.About,
+        ).forEach {
+            DropdownMenuItem(
+                text = { Text(it.name) },
+                onClick = {
+                    coroutine.launch {
+                        navigation.emit(it)
+                        expanded.value = false
+                    }
+                },
             )
         }
     }
 }
+
+private val Navigation.name: String
+    @Composable
+    get() = when (this) {
+        Navigation.About -> "About"
+        Navigation.Matcher -> "Matcher"
+    }

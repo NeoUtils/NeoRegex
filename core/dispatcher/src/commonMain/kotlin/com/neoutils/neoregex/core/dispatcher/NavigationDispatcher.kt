@@ -16,42 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:Suppress("UnstableApiUsage")
+package com.neoutils.neoregex.core.dispatcher
 
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+import com.neoutils.neoregex.core.dispatcher.event.Navigation
+import kotlinx.coroutines.flow.Flow
 
-pluginManagement {
+interface NavigationDispatcher {
 
-    includeBuild("build-logic")
+    val flow: Flow<Navigation>
+    val current: Navigation
 
-    repositories {
-        google()
-        gradlePluginPortal()
-        mavenCentral()
-    }
+    suspend fun emit(navigation: Navigation)
 }
-
-plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
-}
-
-dependencyResolutionManagement {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
-include(
-    ":application",
-    ":core:design-system",
-    ":core:resources",
-    ":core:shared-ui",
-    ":core:common",
-    ":core:datasource",
-    ":core:dispatcher",
-    ":feature:matcher",
-    ":feature:about",
-)
-
-rootProject.name = "NeoRegex"
