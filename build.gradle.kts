@@ -24,4 +24,5 @@ plugins {
     alias(libs.plugins.kmp.compose.compiler) apply false
     alias(libs.plugins.kmp.compose) apply false
     alias(libs.plugins.buildkonfig) apply false
+    alias(libs.plugins.aboutlibraries) apply false
 }

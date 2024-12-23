@@ -28,6 +28,7 @@ plugins {
     alias(libs.plugins.neoutils.neoregex.android)
     alias(libs.plugins.neoutils.neoregex.desktop)
     alias(libs.plugins.neoutils.neoregex.web)
+    alias(libs.plugins.aboutlibraries)
 }
 
 kotlin {
@@ -88,4 +89,8 @@ tasks.register<Tar>("packageReleaseTarGz") {
         from(layout.projectDirectory.dir("installation"))
         from(layout.buildDirectory.dir("compose/binaries/main-release/app/NeoRegex"))
     }
+}
+
+aboutLibraries {
+    prettyPrint = true
 }

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.feature.about
+package com.neoutils.neoregex.feature.about.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -40,6 +40,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
 import com.neoutils.neoregex.NeoConfig.code
 import com.neoutils.neoregex.NeoConfig.version
 import com.neoutils.neoregex.core.common.platform.Platform
@@ -106,10 +107,12 @@ class AboutScreen : Screen {
                     )
                 )
 
+                val navigator = LocalNavigator.current
+
                 Link(
                     text = "Open source libraries",
                     onClick = {
-                        // TODO: implement
+                        navigator?.push(LibrariesScreen())
                     }
                 )
 
