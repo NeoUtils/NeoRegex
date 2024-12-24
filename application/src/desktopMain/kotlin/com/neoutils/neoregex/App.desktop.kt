@@ -20,26 +20,16 @@
 
 package com.neoutils.neoregex
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,17 +41,14 @@ import com.neoutils.neoregex.core.datasource.extension.observe
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.datasource.remember.rememberWindowState
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
-import com.neoutils.neoregex.core.dispatcher.NavigationDispatcher
-import com.neoutils.neoregex.core.dispatcher.event.Navigation
-import com.neoutils.neoregex.core.resources.*
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.sharedui.component.Navigation
 import com.neoutils.neoregex.core.sharedui.component.NeoHeader
 import com.neoutils.neoregex.core.sharedui.component.NeoWindow
+import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
-import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -113,7 +100,6 @@ private fun FrameWindowScope.HeaderImpl(
         Navigation(
             modifier = Modifier
                 .padding(padding)
-                .padding(horizontal = dimensions.medium)
                 .align(Alignment.CenterStart),
             textStyle = TextStyle(
                 fontSize = fontSizes.small
@@ -133,65 +119,7 @@ private fun FrameWindowScope.HeaderImpl(
         Options(
             modifier = Modifier
                 .padding(padding)
-                .padding(horizontal = dimensions.medium)
                 .align(Alignment.CenterEnd)
         )
     }
-}
-
-@Composable
-private fun Options(
-    modifier: Modifier = Modifier,
-    preferencesDataSource: PreferencesDataSource = koinInject()
-) = Row(
-    modifier = modifier,
-    horizontalArrangement = Arrangement.spacedBy(dimensions.medium)
-) {
-
-    val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
-
-    val uriHandler = LocalUriHandler.current
-
-    Icon(
-        painter = painterResource(Res.drawable.github),
-        contentDescription = null,
-        tint = colorScheme.onSurface,
-        modifier = Modifier
-            .clip(CircleShape)
-            .clickable(
-                onClick = {
-                    uriHandler.openUri(
-                        uri = "https://github.com/NeoUtils/NeoRegex"
-                    )
-                }
-            )
-            .padding(dimensions.medium)
-            .aspectRatio(ratio = 1f)
-    )
-
-    Icon(
-        painter = when (preferences.colorTheme) {
-            Preferences.ColorTheme.SYSTEM -> painterResource(Res.drawable.contrast)
-            Preferences.ColorTheme.LIGHT -> painterResource(Res.drawable.light_theme)
-            Preferences.ColorTheme.DARK -> painterResource(Res.drawable.dark_theme)
-        },
-        contentDescription = null,
-        modifier = Modifier
-            .clip(CircleShape)
-            .clickable(
-                onClick = {
-                    preferencesDataSource.update {
-                        it.copy(
-                            colorTheme = when (it.colorTheme) {
-                                Preferences.ColorTheme.SYSTEM -> Preferences.ColorTheme.LIGHT
-                                Preferences.ColorTheme.LIGHT -> Preferences.ColorTheme.DARK
-                                Preferences.ColorTheme.DARK -> Preferences.ColorTheme.SYSTEM
-                            }
-                        )
-                    }
-                }
-            )
-            .padding(dimensions.medium)
-            .aspectRatio(ratio = 1f)
-    )
 }
