@@ -20,9 +20,7 @@
 
 package com.neoutils.neoregex
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
@@ -50,7 +48,8 @@ fun AndroidApp() = WithKoin {
         Scaffold(
             topBar = {
                 NeoAppBar()
-            }
+            },
+            contentWindowInsets = WindowInsets.safeContent
         ) { padding ->
             App(Modifier.padding(padding))
         }
