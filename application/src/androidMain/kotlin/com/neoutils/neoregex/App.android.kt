@@ -82,7 +82,9 @@ fun NeoAppBar(
 ) = TopAppBar(
     navigationIcon = {
         Navigation(
-            modifier = Modifier.padding(dimensions.tiny)
+            modifier = Modifier
+                .width(90.dp)
+                .padding(dimensions.tiny)
         )
     },
     title = {
@@ -98,6 +100,7 @@ fun NeoAppBar(
     actions = {
         Options(
             modifier = Modifier
+                .width(90.dp)
                 .padding(dimensions.tiny)
                 .height(32.dp)
         )
