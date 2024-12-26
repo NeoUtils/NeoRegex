@@ -20,7 +20,10 @@
 
 package com.neoutils.neoregex
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeContent
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
@@ -31,7 +34,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.neoutils.neoregex.core.common.util.ColorTheme
@@ -79,11 +81,10 @@ fun NeoAppBar(
     background: Color = colorScheme.surfaceContainer,
     shadowElevation: Dp = dimensions.tiny,
     height: Dp = 55.dp
-) = TopAppBar(
+) = CenterAlignedTopAppBar(
     navigationIcon = {
         Navigation(
             modifier = Modifier
-                .width(90.dp)
                 .padding(dimensions.tiny)
         )
     },
@@ -92,15 +93,12 @@ fun NeoAppBar(
             text = stringResource(Res.string.app_name),
             style = typography.titleMedium.copy(
                 fontFamily = null,
-                textAlign = TextAlign.Center
             ),
-            modifier = Modifier.fillMaxWidth()
         )
     },
     actions = {
         Options(
             modifier = Modifier
-                .width(90.dp)
                 .padding(dimensions.tiny)
                 .height(32.dp)
         )
