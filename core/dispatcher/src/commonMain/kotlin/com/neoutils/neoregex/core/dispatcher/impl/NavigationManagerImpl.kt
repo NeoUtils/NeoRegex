@@ -18,26 +18,26 @@
 
 package com.neoutils.neoregex.core.dispatcher.impl
 
-import com.neoutils.neoregex.core.dispatcher.NavigationDispatcher
-import com.neoutils.neoregex.core.dispatcher.event.Navigation
+import com.neoutils.neoregex.core.dispatcher.NavigationManager
+import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 
-internal class NavigationDispatcherImpl : NavigationDispatcher {
+internal class NavigationManagerImpl : NavigationManager {
 
-    private val _flow = Channel<Navigation>(Channel.UNLIMITED)
-    private val _current = MutableStateFlow<Navigation>(Navigation.Matcher)
+    private val _event = Channel<Navigation.Event>(Channel.UNLIMITED)
+    private val _current = MutableStateFlow<Navigation.Screen>(Navigation.Screen.Matcher)
 
-    override val current = _current.asStateFlow()
-    override val flow = _flow.receiveAsFlow()
+    override val screen = _current.asStateFlow()
+    override val event = _event.receiveAsFlow()
 
-    override fun setCurrent(navigation: Navigation) {
-        _current.value = navigation
+    override fun setScreen(screen: Navigation.Screen) {
+        _current.value = screen
     }
 
-    override suspend fun emit(navigation: Navigation) {
-        _flow.send(navigation)
+    override suspend fun navigate(event: Navigation.Event) {
+        _event.send(event)
     }
 }

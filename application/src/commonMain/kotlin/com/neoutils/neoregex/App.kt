@@ -24,16 +24,17 @@ import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.transitions.FadeTransition
 import com.neoutils.neoregex.core.designsystem.theme.NeoBackground
-import com.neoutils.neoregex.core.dispatcher.NavigationDispatcher
-import com.neoutils.neoregex.core.dispatcher.event.Navigation
+import com.neoutils.neoregex.core.dispatcher.NavigationManager
+import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.feature.about.screen.AboutScreen
+import com.neoutils.neoregex.feature.about.screen.LibrariesScreen
 import com.neoutils.neoregex.feature.matcher.MatcherScreen
 import org.koin.compose.koinInject
 
 @Composable
 fun App(
     modifier: Modifier = Modifier,
-    navigation: NavigationDispatcher = koinInject()
+    navigation: NavigationManager = koinInject()
 ) = NeoBackground(modifier) {
 
     Navigator(
@@ -43,25 +44,33 @@ fun App(
         LaunchedEffect(navigator.lastItem) {
             when (navigator.lastItem) {
                 is MatcherScreen -> {
-                    navigation.setCurrent(Navigation.Matcher)
+                    navigation.setScreen(Navigation.Screen.Matcher)
                 }
 
                 is AboutScreen -> {
-                    navigation.setCurrent(Navigation.About)
+                    navigation.setScreen(Navigation.Screen.About)
+                }
+
+                is LibrariesScreen -> {
+                    navigation.setScreen(Navigation.Screen.Libraries)
                 }
             }
         }
 
         LaunchedEffect(Unit) {
-            navigation.flow.collect { event ->
+            navigation.event.collect { event ->
                 when (event) {
-                    Navigation.Matcher -> {
+                    Navigation.Event.Matcher -> {
                         navigator.popUntilRoot()
                     }
 
-                    Navigation.About -> {
+                    Navigation.Event.About -> {
                         navigator.popUntilRoot()
                         navigator.push(AboutScreen())
+                    }
+
+                    Navigation.Event.OnBack -> {
+                        navigator.pop()
                     }
                 }
             }

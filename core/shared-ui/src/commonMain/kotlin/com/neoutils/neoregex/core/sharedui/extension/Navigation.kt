@@ -19,11 +19,12 @@
 package com.neoutils.neoregex.core.sharedui.extension
 
 import androidx.compose.runtime.Composable
-import com.neoutils.neoregex.core.dispatcher.event.Navigation
+import com.neoutils.neoregex.core.dispatcher.model.Navigation
 
-val Navigation.name: String
+val Navigation.Screen.name: String
     @Composable
     get() = when (this) {
-        Navigation.About -> "About"
-        Navigation.Matcher -> "Matcher"
+        Navigation.Screen.About -> "About"
+        Navigation.Screen.Matcher -> "Matcher"
+        Navigation.Screen.Libraries -> "Libraries"
     }

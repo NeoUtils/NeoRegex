@@ -16,18 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.dispatcher
+package com.neoutils.neoregex.core.dispatcher.model
 
-import com.neoutils.neoregex.core.dispatcher.event.Navigation
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
+sealed class Navigation {
 
-interface NavigationDispatcher {
+    sealed class Event : Navigation() {
+        data object Matcher : Event()
+        data object About : Event()
+        data object OnBack : Event()
+    }
 
-    val flow: Flow<Navigation>
-    val current: StateFlow<Navigation>
-
-    fun setCurrent(navigation: Navigation)
-
-    suspend fun emit(navigation: Navigation)
+    sealed class Screen(val canBack: Boolean) : Navigation() {
+        data object Matcher : Screen(canBack = false)
+        data object About : Screen(canBack = true)
+        data object Libraries : Screen(canBack = true)
+    }
 }

@@ -86,6 +86,7 @@ fun NeoAppBar(
         Navigation(
             modifier = Modifier
                 .padding(dimensions.tiny)
+                .height(32.dp)
         )
     },
     title = {
