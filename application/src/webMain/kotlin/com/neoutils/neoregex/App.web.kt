@@ -16,17 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.neoutils.neoregex
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -38,14 +40,42 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.common.extension.toCss
+import com.neoutils.neoregex.core.common.util.ColorTheme
+import com.neoutils.neoregex.core.common.util.rememberColorTheme
+import com.neoutils.neoregex.core.datasource.PreferencesDataSource
+import com.neoutils.neoregex.core.datasource.model.Preferences
+import com.neoutils.neoregex.core.designsystem.component.Link
+import com.neoutils.neoregex.core.designsystem.component.LinkColor
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.dispatcher.NavigationManager
+import com.neoutils.neoregex.core.dispatcher.model.Navigation
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.app_name
+import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import kotlinx.browser.document
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Composable
 fun WebApp() = WithKoin {
-    NeoTheme {
+
+    val navigation = koinInject<NavigationManager>()
+    val preferencesDataSource = koinInject<PreferencesDataSource>()
+
+    val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
+
+    NeoTheme(
+        colorTheme = when (preferences.colorTheme) {
+            Preferences.ColorTheme.SYSTEM -> rememberColorTheme()
+            Preferences.ColorTheme.LIGHT -> ColorTheme.LIGHT
+            Preferences.ColorTheme.DARK -> ColorTheme.DARK
+        }
+    ) {
 
         val background = colorScheme.background.toCss()
 
@@ -54,8 +84,73 @@ fun WebApp() = WithKoin {
             body.style.backgroundColor = background
         }
 
-        Experimental {
-            App()
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = stringResource(Res.string.app_name),
+                                style = typography.titleMedium.copy(
+                                    fontFamily = null,
+                                ),
+                            )
+
+                            Spacer(Modifier.width(18.dp))
+
+                            val coroutine = rememberCoroutineScope()
+
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                listOf(
+                                    Navigation.Event.Matcher,
+                                    Navigation.Event.About,
+                                ).forEach {
+                                    Link(
+                                        text = when (it) {
+                                            Navigation.Event.About -> "About"
+                                            Navigation.Event.Matcher -> "Matcher"
+                                            Navigation.Event.OnBack -> error("Invalid")
+                                        },
+                                        onClick = {
+                                            coroutine.launch {
+                                                navigation.navigate(it)
+                                            }
+                                        },
+                                        style = typography.labelMedium,
+                                        colors = LinkColor(
+                                            idle = colorScheme.onSurface,
+                                            hover = colorScheme.onSurface.copy(alpha = 0.8f),
+                                            press = colorScheme.onSurface.copy(alpha = 0.6f),
+                                            pressed = colorScheme.onSurface
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    },
+                    actions = {
+                        Options(
+                            modifier = Modifier
+                                .padding(dimensions.short)
+                                .height(32.dp),
+                            horizontalArrangement = Arrangement.spacedBy(
+                                dimensions.short,
+                                Alignment.End
+                            )
+                        )
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = colorScheme.surfaceContainer,
+                        titleContentColor = colorScheme.onSurface
+                    )
+                )
+            },
+        ) {
+            App(Modifier.padding(it))
         }
     }
 }

@@ -43,13 +43,14 @@ import org.koin.compose.koinInject
 @Composable
 fun Options(
     modifier: Modifier = Modifier,
-    preferencesDataSource: PreferencesDataSource = koinInject()
-) = Row(
-    modifier = modifier,
-    horizontalArrangement = Arrangement.spacedBy(
+    preferencesDataSource: PreferencesDataSource = koinInject(),
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(
         dimensions.medium,
         Alignment.End
-    ),
+    )
+) = Row(
+    modifier = modifier,
+    horizontalArrangement = horizontalArrangement,
 ) {
 
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()

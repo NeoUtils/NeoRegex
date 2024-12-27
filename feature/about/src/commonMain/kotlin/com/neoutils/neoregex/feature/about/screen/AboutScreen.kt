@@ -45,6 +45,7 @@ import com.neoutils.neoregex.NeoConfig.code
 import com.neoutils.neoregex.NeoConfig.version
 import com.neoutils.neoregex.core.common.platform.Platform
 import com.neoutils.neoregex.core.common.platform.platform
+import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.theme.Blue500
 import com.neoutils.neoregex.core.designsystem.theme.Blue600
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
@@ -136,56 +137,4 @@ class AboutScreen : Screen {
             }
         }
     }
-}
-
-data class LinkColor(
-    val idle: Color = Blue500,
-    val hover: Color = Blue600,
-    val press: Color = Purple500
-)
-
-@Composable
-fun Link(
-    text: String,
-    onClick: () -> Unit = {},
-    colors: LinkColor = LinkColor(),
-    modifier: Modifier = Modifier
-) {
-
-    val interactionSource = remember { MutableInteractionSource() }
-    val decoration = remember { mutableStateOf<TextDecoration?>(null) }
-
-    val color = remember { mutableStateOf(colors.idle) }
-
-    LaunchedEffect(Unit) {
-        interactionSource.interactions.collect {
-            when (it) {
-                is HoverInteraction.Enter -> {
-                    decoration.value = TextDecoration.Underline
-                }
-
-                is HoverInteraction.Exit -> {
-                    decoration.value = null
-                }
-
-                is PressInteraction.Press -> {
-                    color.value = colors.press
-                }
-            }
-        }
-    }
-
-    return Text(
-        text = text,
-        modifier = modifier.clickable(
-            onClick = onClick,
-            interactionSource = interactionSource,
-            indication = null
-        ),
-
-        style = LocalTextStyle.current.copy(
-            textDecoration = decoration.value,
-            color = color.value,
-        )
-    )
 }
