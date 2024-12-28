@@ -33,7 +33,6 @@ plugins {
     id("org.jetbrains.compose")
 }
 
-group = config.module(name = "core")
 version = config.version.name()
 
 kotlin {

@@ -1,3 +1,6 @@
+import extension.config
+import extension.module
+
 /*
  * NeoRegex.
  *
@@ -20,6 +23,8 @@ plugins {
     alias(libs.plugins.neoutils.neoregex.core)
 }
 
+group = config.module(name = "core")
+
 kotlin {
     sourceSets {
         commonMain.dependencies {
@@ -27,6 +32,7 @@ kotlin {
             implementation(projects.core.common)
             implementation(projects.core.resources)
             implementation(projects.core.datasource)
+            implementation(projects.core.dispatcher)
         }
     }
 }

@@ -20,6 +20,7 @@ package com.neoutils.neoregex.core.sharedui.di
 
 import androidx.compose.runtime.Composable
 import com.neoutils.neoregex.core.datasource.di.dataSourceModule
+import com.neoutils.neoregex.core.dispatcher.di.navigationModule
 import org.koin.compose.KoinApplication
 
 @Composable
@@ -28,7 +29,8 @@ fun WithKoin(
 ) = KoinApplication(
     application = {
         modules(
-            dataSourceModule
+            dataSourceModule,
+            navigationModule
         )
     },
     content = content

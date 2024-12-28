@@ -67,12 +67,12 @@ fun NeoTypography(
     titleMedium = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,
+        fontSize = 18.sp,
     ),
     titleSmall = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = 14.sp,
+        fontSize = 16.sp,
     ),
     bodyLarge = TextStyle(
         fontFamily = fontFamily,

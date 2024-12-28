@@ -28,23 +28,25 @@ plugins {
     alias(libs.plugins.neoutils.neoregex.android)
     alias(libs.plugins.neoutils.neoregex.desktop)
     alias(libs.plugins.neoutils.neoregex.web)
+    alias(libs.plugins.aboutlibraries)
 }
-
-group = config.basePackage
-version = config.version.name()
 
 kotlin {
 
     sourceSets {
         commonMain.dependencies {
 
-            // modules
-            implementation(projects.feature.matcher)
+            // core
             implementation(projects.core.designSystem)
             implementation(projects.core.resources)
             implementation(projects.core.common)
             implementation(projects.core.sharedUi)
             implementation(projects.core.datasource)
+            implementation(projects.core.dispatcher)
+
+            // feature
+            implementation(projects.feature.matcher)
+            implementation(projects.feature.about)
 
             // voyager
             implementation(catalog.voyager.navigator)
@@ -64,6 +66,12 @@ kotlin {
             // koin
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+        }
+
+        androidMain.dependencies {
+
+            // koin
+            implementation(libs.koin.android)
         }
     }
 }
@@ -88,4 +96,8 @@ tasks.register<Tar>("packageReleaseTarGz") {
         from(layout.projectDirectory.dir("installation"))
         from(layout.buildDirectory.dir("compose/binaries/main-release/app/NeoRegex"))
     }
+}
+
+aboutLibraries {
+    prettyPrint = true
 }

@@ -20,14 +20,8 @@
 
 package com.neoutils.neoregex
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -35,8 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -48,12 +41,14 @@ import com.neoutils.neoregex.core.datasource.extension.observe
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.datasource.remember.rememberWindowState
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.resources.*
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.app_name
+import com.neoutils.neoregex.core.sharedui.component.Navigation
 import com.neoutils.neoregex.core.sharedui.component.NeoHeader
 import com.neoutils.neoregex.core.sharedui.component.NeoWindow
+import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
-import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -61,9 +56,9 @@ import org.koin.compose.koinInject
 fun ApplicationScope.DesktopApp() = WithKoin {
 
     val preferencesDataSource = koinInject<PreferencesDataSource>()
-    val preferences by preferencesDataSource.flow.collectAsState()
-
     val windowStateDataSource = koinInject<WindowStateDataSource>()
+
+    val preferences by preferencesDataSource.flow.collectAsState()
     val windowState by windowStateDataSource.flow.collectAsState()
 
     NeoTheme(
@@ -86,12 +81,15 @@ fun ApplicationScope.DesktopApp() = WithKoin {
 }
 
 @Composable
-private fun FrameWindowScope.HeaderImpl() {
+private fun FrameWindowScope.HeaderImpl(
+    modifier: Modifier = Modifier,
+    preferencesDataSource: PreferencesDataSource = koinInject()
+) {
 
-    val preferencesDataSource = koinInject<PreferencesDataSource>()
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
 
     NeoHeader(
+        modifier = modifier,
         colorTheme = when (preferences.colorTheme) {
             Preferences.ColorTheme.SYSTEM -> rememberColorTheme()
             Preferences.ColorTheme.LIGHT -> ColorTheme.LIGHT
@@ -99,64 +97,29 @@ private fun FrameWindowScope.HeaderImpl() {
         }
     ) { padding ->
 
+        Navigation(
+            modifier = Modifier
+                .padding(padding)
+                .align(Alignment.CenterStart),
+            textStyle = TextStyle(
+                fontSize = fontSizes.small
+            )
+        )
+
         Text(
             text = stringResource(Res.string.app_name),
+            style = typography.titleSmall.copy(
+                fontFamily = null
+            ),
             modifier = Modifier.align(
                 Alignment.Center
             )
         )
 
-        Row(
+        Options(
             modifier = Modifier
                 .padding(padding)
-                .padding(horizontal = dimensions.medium)
-                .align(Alignment.CenterEnd),
-            horizontalArrangement = Arrangement.spacedBy(dimensions.medium)
-        ) {
-            val uriHandler = LocalUriHandler.current
-
-            Icon(
-                painter = painterResource(Res.drawable.github),
-                contentDescription = null,
-                tint = colorScheme.onSurface,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .clickable(
-                        onClick = {
-                            uriHandler.openUri(
-                                uri = "https://github.com/NeoUtils/NeoRegex"
-                            )
-                        }
-                    )
-                    .padding(dimensions.medium)
-                    .aspectRatio(ratio = 1f)
-            )
-
-            Icon(
-                painter = when (preferences.colorTheme) {
-                    Preferences.ColorTheme.SYSTEM -> painterResource(Res.drawable.contrast)
-                    Preferences.ColorTheme.LIGHT -> painterResource(Res.drawable.light_theme)
-                    Preferences.ColorTheme.DARK -> painterResource(Res.drawable.dark_theme)
-                },
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .clickable(
-                        onClick = {
-                            preferencesDataSource.update {
-                                it.copy(
-                                    colorTheme = when (it.colorTheme) {
-                                        Preferences.ColorTheme.SYSTEM -> Preferences.ColorTheme.LIGHT
-                                        Preferences.ColorTheme.LIGHT -> Preferences.ColorTheme.DARK
-                                        Preferences.ColorTheme.DARK -> Preferences.ColorTheme.SYSTEM
-                                    }
-                                )
-                            }
-                        }
-                    )
-                    .padding(dimensions.medium)
-                    .aspectRatio(ratio = 1f)
-            )
-        }
+                .align(Alignment.CenterEnd)
+        )
     }
 }

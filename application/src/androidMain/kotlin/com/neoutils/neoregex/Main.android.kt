@@ -24,10 +24,18 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.coroutineScope
+import androidx.lifecycle.flowWithLifecycle
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.colorTheme
+import com.neoutils.neoregex.core.datasource.PreferencesDataSource
+import com.neoutils.neoregex.core.datasource.model.Preferences
+import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
+
+    private val preferencesDataSource: PreferencesDataSource by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,23 +47,33 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun setupSystemBars() {
+    private fun setupSystemBars() = lifecycle.coroutineScope.launch {
+        preferencesDataSource.flow.flowWithLifecycle(
+            lifecycle = lifecycle
+        ).collect { preferences ->
 
-        val style = when (colorTheme) {
-            ColorTheme.DARK, ColorTheme.DARK_SYSTEM -> {
-                SystemBarStyle.dark(
-                    Color.BLACK,
-                )
+            val colorTheme = when (preferences.colorTheme) {
+                Preferences.ColorTheme.SYSTEM -> colorTheme
+                Preferences.ColorTheme.LIGHT -> ColorTheme.LIGHT
+                Preferences.ColorTheme.DARK -> ColorTheme.DARK
             }
 
-            ColorTheme.LIGHT, ColorTheme.LIGHT_SYSTEM -> {
-                SystemBarStyle.light(
-                    Color.WHITE,
-                    Color.BLACK,
-                )
+            val style = when (colorTheme) {
+                ColorTheme.DARK, ColorTheme.DARK_SYSTEM -> {
+                    SystemBarStyle.dark(
+                        Color.BLACK,
+                    )
+                }
+
+                ColorTheme.LIGHT, ColorTheme.LIGHT_SYSTEM -> {
+                    SystemBarStyle.light(
+                        Color.WHITE,
+                        Color.BLACK,
+                    )
+                }
             }
+
+            enableEdgeToEdge(style, style)
         }
-
-        enableEdgeToEdge(style, style)
     }
 }

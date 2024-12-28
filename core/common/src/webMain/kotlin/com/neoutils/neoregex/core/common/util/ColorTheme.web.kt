@@ -19,15 +19,16 @@
 package com.neoutils.neoregex.core.common.util
 
 import androidx.compose.runtime.Composable
-import org.jetbrains.skiko.SystemTheme
-import org.jetbrains.skiko.currentSystemTheme
+import kotlinx.browser.window
 
 @Composable
 actual fun rememberColorTheme(): ColorTheme {
 
-    return when (currentSystemTheme) {
-        SystemTheme.LIGHT -> ColorTheme.LIGHT_SYSTEM
-        SystemTheme.DARK -> ColorTheme.DARK_SYSTEM
-        SystemTheme.UNKNOWN -> ColorTheme.DARK_SYSTEM
+    val isDarkTheme = window.matchMedia(query = "(prefers-color-scheme: dark)").matches
+
+    return if (isDarkTheme) {
+        ColorTheme.DARK_SYSTEM
+    } else {
+        ColorTheme.LIGHT_SYSTEM
     }
 }

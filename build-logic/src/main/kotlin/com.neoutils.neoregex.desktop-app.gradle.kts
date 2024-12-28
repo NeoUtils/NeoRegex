@@ -29,6 +29,9 @@ plugins {
     id("org.jetbrains.compose")
 }
 
+group = config.basePackage
+version = config.version.name()
+
 kotlin {
 
     jvmToolchain {
