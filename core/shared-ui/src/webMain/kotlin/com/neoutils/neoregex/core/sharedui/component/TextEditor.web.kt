@@ -120,6 +120,12 @@ actual fun TextEditor(
                 }
             }
         }
+
+        LaunchedEffect(matches, selectedMatch) {
+            selectedMatch = matches.firstOrNull { match ->
+                selectedMatch == match
+            }
+        }
     }
 
     Row(Modifier.weight(weight = 1f, fill = true)) {
