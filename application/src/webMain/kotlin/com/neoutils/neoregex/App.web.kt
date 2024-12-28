@@ -66,11 +66,9 @@ import org.koin.compose.koinInject
 @Composable
 fun WebApp() = WithKoin {
 
-    val navigation = koinInject<NavigationManager>()
     val preferencesDataSource = koinInject<PreferencesDataSource>()
 
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
-    val screen by navigation.screen.collectAsStateWithLifecycle()
 
     NeoTheme(
         colorTheme = when (preferences.colorTheme) {
@@ -89,109 +87,122 @@ fun WebApp() = WithKoin {
 
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = stringResource(Res.string.app_name),
-                                style = typography.titleMedium.copy(
-                                    fontFamily = null,
-                                ),
-                            )
-
-                            Spacer(Modifier.width(18.dp))
-
-                            val coroutine = rememberCoroutineScope()
-
-                            Row(
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                val colors = LinkColor(
-                                    idle = colorScheme.onSurface,
-                                    hover = colorScheme.onSurface.copy(alpha = 0.8f),
-                                    press = colorScheme.onSurface.copy(alpha = 0.6f),
-                                    pressed = colorScheme.onSurface
-                                )
-
-                                Link(
-                                    text = "Matcher",
-                                    onClick = {
-                                        coroutine.launch {
-                                            navigation.navigate(
-                                                Navigation.Event.Matcher
-                                            )
-                                        }
-                                    },
-                                    style = typography.labelMedium.copy(
-                                        textDecoration = TextDecoration.None,
-                                        fontWeight = if (screen == Navigation.Screen.Matcher) {
-                                            FontWeight.Bold
-                                        } else {
-                                            FontWeight.Normal
-                                        }
-                                    ),
-                                    enabled = screen != Navigation.Screen.Matcher,
-                                    colors = colors,
-                                )
-
-                                Link(
-                                    text = "About",
-                                    onClick = {
-                                        coroutine.launch {
-                                            navigation.navigate(
-                                                Navigation.Event.About
-                                            )
-                                        }
-                                    },
-                                    style = typography.labelMedium.copy(
-                                        textDecoration = TextDecoration.None,
-                                        fontWeight = if (screen == Navigation.Screen.About) {
-                                            FontWeight.Bold
-                                        } else {
-                                            FontWeight.Normal
-                                        }
-                                    ),
-                                    enabled = screen != Navigation.Screen.About,
-                                    colors = colors
-                                )
-
-                                AnimatedVisibility(visible = screen == Navigation.Screen.Libraries) {
-                                    Link(
-                                        text = "Libraries",
-                                        style = typography.labelMedium.copy(
-                                            textDecoration = TextDecoration.None,
-                                            fontWeight = FontWeight.Bold
-                                        ),
-                                        enabled = false,
-                                        colors = colors
-                                    )
-                                }
-                            }
-                        }
-                    },
-                    actions = {
-                        Options(
-                            modifier = Modifier
-                                .padding(dimensions.short)
-                                .height(32.dp),
-                            horizontalArrangement = Arrangement.spacedBy(
-                                dimensions.short,
-                                Alignment.End
-                            )
-                        )
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = colorScheme.surfaceContainer,
-                        titleContentColor = colorScheme.onSurface
-                    )
-                )
+                Header()
             },
         ) {
             App(Modifier.padding(it))
         }
     }
+}
+
+@Composable
+private fun Header(
+    modifier: Modifier = Modifier,
+    navigation: NavigationManager = koinInject(),
+) {
+    val screen by navigation.screen.collectAsStateWithLifecycle()
+
+    TopAppBar(
+        modifier = modifier,
+        title = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(Res.string.app_name),
+                    style = typography.titleMedium.copy(
+                        fontFamily = null,
+                    ),
+                )
+
+                Spacer(Modifier.width(18.dp))
+
+                val coroutine = rememberCoroutineScope()
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    val colors = LinkColor(
+                        idle = colorScheme.onSurface,
+                        hover = colorScheme.onSurface.copy(alpha = 0.8f),
+                        press = colorScheme.onSurface.copy(alpha = 0.6f),
+                        pressed = colorScheme.onSurface
+                    )
+
+                    Link(
+                        text = "Matcher",
+                        onClick = {
+                            coroutine.launch {
+                                navigation.navigate(
+                                    Navigation.Event.Matcher
+                                )
+                            }
+                        },
+                        style = typography.labelMedium.copy(
+                            textDecoration = TextDecoration.None,
+                            fontWeight = if (screen == Navigation.Screen.Matcher) {
+                                FontWeight.Bold
+                            } else {
+                                FontWeight.Normal
+                            }
+                        ),
+                        enabled = screen != Navigation.Screen.Matcher,
+                        colors = colors,
+                    )
+
+                    Link(
+                        text = "About",
+                        onClick = {
+                            coroutine.launch {
+                                navigation.navigate(
+                                    Navigation.Event.About
+                                )
+                            }
+                        },
+                        style = typography.labelMedium.copy(
+                            textDecoration = TextDecoration.None,
+                            fontWeight = if (screen == Navigation.Screen.About) {
+                                FontWeight.Bold
+                            } else {
+                                FontWeight.Normal
+                            }
+                        ),
+                        enabled = screen != Navigation.Screen.About,
+                        colors = colors
+                    )
+
+                    AnimatedVisibility(
+                        visible = screen == Navigation.Screen.Libraries
+                    ) {
+                        Link(
+                            text = "Libraries",
+                            style = typography.labelMedium.copy(
+                                textDecoration = TextDecoration.None,
+                                fontWeight = FontWeight.Bold
+                            ),
+                            enabled = false,
+                            colors = colors
+                        )
+                    }
+                }
+            }
+        },
+        actions = {
+            Options(
+                modifier = Modifier
+                    .padding(dimensions.short)
+                    .height(32.dp),
+                horizontalArrangement = Arrangement.spacedBy(
+                    dimensions.short,
+                    Alignment.End
+                )
+            )
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = colorScheme.surfaceContainer,
+            titleContentColor = colorScheme.onSurface
+        )
+    )
 }
 
 @Composable
