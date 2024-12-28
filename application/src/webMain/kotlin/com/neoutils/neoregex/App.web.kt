@@ -36,8 +36,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -57,6 +60,7 @@ import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.resources.web_warning_text
 import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
+import com.neoutils.neoregex.core.sharedui.extension.surface
 import kotlinx.browser.document
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -110,111 +114,116 @@ fun WebApp() = WithKoin {
 private fun Header(
     modifier: Modifier = Modifier,
     navigation: NavigationManager = koinInject(),
-) {
-    val screen by navigation.screen.collectAsStateWithLifecycle()
+    shadowElevation: Dp = dimensions.tiny
+) = TopAppBar(
+    modifier = modifier.surface(
+        shape = RectangleShape,
+        backgroundColor = colorScheme.surfaceContainer,
+        shadowElevation = LocalDensity.current.run {
+            shadowElevation.toPx()
+        }
+    ),
+    title = {
+        val screen by navigation.screen.collectAsStateWithLifecycle()
 
-    TopAppBar(
-        modifier = modifier,
-        title = {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = stringResource(Res.string.app_name),
+                style = typography.titleMedium.copy(
+                    fontFamily = null,
+                ),
+            )
+
+            Spacer(Modifier.width(18.dp))
+
+            val coroutine = rememberCoroutineScope()
+
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(
-                    text = stringResource(Res.string.app_name),
-                    style = typography.titleMedium.copy(
-                        fontFamily = null,
-                    ),
+                val colors = LinkColor(
+                    idle = colorScheme.onSurface,
+                    hover = colorScheme.onSurface.copy(alpha = 0.8f),
+                    press = colorScheme.onSurface.copy(alpha = 0.6f),
+                    pressed = colorScheme.onSurface
                 )
 
-                Spacer(Modifier.width(18.dp))
+                Link(
+                    text = "Matcher",
+                    onClick = {
+                        coroutine.launch {
+                            navigation.navigate(
+                                Navigation.Event.Matcher
+                            )
+                        }
+                    },
+                    style = typography.labelMedium.copy(
+                        textDecoration = TextDecoration.None,
+                        fontWeight = if (screen == Navigation.Screen.Matcher) {
+                            FontWeight.Bold
+                        } else {
+                            FontWeight.Normal
+                        }
+                    ),
+                    enabled = screen != Navigation.Screen.Matcher,
+                    colors = colors,
+                )
 
-                val coroutine = rememberCoroutineScope()
+                Link(
+                    text = "About",
+                    onClick = {
+                        coroutine.launch {
+                            navigation.navigate(
+                                Navigation.Event.About
+                            )
+                        }
+                    },
+                    style = typography.labelMedium.copy(
+                        textDecoration = TextDecoration.None,
+                        fontWeight = if (screen == Navigation.Screen.About) {
+                            FontWeight.Bold
+                        } else {
+                            FontWeight.Normal
+                        }
+                    ),
+                    enabled = screen != Navigation.Screen.About,
+                    colors = colors
+                )
 
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                AnimatedVisibility(
+                    visible = screen == Navigation.Screen.Libraries
                 ) {
-                    val colors = LinkColor(
-                        idle = colorScheme.onSurface,
-                        hover = colorScheme.onSurface.copy(alpha = 0.8f),
-                        press = colorScheme.onSurface.copy(alpha = 0.6f),
-                        pressed = colorScheme.onSurface
-                    )
-
                     Link(
-                        text = "Matcher",
-                        onClick = {
-                            coroutine.launch {
-                                navigation.navigate(
-                                    Navigation.Event.Matcher
-                                )
-                            }
-                        },
+                        text = "Libraries",
                         style = typography.labelMedium.copy(
                             textDecoration = TextDecoration.None,
-                            fontWeight = if (screen == Navigation.Screen.Matcher) {
-                                FontWeight.Bold
-                            } else {
-                                FontWeight.Normal
-                            }
+                            fontWeight = FontWeight.Bold
                         ),
-                        enabled = screen != Navigation.Screen.Matcher,
-                        colors = colors,
-                    )
-
-                    Link(
-                        text = "About",
-                        onClick = {
-                            coroutine.launch {
-                                navigation.navigate(
-                                    Navigation.Event.About
-                                )
-                            }
-                        },
-                        style = typography.labelMedium.copy(
-                            textDecoration = TextDecoration.None,
-                            fontWeight = if (screen == Navigation.Screen.About) {
-                                FontWeight.Bold
-                            } else {
-                                FontWeight.Normal
-                            }
-                        ),
-                        enabled = screen != Navigation.Screen.About,
+                        enabled = false,
                         colors = colors
                     )
-
-                    AnimatedVisibility(
-                        visible = screen == Navigation.Screen.Libraries
-                    ) {
-                        Link(
-                            text = "Libraries",
-                            style = typography.labelMedium.copy(
-                                textDecoration = TextDecoration.None,
-                                fontWeight = FontWeight.Bold
-                            ),
-                            enabled = false,
-                            colors = colors
-                        )
-                    }
                 }
             }
-        },
-        actions = {
-            Options(
-                modifier = Modifier
-                    .padding(dimensions.short)
-                    .height(32.dp),
-                horizontalArrangement = Arrangement.spacedBy(
-                    dimensions.short,
-                    Alignment.End
-                )
+        }
+    },
+    actions = {
+        Options(
+            modifier = Modifier
+                .padding(dimensions.short)
+                .height(32.dp),
+            horizontalArrangement = Arrangement.spacedBy(
+                dimensions.short,
+                Alignment.End
             )
-        },
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = colorScheme.surfaceContainer,
-            titleContentColor = colorScheme.onSurface
         )
+    },
+    colors = TopAppBarDefaults.topAppBarColors(
+        containerColor = colorScheme.surfaceContainer,
+        titleContentColor = colorScheme.onSurface
     )
-}
+)
 
 @Composable
 fun TopLabel(
