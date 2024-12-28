@@ -23,7 +23,8 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Preferences(
     val performanceLabelAlign: Alignment,
-    val colorTheme: ColorTheme
+    val colorTheme: ColorTheme,
+    val showWebWarning: Boolean
 ) {
     @Serializable
     enum class Alignment {
@@ -41,7 +42,8 @@ data class Preferences(
     companion object {
         val Default = Preferences(
             performanceLabelAlign = Alignment.BOTTOM_END,
-            colorTheme = ColorTheme.SYSTEM
+            colorTheme = ColorTheme.SYSTEM,
+            showWebWarning = true
         )
     }
 }

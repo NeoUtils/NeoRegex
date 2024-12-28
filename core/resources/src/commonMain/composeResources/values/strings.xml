@@ -36,6 +36,8 @@
     <string name="about_runtime_text">Runtime version: %1$s</string>
     <string name="about_description_text">This software is free, licensed under the GPLv3, and uses only open source libraries.</string>
 
+    <string name="web_warning_text">NeoRegex web version is experimental</string>
+
     <plurals name="match_result_infos">
         <item quantity="one">%1$s match (%2$s)</item>
         <item quantity="other">%1$s matches (%2$s)</item>

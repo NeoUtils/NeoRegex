@@ -21,25 +21,23 @@
 package com.neoutils.neoregex
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -56,6 +54,7 @@ import com.neoutils.neoregex.core.dispatcher.NavigationManager
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
+import com.neoutils.neoregex.core.resources.web_warning_text
 import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import kotlinx.browser.document
@@ -87,7 +86,19 @@ fun WebApp() = WithKoin {
 
         Scaffold(
             topBar = {
-                Header()
+                TopLabel(
+                    text = stringResource(Res.string.web_warning_text),
+                    visible = preferences.showWebWarning,
+                    onClose = {
+                        preferencesDataSource.update {
+                            it.copy(
+                                showWebWarning = false
+                            )
+                        }
+                    }
+                ) {
+                    Header()
+                }
             },
         ) {
             App(Modifier.padding(it))
@@ -206,43 +217,53 @@ private fun Header(
 }
 
 @Composable
-fun Experimental(
-    size: DpSize = DpSize(300.dp, 300.dp),
+fun TopLabel(
+    text: String,
+    visible: Boolean = true,
+    onClose: () -> Unit = {},
     content: @Composable () -> Unit
-) = Box {
+) = Column {
+
+    AnimatedVisibility(visible) {
+        ProvideTextStyle(
+            typography.labelLarge.copy(
+                color = Color.Black
+            )
+        ) {
+            CompositionLocalProvider(
+                LocalIndication provides ripple(color = Color.Black)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .background(Color.Yellow)
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = text,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .padding(vertical = 8.dp),
+                    )
+
+                    Icon(
+                        imageVector = Icons.Rounded.Close,
+                        contentDescription = null,
+                        tint = Color.Black,
+                        modifier = Modifier
+                            .padding(dimensions.tiny)
+                            .size(dimensions.large)
+                            .clip(CircleShape)
+                            .clickable(onClick = onClose)
+                            .padding(dimensions.micro)
+                            .align(Alignment.CenterEnd)
+                    )
+                }
+            }
+        }
+    }
 
     content()
-
-    val density = LocalDensity.current
-
-    val translation = density.run {
-        Offset(
-            x = (size.width / 4.5f).toPx(),
-            y = (size.height / 4.5f).toPx().unaryMinus()
-        )
-    }
-
-    Box(
-        modifier = Modifier
-            .size(size)
-            .align(Alignment.TopEnd)
-            .graphicsLayer(
-                translationX = translation.x,
-                translationY = translation.y,
-                rotationZ = 45f
-            )
-    ) {
-        Text(
-            text = "experimental",
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Center)
-                .background(Color.Yellow)
-                .padding(vertical = 8.dp),
-        )
-    }
 }
 
