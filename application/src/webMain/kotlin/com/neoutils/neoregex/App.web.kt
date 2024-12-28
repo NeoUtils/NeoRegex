@@ -20,6 +20,7 @@
 
 package com.neoutils.neoregex
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -37,6 +38,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -68,6 +70,7 @@ fun WebApp() = WithKoin {
     val preferencesDataSource = koinInject<PreferencesDataSource>()
 
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
+    val screen by navigation.screen.collectAsStateWithLifecycle()
 
     NeoTheme(
         colorTheme = when (preferences.colorTheme) {
@@ -105,28 +108,64 @@ fun WebApp() = WithKoin {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(8.dp)
                             ) {
-                                listOf(
-                                    Navigation.Event.Matcher,
-                                    Navigation.Event.About,
-                                ).forEach {
+                                val colors = LinkColor(
+                                    idle = colorScheme.onSurface,
+                                    hover = colorScheme.onSurface.copy(alpha = 0.8f),
+                                    press = colorScheme.onSurface.copy(alpha = 0.6f),
+                                    pressed = colorScheme.onSurface
+                                )
+
+                                Link(
+                                    text = "Matcher",
+                                    onClick = {
+                                        coroutine.launch {
+                                            navigation.navigate(
+                                                Navigation.Event.Matcher
+                                            )
+                                        }
+                                    },
+                                    style = typography.labelMedium.copy(
+                                        textDecoration = TextDecoration.None,
+                                        fontWeight = if (screen == Navigation.Screen.Matcher) {
+                                            FontWeight.Bold
+                                        } else {
+                                            FontWeight.Normal
+                                        }
+                                    ),
+                                    enabled = screen != Navigation.Screen.Matcher,
+                                    colors = colors,
+                                )
+
+                                Link(
+                                    text = "About",
+                                    onClick = {
+                                        coroutine.launch {
+                                            navigation.navigate(
+                                                Navigation.Event.About
+                                            )
+                                        }
+                                    },
+                                    style = typography.labelMedium.copy(
+                                        textDecoration = TextDecoration.None,
+                                        fontWeight = if (screen == Navigation.Screen.About) {
+                                            FontWeight.Bold
+                                        } else {
+                                            FontWeight.Normal
+                                        }
+                                    ),
+                                    enabled = screen != Navigation.Screen.About,
+                                    colors = colors
+                                )
+
+                                AnimatedVisibility(visible = screen == Navigation.Screen.Libraries) {
                                     Link(
-                                        text = when (it) {
-                                            Navigation.Event.About -> "About"
-                                            Navigation.Event.Matcher -> "Matcher"
-                                            Navigation.Event.OnBack -> error("Invalid")
-                                        },
-                                        onClick = {
-                                            coroutine.launch {
-                                                navigation.navigate(it)
-                                            }
-                                        },
-                                        style = typography.labelMedium,
-                                        colors = LinkColor(
-                                            idle = colorScheme.onSurface,
-                                            hover = colorScheme.onSurface.copy(alpha = 0.8f),
-                                            press = colorScheme.onSurface.copy(alpha = 0.6f),
-                                            pressed = colorScheme.onSurface
-                                        )
+                                        text = "Libraries",
+                                        style = typography.labelMedium.copy(
+                                            textDecoration = TextDecoration.None,
+                                            fontWeight = FontWeight.Bold
+                                        ),
+                                        enabled = false,
+                                        colors = colors
                                     )
                                 }
                             }
@@ -157,7 +196,7 @@ fun WebApp() = WithKoin {
 
 @Composable
 fun Experimental(
-    size: DpSize = DpSize(250.dp, 250.dp),
+    size: DpSize = DpSize(300.dp, 300.dp),
     content: @Composable () -> Unit
 ) = Box {
 
@@ -167,8 +206,8 @@ fun Experimental(
 
     val translation = density.run {
         Offset(
-            x = (size.width / 3.5f).toPx(),
-            y = (size.height / 3.5f).toPx().unaryMinus()
+            x = (size.width / 4.5f).toPx(),
+            y = (size.height / 4.5f).toPx().unaryMinus()
         )
     }
 

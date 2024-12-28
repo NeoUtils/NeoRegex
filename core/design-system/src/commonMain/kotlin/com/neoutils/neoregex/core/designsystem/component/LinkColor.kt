@@ -23,6 +23,7 @@ import androidx.compose.foundation.interaction.HoverInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -56,7 +57,8 @@ fun Link(
     text: String,
     onClick: () -> Unit = {},
     colors: LinkColor = LinkColor(),
-    style: TextStyle = TextStyle(),
+    enabled: Boolean = true,
+    style: TextStyle = typography.labelMedium,
     modifier: Modifier = Modifier
 ) {
 
@@ -88,22 +90,22 @@ fun Link(
         }
     }
 
-    val mergedTextStyle = LocalTextStyle.current.merge(style)
+    val mergedTextStyle = TextStyle(
+        textDecoration = when (hover) {
+            LinkHover.IDLE -> null
+            LinkHover.HOVER -> TextDecoration.Underline
+        }
+    ).merge(style)
 
     return Text(
         text = text,
         modifier = modifier.clickable(
             onClick = onClick,
             interactionSource = interactionSource,
-            indication = null
+            indication = null,
+            enabled = enabled
         ),
         style = mergedTextStyle.copy(
-            textDecoration = remember(hover) {
-                when (hover) {
-                    LinkHover.IDLE -> null
-                    LinkHover.HOVER -> TextDecoration.Underline
-                }
-            },
             color = remember(press, hover, colors) {
                 when {
                     press == LinkPress.PRESS -> colors.press
