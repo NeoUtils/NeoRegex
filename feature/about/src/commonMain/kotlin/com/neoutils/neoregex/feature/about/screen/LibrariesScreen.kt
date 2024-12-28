@@ -28,6 +28,8 @@ import androidx.compose.ui.platform.LocalUriHandler
 import cafe.adriel.voyager.core.screen.Screen
 import com.mikepenz.aboutlibraries.ui.compose.m3.LibrariesContainer
 import com.mikepenz.aboutlibraries.ui.compose.m3.rememberLibraries
+import com.neoutils.neoregex.core.common.platform.Platform
+import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
@@ -48,7 +50,8 @@ class LibrariesScreen : Screen {
                 library.scm?.url?.let {
                     uriHandler.openUri(it)
                 }
-            }
+            },
+            showLicenseBadges = platform != Platform.Web
         )
     }
 }
