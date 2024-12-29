@@ -20,10 +20,7 @@
 
 package com.neoutils.neoregex
 
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContent
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
@@ -68,7 +65,7 @@ fun AndroidApp() {
             topBar = {
                 NeoAppBar()
             },
-            contentWindowInsets = WindowInsets.safeContent
+            contentWindowInsets = WindowInsets.safeDrawing
         ) { padding ->
             App(Modifier.padding(padding))
         }
