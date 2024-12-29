@@ -23,14 +23,14 @@ A cross-platform app to validate regular expressions.
 
 ## Platforms
 
-| Platform | Status |
-|----------|--------|
-| Android  | ✅      |
-| iOS      | ❌      |
-| Windows  | ✅      |
-| Linux    | ✅      |
-| macOS    | ✅      |
-| Web      | ✅      |
+| Platform      | Status |
+|---------------|--------|
+| Android       | ✅      |
+| iOS           | ❌      |
+| Windows (JVM) | ✅      |
+| Linux (JVM)   | ✅      |
+| macOS (JVM)   | ✅      |
+| Web           | ✅      |
 
 ## Build
 
@@ -44,11 +44,12 @@ I recommend using [Intellij IDEA](https://www.jetbrains.com/idea/download) as th
 
 ## Acknowledgments
 
-NeoRegex utilizes several open-source libraries that greatly enhance its functionality. We would like to thank the authors and contributors of the following projects for their amazing work:
+NeoRegex relies on several open-source projects to deliver robust, cross-platform capabilities. We extend our gratitude to the authors and contributors of the following libraries, which are essential to the project:
 
-- [**Highlight**](https://github.com/NeoUtils/Highlight):  This library provides essential syntax highlighting features, making the pattern more readable and visually appealing.
-- [**multiplatform-settings**](https://github.com/russhwolf/multiplatform-settings): A useful library for managing settings across multiple platforms, allowing us to easily persist user preferences.
-- [**dbus-java**](https://github.com/hypfvieh/dbus-java): This library enables integration with D-Bus, providing important desktop interprocess communication capabilities for Linux systems.
+- [**Compose Multiplatform**](https://github.com/JetBrains/compose-multiplatform): A modern, declarative UI framework from JetBrains for building user interfaces across multiple platforms.
+- [**Highlight**](https://github.com/NeoUtils/Highlight): Provides syntax highlighting, making patterns more readable and visually clear.
+- [**multiplatform-settings**](https://github.com/russhwolf/multiplatform-settings): Simplifies configuration and preference management across different platforms.
+- [**dbus-java**](https://github.com/hypfvieh/dbus-java): Enables D-Bus integration on Linux, offering essential interprocess communication features.
 
 ## License
 
