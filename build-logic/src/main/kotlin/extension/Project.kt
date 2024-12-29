@@ -27,7 +27,7 @@ val config = Config(
     version = Config.Version(
         major = 2,
         minor = 5,
-        patch = 1,
+        patch = 2,
         phase = Config.Phase.RELEASE
     ),
     android = Config.Android(
