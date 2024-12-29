@@ -18,10 +18,36 @@
 
 package com.neoutils.neoregex.feature.about.component
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.about_runtime_text
+import com.neoutils.neoregex.core.resources.about_vm_text
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
-expect fun JavaInfos(
-    modifier: Modifier = Modifier
-)
+actual fun RuntimeInfos(
+    modifier: Modifier
+) = Column {
+
+    val vmName = System.getProperty("java.vm.name")
+    val vmVersion = System.getProperty("java.vm.version");
+    val vmVendor =System.getProperty("java.vm.vendor");
+
+    Text(
+        text = stringResource(
+            Res.string.about_vm_text,
+            vmName,
+            vmVendor
+        )
+    )
+
+    Text(
+        text = stringResource(
+            Res.string.about_runtime_text,
+            vmVersion
+        )
+    )
+}

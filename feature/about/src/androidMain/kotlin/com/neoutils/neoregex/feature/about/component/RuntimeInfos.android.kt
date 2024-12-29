@@ -22,6 +22,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-actual fun JavaInfos(modifier: Modifier) {
-    error("Unavailable on the web target")
+actual fun RuntimeInfos(modifier: Modifier) {
+    error("Unavailable on the android target")
 }

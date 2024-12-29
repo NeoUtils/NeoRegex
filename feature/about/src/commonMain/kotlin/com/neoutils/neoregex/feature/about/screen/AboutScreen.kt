@@ -19,25 +19,15 @@
 package com.neoutils.neoregex.feature.about.screen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.HoverInteraction
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -46,15 +36,12 @@ import com.neoutils.neoregex.NeoConfig.version
 import com.neoutils.neoregex.core.common.platform.Platform
 import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.designsystem.component.Link
-import com.neoutils.neoregex.core.designsystem.theme.Blue500
-import com.neoutils.neoregex.core.designsystem.theme.Blue600
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.designsystem.theme.Purple500
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.about_description_text
 import com.neoutils.neoregex.core.resources.about_version_text
 import com.neoutils.neoregex.core.resources.ic_launcher
-import com.neoutils.neoregex.feature.about.component.JavaInfos
+import com.neoutils.neoregex.feature.about.component.RuntimeInfos
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -101,7 +88,7 @@ class AboutScreen : Screen {
                 Text(stringResource(Res.string.about_description_text))
 
                 if (platform is Platform.Desktop) {
-                    JavaInfos()
+                    RuntimeInfos()
                 }
 
                 HorizontalDivider(
