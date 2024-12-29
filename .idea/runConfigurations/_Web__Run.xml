@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run desktop release" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="[Web] Run" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -10,7 +10,8 @@
       </option>
       <option name="taskNames">
         <list>
-          <option value="runReleaseDistributable" />
+          <option value="clean" />
+          <option value="application:webBrowserRun" />
         </list>
       </option>
       <option name="vmOptions" />
