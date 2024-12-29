@@ -9,7 +9,7 @@ A cross-platform app to validate regular expressions.
 </p>
 
 <p align="center">
-    <img src="images/desktop/linux_dark_mode.png" alt="NeoRegex desktop app"/>
+    <img src="images/desktop/linux_dark.png" alt="NeoRegex desktop app"/>
 </p>
 
 <p align="center">
