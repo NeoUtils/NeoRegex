@@ -5,7 +5,7 @@
 <h1 align="center">NeoRegex</h1>
 
 <p align="center">
-A cross-platform app to validate regular expressions.
+Create and validate regular expressions easily, anywhere.
 </p>
 
 <p align="center">
@@ -23,18 +23,18 @@ A cross-platform app to validate regular expressions.
 
 ## Platforms
 
-| Platform      | Status |
-|---------------|--------|
-| Android       | ✅      |
-| iOS           | ❌      |
-| Windows (JVM) | ✅      |
-| Linux (JVM)   | ✅      |
-| macOS (JVM)   | ✅      |
-| Web           | ✅      |
+| Platform           | Status |
+|--------------------|--------|
+| Android            | ✅      |
+| iOS                | ❌      |
+| Windows (jvm)      | ✅      |
+| Linux (jvm)        | ✅      |
+| macOS (jvm)        | ✅      |
+| Web (experimental) | ✅      |
 
 ## Build
 
-To build this project, the JDK 17 and the Android SDK are required.
+To build this project, the **JDK 17** and the **Android SDK** are required.
 I recommend using [Intellij IDEA](https://www.jetbrains.com/idea/download) as the IDE, with the **Android**, **Jetpack Compose** and **Compose Multiplatform** plugins installed.
 
 > [!TIP]
@@ -48,7 +48,7 @@ NeoRegex relies on several open-source projects to deliver robust, cross-platfor
 
 - [**Compose Multiplatform**](https://github.com/JetBrains/compose-multiplatform): A modern, declarative UI framework from JetBrains for building user interfaces across multiple platforms.
 - [**Highlight**](https://github.com/NeoUtils/Highlight): Provides syntax highlighting, making patterns more readable and visually clear.
-- [**multiplatform-settings**](https://github.com/russhwolf/multiplatform-settings): Simplifies configuration and preference management across different platforms.
+- [**Multiplatform Settings**](https://github.com/russhwolf/multiplatform-settings): Simplifies configuration and preference management across different platforms.
 - [**dbus-java**](https://github.com/hypfvieh/dbus-java): Enables D-Bus integration on Linux, offering essential interprocess communication features.
 
 ## License
