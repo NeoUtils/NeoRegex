@@ -41,8 +41,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.dispatcher.NavigationManager
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.screen_about
+import com.neoutils.neoregex.core.resources.screen_matcher
 import com.neoutils.neoregex.core.sharedui.extension.name
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
@@ -59,9 +63,11 @@ fun Navigation(
 
     val current by navigation.screen.collectAsStateWithLifecycle()
 
+    val canPop by navigation.canPopBack.collectAsStateWithLifecycle()
+
     val coroutines = rememberCoroutineScope()
 
-    AnimatedVisibility(current.canBack) {
+    AnimatedVisibility(canPop) {
         Icon(
             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
             contentDescription = null,
@@ -70,7 +76,7 @@ fun Navigation(
                 .clickable(
                     onClick = {
                         coroutines.launch {
-                            navigation.navigate(Navigation.Event.OnBack)
+                            navigation.emit(Navigation.Event.OnBack)
                         }
                     }
                 )
@@ -113,28 +119,41 @@ fun Navigation(
             expanded = expanded.value,
             onDismissRequest = { expanded.value = false }
         ) {
-            listOf(
-                Navigation.Event.Matcher,
-                Navigation.Event.About,
-            ).forEach {
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            text = when (it) {
-                                Navigation.Event.About -> "About"
-                                Navigation.Event.Matcher -> "Matcher"
-                                Navigation.Event.OnBack -> error("Invalid")
-                            }
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        text = stringResource(Res.string.screen_matcher)
+                    )
+                },
+                onClick = {
+                    coroutine.launch {
+                        navigation.emit(
+                            Navigation.Event.Navigate(
+                                screen = Navigation.Screen.Matcher
+                            )
                         )
-                    },
-                    onClick = {
-                        coroutine.launch {
-                            navigation.navigate(it)
-                            expanded.value = false
-                        }
-                    },
-                )
-            }
+                        expanded.value = false
+                    }
+                },
+            )
+
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        text = stringResource(Res.string.screen_about)
+                    )
+                },
+                onClick = {
+                    coroutine.launch {
+                        navigation.emit(
+                            Navigation.Event.Navigate(
+                                screen = Navigation.Screen.About
+                            )
+                        )
+                        expanded.value = false
+                    }
+                },
+            )
         }
     }
 }

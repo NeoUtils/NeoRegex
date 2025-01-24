@@ -55,9 +55,7 @@ import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.dispatcher.NavigationManager
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
-import com.neoutils.neoregex.core.resources.Res
-import com.neoutils.neoregex.core.resources.app_name
-import com.neoutils.neoregex.core.resources.web_warning_text
+import com.neoutils.neoregex.core.resources.*
 import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import com.neoutils.neoregex.core.sharedui.extension.surface
@@ -143,66 +141,50 @@ private fun Header(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                val colors = LinkColor(
-                    idle = colorScheme.onSurface,
-                    hover = colorScheme.onSurface.copy(alpha = 0.8f),
-                    press = colorScheme.onSurface.copy(alpha = 0.6f),
-                    pressed = colorScheme.onSurface
-                )
-
-                Link(
-                    text = "Matcher",
-                    onClick = {
+                NavigateButton(
+                    text = stringResource(Res.string.screen_matcher),
+                    onNavigate = {
                         coroutine.launch {
-                            navigation.navigate(
-                                Navigation.Event.Matcher
+                            navigation.emit(
+                                Navigation.Event.Navigate(
+                                    screen = Navigation.Screen.Matcher
+                                )
                             )
                         }
                     },
-                    style = typography.labelMedium.copy(
-                        textDecoration = TextDecoration.None,
-                        fontWeight = if (screen == Navigation.Screen.Matcher) {
-                            FontWeight.Bold
-                        } else {
-                            FontWeight.Normal
-                        }
-                    ),
-                    enabled = screen != Navigation.Screen.Matcher,
-                    colors = colors,
+                    selected = screen == Navigation.Screen.Matcher
                 )
 
-                Link(
-                    text = "About",
-                    onClick = {
+                NavigateButton(
+                    text = stringResource(Res.string.screen_about),
+                    onNavigate = {
                         coroutine.launch {
-                            navigation.navigate(
-                                Navigation.Event.About
+                            navigation.emit(
+                                Navigation.Event.Navigate(
+                                    screen = Navigation.Screen.About
+                                )
                             )
                         }
                     },
-                    style = typography.labelMedium.copy(
-                        textDecoration = TextDecoration.None,
-                        fontWeight = if (screen == Navigation.Screen.About) {
-                            FontWeight.Bold
-                        } else {
-                            FontWeight.Normal
-                        }
-                    ),
-                    enabled = screen != Navigation.Screen.About,
-                    colors = colors
+                    selected = screen == Navigation.Screen.About
                 )
 
                 AnimatedVisibility(
                     visible = screen == Navigation.Screen.Libraries
                 ) {
                     Link(
-                        text = "Libraries",
+                        text = stringResource(Res.string.screen_libraries),
                         style = typography.labelMedium.copy(
                             textDecoration = TextDecoration.None,
                             fontWeight = FontWeight.Bold
                         ),
-                        enabled = false,
-                        colors = colors
+                        colors = LinkColor(
+                            idle = colorScheme.onSurface,
+                            hover = colorScheme.onSurface.copy(alpha = 0.8f),
+                            press = colorScheme.onSurface.copy(alpha = 0.6f),
+                            pressed = colorScheme.onSurface
+                        ),
+                        enabled = false
                     )
                 }
             }
@@ -224,6 +206,35 @@ private fun Header(
         titleContentColor = colorScheme.onSurface
     )
 )
+
+@Composable
+private fun NavigateButton(
+    text: String,
+    selected: Boolean,
+    onNavigate: () -> Unit
+) {
+    val colors = LinkColor(
+        idle = colorScheme.onSurface,
+        hover = colorScheme.onSurface.copy(alpha = 0.8f),
+        press = colorScheme.onSurface.copy(alpha = 0.6f),
+        pressed = colorScheme.onSurface
+    )
+
+    Link(
+        text = text,
+        onClick = onNavigate,
+        style = typography.labelMedium.copy(
+            textDecoration = TextDecoration.None,
+            fontWeight = if (selected) {
+                FontWeight.Bold
+            } else {
+                FontWeight.Normal
+            }
+        ),
+        enabled = !selected,
+        colors = colors,
+    )
+}
 
 @Composable
 fun TopLabel(
@@ -275,4 +286,3 @@ fun TopLabel(
 
     content()
 }
-

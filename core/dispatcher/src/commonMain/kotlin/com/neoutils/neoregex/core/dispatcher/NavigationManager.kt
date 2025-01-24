@@ -26,8 +26,9 @@ interface NavigationManager {
 
     val event: Flow<Navigation.Event>
     val screen: StateFlow<Navigation.Screen>
+    val canPopBack: StateFlow<Boolean>
 
-    fun setScreen(screen: Navigation.Screen)
+    fun update(screen: Navigation.Screen)
 
-    suspend fun navigate(event: Navigation.Event)
+    suspend fun emit(event: Navigation.Event)
 }

@@ -21,14 +21,16 @@ package com.neoutils.neoregex.core.dispatcher.model
 sealed class Navigation {
 
     sealed class Event : Navigation() {
-        data object Matcher : Event()
-        data object About : Event()
+        data class Navigate(
+            val screen: Screen
+        ) : Event()
+
         data object OnBack : Event()
     }
 
-    sealed class Screen(val canBack: Boolean) : Navigation() {
-        data object Matcher : Screen(canBack = false)
-        data object About : Screen(canBack = true)
-        data object Libraries : Screen(canBack = true)
+    sealed class Screen : Navigation() {
+        data object Matcher : Screen()
+        data object About : Screen()
+        data object Libraries : Screen()
     }
 }
