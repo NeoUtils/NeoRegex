@@ -45,7 +45,7 @@ internal class NavigationManagerWeb : NavigationManager {
     init {
         window.onpopstate = { _ ->
             coroutines.launch {
-                emit(Navigation.Event.OnBack)
+                navigate(window.location.search)
             }
         }
     }
@@ -66,6 +66,11 @@ internal class NavigationManagerWeb : NavigationManager {
         if (event is Navigation.Event.Navigate) {
             when (event.screen) {
                 Navigation.Screen.About -> {
+                    if (screen.value is Navigation.Screen.Libraries) {
+                        window.history.back()
+                        return
+                    }
+
                     window.history.pushState(
                         data = null,
                         title = "",
@@ -82,13 +87,51 @@ internal class NavigationManagerWeb : NavigationManager {
                 }
 
                 Navigation.Screen.Matcher -> {
-                    window.history.clear()
+                    window.history.popUntil()
                 }
             }
         }
     }
+
+    private suspend fun navigate(query: String) {
+        val result = ScreenArg.find(query)
+
+        if (result == null) {
+            _event.send(
+                Navigation.Event.Navigate(
+                    Navigation.Screen.Matcher
+                )
+            )
+
+            return
+        }
+
+        val screen = result.groups[1]?.value
+
+        when (screen) {
+            "about" -> {
+                _event.send(
+                    Navigation.Event.Navigate(
+                        Navigation.Screen.About
+                    )
+                )
+            }
+
+            "libraries" -> {
+                _event.send(
+                    Navigation.Event.Navigate(
+                        Navigation.Screen.Libraries
+                    )
+                )
+            }
+        }
+    }
+
+    companion object {
+        private val ScreenArg = "\\?screen=(\\w+)".toRegex()
+    }
 }
 
-fun History.clear() = go(delta = -lastIndex)
+fun History.popUntil() = go(delta = -lastIndex)
 
 val History.lastIndex get() = length - 1
