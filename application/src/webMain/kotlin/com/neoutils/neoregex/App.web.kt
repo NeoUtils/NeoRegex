@@ -61,7 +61,9 @@ import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import com.neoutils.neoregex.core.sharedui.extension.surface
 import kotlinx.browser.document
 import kotlinx.browser.window
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -112,7 +114,6 @@ fun WebApp() = WithKoin {
 @Composable
 private fun Header(
     modifier: Modifier = Modifier,
-    navigation: NavigationManager = koinInject(),
     shadowElevation: Dp = dimensions.tiny
 ) = TopAppBar(
     modifier = modifier.surface(
@@ -123,8 +124,6 @@ private fun Header(
         }
     ),
     title = {
-        val screen by navigation.screen.collectAsStateWithLifecycle()
-
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -137,58 +136,7 @@ private fun Header(
 
             Spacer(Modifier.width(18.dp))
 
-            val coroutine = rememberCoroutineScope()
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                NavigateButton(
-                    text = stringResource(Res.string.screen_matcher),
-                    onNavigate = {
-                        coroutine.launch {
-                            navigation.emit(
-                                Navigation.Event.Navigate(
-                                    screen = Navigation.Screen.Matcher
-                                )
-                            )
-                        }
-                    },
-                    selected = screen == Navigation.Screen.Matcher
-                )
-
-                NavigateButton(
-                    text = stringResource(Res.string.screen_about),
-                    onNavigate = {
-                        coroutine.launch {
-                            navigation.emit(
-                                Navigation.Event.Navigate(
-                                    screen = Navigation.Screen.About
-                                )
-                            )
-                        }
-                    },
-                    selected = screen == Navigation.Screen.About
-                )
-
-                AnimatedVisibility(
-                    visible = screen == Navigation.Screen.Libraries
-                ) {
-                    Link(
-                        text = stringResource(Res.string.screen_libraries),
-                        style = typography.labelMedium.copy(
-                            textDecoration = TextDecoration.None,
-                            fontWeight = FontWeight.Bold
-                        ),
-                        colors = LinkColor(
-                            idle = colorScheme.onSurface,
-                            hover = colorScheme.onSurface.copy(alpha = 0.8f),
-                            press = colorScheme.onSurface.copy(alpha = 0.6f),
-                            pressed = colorScheme.onSurface
-                        ),
-                        enabled = false
-                    )
-                }
-            }
+            Navigation()
         }
     },
     actions = {
@@ -207,6 +155,75 @@ private fun Header(
         titleContentColor = colorScheme.onSurface
     )
 )
+
+@Composable
+private fun Navigation(
+    navigation: NavigationManager = koinInject(),
+) {
+    Row(
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        val screen by navigation.screen.collectAsStateWithLifecycle()
+
+        LaunchedEffect(Unit) {
+            navigation.screen.collectLatest {
+                window.document.title = getString(
+                    Res.string.app_title,
+                    getString(screen.title)
+                )
+            }
+        }
+
+        val coroutine = rememberCoroutineScope()
+
+        NavigateButton(
+            text = stringResource(Res.string.screen_matcher),
+            onNavigate = {
+                coroutine.launch {
+                    navigation.emit(
+                        Navigation.Event.Navigate(
+                            screen = Navigation.Screen.Matcher
+                        )
+                    )
+                }
+            },
+            selected = screen == Navigation.Screen.Matcher
+        )
+
+        NavigateButton(
+            text = stringResource(Res.string.screen_about),
+            onNavigate = {
+                coroutine.launch {
+                    navigation.emit(
+                        Navigation.Event.Navigate(
+                            screen = Navigation.Screen.About
+                        )
+                    )
+                }
+            },
+            selected = screen == Navigation.Screen.About
+        )
+
+        AnimatedVisibility(
+            visible = screen == Navigation.Screen.Libraries
+        ) {
+            Link(
+                text = stringResource(Res.string.screen_libraries),
+                style = typography.labelMedium.copy(
+                    textDecoration = TextDecoration.None,
+                    fontWeight = FontWeight.Bold
+                ),
+                colors = LinkColor(
+                    idle = colorScheme.onSurface,
+                    hover = colorScheme.onSurface.copy(alpha = 0.8f),
+                    press = colorScheme.onSurface.copy(alpha = 0.6f),
+                    pressed = colorScheme.onSurface
+                ),
+                enabled = false
+            )
+        }
+    }
+}
 
 @Composable
 private fun NavigateButton(

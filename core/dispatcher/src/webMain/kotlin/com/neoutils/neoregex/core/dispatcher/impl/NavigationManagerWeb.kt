@@ -48,6 +48,10 @@ internal class NavigationManagerWeb : NavigationManager {
                 navigate(window.location.search)
             }
         }
+
+        coroutines.launch {
+            navigate(window.location.search)
+        }
     }
 
     override fun update(screen: Navigation.Screen) {

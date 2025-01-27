@@ -46,6 +46,7 @@
         <item quantity="other">%1$s matches (%2$s)</item>
     </plurals>
 
+    <string name="app_title">NeoRegex - %1$s</string>
     <string name="screen_matcher">Matcher</string>
     <string name="screen_about">About</string>
     <string name="screen_libraries">Libraries</string>

@@ -18,6 +18,12 @@
 
 package com.neoutils.neoregex.core.dispatcher.model
 
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.screen_about
+import com.neoutils.neoregex.core.resources.screen_libraries
+import com.neoutils.neoregex.core.resources.screen_matcher
+import org.jetbrains.compose.resources.StringResource
+
 sealed class Navigation {
 
     sealed class Event : Navigation() {
@@ -29,8 +35,19 @@ sealed class Navigation {
     }
 
     sealed class Screen : Navigation() {
-        data object Matcher : Screen()
-        data object About : Screen()
-        data object Libraries : Screen()
+
+        abstract val title: StringResource
+
+        data object Matcher : Screen() {
+            override val title = Res.string.screen_matcher
+        }
+
+        data object About : Screen() {
+            override val title = Res.string.screen_about
+        }
+
+        data object Libraries : Screen() {
+            override val title = Res.string.screen_libraries
+        }
     }
 }

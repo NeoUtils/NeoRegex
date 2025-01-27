@@ -44,7 +44,6 @@ import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.screen_about
 import com.neoutils.neoregex.core.resources.screen_matcher
-import com.neoutils.neoregex.core.sharedui.extension.name
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -102,7 +101,7 @@ fun Navigation(
         ) {
 
             Text(
-                text = current.name,
+                text = stringResource(current.title),
                 style = mergedTextStyle
             )
 
