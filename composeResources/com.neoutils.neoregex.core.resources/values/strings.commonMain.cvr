@@ -1,10 +1,14 @@
 version:0
 plurals|match_result_infos|ONE:JTEkcyBtYXRjaCAoJTIkcyk=,OTHER:JTEkcyBtYXRjaGVzICglMiRzKQ==
 string|about_description_text|VGhpcyBzb2Z0d2FyZSBpcyBmcmVlLCBsaWNlbnNlZCB1bmRlciB0aGUgR1BMdjMsIGFuZCB1c2VzIG9ubHkgb3BlbiBzb3VyY2UgbGlicmFyaWVzLg==
+string|about_libraries_btn|T3BlbiBzb3VyY2UgbGlicmFyaWVz
+string|about_license_btn|TGljZW5zZQ==
 string|about_runtime_text|UnVudGltZSB2ZXJzaW9uOiAlMSRz
+string|about_source_code_btn|U291cmNlIGNvZGU=
 string|about_version_text|diUxJHMgKCUyJHMp
 string|about_vm_text|Vk06ICUxJHMgYnkgJTIkcw==
 string|app_name|TmVvUmVnZXg=
+string|app_title|TmVvUmVnZXggLSAlMSRz
 string|fatal_error_copied_label|Q29waWVkIQ==
 string|fatal_error_copy_btn|Q29weSBlcnJvcg==
 string|fatal_error_message|V2UnZCBsb3ZlIHRvIGZpeCB0aGlzISBJZiBwb3NzaWJsZSwgcGxlYXNlIHNoYXJlIHdoYXQgaGFwcGVuZWQu
@@ -13,6 +17,8 @@ string|fatal_error_report_tab|UmVwb3J0IGVycm9y
 string|fatal_error_stack_trace_tab|U3RhY2sgdHJhY2U=
 string|fatal_error_subtitle|T29wcyEgU29tZXRoaW5nIHdlbnQgd3Jvbmcu
 string|fatal_error_title|RmF0YWwgZXJyb3I6ICUxJHM=
-string|insert_regex_hint|RW50ZXIgcmVndWxhciBleHByZXNzaW9u
 string|matcher_footer_insert_regex_hint|RW50ZXIgcmVndWxhciBleHByZXNzaW9u
+string|screen_about|QWJvdXQ=
+string|screen_libraries|TGlicmFyaWVz
+string|screen_matcher|TWF0Y2hlcg==
 string|web_warning_text|TmVvUmVnZXggd2ViIHZlcnNpb24gaXMgZXhwZXJpbWVudGFs
