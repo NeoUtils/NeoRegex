@@ -50,4 +50,5 @@
     <string name="screen_matcher">Matcher</string>
     <string name="screen_about">About</string>
     <string name="screen_libraries">Libraries</string>
+    <string name="screen_validator">Validator</string>
 </resources>

@@ -52,6 +52,7 @@ include(
     ":core:dispatcher",
     ":feature:matcher",
     ":feature:about",
+    ":feature:validator",
 )
 
 rootProject.name = "NeoRegex"

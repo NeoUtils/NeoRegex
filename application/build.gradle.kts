@@ -47,6 +47,7 @@ kotlin {
             // feature
             implementation(projects.feature.matcher)
             implementation(projects.feature.about)
+            implementation(projects.feature.validator)
 
             // voyager
             implementation(catalog.voyager.navigator)

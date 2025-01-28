@@ -40,13 +40,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.dispatcher.NavigationManager
-import com.neoutils.neoregex.core.resources.Res
-import com.neoutils.neoregex.core.resources.screen_about
-import com.neoutils.neoregex.core.resources.screen_matcher
+import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
 
 @Composable
 fun CompactNavigation(
@@ -121,7 +118,7 @@ fun CompactNavigation(
             DropdownMenuItem(
                 text = {
                     Text(
-                        text = stringResource(Res.string.screen_matcher),
+                        text = stringResource(Navigation.Screen.Matcher.title),
                     )
                 },
                 onClick = {
@@ -139,7 +136,25 @@ fun CompactNavigation(
             DropdownMenuItem(
                 text = {
                     Text(
-                        text = stringResource(Res.string.screen_about),
+                        text = stringResource(Navigation.Screen.Validator.title),
+                    )
+                },
+                onClick = {
+                    coroutine.launch {
+                        navigation.emit(
+                            Navigation.Event.Navigate(
+                                screen = Navigation.Screen.Validator
+                            )
+                        )
+                        expanded.value = false
+                    }
+                },
+            )
+
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        text = stringResource(Navigation.Screen.About.title),
                     )
                 },
                 onClick = {
