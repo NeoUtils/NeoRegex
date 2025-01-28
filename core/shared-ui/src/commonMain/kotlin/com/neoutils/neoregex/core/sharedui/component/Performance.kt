@@ -48,8 +48,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.neoutils.neoregex.core.common.platform.Platform
-import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
@@ -63,9 +61,11 @@ import kotlin.time.Duration
 import kotlin.time.DurationUnit
 
 @Composable
-fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
+fun BoxWithConstraintsScope.Performance(
+    performance: Performance,
+    preferencesDataSource: PreferencesDataSource = koinInject()
+) {
 
-    val preferencesDataSource = koinInject<PreferencesDataSource>()
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
 
     val current = rememberUpdatedState(
@@ -116,10 +116,10 @@ fun BoxWithConstraintsScope.MatchesInfos(infos: MatchesInfos) {
     Text(
         text = pluralStringResource(
             Res.plurals.match_result_infos,
-            infos.matches,
-            infos.matches,
-            infos.duration.toString(
-                unit = DurationUnit.MILLISECONDS,
+            performance.matches,
+            performance.matches,
+            performance.duration.toString(
+                unit = DurationUnit.MICROSECONDS,
                 decimals = 3
             )
         ),
@@ -239,24 +239,7 @@ private fun BoxScope.AlignmentTarget(
     )
 }
 
-data class MatchesInfos(
-    val duration: Duration,
-    val matches: Int
-) {
-    companion object {
-        fun create(
-            duration: Duration = Duration.ZERO,
-            matches: Int = 0
-        ): MatchesInfos? = when (platform) {
-            is Platform.Android,
-            is Platform.Desktop -> {
-                MatchesInfos(
-                    duration = duration,
-                    matches = matches
-                )
-            }
-
-            Platform.Web -> null
-        }
-    }
-}
+data class Performance(
+    val duration: Duration = Duration.ZERO,
+    val matches: Int = 0
+)

@@ -40,8 +40,13 @@ kotlin {
             implementation(projects.core.resources)
             implementation(projects.core.sharedUi)
             implementation(projects.core.common)
+            implementation(projects.core.datasource)
 
+            // NeoUtils
             implementation(libs.highlight.compose)
+
+            // kotlinx
+            implementation(libs.kotlinx.datetime)
         }
     }
 }
