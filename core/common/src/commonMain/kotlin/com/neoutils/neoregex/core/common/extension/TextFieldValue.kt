@@ -16,9 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.feature.matcher.model
+package com.neoutils.neoregex.core.common.extension
 
-enum class Target {
-    TEXT,
-    REGEX
-}
+import androidx.compose.ui.text.input.TextFieldValue
+import com.neoutils.neoregex.core.common.model.TextState
+
+fun TextFieldValue.toTextState(allowMultiline: Boolean = true) = TextState(
+    text = if (allowMultiline) {
+        text
+    } else {
+        text.replace("\n", "")
+    },
+    selection = selection
+)

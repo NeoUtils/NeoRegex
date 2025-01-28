@@ -18,7 +18,7 @@
 
 package com.neoutils.neoregex.feature.matcher.manager
 
-import com.neoutils.neoregex.feature.matcher.model.TextState
+import com.neoutils.neoregex.core.common.model.TextState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 

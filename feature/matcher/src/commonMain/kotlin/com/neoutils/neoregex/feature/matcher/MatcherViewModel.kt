@@ -20,14 +20,17 @@ package com.neoutils.neoregex.feature.matcher
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.neoutils.neoregex.core.common.model.Inputs
+import com.neoutils.neoregex.core.common.model.Target
+import com.neoutils.neoregex.core.common.model.TextState
+import com.neoutils.neoregex.core.sharedui.component.FooterAction
 import com.neoutils.neoregex.core.sharedui.component.Performance
+import com.neoutils.neoregex.core.sharedui.model.History
 import com.neoutils.neoregex.core.sharedui.model.Match
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
 import com.neoutils.neoregex.feature.matcher.extension.toTextFieldValue
 import com.neoutils.neoregex.feature.matcher.manager.HistoryManager
-import com.neoutils.neoregex.feature.matcher.model.Target
 import com.neoutils.neoregex.feature.matcher.model.Targeted
-import com.neoutils.neoregex.feature.matcher.model.TextState
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
@@ -100,20 +103,20 @@ class MatcherViewModel : ScreenModel {
     ) { target, text, regex ->
         when (target) {
             Target.TEXT -> {
-                MatcherUiState.History(
+                History(
                     canUndo = text.canUndo,
                     canRedo = text.canRedo
                 )
             }
 
             Target.REGEX -> {
-                MatcherUiState.History(
+                History(
                     canUndo = regex.canUndo,
                     canRedo = regex.canRedo
                 )
             }
 
-            null -> MatcherUiState.History()
+            null -> History()
         }
     }
 
@@ -122,7 +125,7 @@ class MatcherViewModel : ScreenModel {
         inputs[Target.TEXT],
         inputs[Target.REGEX],
     ) { target, text, regex ->
-        MatcherUiState.Inputs(
+        Inputs(
             target = target,
             text = text.toTextFieldValue(),
             regex = regex.toTextFieldValue()
@@ -164,14 +167,33 @@ class MatcherViewModel : ScreenModel {
         }.launchIn(screenModelScope)
     }
 
-    fun onAction(action: MatcherAction) {
-
+    fun onAction(action: FooterAction) {
         when (action) {
-            is MatcherAction.Input.UpdateRegex -> {
-                onChange(Target.REGEX, action.textState)
+            is FooterAction.History.Redo -> {
+                onRedo(
+                    target = action.textState
+                        ?: target.value
+                        ?: return
+                )
             }
 
-            is MatcherAction.Input.UpdateText -> {
+            is FooterAction.History.Undo -> {
+                onUndo(
+                    target = action.textState
+                        ?: target.value
+                        ?: return
+                )
+            }
+
+            is FooterAction.UpdateRegex -> {
+                onChange(Target.REGEX, action.textState)
+            }
+        }
+    }
+
+    fun onAction(action: MatcherAction) {
+        when (action) {
+            is MatcherAction.UpdateText -> {
                 onChange(Target.TEXT, action.textState)
             }
 

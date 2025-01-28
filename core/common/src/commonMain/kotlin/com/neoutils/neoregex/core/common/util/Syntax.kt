@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2025 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.feature.matcher.model
+package com.neoutils.neoregex.core.common.util
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import com.neoutils.highlight.compose.extension.spanStyle
 import com.neoutils.highlight.core.Highlight
-import com.neoutils.neoregex.core.common.platform.Platform
-import com.neoutils.neoregex.core.common.platform.platform
-import com.neoutils.xregex.Flavor
-import com.neoutils.xregex.extension.isSupported
 import com.neoutils.xregex.extension.xRegex
 
 interface Syntax {

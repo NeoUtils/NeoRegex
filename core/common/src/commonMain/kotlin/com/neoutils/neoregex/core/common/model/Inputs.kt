@@ -1,10 +1,7 @@
-import extension.config
-import extension.module
-
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2025 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,26 +16,12 @@ import extension.module
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
-}
+package com.neoutils.neoregex.core.common.model
 
-group = config.module(name = "core")
+import androidx.compose.ui.text.input.TextFieldValue
 
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-
-            // modules
-            implementation(projects.core.designSystem)
-            implementation(projects.core.common)
-            implementation(projects.core.resources)
-            implementation(projects.core.datasource)
-            implementation(projects.core.dispatcher)
-
-            // NeoUtils
-            implementation(libs.highlight.compose)
-        }
-    }
-}
-
+data class Inputs(
+    val target: Target? = null,
+    val text: TextFieldValue = TextFieldValue(),
+    val regex: TextFieldValue = TextFieldValue(),
+)

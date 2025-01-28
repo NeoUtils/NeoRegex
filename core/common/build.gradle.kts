@@ -29,6 +29,12 @@ group = config.module(name = "core")
 kotlin {
     sourceSets {
 
+        commonMain.dependencies {
+
+            // NeoUtils
+            implementation(libs.highlight.compose)
+        }
+
         webTest.dependencies {
 
             // junit

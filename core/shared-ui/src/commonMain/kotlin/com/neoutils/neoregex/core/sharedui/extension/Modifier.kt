@@ -20,11 +20,17 @@ package com.neoutils.neoregex.core.sharedui.extension
 
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Stable
 fun Modifier.surface(
@@ -49,4 +55,31 @@ fun Modifier.surface(
             shape = shape
         )
         .clip(shape)
+}
+
+fun Modifier.onLongHold(
+    delayMillis: Long = 10L,
+    action: () -> Unit
+) = composed {
+
+    val scope = rememberCoroutineScope()
+
+    pointerInput(Unit) {
+
+        var job: Job? = null
+
+        detectPressEvent(
+            onRelease = {
+                job?.cancel()
+            },
+            onLongPress = {
+                job = scope.launch {
+                    while (true) {
+                        action()
+                        delay(delayMillis)
+                    }
+                }
+            },
+        )
+    }
 }

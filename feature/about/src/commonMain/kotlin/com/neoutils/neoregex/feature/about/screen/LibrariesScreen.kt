@@ -20,7 +20,9 @@
 
 package com.neoutils.neoregex.feature.about.screen
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -45,7 +47,9 @@ class LibrariesScreen : Screen {
 
         LibrariesContainer(
             libraries = libraries,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .background(colorScheme.background)
+                .fillMaxSize(),
             onLibraryClick = { library ->
                 library.scm?.url?.let {
                     uriHandler.openUri(it)

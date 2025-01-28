@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.feature.matcher.model
+package com.neoutils.neoregex.core.common.model
 
 import androidx.compose.ui.text.TextRange
 

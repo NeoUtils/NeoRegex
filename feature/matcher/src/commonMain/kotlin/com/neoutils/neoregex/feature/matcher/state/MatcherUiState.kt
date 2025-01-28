@@ -18,10 +18,10 @@
 
 package com.neoutils.neoregex.feature.matcher.state
 
-import androidx.compose.ui.text.input.TextFieldValue
+import com.neoutils.neoregex.core.common.model.Inputs
 import com.neoutils.neoregex.core.sharedui.component.Performance
+import com.neoutils.neoregex.core.sharedui.model.History
 import com.neoutils.neoregex.core.sharedui.model.Match
-import com.neoutils.neoregex.feature.matcher.model.Target
 
 data class MatcherUiState(
     val inputs: Inputs = Inputs(),
@@ -29,17 +29,6 @@ data class MatcherUiState(
     val result: Result = Result.Success(),
     val performance: Performance = Performance()
 ) {
-
-    data class Inputs(
-        val target: Target? = null,
-        val text: TextFieldValue = TextFieldValue(),
-        val regex: TextFieldValue = TextFieldValue(),
-    )
-
-    data class History(
-        val canUndo: Boolean = false,
-        val canRedo: Boolean = false
-    )
 
     sealed class Result {
         data class Success(

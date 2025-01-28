@@ -18,8 +18,8 @@
 
 package com.neoutils.neoregex.feature.matcher.action
 
-import com.neoutils.neoregex.feature.matcher.model.Target
-import com.neoutils.neoregex.feature.matcher.model.TextState
+import com.neoutils.neoregex.core.common.model.Target
+import com.neoutils.neoregex.core.common.model.TextState
 
 sealed class MatcherAction {
 
@@ -29,18 +29,9 @@ sealed class MatcherAction {
         val target: Target
     ) : MatcherAction()
 
-    sealed class Input : MatcherAction() {
-
-        abstract val textState: TextState
-
-        data class UpdateText(
-            override val textState: TextState
-        ) : Input()
-
-        data class UpdateRegex(
-            override val textState: TextState
-        ) : Input()
-    }
+    data class UpdateText(
+        val textState: TextState
+    ) : MatcherAction()
 
     sealed class History : MatcherAction() {
 
