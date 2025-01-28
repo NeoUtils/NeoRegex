@@ -38,62 +38,55 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import kotlinx.coroutines.launch
 
+
+@Composable
+fun NeoTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    endIcon: @Composable (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
+    textStyle: TextStyle = TextStyle(),
+    singleLine: Boolean = false,
+    contentPadding: PaddingValues = PaddingValues(dimensions.default),
+    hint: String = ""
+) {
+    var textFieldValue by remember { mutableStateOf(TextFieldValue(text = value)) }
+
+    NeoTextField(
+        value = textFieldValue.copy(
+            text = value
+        ),
+        onValueChange = {
+            textFieldValue = it
+            onValueChange(it.text)
+        },
+        endIcon = endIcon,
+        modifier = modifier,
+        textStyle = textStyle,
+        singleLine = singleLine,
+        contentPadding = contentPadding,
+        hint = hint
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NeoTextField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
+    endIcon: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(),
     singleLine: Boolean = false,
     contentPadding: PaddingValues = PaddingValues(dimensions.default),
-    hint: String = "",
-    error: String = ""
+    hint: String = ""
 ) {
 
-    val contentColor = LocalContentColor.current
-
     val mergedTextStyle = typography.bodyLarge.copy(
-        color = contentColor
+        color = LocalContentColor.current
     ).merge(textStyle)
 
     var focused by remember { mutableStateOf(false) }
-
-    val errorUi = @Composable {
-        val colorScheme = colorScheme
-
-        val tooltipState = rememberTooltipState(isPersistent = true)
-        val scope = rememberCoroutineScope()
-
-        TooltipBox(
-            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
-            tooltip = {
-                PlainTooltip(
-                    containerColor = colorScheme.secondaryContainer,
-                    contentColor = colorScheme.onSecondaryContainer,
-                ) {
-                    Text(error)
-                }
-            },
-            state = tooltipState,
-            focusable = false,
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Info,
-                contentDescription = error,
-                tint = colorScheme.error,
-                modifier = Modifier.clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = {
-                        scope.launch {
-                            tooltipState.show()
-                        }
-                    }
-                )
-            )
-        }
-    }
 
     BasicTextField(
         value = value,
@@ -102,7 +95,7 @@ fun NeoTextField(
         },
         singleLine = singleLine,
         textStyle = mergedTextStyle,
-        cursorBrush = SolidColor(contentColor),
+        cursorBrush = SolidColor(mergedTextStyle.color),
         modifier = modifier.onFocusChanged {
             focused = it.isFocused
         },
@@ -129,12 +122,49 @@ fun NeoTextField(
                         maxLines = 1
                     )
                 },
-                trailingIcon = error.takeIf {
-                    it.isNotEmpty()
-                }?.let {
-                    errorUi
-                }
+                trailingIcon = endIcon
             )
         },
     )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ErrorTooltip(
+    error: String,
+    modifier: Modifier = Modifier
+) {
+    val tooltipState = rememberTooltipState(isPersistent = true)
+
+    TooltipBox(
+        modifier = modifier,
+        positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+        tooltip = {
+            PlainTooltip(
+                containerColor = colorScheme.secondaryContainer,
+                contentColor = colorScheme.onSecondaryContainer,
+            ) {
+                Text(error)
+            }
+        },
+        state = tooltipState,
+        focusable = false,
+    ) {
+        val scope = rememberCoroutineScope()
+
+        Icon(
+            imageVector = Icons.Rounded.Info,
+            contentDescription = error,
+            tint = colorScheme.error,
+            modifier = Modifier.clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = {
+                    scope.launch {
+                        tooltipState.show()
+                    }
+                }
+            )
+        )
+    }
 }

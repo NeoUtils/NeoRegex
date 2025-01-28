@@ -22,14 +22,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.HoverInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
-import androidx.compose.material3.LocalTextStyle
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.unit.dp
 import com.neoutils.neoregex.core.designsystem.theme.Blue500
 import com.neoutils.neoregex.core.designsystem.theme.Blue600
 import com.neoutils.neoregex.core.designsystem.theme.Purple500
@@ -56,7 +60,9 @@ enum class LinkHover {
 fun Link(
     text: String,
     onClick: () -> Unit = {},
+    endIcon: (@Composable () -> Unit)? = null,
     colors: LinkColor = LinkColor(),
+    enabledUnderline: Boolean = true,
     enabled: Boolean = true,
     style: TextStyle = typography.labelMedium,
     modifier: Modifier = Modifier
@@ -91,29 +97,41 @@ fun Link(
     }
 
     val mergedTextStyle = TextStyle(
-        textDecoration = when (hover) {
-            LinkHover.IDLE -> null
-            LinkHover.HOVER -> TextDecoration.Underline
+        textDecoration = TextDecoration.Underline.takeIf {
+            enabledUnderline && hover == LinkHover.HOVER
         }
     ).merge(style)
 
-    return Text(
-        text = text,
-        modifier = modifier.clickable(
-            onClick = onClick,
-            interactionSource = interactionSource,
-            indication = null,
-            enabled = enabled
-        ),
-        style = mergedTextStyle.copy(
-            color = remember(press, hover, colors) {
-                when {
-                    press == LinkPress.PRESS -> colors.press
-                    hover == LinkHover.HOVER -> colors.hover
-                    press == LinkPress.PRESSED -> colors.pressed
-                    else -> colors.idle
-                }
-            },
-        )
-    )
+    val color = remember(press, hover, colors) {
+        when {
+            press == LinkPress.PRESS -> colors.press
+            hover == LinkHover.HOVER -> colors.hover
+            press == LinkPress.PRESSED -> colors.pressed
+            else -> colors.idle
+        }
+    }
+
+    CompositionLocalProvider(
+        LocalContentColor provides color
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            modifier = modifier.clickable(
+                onClick = onClick,
+                interactionSource = interactionSource,
+                indication = null,
+                enabled = enabled
+            )
+        ) {
+            Text(
+                text = text,
+                style = mergedTextStyle.copy(
+                    color = LocalContentColor.current,
+                )
+            )
+
+            endIcon?.invoke()
+        }
+    }
 }

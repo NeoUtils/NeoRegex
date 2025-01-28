@@ -70,35 +70,26 @@ actual fun Navigation(
 
     val coroutine = rememberCoroutineScope()
 
-    NavigateButton(
-        text = stringResource(Res.string.screen_matcher),
-        selected = screen == Navigation.Screen.Matcher,
-        onNavigate = {
-            coroutine.launch {
-                navigation.emit(
-                    Navigation.Event.Navigate(
-                        screen = Navigation.Screen.Matcher
+    listOf(
+        Navigation.Screen.Matcher,
+        Navigation.Screen.Validator,
+        Navigation.Screen.About,
+    ).forEach {
+        NavigateButton(
+            text = stringResource(it.title),
+            selected = screen == it,
+            onNavigate = {
+                coroutine.launch {
+                    navigation.emit(
+                        Navigation.Event.Navigate(
+                            screen = it
+                        )
                     )
-                )
-            }
-        },
-        textStyle = mergedTextStyle
-    )
-
-    NavigateButton(
-        text = stringResource(Res.string.screen_about),
-        textStyle = mergedTextStyle,
-        onNavigate = {
-            coroutine.launch {
-                navigation.emit(
-                    Navigation.Event.Navigate(
-                        screen = Navigation.Screen.About
-                    )
-                )
-            }
-        },
-        selected = screen == Navigation.Screen.About
-    )
+                }
+            },
+            textStyle = mergedTextStyle
+        )
+    }
 
     AnimatedVisibility(
         visible = screen == Navigation.Screen.Libraries

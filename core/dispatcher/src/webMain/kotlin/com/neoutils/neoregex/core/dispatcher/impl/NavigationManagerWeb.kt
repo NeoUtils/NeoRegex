@@ -66,6 +66,7 @@ internal class NavigationManagerWeb : NavigationManager {
             Navigation.Screen.About -> true
             Navigation.Screen.Libraries -> true
             Navigation.Screen.Matcher -> false
+            Navigation.Screen.Validator -> false
         }
 
         _current.value = screen
@@ -100,6 +101,16 @@ internal class NavigationManagerWeb : NavigationManager {
                 stack = 1
             }
 
+            Navigation.Screen.Validator -> {
+                window.history.pushState(
+                    data = null,
+                    title = "",
+                    url = "?screen=validator"
+                )
+
+                stack = 1
+            }
+
             Navigation.Screen.Libraries -> {
                 window.history.pushState(
                     data = null,
@@ -108,6 +119,7 @@ internal class NavigationManagerWeb : NavigationManager {
                 )
                 stack = 2
             }
+
         }
     }
 
@@ -137,6 +149,14 @@ internal class NavigationManagerWeb : NavigationManager {
                 _event.send(
                     Navigation.Event.Navigate(
                         Navigation.Screen.Matcher
+                    )
+                )
+            }
+
+            "validator" -> {
+                _event.send(
+                    Navigation.Event.Navigate(
+                        Navigation.Screen.Validator
                     )
                 )
             }

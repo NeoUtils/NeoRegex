@@ -38,6 +38,7 @@ import com.neoutils.neoregex.core.common.model.Target
 import com.neoutils.neoregex.core.common.model.TextState
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.common.util.Syntax
+import com.neoutils.neoregex.core.designsystem.textfield.ErrorTooltip
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
@@ -92,7 +93,13 @@ fun Footer(
                     )
                 )
             },
-            singleLine = true,
+            endIcon = error.takeIf {
+                it.isNotEmpty()
+            }?.let {
+                {
+                    ErrorTooltip(error = it)
+                }
+            },
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .weight(weight = 1f)
@@ -116,8 +123,8 @@ fun Footer(
                         else -> false
                     }
                 },
+            singleLine = true,
             hint = stringResource(Res.string.matcher_footer_insert_regex_hint),
-            error = error
         )
 
         History(
