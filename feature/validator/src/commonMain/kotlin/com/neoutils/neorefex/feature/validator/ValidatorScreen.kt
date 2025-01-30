@@ -33,16 +33,20 @@ import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import com.neoutils.neorefex.feature.validator.action.ValidatorAction
 import com.neoutils.neoregex.core.common.model.Inputs
 import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.component.LinkColor
@@ -54,6 +58,24 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
+data class ValidatorUiState(
+    val validations: List<Validation>,
+    val pattern: TextFieldValue,
+    val expanded: Uuid? = null,
+) {
+    data class Validation(
+        val test: TestCase,
+        val result: Result = Result.IDLE,
+    ) {
+        enum class Result {
+            SUCCESS,
+            ERROR,
+            IDLE
+        }
+    }
+}
+
+@OptIn(ExperimentalUuidApi::class)
 class ValidatorScreen : Screen {
 
     @Composable
@@ -63,8 +85,9 @@ class ValidatorScreen : Screen {
             .fillMaxSize()
     ) {
 
-        val tests = remember { mutableStateListOf(TestCase()) }
-        val selected = remember { mutableStateOf<Uuid?>(tests.first().uuid) }
+        val viewModel = rememberScreenModel { ValidatorViewModel() }
+
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         LazyColumn(
             modifier = Modifier
@@ -74,21 +97,36 @@ class ValidatorScreen : Screen {
             contentPadding = PaddingValues(16.dp)
         ) {
             itemsIndexed(
-                items = tests,
-                key = { _, test -> test.uuid }
-            ) { index, test ->
+                items = uiState.validations,
+                key = { _, validation -> validation.test.uuid }
+            ) { _, validation ->
+
+                val selected = validation.test.uuid == uiState.expanded
+
                 TestCase(
-                    test = test,
-                    onTestChange = {
-                        tests[index] = it
+                    test = validation.test,
+                    onTestChange = { newTestCase ->
+                        viewModel.onAction(
+                            ValidatorAction.UpdateTestCase(
+                                newTestCase
+                            )
+                        )
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    expanded = test.uuid == selected.value,
+                    expanded = selected,
                     onExpanded = {
-                        selected.value = test.uuid
+                        viewModel.onAction(
+                            ValidatorAction.ExpandedTestCase(
+                                validation.test.uuid
+                            )
+                        )
                     },
                     onDelete = {
-                        tests.removeAt(index)
+                        viewModel.onAction(
+                            ValidatorAction.RemoveTestCase(
+                                validation.test.uuid
+                            )
+                        )
                     },
                 )
             }
@@ -103,10 +141,7 @@ class ValidatorScreen : Screen {
                         colorScheme.outlineVariant
                     ),
                     onClick = {
-                        TestCase().also {
-                            tests.add(it)
-                            selected.value = it.uuid
-                        }
+                        viewModel.onAction(ValidatorAction.AddTestCase())
                     }
                 ) {
                     Text(
@@ -120,7 +155,8 @@ class ValidatorScreen : Screen {
         }
 
         Footer(
-            inputs = Inputs(),
+            pattern = uiState.pattern,
+            onAction = viewModel::onAction,
             history = History(),
         )
     }

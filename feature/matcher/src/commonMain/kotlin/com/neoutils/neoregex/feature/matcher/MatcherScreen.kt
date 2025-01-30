@@ -107,7 +107,7 @@ class MatcherScreen : Screen {
         }
 
         Footer(
-            inputs = uiState.inputs,
+            pattern = uiState.inputs.text,
             history = uiState.history,
             onAction = viewModel::onAction,
             error = remember(uiState.result) {

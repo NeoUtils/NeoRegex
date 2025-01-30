@@ -31,6 +31,7 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.text.input.TextFieldValue
 import com.neoutils.highlight.compose.remember.rememberTextFieldValue
 import com.neoutils.neoregex.core.common.extension.toTextState
 import com.neoutils.neoregex.core.common.model.Inputs
@@ -67,7 +68,7 @@ sealed class FooterAction {
 
 @Composable
 fun Footer(
-    inputs: Inputs,
+    pattern: TextFieldValue,
     history: History,
     onFocus: (FocusState) -> Unit = {},
     modifier: Modifier = Modifier,
@@ -85,7 +86,7 @@ fun Footer(
         NeoTextField(
             value = syntax
                 .highlight
-                .rememberTextFieldValue(inputs.regex),
+                .rememberTextFieldValue(pattern),
             onValueChange = {
                 onAction(
                     FooterAction.UpdateRegex(
