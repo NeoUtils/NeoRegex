@@ -16,28 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neorefex.feature.validator.action
+package com.neoutils.neorefex.feature.validator.state
 
+import androidx.compose.ui.text.input.TextFieldValue
 import com.neoutils.neorefex.feature.validator.model.TestCase
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-sealed class ValidatorAction {
-
-    data class UpdateTestCase(
-        val newTestCase: TestCase
-    ) : ValidatorAction()
-
-    data class ExpandedTestCase(
-        val uuid: Uuid
-    ) : ValidatorAction()
-
-    data class RemoveTestCase(
-        val uuid: Uuid
-    ) : ValidatorAction()
-
-    data class AddTestCase(
-        val newTestCase: TestCase = TestCase()
-    ) : ValidatorAction()
-}
+data class ValidatorUiState(
+    val testCases: List<TestCase>,
+    val pattern: TextFieldValue,
+    val expanded: Uuid? = null,
+)

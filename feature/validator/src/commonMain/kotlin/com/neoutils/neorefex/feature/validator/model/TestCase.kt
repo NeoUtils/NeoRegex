@@ -16,28 +16,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neorefex.feature.validator.action
+package com.neoutils.neorefex.feature.validator.model
 
-import com.neoutils.neorefex.feature.validator.model.TestCase
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-sealed class ValidatorAction {
+data class TestCase(
+    val title: String = "",
+    val text: String = "",
+    val case: Case = Case.MATCH_ANY,
+    val uuid: Uuid = Uuid.random(),
+    val result: Result = Result.IDLE
+) {
 
-    data class UpdateTestCase(
-        val newTestCase: TestCase
-    ) : ValidatorAction()
+    val mustValidate = text.isNotEmpty() && result == Result.IDLE
 
-    data class ExpandedTestCase(
-        val uuid: Uuid
-    ) : ValidatorAction()
+    enum class Case(val text: String) {
+        MATCH_ANY(text = "Match Any"),
+        MATCH_ALL(text = "Match All"),
+        MATCH_NONE(text = "Match None")
+    }
 
-    data class RemoveTestCase(
-        val uuid: Uuid
-    ) : ValidatorAction()
-
-    data class AddTestCase(
-        val newTestCase: TestCase = TestCase()
-    ) : ValidatorAction()
+    enum class Result {
+        IDLE,
+        RUNNING,
+        SUCCESS,
+        ERROR
+    }
 }

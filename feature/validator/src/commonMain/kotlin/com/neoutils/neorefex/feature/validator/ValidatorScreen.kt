@@ -19,6 +19,10 @@
 package com.neoutils.neorefex.feature.validator
 
 import androidx.compose.animation.*
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -38,8 +42,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -47,33 +51,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.neoutils.neorefex.feature.validator.action.ValidatorAction
-import com.neoutils.neoregex.core.common.model.Inputs
+import com.neoutils.neorefex.feature.validator.model.TestCase
 import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.component.LinkColor
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
+import com.neoutils.neoregex.core.designsystem.theme.Green
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.designsystem.theme.Red
 import com.neoutils.neoregex.core.sharedui.component.Footer
 import com.neoutils.neoregex.core.sharedui.model.History
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
-
-@OptIn(ExperimentalUuidApi::class)
-data class ValidatorUiState(
-    val validations: List<Validation>,
-    val pattern: TextFieldValue,
-    val expanded: Uuid? = null,
-) {
-    data class Validation(
-        val test: TestCase,
-        val result: Result = Result.IDLE,
-    ) {
-        enum class Result {
-            SUCCESS,
-            ERROR,
-            IDLE
-        }
-    }
-}
 
 @OptIn(ExperimentalUuidApi::class)
 class ValidatorScreen : Screen {
@@ -97,14 +84,14 @@ class ValidatorScreen : Screen {
             contentPadding = PaddingValues(16.dp)
         ) {
             itemsIndexed(
-                items = uiState.validations,
-                key = { _, validation -> validation.test.uuid }
-            ) { _, validation ->
+                items = uiState.testCases,
+                key = { _, testCase -> testCase.uuid }
+            ) { _, testCase ->
 
-                val selected = validation.test.uuid == uiState.expanded
+                val selected = testCase.uuid == uiState.expanded
 
                 TestCase(
-                    test = validation.test,
+                    test = testCase,
                     onTestChange = { newTestCase ->
                         viewModel.onAction(
                             ValidatorAction.UpdateTestCase(
@@ -117,14 +104,14 @@ class ValidatorScreen : Screen {
                     onExpanded = {
                         viewModel.onAction(
                             ValidatorAction.ExpandedTestCase(
-                                validation.test.uuid
+                                testCase.uuid
                             )
                         )
                     },
                     onDelete = {
                         viewModel.onAction(
                             ValidatorAction.RemoveTestCase(
-                                validation.test.uuid
+                                testCase.uuid
                             )
                         )
                     },
@@ -162,24 +149,12 @@ class ValidatorScreen : Screen {
     }
 }
 
-@OptIn(ExperimentalUuidApi::class)
-data class TestCase(
-    val title: String? = null,
-    val text: String = "",
-    val case: Case = Case.MATCH_ANY,
-    val uuid: Uuid = Uuid.random()
-) {
-    enum class Case(val text: String) {
-        MATCH_ANY(text = "Match Any"),
-        MATCH_ALL(text = "Match All"),
-        MATCH_NONE(text = "Match None")
-    }
-}
-
-
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalUuidApi::class)
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalUuidApi::class
+)
 @Composable
-fun TestCase(
+private fun TestCase(
     test: TestCase,
     onTestChange: (TestCase) -> Unit,
     onExpanded: () -> Unit,
@@ -190,6 +165,26 @@ fun TestCase(
     contentPadding: PaddingValues = PaddingValues(dimensions.default),
     hint: String = "Enter input"
 ) {
+    val color by animateColorAsState(
+        when (test.result) {
+            TestCase.Result.IDLE -> colorScheme.outlineVariant
+
+            TestCase.Result.RUNNING -> {
+                rememberInfiniteTransition().animateColor(
+                    initialValue = colorScheme.outlineVariant,
+                    targetValue = Color.White,
+                    animationSpec = infiniteRepeatable(
+                        animation = tween(durationMillis = 1000),
+                        repeatMode = RepeatMode.Reverse
+                    )
+                ).value
+            }
+
+            TestCase.Result.SUCCESS -> Green
+            TestCase.Result.ERROR -> Red
+        }
+    )
+
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(4.dp),
@@ -197,7 +192,7 @@ fun TestCase(
         contentColor = colorScheme.onSurface,
         border = BorderStroke(
             width = 1.dp,
-            colorScheme.outlineVariant
+            color = color
         ),
         onClick = onExpanded,
         enabled = !expanded
@@ -212,11 +207,11 @@ fun TestCase(
                         .fillMaxWidth(),
                 ) {
                     NeoTextField(
-                        value = test.title.orEmpty(),
+                        value = test.title,
                         onValueChange = {
                             onTestChange(
                                 test.copy(
-                                    title = it.takeIf(String::isNotEmpty)
+                                    title = it
                                 )
                             )
                         },
@@ -267,7 +262,11 @@ fun TestCase(
                     )
                 } else {
 
-                    val title = test.title ?: test.text.ifEmpty { "Untitled" }
+                    val title = test.title.ifEmpty {
+                        test.text.ifEmpty {
+                            "Untitled"
+                        }
+                    }
 
                     TextFieldDefaults.DecorationBox(
                         value = title,
@@ -293,9 +292,8 @@ fun TestCase(
     }
 }
 
-
 @Composable
-fun Options(
+private fun Options(
     case: TestCase.Case,
     onCaseChange: (TestCase.Case) -> Unit,
     onDelete: () -> Unit,
@@ -328,7 +326,7 @@ fun Options(
 }
 
 @Composable
-fun MatchDropDown(
+private fun MatchDropDown(
     case: TestCase.Case,
     onChange: (TestCase.Case) -> Unit
 ) {
