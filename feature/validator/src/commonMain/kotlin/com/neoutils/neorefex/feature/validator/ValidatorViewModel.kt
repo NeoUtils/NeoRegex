@@ -24,6 +24,7 @@ import cafe.adriel.voyager.core.model.screenModelScope
 import com.neoutils.neorefex.feature.validator.action.ValidatorAction
 import com.neoutils.neorefex.feature.validator.model.TestCase
 import com.neoutils.neorefex.feature.validator.model.TestCaseQueue
+import com.neoutils.neorefex.feature.validator.model.TestPattern
 import com.neoutils.neorefex.feature.validator.state.ValidatorUiState
 import com.neoutils.neoregex.core.sharedui.component.FooterAction
 import com.neoutils.neoregex.core.sharedui.extension.toTextFieldValue
@@ -47,6 +48,15 @@ class ValidatorViewModel : ScreenModel {
     private var validationJob = mutableMapOf<Uuid, Job>()
     private var addToQueueJob = mutableMapOf<Uuid, Job>()
 
+    private val testPattern = pattern
+        .distinctUntilChangedBy { it.text }
+        .map { TestPattern(it.text) }
+        .stateIn(
+            scope = screenModelScope,
+            started = SharingStarted.WhileSubscribed(),
+            initialValue = TestPattern()
+        )
+
     val uiState = combine(
         pattern,
         testCases,
@@ -69,6 +79,47 @@ class ValidatorViewModel : ScreenModel {
 
     init {
         setupQueueExecution()
+        setupPatternListener()
+    }
+
+    private fun setupPatternListener() = screenModelScope.launch {
+        testPattern.collectLatest { testPattern ->
+
+            // invalidate
+            testCases.update { testCases ->
+                testCases.map {
+                    it.copy(
+                        result = TestCase.Result.IDLE
+                    )
+                }
+            }
+
+            // clear queue
+
+            testCaseQueue.clear()
+
+            // stop validation
+
+            validationJob.forEach { it.value.cancel() }
+            validationJob.clear()
+
+            // add to queue
+            addToQueueJob[Uuid.NIL]?.cancel()
+
+            if (testPattern.isValid) {
+                addToQueueJob[Uuid.NIL] = launch {
+                    delay(DELAY_TYPING)
+                    testCaseQueue.enqueue(
+                        testCases.value.filter {
+                            it.mustValidate
+                        }
+                    )
+                }
+
+                addToQueueJob[Uuid.NIL]?.join()
+                addToQueueJob.remove(Uuid.NIL)
+            }
+        }
     }
 
     private fun setupQueueExecution() = screenModelScope.launch {
@@ -83,11 +134,9 @@ class ValidatorViewModel : ScreenModel {
                         )
                     }
 
-                    delay(timeMillis = 5000)
-
                     testCases.replace(testCase.uuid) {
                         it.copy(
-                            result = TestCase.Result.SUCCESS
+                            result = validate(testCase)
                         )
                     }
                 }
@@ -103,6 +152,37 @@ class ValidatorViewModel : ScreenModel {
         }
     }
 
+    private fun validate(
+        testCase: TestCase,
+        regex: Regex = checkNotNull(testPattern.value.regex)
+    ): TestCase.Result {
+        return when (testCase.case) {
+            TestCase.Case.MATCH_ANY -> {
+                if (regex.find(testCase.text) != null) {
+                    TestCase.Result.SUCCESS
+                } else {
+                    TestCase.Result.ERROR
+                }
+            }
+
+            TestCase.Case.MATCH_ALL -> {
+                if (regex.matches(testCase.text)) {
+                    TestCase.Result.SUCCESS
+                } else {
+                    TestCase.Result.ERROR
+                }
+            }
+
+            TestCase.Case.MATCH_NONE -> {
+                if (regex.find(testCase.text) == null) {
+                    TestCase.Result.SUCCESS
+                } else {
+                    TestCase.Result.ERROR
+                }
+            }
+        }
+    }
+
     fun onAction(action: ValidatorAction) {
         when (action) {
             is ValidatorAction.ExpandedTestCase -> {
@@ -114,7 +194,7 @@ class ValidatorViewModel : ScreenModel {
             }
 
             is ValidatorAction.UpdateTestCase -> {
-                updateTestCase(action)
+                updateTestCase(action.newTestCase)
             }
 
             is ValidatorAction.AddTestCase -> {
@@ -125,37 +205,38 @@ class ValidatorViewModel : ScreenModel {
     }
 
     private fun updateTestCase(
-        action: ValidatorAction.UpdateTestCase
+        newTestCase: TestCase,
+        testPattern: TestPattern = this.testPattern.value
     ) {
         val oldTestCase = testCases.value.find {
-            it.uuid == action.newTestCase.uuid
+            it.uuid == newTestCase.uuid
         }
 
         val mustValidate = when {
             oldTestCase == null -> true
-            oldTestCase.text != action.newTestCase.text -> true
-            oldTestCase.case != action.newTestCase.case -> true
+            oldTestCase.text != newTestCase.text -> true
+            oldTestCase.case != newTestCase.case -> true
             else -> false
         }
 
-        val newTestCase = action.newTestCase.copy(
+        val testCase = newTestCase.copy(
             result = if (mustValidate) {
                 TestCase.Result.IDLE
             } else {
-                action.newTestCase.result
+                newTestCase.result
             }
         )
 
         testCases.update { testCases ->
             testCases.map { oldTestCase ->
-                newTestCase.takeIf {
+                testCase.takeIf {
                     it.uuid == oldTestCase.uuid
                 } ?: oldTestCase
             }
         }
 
-        if (mustValidate) {
-            addToQueue(newTestCase)
+        if (mustValidate && testPattern.isValid) {
+            addToQueue(testCase)
         }
     }
 
@@ -211,43 +292,7 @@ class ValidatorViewModel : ScreenModel {
             }
 
             is FooterAction.UpdateRegex -> {
-                screenModelScope.launch {
-
-                    pattern.value = action.textState.toTextFieldValue()
-
-                    // invalidate
-
-                    testCases.update { testCases ->
-                        testCases.map {
-                            it.copy(
-                                result = TestCase.Result.IDLE
-                            )
-                        }
-                    }
-
-                    // clear queue
-
-                    testCaseQueue.clear()
-
-                    // stop validation
-
-                    validationJob.forEach { it.value.cancel() }
-                    validationJob.clear()
-
-                    // add to queue
-
-                    addToQueueJob[Uuid.NIL] = launch {
-                        delay(DELAY_TYPING)
-                        testCaseQueue.enqueue(
-                            testCases.value.filter {
-                                it.mustValidate
-                            }
-                        )
-                    }
-
-                    addToQueueJob[Uuid.NIL]?.join()
-                    addToQueueJob.remove(Uuid.NIL)
-                }
+                pattern.value = action.textState.toTextFieldValue()
             }
         }
     }
