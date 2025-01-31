@@ -20,6 +20,7 @@ package com.neoutils.neorefex.feature.validator.state
 
 import androidx.compose.ui.text.input.TextFieldValue
 import com.neoutils.neorefex.feature.validator.model.TestCase
+import com.neoutils.neoregex.core.sharedui.model.History
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -27,5 +28,6 @@ import kotlin.uuid.Uuid
 data class ValidatorUiState(
     val testCases: List<TestCase>,
     val pattern: TextFieldValue,
+    val history: History,
     val expanded: Uuid? = null,
 )

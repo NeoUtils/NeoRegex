@@ -143,8 +143,8 @@ class ValidatorScreen : Screen {
 
         Footer(
             pattern = uiState.pattern,
+            history = uiState.history,
             onAction = viewModel::onAction,
-            history = History(),
         )
     }
 }

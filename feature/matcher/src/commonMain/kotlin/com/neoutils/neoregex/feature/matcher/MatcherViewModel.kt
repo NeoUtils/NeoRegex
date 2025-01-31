@@ -29,7 +29,7 @@ import com.neoutils.neoregex.core.sharedui.model.History
 import com.neoutils.neoregex.core.sharedui.model.Match
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
 import com.neoutils.neoregex.core.sharedui.extension.toTextFieldValue
-import com.neoutils.neoregex.feature.matcher.manager.HistoryManager
+import com.neoutils.neoregex.core.common.manager.HistoryManager
 import com.neoutils.neoregex.feature.matcher.model.Targeted
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
 import kotlinx.coroutines.FlowPreview

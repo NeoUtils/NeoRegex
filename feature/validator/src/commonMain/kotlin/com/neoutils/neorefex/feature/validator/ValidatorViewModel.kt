@@ -26,8 +26,12 @@ import com.neoutils.neorefex.feature.validator.model.TestCase
 import com.neoutils.neorefex.feature.validator.model.TestCaseQueue
 import com.neoutils.neorefex.feature.validator.model.TestPattern
 import com.neoutils.neorefex.feature.validator.state.ValidatorUiState
+import com.neoutils.neoregex.core.common.extension.toTextState
+import com.neoutils.neoregex.core.common.manager.HistoryManager
+import com.neoutils.neoregex.core.common.model.Target
 import com.neoutils.neoregex.core.sharedui.component.FooterAction
 import com.neoutils.neoregex.core.sharedui.extension.toTextFieldValue
+import com.neoutils.neoregex.core.sharedui.model.History
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -44,6 +48,7 @@ class ValidatorViewModel : ScreenModel {
     private val expanded = MutableStateFlow<Uuid?>(testCases.value.first().uuid)
 
     private val testCaseQueue = TestCaseQueue()
+    private val patternHistory = HistoryManager()
 
     private var validationJob = mutableMapOf<Uuid, Job>()
     private var addToQueueJob = mutableMapOf<Uuid, Job>()
@@ -59,11 +64,16 @@ class ValidatorViewModel : ScreenModel {
 
     val uiState = combine(
         pattern,
+        patternHistory.state,
         testCases,
-        expanded
-    ) { pattern, testCases, selected ->
+        expanded,
+    ) { pattern, history, testCases, selected ->
         ValidatorUiState(
             pattern = pattern,
+            history = History(
+                canRedo = history.canRedo,
+                canUndo = history.canUndo
+            ),
             testCases = testCases,
             expanded = selected
         )
@@ -73,13 +83,18 @@ class ValidatorViewModel : ScreenModel {
         initialValue = ValidatorUiState(
             pattern = pattern.value,
             testCases = testCases.value,
-            expanded = expanded.value
+            expanded = expanded.value,
+            history = History()
         )
     )
 
     init {
         setupQueueExecution()
         setupPatternListener()
+
+        pattern.onEach {
+            patternHistory.push(it.toTextState())
+        }.launchIn(screenModelScope)
     }
 
     private fun setupPatternListener() = screenModelScope.launch {
@@ -284,14 +299,17 @@ class ValidatorViewModel : ScreenModel {
     fun onAction(action: FooterAction) {
         when (action) {
             is FooterAction.History.Redo -> {
-                // TODO: implement later
+                val textState = patternHistory.redo() ?: return
+                pattern.value = textState.toTextFieldValue()
             }
 
             is FooterAction.History.Undo -> {
-                // TODO: implement later
+                val textState = patternHistory.undo() ?: return
+                pattern.value = textState.toTextFieldValue()
             }
 
             is FooterAction.UpdateRegex -> {
+                patternHistory.unlock()
                 pattern.value = action.textState.toTextFieldValue()
             }
         }
