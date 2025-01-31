@@ -60,6 +60,11 @@ import org.koin.compose.koinInject
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 
+data class Performance(
+    val duration: Duration = Duration.ZERO,
+    val matches: Int = 0
+)
+
 @Composable
 fun BoxWithConstraintsScope.Performance(
     performance: Performance,
@@ -238,8 +243,3 @@ private fun BoxScope.AlignmentTarget(
             }
     )
 }
-
-data class Performance(
-    val duration: Duration = Duration.ZERO,
-    val matches: Int = 0
-)

@@ -31,7 +31,10 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,7 +42,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,21 +51,16 @@ import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.model.Preferences
-import com.neoutils.neoregex.core.designsystem.component.Link
-import com.neoutils.neoregex.core.designsystem.component.LinkColor
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.dispatcher.NavigationManager
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
-import com.neoutils.neoregex.core.resources.*
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.app_name
+import com.neoutils.neoregex.core.resources.web_warning_text
+import com.neoutils.neoregex.core.sharedui.component.Navigation
 import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import com.neoutils.neoregex.core.sharedui.extension.surface
 import kotlinx.browser.document
-import kotlinx.browser.window
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -125,7 +122,8 @@ private fun Header(
     ),
     title = {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(18.dp)
         ) {
             Text(
                 text = stringResource(Res.string.app_name),
@@ -133,8 +131,6 @@ private fun Header(
                     fontFamily = null,
                 ),
             )
-
-            Spacer(Modifier.width(18.dp))
 
             Navigation()
         }
@@ -155,104 +151,6 @@ private fun Header(
         titleContentColor = colorScheme.onSurface
     )
 )
-
-@Composable
-private fun Navigation(
-    navigation: NavigationManager = koinInject(),
-) {
-    Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        val screen by navigation.screen.collectAsStateWithLifecycle()
-
-        LaunchedEffect(Unit) {
-            navigation.screen.collectLatest {
-                window.document.title = getString(
-                    Res.string.app_title,
-                    getString(screen.title)
-                )
-            }
-        }
-
-        val coroutine = rememberCoroutineScope()
-
-        NavigateButton(
-            text = stringResource(Res.string.screen_matcher),
-            onNavigate = {
-                coroutine.launch {
-                    navigation.emit(
-                        Navigation.Event.Navigate(
-                            screen = Navigation.Screen.Matcher
-                        )
-                    )
-                }
-            },
-            selected = screen == Navigation.Screen.Matcher
-        )
-
-        NavigateButton(
-            text = stringResource(Res.string.screen_about),
-            onNavigate = {
-                coroutine.launch {
-                    navigation.emit(
-                        Navigation.Event.Navigate(
-                            screen = Navigation.Screen.About
-                        )
-                    )
-                }
-            },
-            selected = screen == Navigation.Screen.About
-        )
-
-        AnimatedVisibility(
-            visible = screen == Navigation.Screen.Libraries
-        ) {
-            Link(
-                text = stringResource(Res.string.screen_libraries),
-                style = typography.labelMedium.copy(
-                    textDecoration = TextDecoration.None,
-                    fontWeight = FontWeight.Bold
-                ),
-                colors = LinkColor(
-                    idle = colorScheme.onSurface,
-                    hover = colorScheme.onSurface.copy(alpha = 0.8f),
-                    press = colorScheme.onSurface.copy(alpha = 0.6f),
-                    pressed = colorScheme.onSurface
-                ),
-                enabled = false
-            )
-        }
-    }
-}
-
-@Composable
-private fun NavigateButton(
-    text: String,
-    selected: Boolean,
-    onNavigate: () -> Unit
-) {
-    val colors = LinkColor(
-        idle = colorScheme.onSurface,
-        hover = colorScheme.onSurface.copy(alpha = 0.8f),
-        press = colorScheme.onSurface.copy(alpha = 0.6f),
-        pressed = colorScheme.onSurface
-    )
-
-    Link(
-        text = text,
-        onClick = onNavigate,
-        style = typography.labelMedium.copy(
-            textDecoration = TextDecoration.None,
-            fontWeight = if (selected) {
-                FontWeight.Bold
-            } else {
-                FontWeight.Normal
-            }
-        ),
-        enabled = !selected,
-        colors = colors,
-    )
-}
 
 @Composable
 fun TopLabel(
