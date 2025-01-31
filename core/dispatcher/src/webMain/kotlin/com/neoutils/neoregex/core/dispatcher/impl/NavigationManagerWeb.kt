@@ -28,7 +28,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import org.w3c.dom.History
 
 internal class NavigationManagerWeb : NavigationManager {
 
@@ -42,12 +41,20 @@ internal class NavigationManagerWeb : NavigationManager {
     override val event = _event.receiveAsFlow()
     override val canPopBack = _canPop.asStateFlow()
 
+    private var stack = 0
+
     init {
         window.onpopstate = { _ ->
             coroutines.launch {
                 navigate(window.location.search)
             }
         }
+
+        window.history.replaceState(
+            data = null,
+            title = "",
+            url = "?screen=matcher"
+        )
 
         coroutines.launch {
             navigate(window.location.search)
@@ -68,47 +75,44 @@ internal class NavigationManagerWeb : NavigationManager {
         _event.send(event)
 
         if (event is Navigation.Event.Navigate) {
-            when (event.screen) {
-                Navigation.Screen.About -> {
-                    if (screen.value is Navigation.Screen.Libraries) {
-                        window.history.back()
-                        return
-                    }
+            registerHistory(event.screen)
+        }
+    }
 
-                    window.history.pushState(
-                        data = null,
-                        title = "",
-                        url = "?screen=about"
-                    )
+    private fun registerHistory(screen: Navigation.Screen) {
+        when (screen) {
+            Navigation.Screen.Matcher -> {
+                window.history.go(delta = -stack)
+                stack = 0
+            }
+
+            Navigation.Screen.About -> {
+                if (screen is Navigation.Screen.Libraries) {
+                    window.history.back()
+                    return
                 }
 
-                Navigation.Screen.Libraries -> {
-                    window.history.pushState(
-                        data = null,
-                        title = "",
-                        url = "?screen=libraries"
-                    )
-                }
+                window.history.pushState(
+                    data = null,
+                    title = "",
+                    url = "?screen=about"
+                )
+                stack = 1
+            }
 
-                Navigation.Screen.Matcher -> {
-                    window.history.popUntil()
-                }
+            Navigation.Screen.Libraries -> {
+                window.history.pushState(
+                    data = null,
+                    title = "",
+                    url = "?screen=libraries"
+                )
+                stack = 2
             }
         }
     }
 
     private suspend fun navigate(query: String) {
-        val result = ScreenArg.find(query)
-
-        if (result == null) {
-            _event.send(
-                Navigation.Event.Navigate(
-                    Navigation.Screen.Matcher
-                )
-            )
-
-            return
-        }
+        val result = ScreenArg.find(query) ?: return
 
         val screen = result.groups[1]?.value
 
@@ -128,6 +132,14 @@ internal class NavigationManagerWeb : NavigationManager {
                     )
                 )
             }
+
+            "matcher" -> {
+                _event.send(
+                    Navigation.Event.Navigate(
+                        Navigation.Screen.Matcher
+                    )
+                )
+            }
         }
     }
 
@@ -135,7 +147,3 @@ internal class NavigationManagerWeb : NavigationManager {
         private val ScreenArg = "\\?screen=(\\w+)".toRegex()
     }
 }
-
-fun History.popUntil() = go(delta = -lastIndex)
-
-val History.lastIndex get() = length - 1
