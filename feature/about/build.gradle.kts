@@ -35,11 +35,11 @@ kotlin {
             implementation(projects.core.resources)
             implementation(projects.core.sharedUi)
             implementation(projects.core.common)
+            implementation(projects.core.dispatcher)
 
             // voyager
             implementation(catalog.voyager.navigator)
             implementation(catalog.voyager.screenModel)
-            implementation(catalog.voyager.transitions)
 
             // about libraries
             implementation(libs.aboutlibraries.compose)

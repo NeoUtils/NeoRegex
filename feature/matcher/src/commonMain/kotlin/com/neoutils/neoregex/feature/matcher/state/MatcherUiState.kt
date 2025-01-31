@@ -19,46 +19,36 @@
 package com.neoutils.neoregex.feature.matcher.state
 
 import androidx.compose.ui.text.input.TextFieldValue
-import com.neoutils.neoregex.core.sharedui.component.MatchesInfos
+import com.neoutils.neoregex.core.sharedui.component.Performance
 import com.neoutils.neoregex.core.sharedui.model.Match
 import com.neoutils.neoregex.feature.matcher.model.Target
 
 data class MatcherUiState(
-    val target: Target? = null,
-    val text: TextFieldValue = TextFieldValue(),
-    val regex: TextFieldValue = TextFieldValue(),
+    val inputs: Inputs = Inputs(),
     val history: History = History(),
-    val matchResult: MatchResult = MatchResult.Success(),
+    val result: Result = Result.Success(),
+    val performance: Performance = Performance()
 ) {
+
+    data class Inputs(
+        val target: Target? = null,
+        val text: TextFieldValue = TextFieldValue(),
+        val regex: TextFieldValue = TextFieldValue(),
+    )
+
     data class History(
         val canUndo: Boolean = false,
         val canRedo: Boolean = false
     )
 
-    sealed class MatchResult {
-
-        abstract val infos: MatchesInfos?
-
+    sealed class Result {
         data class Success(
             val matches: List<Match> = listOf(),
-            override val infos: MatchesInfos? = MatchesInfos.create(),
-        ) : MatchResult()
+            val performance: Performance = Performance()
+        ) : Result()
 
         data class Failure(
             val error: String,
-            override val infos: MatchesInfos? = MatchesInfos.create()
-        ) : MatchResult()
+        ) : Result()
     }
 }
-
-val MatcherUiState.MatchResult.matches
-    get() = when (this) {
-        is MatcherUiState.MatchResult.Failure -> listOf()
-        is MatcherUiState.MatchResult.Success -> matches
-    }
-
-val MatcherUiState.MatchResult.error
-    get() = when (this) {
-        is MatcherUiState.MatchResult.Failure -> error
-        is MatcherUiState.MatchResult.Success -> ""
-    }

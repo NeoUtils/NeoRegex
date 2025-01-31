@@ -20,7 +20,7 @@ package com.neoutils.neoregex.feature.matcher
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.neoutils.neoregex.core.sharedui.component.MatchesInfos
+import com.neoutils.neoregex.core.sharedui.component.Performance
 import com.neoutils.neoregex.core.sharedui.model.Match
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
 import com.neoutils.neoregex.feature.matcher.extension.toTextFieldValue
@@ -31,8 +31,7 @@ import com.neoutils.neoregex.feature.matcher.model.TextState
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
-import kotlin.time.Duration
-import kotlin.time.measureTime
+import kotlinx.datetime.Clock
 
 @OptIn(FlowPreview::class)
 class MatcherViewModel : ScreenModel {
@@ -49,47 +48,47 @@ class MatcherViewModel : ScreenModel {
         Target.REGEX to MutableStateFlow(TextState())
     )
 
-    private val matchResult = combine(
+    private val resultFlow = combine(
         inputs[Target.TEXT].map { it.text }.distinctUntilChanged(),
         inputs[Target.REGEX].map { it.text }.distinctUntilChanged()
     ) { text, pattern ->
 
         if (pattern.isEmpty()) {
-            return@combine MatcherUiState.MatchResult.Success()
+            return@combine MatcherUiState.Result.Success()
         }
 
         val regex = try {
             Regex(pattern)
         } catch (t: Throwable) {
-            return@combine MatcherUiState.MatchResult.Failure(
+            return@combine MatcherUiState.Result.Failure(
                 error = t.message ?: "Invalid regex pattern"
             )
         }
 
-        val duration: Duration
-        val result: Sequence<MatchResult>
+        val start = Clock.System.now()
 
-        // TODO: don't support web target
-        duration = measureTime {
-            result = regex.findAll(text)
+        val result = regex.findAll(text)
+
+        val end = Clock.System.now()
+
+        val matches = buildList {
+            result.forEachIndexed { index, match ->
+                add(
+                    Match(
+                        text = match.value,
+                        range = match.range,
+                        groups = match.groupValues.drop(n = 1),
+                        number = index.inc(),
+                    )
+                )
+            }
         }
 
-        MatcherUiState.MatchResult.Success(
-            matches = buildList {
-                result.forEachIndexed { index, match ->
-                    add(
-                        Match(
-                            text = match.value,
-                            range = match.range,
-                            groups = match.groupValues.drop(n = 1),
-                            number = index.inc(),
-                        )
-                    )
-                }
-            },
-            infos = MatchesInfos.create(
-                duration = duration,
-                matches = result.count()
+        MatcherUiState.Result.Success(
+            matches = matches,
+            performance = Performance(
+                duration = end - start,
+                matches = matches.size
             )
         )
     }
@@ -118,24 +117,36 @@ class MatcherViewModel : ScreenModel {
         }
     }
 
-    val uiState = combine(
+    private val inputFlow = combine(
         target,
         inputs[Target.TEXT],
         inputs[Target.REGEX],
-        historyFlow,
-        matchResult.debounce {
-            when (it) {
-                is MatcherUiState.MatchResult.Failure -> ERROR_DELAY
-                is MatcherUiState.MatchResult.Success -> 0L
-            }
-        }
-    ) { target, text, regex, history, matchResult ->
-        MatcherUiState(
+    ) { target, text, regex ->
+        MatcherUiState.Inputs(
             target = target,
             text = text.toTextFieldValue(),
-            regex = regex.toTextFieldValue(),
+            regex = regex.toTextFieldValue()
+        )
+    }
+
+    val uiState = combine(
+        inputFlow,
+        historyFlow,
+        resultFlow.debounce {
+            when (it) {
+                is MatcherUiState.Result.Failure -> ERROR_DELAY
+                is MatcherUiState.Result.Success -> 0L
+            }
+        }
+    ) { inputs, history, result ->
+        MatcherUiState(
+            inputs = inputs,
             history = history,
-            matchResult = matchResult
+            result = result,
+            performance = when (result) {
+                is MatcherUiState.Result.Failure -> Performance()
+                is MatcherUiState.Result.Success -> result.performance
+            }
         )
     }.stateIn(
         scope = screenModelScope,

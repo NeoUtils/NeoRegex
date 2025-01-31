@@ -32,6 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,7 +54,7 @@ import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.ic_redo_24
 import com.neoutils.neoregex.core.resources.ic_undo_24
 import com.neoutils.neoregex.core.resources.matcher_footer_insert_regex_hint
-import com.neoutils.neoregex.core.sharedui.component.MatchesInfos
+import com.neoutils.neoregex.core.sharedui.component.Performance
 import com.neoutils.neoregex.core.sharedui.component.TextEditor
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
 import com.neoutils.neoregex.feature.matcher.extension.onLongHold
@@ -61,8 +62,6 @@ import com.neoutils.neoregex.feature.matcher.extension.toTextState
 import com.neoutils.neoregex.feature.matcher.model.Syntax
 import com.neoutils.neoregex.feature.matcher.model.Target
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
-import com.neoutils.neoregex.feature.matcher.state.error
-import com.neoutils.neoregex.feature.matcher.state.matches
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
@@ -82,7 +81,7 @@ class MatcherScreen : Screen {
         BoxWithConstraints(modifier = Modifier.weight(weight = 1f)) {
 
             TextEditor(
-                value = uiState.text,
+                value = uiState.inputs.text,
                 onValueChange = {
                     viewModel.onAction(
                         MatcherAction.Input.UpdateText(it.toTextState())
@@ -99,7 +98,12 @@ class MatcherScreen : Screen {
                     letterSpacing = 1.sp,
                     fontSize = 16.sp,
                 ),
-                matches = uiState.matchResult.matches,
+                matches = remember(uiState.result) {
+                    when (val result = uiState.result) {
+                        is MatcherUiState.Result.Failure -> listOf()
+                        is MatcherUiState.Result.Success -> result.matches
+                    }
+                },
                 modifier = Modifier.onPreviewKeyEvent {
                     when (Command.from(it)) {
                         Command.UNDO -> {
@@ -121,11 +125,7 @@ class MatcherScreen : Screen {
                 },
             )
 
-            uiState.matchResult.infos?.let { infos ->
-                MatchesInfos(
-                    infos = infos,
-                )
-            }
+            Performance(uiState.performance)
         }
 
         Footer(
@@ -151,7 +151,9 @@ class MatcherScreen : Screen {
 
         Row(Modifier.fillMaxWidth()) {
             NeoTextField(
-                value = syntax.highlight.rememberTextFieldValue(uiState.regex),
+                value = syntax
+                    .highlight
+                    .rememberTextFieldValue(uiState.inputs.regex),
                 onValueChange = {
                     onAction(
                         MatcherAction.Input.UpdateRegex(
@@ -190,7 +192,12 @@ class MatcherScreen : Screen {
                         }
                     },
                 hint = stringResource(Res.string.matcher_footer_insert_regex_hint),
-                error = uiState.matchResult.error
+                error = remember(uiState.result) {
+                    when (uiState.result) {
+                        is MatcherUiState.Result.Failure -> uiState.result.error
+                        is MatcherUiState.Result.Success -> ""
+                    }
+                }
             )
 
             HistoryControl(

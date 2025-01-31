@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2025 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,28 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package extension
+package com.neoutils.neoregex.core.sharedui.component
 
-import model.Config
-import org.gradle.accessors.dm.LibrariesForLibs
-import org.gradle.api.Project
-import org.gradle.kotlin.dsl.the
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import com.neoutils.neoregex.core.dispatcher.NavigationManager
 
-val config = Config(
-    version = Config.Version(
-        major = 2,
-        minor = 6,
-        patch = 0,
-        phase = Config.Phase.RELEASE
-    ),
-    android = Config.Android(
-        compileSdk = 34,
-        minSdk = 24,
-        targetSdk = 34
-    ),
-    basePackage = "com.neoutils.neoregex",
-    name = "NeoRegex"
+@Composable
+actual fun Navigation(
+    modifier: Modifier,
+    navigation: NavigationManager,
+    textStyle: TextStyle
+) = CompactNavigation(
+    modifier = modifier,
+    navigation = navigation,
+    textStyle = textStyle
 )
-
-val Project.catalog
-    get() = the<LibrariesForLibs>()

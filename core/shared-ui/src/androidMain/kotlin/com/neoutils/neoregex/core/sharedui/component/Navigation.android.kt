@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2025 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,15 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.sharedui.extension
+package com.neoutils.neoregex.core.sharedui.component
 
 import androidx.compose.runtime.Composable
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import com.neoutils.neoregex.core.dispatcher.NavigationManager
 
-val Navigation.Screen.name: String
-    @Composable
-    get() = when (this) {
-        Navigation.Screen.About -> "About"
-        Navigation.Screen.Matcher -> "Matcher"
-        Navigation.Screen.Libraries -> "Libraries"
-    }
+@Composable
+actual fun Navigation(
+    modifier: Modifier,
+    navigation: NavigationManager,
+    textStyle: TextStyle
+) = CompactNavigation(
+    modifier = modifier,
+    navigation = navigation,
+    textStyle = textStyle
+)

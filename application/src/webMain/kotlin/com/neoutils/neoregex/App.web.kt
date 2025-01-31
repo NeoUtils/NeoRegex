@@ -31,7 +31,10 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,7 +42,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -49,20 +51,16 @@ import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.model.Preferences
-import com.neoutils.neoregex.core.designsystem.component.Link
-import com.neoutils.neoregex.core.designsystem.component.LinkColor
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.dispatcher.NavigationManager
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.resources.web_warning_text
+import com.neoutils.neoregex.core.sharedui.component.Navigation
 import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import com.neoutils.neoregex.core.sharedui.extension.surface
 import kotlinx.browser.document
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -113,7 +111,6 @@ fun WebApp() = WithKoin {
 @Composable
 private fun Header(
     modifier: Modifier = Modifier,
-    navigation: NavigationManager = koinInject(),
     shadowElevation: Dp = dimensions.tiny
 ) = TopAppBar(
     modifier = modifier.surface(
@@ -124,10 +121,9 @@ private fun Header(
         }
     ),
     title = {
-        val screen by navigation.screen.collectAsStateWithLifecycle()
-
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(18.dp)
         ) {
             Text(
                 text = stringResource(Res.string.app_name),
@@ -136,76 +132,7 @@ private fun Header(
                 ),
             )
 
-            Spacer(Modifier.width(18.dp))
-
-            val coroutine = rememberCoroutineScope()
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                val colors = LinkColor(
-                    idle = colorScheme.onSurface,
-                    hover = colorScheme.onSurface.copy(alpha = 0.8f),
-                    press = colorScheme.onSurface.copy(alpha = 0.6f),
-                    pressed = colorScheme.onSurface
-                )
-
-                Link(
-                    text = "Matcher",
-                    onClick = {
-                        coroutine.launch {
-                            navigation.navigate(
-                                Navigation.Event.Matcher
-                            )
-                        }
-                    },
-                    style = typography.labelMedium.copy(
-                        textDecoration = TextDecoration.None,
-                        fontWeight = if (screen == Navigation.Screen.Matcher) {
-                            FontWeight.Bold
-                        } else {
-                            FontWeight.Normal
-                        }
-                    ),
-                    enabled = screen != Navigation.Screen.Matcher,
-                    colors = colors,
-                )
-
-                Link(
-                    text = "About",
-                    onClick = {
-                        coroutine.launch {
-                            navigation.navigate(
-                                Navigation.Event.About
-                            )
-                        }
-                    },
-                    style = typography.labelMedium.copy(
-                        textDecoration = TextDecoration.None,
-                        fontWeight = if (screen == Navigation.Screen.About) {
-                            FontWeight.Bold
-                        } else {
-                            FontWeight.Normal
-                        }
-                    ),
-                    enabled = screen != Navigation.Screen.About,
-                    colors = colors
-                )
-
-                AnimatedVisibility(
-                    visible = screen == Navigation.Screen.Libraries
-                ) {
-                    Link(
-                        text = "Libraries",
-                        style = typography.labelMedium.copy(
-                            textDecoration = TextDecoration.None,
-                            fontWeight = FontWeight.Bold
-                        ),
-                        enabled = false,
-                        colors = colors
-                    )
-                }
-            }
+            Navigation()
         }
     },
     actions = {
@@ -275,4 +202,3 @@ fun TopLabel(
 
     content()
 }
-

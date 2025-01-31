@@ -29,15 +29,23 @@ internal class NavigationManagerImpl : NavigationManager {
 
     private val _event = Channel<Navigation.Event>(Channel.UNLIMITED)
     private val _current = MutableStateFlow<Navigation.Screen>(Navigation.Screen.Matcher)
+    private val _canPop = MutableStateFlow(value = false)
 
     override val screen = _current.asStateFlow()
     override val event = _event.receiveAsFlow()
+    override val canPopBack = _canPop.asStateFlow()
 
-    override fun setScreen(screen: Navigation.Screen) {
+    override fun update(screen: Navigation.Screen) {
+        _canPop.value = when (screen) {
+            Navigation.Screen.About -> true
+            Navigation.Screen.Libraries -> true
+            Navigation.Screen.Matcher -> false
+        }
+
         _current.value = screen
     }
 
-    override suspend fun navigate(event: Navigation.Event) {
+    override suspend fun emit(event: Navigation.Event) {
         _event.send(event)
     }
 }
