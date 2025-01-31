@@ -124,7 +124,7 @@ fun BoxWithConstraintsScope.Performance(
             performance.matches,
             performance.matches,
             performance.duration.toString(
-                unit = DurationUnit.MICROSECONDS,
+                unit = DurationUnit.NANOSECONDS,
                 decimals = 3
             )
         ),
