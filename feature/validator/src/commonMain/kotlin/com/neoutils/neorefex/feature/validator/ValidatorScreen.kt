@@ -31,19 +31,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandCircleDown
-import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.ExpandCircleDown
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.rounded.ContentCopy
-import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.twotone.Cancel
-import androidx.compose.material.icons.twotone.ContentCopy
-import androidx.compose.material.icons.twotone.Delete
-import androidx.compose.material.icons.twotone.ExpandCircleDown
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
@@ -72,7 +65,6 @@ import com.neoutils.neoregex.core.designsystem.theme.Green
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.sharedui.component.Footer
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class ValidatorScreen : Screen {
@@ -366,7 +358,14 @@ private fun TestCase(
                         visualTransformation = VisualTransformation.None,
                         interactionSource = remember { MutableInteractionSource() },
                         contentPadding = contentPadding,
-                        container = {}
+                        container = {},
+                        trailingIcon = {
+                            Text(
+                                text = test.case.text,
+                                modifier = Modifier.padding(contentPadding),
+                                style = typography.labelMedium
+                            )
+                        }
                     )
                 }
             }
