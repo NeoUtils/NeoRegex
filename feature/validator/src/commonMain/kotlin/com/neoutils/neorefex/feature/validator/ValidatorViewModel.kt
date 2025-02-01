@@ -228,17 +228,17 @@ class ValidatorViewModel : ScreenModel {
     fun onAction(action: ValidatorAction) {
         when (action) {
             is ValidatorAction.ExpandedTestCase -> {
-                expanded.value = action.uuid
+                expanded.value = action.targetUuid
             }
 
             is ValidatorAction.CollapseTestCase -> {
-                if (expanded.value == action.uuid) {
+                if (expanded.value == action.targetUuid) {
                     expanded.value = null
                 }
             }
 
             is ValidatorAction.RemoveTestCase -> {
-                removeTestCase(action.uuid)
+                removeTestCase(action.targetUuid)
             }
 
             is ValidatorAction.UpdateTestCase -> {
@@ -249,7 +249,33 @@ class ValidatorViewModel : ScreenModel {
                 testCases.update { it + action.newTestCase }
                 expanded.value = action.newTestCase.uuid
             }
+
+            is ValidatorAction.Duplicate -> {
+                duplicateTestCase(action.targetUuid)
+            }
         }
+    }
+
+    private fun duplicateTestCase(
+        targetUuid: Uuid,
+        newUuid: Uuid = Uuid.random()
+    ) {
+        testCases.update { testCase ->
+            val index = testCase.indexOfFirst {
+                it.uuid == targetUuid
+            }
+
+            val newTestCase = testCase[index].copy(
+                uuid = newUuid
+            )
+
+            val before = testCase.subList(0, index.inc())
+            val after = testCase.subList(index.inc(), testCase.size)
+
+            before + newTestCase + after
+        }
+
+        expanded.value = newUuid
     }
 
     private fun updateTestCase(

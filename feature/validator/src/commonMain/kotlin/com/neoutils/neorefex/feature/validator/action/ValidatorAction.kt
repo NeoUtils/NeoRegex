@@ -30,18 +30,22 @@ sealed class ValidatorAction {
     ) : ValidatorAction()
 
     data class ExpandedTestCase(
-        val uuid: Uuid
+        val targetUuid: Uuid
     ) : ValidatorAction()
 
     data class CollapseTestCase(
-        val uuid: Uuid
+        val targetUuid: Uuid
     ) : ValidatorAction()
 
     data class RemoveTestCase(
-        val uuid: Uuid
+        val targetUuid: Uuid
     ) : ValidatorAction()
 
     data class AddTestCase(
         val newTestCase: TestCase = TestCase()
+    ) : ValidatorAction()
+
+    data class Duplicate(
+        val targetUuid: Uuid
     ) : ValidatorAction()
 }

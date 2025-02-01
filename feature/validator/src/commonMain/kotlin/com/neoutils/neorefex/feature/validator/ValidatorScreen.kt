@@ -31,11 +31,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandCircleDown
+import androidx.compose.material.icons.outlined.Cancel
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material.icons.outlined.ExpandCircleDown
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.ContentCopy
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.twotone.Cancel
+import androidx.compose.material.icons.twotone.ContentCopy
 import androidx.compose.material.icons.twotone.Delete
+import androidx.compose.material.icons.twotone.ExpandCircleDown
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
@@ -64,6 +72,7 @@ import com.neoutils.neoregex.core.designsystem.theme.Green
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.sharedui.component.Footer
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class ValidatorScreen : Screen {
@@ -125,6 +134,13 @@ class ValidatorScreen : Screen {
                             )
                         )
                     },
+                    onCopy = {
+                        viewModel.onAction(
+                            ValidatorAction.Duplicate(
+                                testCase.uuid
+                            )
+                        )
+                    }
                 )
             }
 
@@ -221,6 +237,7 @@ private fun TestCase(
     onExpanded: () -> Unit = {},
     onClose: () -> Unit = {},
     onDelete: () -> Unit = {},
+    onCopy: () -> Unit = {},
     textStyle: TextStyle = TextStyle(),
     contentPadding: PaddingValues = PaddingValues(dimensions.default),
     hint: String = "Enter input"
@@ -294,7 +311,8 @@ private fun TestCase(
                             )
                         },
                         onDelete = onDelete,
-                        onClose = onClose
+                        onClose = onClose,
+                        onCopy = onCopy
                     )
                 }
             }
@@ -360,7 +378,8 @@ private fun Options(
     onCaseChange: (TestCase.Case) -> Unit,
     modifier: Modifier = Modifier,
     onDelete: () -> Unit = {},
-    onClose: () -> Unit = {}
+    onClose: () -> Unit = {},
+    onCopy: () -> Unit = {},
 ) {
     Row(
         modifier = modifier,
@@ -375,11 +394,24 @@ private fun Options(
         )
 
         IconButton(
+            onClick = onCopy,
+            modifier = Modifier.size(24.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Rounded.ContentCopy,
+                contentDescription = null,
+                modifier = Modifier
+                    .padding(vertical = 0.5.dp)
+                    .padding(4.dp)
+            )
+        }
+
+        IconButton(
             onClick = onDelete,
             modifier = Modifier.size(24.dp)
         ) {
             Icon(
-                imageVector = Icons.TwoTone.Delete,
+                imageVector = Icons.Outlined.Delete,
                 contentDescription = null,
                 modifier = Modifier.padding(4.dp)
             )
@@ -390,7 +422,7 @@ private fun Options(
             modifier = Modifier.size(24.dp)
         ) {
             Icon(
-                imageVector = Icons.TwoTone.Cancel,
+                imageVector = Icons.Outlined.ExpandCircleDown,
                 contentDescription = null,
                 modifier = Modifier.padding(4.dp)
             )
