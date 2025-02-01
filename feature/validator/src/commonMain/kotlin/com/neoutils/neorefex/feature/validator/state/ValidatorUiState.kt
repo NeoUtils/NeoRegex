@@ -30,5 +30,13 @@ data class ValidatorUiState(
     val pattern: TextFieldValue,
     val history: History,
     val expanded: Uuid? = null,
-    val error: String? = null
-)
+    val error: String? = null,
+    val result: Result = Result.WAITING
+) {
+    enum class Result {
+        WAITING,
+        RUNNING,
+        SUCCESS,
+        ERROR
+    }
+}

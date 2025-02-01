@@ -38,7 +38,6 @@ import com.neoutils.neoregex.core.common.model.Target
 import com.neoutils.neoregex.core.common.model.TextState
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.common.util.Syntax
-import com.neoutils.neoregex.core.designsystem.textfield.ErrorTooltip
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
@@ -72,8 +71,8 @@ fun Footer(
     modifier: Modifier = Modifier,
     onFocus: (FocusState) -> Unit = {},
     onAction: (FooterAction) -> Unit = {},
+    tooling: (@Composable () -> Unit)? = null,
     syntax: Syntax.Regex = Syntax.Regex(),
-    error: String? = null
 ) = Surface(
     modifier = modifier,
     shape = RectangleShape,
@@ -94,13 +93,7 @@ fun Footer(
                     )
                 )
             },
-            endIcon = error?.takeIf {
-                it.isNotEmpty()
-            }?.let {
-                {
-                    ErrorTooltip(error = it)
-                }
-            },
+            endIcon = tooling,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
                 .weight(weight = 1f)

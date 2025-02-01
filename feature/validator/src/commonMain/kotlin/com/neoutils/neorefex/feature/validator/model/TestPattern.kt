@@ -5,4 +5,5 @@ data class TestPattern(
 ) {
     val regex = runCatching { Regex(pattern) }
     val isValid = regex.isSuccess && pattern.isNotEmpty()
+    val isInvalid = regex.isFailure || pattern.isEmpty()
 }

@@ -28,7 +28,6 @@ import com.neoutils.neorefex.feature.validator.model.TestPattern
 import com.neoutils.neorefex.feature.validator.state.ValidatorUiState
 import com.neoutils.neoregex.core.common.extension.toTextState
 import com.neoutils.neoregex.core.common.manager.HistoryManager
-import com.neoutils.neoregex.core.common.model.Target
 import com.neoutils.neoregex.core.sharedui.component.FooterAction
 import com.neoutils.neoregex.core.sharedui.extension.toTextFieldValue
 import com.neoutils.neoregex.core.sharedui.model.History
@@ -69,6 +68,9 @@ class ValidatorViewModel : ScreenModel {
         testCases,
         expanded,
     ) { pattern, history, testPattern, testCases, selected ->
+
+        val testableCases = testCases.filter { it.testable }
+
         ValidatorUiState(
             pattern = pattern,
             history = History(
@@ -77,7 +79,32 @@ class ValidatorViewModel : ScreenModel {
             ),
             testCases = testCases,
             expanded = selected,
-            error = testPattern.regex.exceptionOrNull()?.message
+            error = testPattern.regex.exceptionOrNull()?.message,
+            result = when {
+                testPattern.regex.isFailure -> {
+                    ValidatorUiState.Result.ERROR
+                }
+
+                testPattern.isInvalid or testableCases.isEmpty() -> {
+                    ValidatorUiState.Result.WAITING
+                }
+
+                testableCases.any { it.result.isRunning } -> {
+                    ValidatorUiState.Result.RUNNING
+                }
+
+                testableCases.any { it.result.isError } -> {
+                    ValidatorUiState.Result.ERROR
+                }
+
+                testableCases.all { it.result.isSuccess } -> {
+                    ValidatorUiState.Result.SUCCESS
+                }
+
+                else -> {
+                    ValidatorUiState.Result.WAITING
+                }
+            }
         )
     }.stateIn(
         scope = screenModelScope,

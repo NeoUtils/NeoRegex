@@ -31,6 +31,7 @@ data class TestCase(
 ) {
 
     val mustValidate = text.isNotEmpty() && result == Result.IDLE
+    val testable = text.isNotEmpty()
 
     enum class Case(val text: String) {
         MATCH_ANY(text = "Match Any"),
@@ -42,6 +43,10 @@ data class TestCase(
         IDLE,
         RUNNING,
         SUCCESS,
-        ERROR
+        ERROR;
+
+        val isRunning get() = this == RUNNING
+        val isSuccess get() = this == SUCCESS
+        val isError get() = this == ERROR
     }
 }

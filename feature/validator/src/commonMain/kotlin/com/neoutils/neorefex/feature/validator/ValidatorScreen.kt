@@ -32,6 +32,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.rounded.Cancel
+import androidx.compose.material.icons.rounded.CheckCircle
 import androidx.compose.material.icons.twotone.Delete
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -52,14 +54,14 @@ import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import com.neoutils.neorefex.feature.validator.action.ValidatorAction
 import com.neoutils.neorefex.feature.validator.model.TestCase
+import com.neoutils.neorefex.feature.validator.state.ValidatorUiState
+import com.neoutils.neoregex.core.designsystem.component.ErrorTooltip
 import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.component.LinkColor
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.Green
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.designsystem.theme.Red
 import com.neoutils.neoregex.core.sharedui.component.Footer
-import com.neoutils.neoregex.core.sharedui.model.History
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
@@ -128,7 +130,9 @@ class ValidatorScreen : Screen {
                         colorScheme.outlineVariant
                     ),
                     onClick = {
-                        viewModel.onAction(ValidatorAction.AddTestCase())
+                        viewModel.onAction(
+                            ValidatorAction.AddTestCase()
+                        )
                     }
                 ) {
                     Text(
@@ -144,7 +148,53 @@ class ValidatorScreen : Screen {
         Footer(
             pattern = uiState.pattern,
             history = uiState.history,
-            error = uiState.error,
+            tooling = {
+                AnimatedContent(
+                    targetState = Pair(
+                        uiState.result,
+                        uiState.error
+                    ),
+                    transitionSpec = {
+                        fadeIn() togetherWith fadeOut()
+                    }
+                ) { (result, error) ->
+                    when (result) {
+                        ValidatorUiState.Result.WAITING -> {
+                            Spacer(Modifier.size(24.dp))
+                        }
+
+                        ValidatorUiState.Result.RUNNING -> {
+                            CircularProgressIndicator(
+                                strokeWidth = 2.dp,
+                                color = colorScheme.onSurface,
+                                modifier = Modifier
+                                    .size(24.dp)
+                                    .padding(2.dp)
+                            )
+                        }
+
+                        ValidatorUiState.Result.SUCCESS -> {
+                            Icon(
+                                imageVector = Icons.Rounded.CheckCircle,
+                                contentDescription = null,
+                                tint = Green
+                            )
+                        }
+
+                        ValidatorUiState.Result.ERROR -> {
+                            if (error != null) {
+                                ErrorTooltip(error)
+                            } else {
+                                Icon(
+                                    imageVector = Icons.Rounded.Cancel,
+                                    contentDescription = null,
+                                    tint = colorScheme.error
+                                )
+                            }
+                        }
+                    }
+                }
+            },
             onAction = viewModel::onAction
         )
     }
@@ -182,7 +232,7 @@ private fun TestCase(
             }
 
             TestCase.Result.SUCCESS -> Green
-            TestCase.Result.ERROR -> Red
+            TestCase.Result.ERROR -> colorScheme.error
         }
     )
 

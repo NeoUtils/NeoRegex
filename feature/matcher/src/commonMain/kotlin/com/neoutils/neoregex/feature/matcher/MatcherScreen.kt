@@ -18,11 +18,12 @@
 
 package com.neoutils.neoregex.feature.matcher
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,6 +31,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.model.rememberScreenModel
@@ -37,6 +39,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import com.neoutils.neoregex.core.common.extension.toTextState
 import com.neoutils.neoregex.core.common.model.Target
 import com.neoutils.neoregex.core.common.util.Command
+import com.neoutils.neoregex.core.designsystem.component.ErrorTooltip
 import com.neoutils.neoregex.core.sharedui.component.Footer
 import com.neoutils.neoregex.core.sharedui.component.Performance
 import com.neoutils.neoregex.core.sharedui.component.TextEditor
@@ -110,10 +113,22 @@ class MatcherScreen : Screen {
             pattern = uiState.inputs.regex,
             history = uiState.history,
             onAction = viewModel::onAction,
-            error = remember(uiState.result) {
-                when (val result = uiState.result) {
-                    is MatcherUiState.Result.Failure -> result.error
-                    is MatcherUiState.Result.Success -> ""
+            tooling = {
+                AnimatedContent(
+                    targetState = uiState.result,
+                    transitionSpec = {
+                        fadeIn() togetherWith fadeOut()
+                    }
+                ) { result ->
+                    when (result) {
+                        is MatcherUiState.Result.Failure -> {
+                            ErrorTooltip(result.error)
+                        }
+
+                        is MatcherUiState.Result.Success -> {
+                            Spacer(Modifier.size(24.dp))
+                        }
+                    }
                 }
             },
             onFocus = {
