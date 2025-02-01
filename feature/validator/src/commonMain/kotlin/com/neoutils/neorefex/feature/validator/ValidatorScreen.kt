@@ -34,6 +34,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.twotone.Cancel
 import androidx.compose.material.icons.twotone.Delete
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -113,6 +114,13 @@ class ValidatorScreen : Screen {
                     onDelete = {
                         viewModel.onAction(
                             ValidatorAction.RemoveTestCase(
+                                testCase.uuid
+                            )
+                        )
+                    },
+                    onClose = {
+                        viewModel.onAction(
+                            ValidatorAction.CollapseTestCase(
                                 testCase.uuid
                             )
                         )
@@ -207,11 +215,12 @@ class ValidatorScreen : Screen {
 @Composable
 private fun TestCase(
     test: TestCase,
-    onTestChange: (TestCase) -> Unit,
-    onExpanded: () -> Unit,
-    onDelete: () -> Unit,
     expanded: Boolean,
+    onTestChange: (TestCase) -> Unit,
     modifier: Modifier = Modifier,
+    onExpanded: () -> Unit = {},
+    onClose: () -> Unit = {},
+    onDelete: () -> Unit = {},
     textStyle: TextStyle = TextStyle(),
     contentPadding: PaddingValues = PaddingValues(dimensions.default),
     hint: String = "Enter input"
@@ -284,7 +293,8 @@ private fun TestCase(
                                 )
                             )
                         },
-                        onDelete = onDelete
+                        onDelete = onDelete,
+                        onClose = onClose
                     )
                 }
             }
@@ -307,6 +317,7 @@ private fun TestCase(
                                 )
                             )
                         },
+                        modifier = Modifier.fillMaxWidth(),
                         contentPadding = contentPadding,
                         textStyle = mergedTextStyle,
                         hint = hint
@@ -347,12 +358,14 @@ private fun TestCase(
 private fun Options(
     case: TestCase.Case,
     onCaseChange: (TestCase.Case) -> Unit,
-    onDelete: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onDelete: () -> Unit = {},
+    onClose: () -> Unit = {}
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(dimensions.tiny)
     ) {
         MatchDropDown(
             case = case,
@@ -363,12 +376,21 @@ private fun Options(
 
         IconButton(
             onClick = onDelete,
-            modifier = Modifier
-                .padding(start = 4.dp)
-                .size(24.dp)
+            modifier = Modifier.size(24.dp)
         ) {
             Icon(
                 imageVector = Icons.TwoTone.Delete,
+                contentDescription = null,
+                modifier = Modifier.padding(4.dp)
+            )
+        }
+
+        IconButton(
+            onClick = onClose,
+            modifier = Modifier.size(24.dp)
+        ) {
+            Icon(
+                imageVector = Icons.TwoTone.Cancel,
                 contentDescription = null,
                 modifier = Modifier.padding(4.dp)
             )

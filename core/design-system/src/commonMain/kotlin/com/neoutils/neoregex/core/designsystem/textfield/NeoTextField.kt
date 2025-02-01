@@ -43,8 +43,8 @@ import kotlinx.coroutines.launch
 fun NeoTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    endIcon: @Composable (() -> Unit)? = null,
     modifier: Modifier = Modifier,
+    endIcon: @Composable (() -> Unit)? = null,
     textStyle: TextStyle = TextStyle(),
     singleLine: Boolean = false,
     contentPadding: PaddingValues = PaddingValues(dimensions.default),

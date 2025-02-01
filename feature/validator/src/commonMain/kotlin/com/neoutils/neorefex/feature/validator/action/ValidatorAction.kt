@@ -33,6 +33,10 @@ sealed class ValidatorAction {
         val uuid: Uuid
     ) : ValidatorAction()
 
+    data class CollapseTestCase(
+        val uuid: Uuid
+    ) : ValidatorAction()
+
     data class RemoveTestCase(
         val uuid: Uuid
     ) : ValidatorAction()

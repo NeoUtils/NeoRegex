@@ -231,6 +231,12 @@ class ValidatorViewModel : ScreenModel {
                 expanded.value = action.uuid
             }
 
+            is ValidatorAction.CollapseTestCase -> {
+                if (expanded.value == action.uuid) {
+                    expanded.value = null
+                }
+            }
+
             is ValidatorAction.RemoveTestCase -> {
                 removeTestCase(action.uuid)
             }
