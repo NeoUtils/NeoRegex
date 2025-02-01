@@ -65,9 +65,10 @@ class ValidatorViewModel : ScreenModel {
     val uiState = combine(
         pattern,
         patternHistory.state,
+        testPattern,
         testCases,
         expanded,
-    ) { pattern, history, testCases, selected ->
+    ) { pattern, history, testPattern, testCases, selected ->
         ValidatorUiState(
             pattern = pattern,
             history = History(
@@ -75,7 +76,8 @@ class ValidatorViewModel : ScreenModel {
                 canUndo = history.canUndo
             ),
             testCases = testCases,
-            expanded = selected
+            expanded = selected,
+            error = testPattern.regex.exceptionOrNull()?.message
         )
     }.stateIn(
         scope = screenModelScope,
@@ -110,11 +112,9 @@ class ValidatorViewModel : ScreenModel {
             }
 
             // clear queue
-
             testCaseQueue.clear()
 
             // stop validation
-
             validationJob.forEach { it.value.cancel() }
             validationJob.clear()
 
@@ -169,7 +169,7 @@ class ValidatorViewModel : ScreenModel {
 
     private fun validate(
         testCase: TestCase,
-        regex: Regex = checkNotNull(testPattern.value.regex)
+        regex: Regex = testPattern.value.regex.getOrThrow()
     ): TestCase.Result {
         return when (testCase.case) {
             TestCase.Case.MATCH_ANY -> {
@@ -282,7 +282,6 @@ class ValidatorViewModel : ScreenModel {
         validationJob.remove(newTestCase.uuid)
 
         // add to queue
-
         addToQueueJob[newTestCase.uuid]?.cancel()
 
         if (newTestCase.mustValidate) {

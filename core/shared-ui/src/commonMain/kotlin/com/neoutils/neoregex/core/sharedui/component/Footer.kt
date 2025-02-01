@@ -34,7 +34,6 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.text.input.TextFieldValue
 import com.neoutils.highlight.compose.remember.rememberTextFieldValue
 import com.neoutils.neoregex.core.common.extension.toTextState
-import com.neoutils.neoregex.core.common.model.Inputs
 import com.neoutils.neoregex.core.common.model.Target
 import com.neoutils.neoregex.core.common.model.TextState
 import com.neoutils.neoregex.core.common.util.Command
@@ -70,11 +69,11 @@ sealed class FooterAction {
 fun Footer(
     pattern: TextFieldValue,
     history: History,
-    onFocus: (FocusState) -> Unit = {},
     modifier: Modifier = Modifier,
+    onFocus: (FocusState) -> Unit = {},
     onAction: (FooterAction) -> Unit = {},
     syntax: Syntax.Regex = Syntax.Regex(),
-    error: String = ""
+    error: String? = null
 ) = Surface(
     modifier = modifier,
     shape = RectangleShape,
@@ -83,6 +82,7 @@ fun Footer(
     contentColor = colorScheme.onSurface,
 ) {
     Row(Modifier.fillMaxWidth()) {
+
         NeoTextField(
             value = syntax
                 .highlight
@@ -94,7 +94,7 @@ fun Footer(
                     )
                 )
             },
-            endIcon = error.takeIf {
+            endIcon = error?.takeIf {
                 it.isNotEmpty()
             }?.let {
                 {

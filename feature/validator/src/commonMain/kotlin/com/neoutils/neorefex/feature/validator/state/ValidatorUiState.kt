@@ -30,4 +30,5 @@ data class ValidatorUiState(
     val pattern: TextFieldValue,
     val history: History,
     val expanded: Uuid? = null,
+    val error: String? = null
 )

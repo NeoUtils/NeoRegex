@@ -144,7 +144,8 @@ class ValidatorScreen : Screen {
         Footer(
             pattern = uiState.pattern,
             history = uiState.history,
-            onAction = viewModel::onAction,
+            error = uiState.error,
+            onAction = viewModel::onAction
         )
     }
 }
