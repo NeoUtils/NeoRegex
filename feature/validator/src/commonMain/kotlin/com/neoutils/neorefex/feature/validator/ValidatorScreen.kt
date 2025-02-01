@@ -278,6 +278,7 @@ private fun TestCase(
             AnimatedVisibility(visible = expanded) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(dimensions.small),
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
                         .padding(top = 8.dp)
@@ -295,6 +296,7 @@ private fun TestCase(
                         contentPadding = PaddingValues(0.dp),
                         textStyle = typography.labelMedium,
                         hint = "Untitled",
+                        singleLine = true,
                         modifier = Modifier
                             .padding(start = 8.dp)
                             .fillMaxWidth()
