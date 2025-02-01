@@ -25,6 +25,7 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -40,12 +41,11 @@ import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
@@ -263,8 +263,6 @@ private fun TestCase(
             width = 1.dp,
             color = color
         ),
-        onClick = onExpanded,
-        enabled = !expanded
     ) {
         Column {
             AnimatedVisibility(visible = expanded) {
@@ -320,6 +318,13 @@ private fun TestCase(
                 }
             ) { expanded ->
                 if (expanded) {
+
+                    val focusRequester = remember { FocusRequester() }
+
+                    LaunchedEffect(Unit) {
+                        focusRequester.requestFocus()
+                    }
+
                     NeoTextField(
                         value = test.text,
                         onValueChange = {
@@ -329,7 +334,9 @@ private fun TestCase(
                                 )
                             )
                         },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .focusRequester(focusRequester)
+                            .fillMaxWidth(),
                         contentPadding = contentPadding,
                         textStyle = mergedTextStyle,
                         hint = hint
@@ -358,7 +365,13 @@ private fun TestCase(
                         visualTransformation = VisualTransformation.None,
                         interactionSource = remember { MutableInteractionSource() },
                         contentPadding = contentPadding,
-                        container = {},
+                        container = {
+                            Box(
+                                modifier.clickable(
+                                    onClick = onExpanded
+                                )
+                            )
+                        },
                         trailingIcon = {
                             Text(
                                 text = test.case.text,
