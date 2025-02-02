@@ -33,15 +33,19 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.neoutils.neorefex.feature.validator.di.validatorModule
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.WindowStateDataSource
+import com.neoutils.neoregex.core.datasource.di.dataSourceModule
 import com.neoutils.neoregex.core.datasource.extension.observe
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.datasource.remember.rememberWindowState
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
+import com.neoutils.neoregex.core.dispatcher.di.navigationModule
+import com.neoutils.neoregex.core.repository.di.repositoryModule
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.sharedui.component.Navigation
@@ -49,11 +53,18 @@ import com.neoutils.neoregex.core.sharedui.component.NeoHeader
 import com.neoutils.neoregex.core.sharedui.component.NeoWindow
 import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
+import com.neoutils.neoregex.feature.matcher.di.matcherModule
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
-fun ApplicationScope.DesktopApp() = WithKoin {
+fun ApplicationScope.DesktopApp() = WithKoin(
+    dataSourceModule,
+    repositoryModule,
+    navigationModule,
+    matcherModule,
+    validatorModule
+) {
 
     val preferencesDataSource = koinInject<PreferencesDataSource>()
     val windowStateDataSource = koinInject<WindowStateDataSource>()

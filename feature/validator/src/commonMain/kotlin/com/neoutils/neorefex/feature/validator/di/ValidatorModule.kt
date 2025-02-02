@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2025 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,11 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.common.model
+package com.neoutils.neorefex.feature.validator.di
 
-import androidx.compose.ui.text.TextRange
+import com.neoutils.neorefex.feature.validator.ValidatorViewModel
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.module
 
-data class TextState(
-    val text: String = "",
-    val selection: TextRange = TextRange.Zero
-)
+val validatorModule = module {
+    factoryOf(::ValidatorViewModel)
+}

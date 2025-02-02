@@ -19,7 +19,7 @@
 package com.neoutils.neoregex.feature.matcher.action
 
 import com.neoutils.neoregex.core.common.model.Target
-import com.neoutils.neoregex.core.common.model.TextState
+import com.neoutils.neoregex.core.common.model.Text
 
 sealed class MatcherAction {
 
@@ -30,7 +30,7 @@ sealed class MatcherAction {
     ) : MatcherAction()
 
     data class UpdateText(
-        val textState: TextState
+        val text: Text
     ) : MatcherAction()
 
     sealed class History : MatcherAction() {

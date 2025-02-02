@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
@@ -31,23 +32,23 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.text.input.TextFieldValue
 import com.neoutils.highlight.compose.remember.rememberTextFieldValue
 import com.neoutils.neoregex.core.common.extension.toTextState
+import com.neoutils.neoregex.core.common.model.History
 import com.neoutils.neoregex.core.common.model.Target
-import com.neoutils.neoregex.core.common.model.TextState
+import com.neoutils.neoregex.core.common.model.Text
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.common.util.Syntax
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.matcher_footer_insert_regex_hint
-import com.neoutils.neoregex.core.sharedui.model.History
+import com.neoutils.neoregex.core.sharedui.extension.toTextFieldValue
 import org.jetbrains.compose.resources.stringResource
 
 sealed class FooterAction {
     data class UpdateRegex(
-        val textState: TextState
+        val text: Text
     ) : FooterAction()
 
     sealed class History : FooterAction() {
@@ -66,7 +67,7 @@ sealed class FooterAction {
 
 @Composable
 fun Footer(
-    pattern: TextFieldValue,
+    pattern: Text,
     history: History,
     modifier: Modifier = Modifier,
     onFocus: (FocusState) -> Unit = {},
@@ -82,10 +83,12 @@ fun Footer(
 ) {
     Row(Modifier.fillMaxWidth()) {
 
+        val textFieldValue = remember(pattern) { pattern.toTextFieldValue() }
+
         NeoTextField(
             value = syntax
                 .highlight
-                .rememberTextFieldValue(pattern),
+                .rememberTextFieldValue(textFieldValue),
             onValueChange = {
                 onAction(
                     FooterAction.UpdateRegex(

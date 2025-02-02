@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.koin.koinScreenModel
 import com.neoutils.neoregex.core.common.extension.toTextState
 import com.neoutils.neoregex.core.common.model.Target
 import com.neoutils.neoregex.core.common.util.Command
@@ -55,7 +56,7 @@ class MatcherScreen : Screen {
             .fillMaxSize()
     ) {
 
-        val viewModel = rememberScreenModel { MatcherViewModel() }
+        val viewModel = koinScreenModel<MatcherViewModel>()
 
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -65,7 +66,7 @@ class MatcherScreen : Screen {
                 value = uiState.inputs.text,
                 onValueChange = {
                     viewModel.onAction(
-                        MatcherAction.UpdateText(it.toTextState())
+                        MatcherAction.UpdateText(it)
                     )
                 },
                 onFocusChange = {

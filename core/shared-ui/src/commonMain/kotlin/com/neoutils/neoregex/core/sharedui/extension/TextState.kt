@@ -21,9 +21,9 @@ package com.neoutils.neoregex.core.sharedui.extension
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.input.TextFieldValue
-import com.neoutils.neoregex.core.common.model.TextState
+import com.neoutils.neoregex.core.common.model.Text
 
-fun TextState.toTextFieldValue(
+fun Text.toTextFieldValue(
     spanStyles: List<AnnotatedString.Range<SpanStyle>> = listOf()
 ) = TextFieldValue(
     annotatedString = text.withSpanStyles(spanStyles),

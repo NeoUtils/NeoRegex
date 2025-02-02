@@ -18,9 +18,9 @@
 
 package com.neoutils.neoregex.feature.matcher.state
 
+import com.neoutils.neoregex.core.common.model.History
 import com.neoutils.neoregex.core.common.model.Inputs
 import com.neoutils.neoregex.core.sharedui.component.Performance
-import com.neoutils.neoregex.core.sharedui.model.History
 import com.neoutils.neoregex.core.sharedui.model.Match
 
 data class MatcherUiState(

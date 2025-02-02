@@ -18,21 +18,22 @@
 
 package com.neoutils.neoregex.core.common.manager
 
-import com.neoutils.neoregex.core.common.model.TextState
+import com.neoutils.neoregex.core.common.model.History
+import com.neoutils.neoregex.core.common.model.Text
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class HistoryManager {
+class TextHistoryManager {
 
     private var undoStack: Entry? = null
     private var redoStack: Entry? = null
 
-    private val _state = MutableStateFlow(State())
-    val state = _state.asStateFlow()
+    private val _flow = MutableStateFlow(History())
+    val flow = _flow.asStateFlow()
 
     private var lock = false
 
-    fun push(value: TextState) {
+    fun push(value: Text) {
 
         if (lock) return
 
@@ -41,7 +42,7 @@ class HistoryManager {
             undoStack = Entry(value, undoStack)
             redoStack = null
 
-            updateState()
+            update()
             return
         }
 
@@ -49,38 +50,38 @@ class HistoryManager {
 
             undoStack?.value = value
 
-            updateState()
+            update()
         }
     }
 
-    private fun shouldPush(value: TextState): Boolean {
+    private fun shouldPush(value: Text): Boolean {
         return undoStack?.value?.text != value.text
     }
 
-    private fun shouldUpdateLast(value: TextState): Boolean {
+    private fun shouldUpdateLast(value: Text): Boolean {
         return redoStack == null && value != undoStack?.value
     }
 
-    fun undo(): TextState? {
+    fun undo(): Text? {
         val entry = undoStack ?: return null
 
         undoStack = entry.next ?: return null
         redoStack = Entry(entry.value, redoStack)
 
-        updateState()
+        update()
 
         lock = true
 
         return undoStack?.value
     }
 
-    fun redo(): TextState? {
+    fun redo(): Text? {
         val entry = redoStack ?: return null
 
         redoStack = entry.next
         undoStack = Entry(entry.value, undoStack)
 
-        updateState()
+        update()
 
         lock = true
 
@@ -91,20 +92,15 @@ class HistoryManager {
         lock = false
     }
 
-    private fun updateState() {
-        _state.value = State(
+    private fun update() {
+        _flow.value = History(
             canUndo = undoStack?.next != null,
             canRedo = redoStack != null,
         )
     }
 
     data class Entry(
-        var value: TextState,
+        var value: Text,
         val next: Entry? = null
-    )
-
-    data class State(
-        val canUndo: Boolean = false,
-        val canRedo: Boolean = false,
     )
 }

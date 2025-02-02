@@ -32,12 +32,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.neoutils.neoregex.core.common.model.History
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.ic_redo_24
 import com.neoutils.neoregex.core.resources.ic_undo_24
 import com.neoutils.neoregex.core.sharedui.extension.onLongHold
-import com.neoutils.neoregex.core.sharedui.model.History
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

@@ -30,17 +30,19 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
 
-            // voyager
-            implementation(catalog.voyager.navigator)
-            implementation(catalog.voyager.screenModel)
-            implementation(catalog.voyager.transitions)
-
             // modules
             implementation(projects.core.designSystem)
             implementation(projects.core.resources)
             implementation(projects.core.sharedUi)
             implementation(projects.core.common)
             implementation(projects.core.datasource)
+            implementation(projects.core.repository)
+
+            // voyager
+            implementation(catalog.voyager.navigator)
+            implementation(catalog.voyager.screenModel)
+            implementation(catalog.voyager.transitions)
+            implementation(catalog.voyager.koin)
 
             // NeoUtils
             implementation(libs.highlight.compose)

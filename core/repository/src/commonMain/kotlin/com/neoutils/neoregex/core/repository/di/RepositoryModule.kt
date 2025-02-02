@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2025 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.common.extension
+package com.neoutils.neoregex.core.repository.di
 
-import androidx.compose.ui.text.input.TextFieldValue
-import com.neoutils.neoregex.core.common.model.Text
+import com.neoutils.neoregex.core.repository.pattern.PatternRepository
+import com.neoutils.neoregex.core.repository.pattern.PatternRepositoryImpl
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
-fun TextFieldValue.toTextState(allowMultiline: Boolean = true) = Text(
-    text = if (allowMultiline) {
-        text
-    } else {
-        text.replace("\n", "")
-    },
-    selection = selection
-)
+val repositoryModule = module {
+    single { PatternRepositoryImpl() } bind PatternRepository::class
+}

@@ -18,7 +18,6 @@
 
 package com.neoutils.neorefex.feature.validator
 
-import androidx.compose.ui.text.input.TextFieldValue
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.neoutils.neorefex.feature.validator.action.ValidatorAction
@@ -26,11 +25,9 @@ import com.neoutils.neorefex.feature.validator.model.TestCase
 import com.neoutils.neorefex.feature.validator.model.TestCaseQueue
 import com.neoutils.neorefex.feature.validator.model.TestPattern
 import com.neoutils.neorefex.feature.validator.state.ValidatorUiState
-import com.neoutils.neoregex.core.common.extension.toTextState
-import com.neoutils.neoregex.core.common.manager.HistoryManager
+import com.neoutils.neoregex.core.common.model.History
+import com.neoutils.neoregex.core.repository.pattern.PatternRepository
 import com.neoutils.neoregex.core.sharedui.component.FooterAction
-import com.neoutils.neoregex.core.sharedui.extension.toTextFieldValue
-import com.neoutils.neoregex.core.sharedui.model.History
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -40,19 +37,19 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-class ValidatorViewModel : ScreenModel {
+class ValidatorViewModel(
+    private val patternRepository: PatternRepository
+) : ScreenModel {
 
-    private val pattern = MutableStateFlow(TextFieldValue())
     private val testCases = MutableStateFlow(listOf(TestCase()))
     private val expanded = MutableStateFlow<Uuid?>(testCases.value.first().uuid)
 
     private val testCaseQueue = TestCaseQueue()
-    private val patternHistory = HistoryManager()
 
     private var validationJob = mutableMapOf<Uuid, Job>()
     private var addToQueueJob = mutableMapOf<Uuid, Job>()
 
-    private val testPattern = pattern
+    private val testPattern = patternRepository.flow
         .distinctUntilChangedBy { it.text }
         .map { TestPattern(it.text) }
         .stateIn(
@@ -62,8 +59,8 @@ class ValidatorViewModel : ScreenModel {
         )
 
     val uiState = combine(
-        pattern,
-        patternHistory.state,
+        patternRepository.flow,
+        patternRepository.historyFlow,
         testPattern,
         testCases,
         expanded,
@@ -73,10 +70,7 @@ class ValidatorViewModel : ScreenModel {
 
         ValidatorUiState(
             pattern = pattern,
-            history = History(
-                canRedo = history.canRedo,
-                canUndo = history.canUndo
-            ),
+            history = history,
             testCases = testCases,
             expanded = selected,
             error = testPattern.regex.exceptionOrNull()?.message,
@@ -110,20 +104,16 @@ class ValidatorViewModel : ScreenModel {
         scope = screenModelScope,
         started = SharingStarted.WhileSubscribed(),
         initialValue = ValidatorUiState(
-            pattern = pattern.value,
+            pattern = patternRepository.flow.value,
+            history = patternRepository.historyFlow.value,
             testCases = testCases.value,
-            expanded = expanded.value,
-            history = History()
+            expanded = expanded.value
         )
     )
 
     init {
         setupQueueExecution()
         setupPatternListener()
-
-        pattern.onEach {
-            patternHistory.push(it.toTextState())
-        }.launchIn(screenModelScope)
     }
 
     private fun setupPatternListener() = screenModelScope.launch {
@@ -357,18 +347,15 @@ class ValidatorViewModel : ScreenModel {
     fun onAction(action: FooterAction) {
         when (action) {
             is FooterAction.History.Redo -> {
-                val textState = patternHistory.redo() ?: return
-                pattern.value = textState.toTextFieldValue()
+                patternRepository.redo()
             }
 
             is FooterAction.History.Undo -> {
-                val textState = patternHistory.undo() ?: return
-                pattern.value = textState.toTextFieldValue()
+                patternRepository.undo()
             }
 
             is FooterAction.UpdateRegex -> {
-                patternHistory.unlock()
-                pattern.value = action.textState.toTextFieldValue()
+                patternRepository.update(action.text)
             }
         }
     }

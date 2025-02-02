@@ -18,10 +18,8 @@
 
 package com.neoutils.neoregex.core.common.model
 
-import androidx.compose.ui.text.input.TextFieldValue
-
 data class Inputs(
     val target: Target? = null,
-    val text: TextFieldValue = TextFieldValue(),
-    val regex: TextFieldValue = TextFieldValue(),
+    val text: Text = Text(),
+    val regex: Text = Text(),
 )

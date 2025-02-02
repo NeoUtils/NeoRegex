@@ -1,3 +1,6 @@
+import extension.config
+import extension.module
+
 /*
  * NeoRegex.
  *
@@ -16,16 +19,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.common.extension
+plugins {
+    alias(libs.plugins.neoutils.neoregex.core)
+    kotlin("plugin.serialization") version "2.0.20"
+}
 
-import androidx.compose.ui.text.input.TextFieldValue
-import com.neoutils.neoregex.core.common.model.Text
+group = config.module(name = "core")
 
-fun TextFieldValue.toTextState(allowMultiline: Boolean = true) = Text(
-    text = if (allowMultiline) {
-        text
-    } else {
-        text.replace("\n", "")
-    },
-    selection = selection
-)
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+
+            // modules
+            api(projects.core.common)
+        }
+    }
+}

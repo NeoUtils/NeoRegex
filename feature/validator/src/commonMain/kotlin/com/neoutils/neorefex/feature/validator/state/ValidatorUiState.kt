@@ -18,16 +18,16 @@
 
 package com.neoutils.neorefex.feature.validator.state
 
-import androidx.compose.ui.text.input.TextFieldValue
 import com.neoutils.neorefex.feature.validator.model.TestCase
-import com.neoutils.neoregex.core.sharedui.model.History
+import com.neoutils.neoregex.core.common.model.History
+import com.neoutils.neoregex.core.common.model.Text
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 data class ValidatorUiState(
     val testCases: List<TestCase>,
-    val pattern: TextFieldValue,
+    val pattern: Text,
     val history: History,
     val expanded: Uuid? = null,
     val error: String? = null,
