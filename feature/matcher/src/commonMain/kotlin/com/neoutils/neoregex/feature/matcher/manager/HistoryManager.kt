@@ -30,11 +30,7 @@ class HistoryManager {
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
 
-    private var lock = false
-
     fun push(value: TextState) {
-
-        if (lock) return
 
         if (shouldPush(value)) {
 
@@ -69,8 +65,6 @@ class HistoryManager {
 
         updateState()
 
-        lock = true
-
         return undoStack?.value
     }
 
@@ -82,13 +76,7 @@ class HistoryManager {
 
         updateState()
 
-        lock = true
-
         return entry.value
-    }
-
-    fun unlock() {
-        lock = false
     }
 
     private fun updateState() {

@@ -155,13 +155,15 @@ class MatcherViewModel : ScreenModel {
     )
 
     init {
-        inputs[Target.TEXT].onEach {
-            histories[Target.TEXT].push(it)
-        }.launchIn(screenModelScope)
+        inputs[Target.TEXT]
+            .filter { it.register }
+            .onEach { histories[Target.TEXT].push(it) }
+            .launchIn(screenModelScope)
 
-        inputs[Target.REGEX].onEach {
-            histories[Target.REGEX].push(it)
-        }.launchIn(screenModelScope)
+        inputs[Target.REGEX]
+            .filter { it.register }
+            .onEach { histories[Target.REGEX].push(it) }
+            .launchIn(screenModelScope)
     }
 
     fun onAction(action: MatcherAction) {
@@ -209,16 +211,23 @@ class MatcherViewModel : ScreenModel {
         target: Target,
         textState: TextState
     ) {
-        histories[target].unlock()
         inputs[target].value = textState
     }
 
     private fun onRedo(target: Target) {
-        inputs[target].value = histories[target].redo() ?: return
+        val redo = histories[target].redo()
+
+        if (redo != null) {
+            inputs[target].value = redo.copy(register = false)
+        }
     }
 
     private fun onUndo(target: Target) {
-        inputs[target].value = histories[target].undo() ?: return
+        val undo = histories[target].undo()
+
+        if (undo != null) {
+            inputs[target].value = undo.copy(register = false)
+        }
     }
 
     companion object {

@@ -22,5 +22,6 @@ import androidx.compose.ui.text.TextRange
 
 data class TextState(
     val text: String = "",
-    val selection: TextRange = TextRange.Zero
+    val selection: TextRange = TextRange.Zero,
+    val register: Boolean = true
 )
