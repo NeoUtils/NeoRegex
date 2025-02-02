@@ -19,8 +19,10 @@
 package com.neoutils.neoregex.core.sharedui.component
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
@@ -50,8 +52,8 @@ actual fun Navigation(
     navigation: NavigationManager,
     textStyle: TextStyle
 ) = Row(
-    modifier = modifier,
-    horizontalArrangement = Arrangement.spacedBy(8.dp)
+    modifier = modifier.horizontalScroll(rememberScrollState()),
+    horizontalArrangement = Arrangement.spacedBy(8.dp),
 ) {
     val screen by navigation.screen.collectAsStateWithLifecycle()
 
