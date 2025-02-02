@@ -60,10 +60,9 @@ class TestCaseQueue {
 
     suspend fun dequeue(): TestCase? {
         return mutex.withLock {
-            val nextEntry = tests.entries.firstOrNull() ?: return null
-
-            tests.remove(nextEntry.key)
-            nextEntry.value
+            tests.values.lastOrNull()?.also {
+                tests.remove(it.uuid)
+            }
         }
     }
 
