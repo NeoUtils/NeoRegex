@@ -67,40 +67,12 @@ class ValidatorViewModel(
         testPattern,
         expanded,
     ) { history, pattern, testCases, testPattern, selected ->
-
-        val testableCases = testCases.filter { it.testable }
-
         ValidatorUiState(
             pattern = pattern,
             history = history,
             testCases = testCases,
-            expanded = selected,
-            error = testPattern.regex.exceptionOrNull()?.message,
-            result = when {
-                testPattern.regex.isFailure -> {
-                    ValidatorUiState.Result.ERROR
-                }
-
-                testPattern.isInvalid or testableCases.isEmpty() -> {
-                    ValidatorUiState.Result.WAITING
-                }
-
-                testableCases.any { it.result.isRunning } -> {
-                    ValidatorUiState.Result.RUNNING
-                }
-
-                testableCases.any { it.result.isError } -> {
-                    ValidatorUiState.Result.ERROR
-                }
-
-                testableCases.all { it.result.isSuccess } -> {
-                    ValidatorUiState.Result.SUCCESS
-                }
-
-                else -> {
-                    ValidatorUiState.Result.WAITING
-                }
-            }
+            testPattern = testPattern,
+            expanded = selected
         )
     }.stateIn(
         scope = screenModelScope,
@@ -109,6 +81,7 @@ class ValidatorViewModel(
             history = patternRepository.historyFlow.value,
             pattern = patternRepository.flow.value,
             testCases = testCasesRepository.flow.value,
+            testPattern = testPattern.value,
             expanded = expanded.value
         )
     )

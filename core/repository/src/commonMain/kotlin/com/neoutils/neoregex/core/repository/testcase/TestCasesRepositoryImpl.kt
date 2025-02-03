@@ -30,6 +30,7 @@ internal class TestCasesRepositoryImpl : TestCasesRepository {
 
     private val _flow = MutableStateFlow(listOf(TestCase()))
     override val flow = _flow.asStateFlow()
+
     override val all get() = flow.value
 
     override fun add(testCase: TestCase) {
@@ -85,16 +86,14 @@ internal class TestCasesRepositoryImpl : TestCasesRepository {
 
         val newUuid = Uuid.random()
 
-        _flow.update {
-            val index = it.indexOfFirst { testCase -> testCase.uuid == uuid }
+        val index = all.indexOfFirst { testCase -> testCase.uuid == uuid }
 
-            val newTestCase = it[index].copy(uuid = newUuid)
+        val newTestCase = all[index].copy(uuid = newUuid)
 
-            val before = it.subList(0, index.inc())
-            val after = it.subList(index.inc(), it.size)
+        val before = all.subList(0, index.inc())
+        val after = all.subList(index.inc(), all.size)
 
-            before + newTestCase + after
-        }
+        _flow.value = before + newTestCase + after
 
         return checkNotNull(get(newUuid))
     }

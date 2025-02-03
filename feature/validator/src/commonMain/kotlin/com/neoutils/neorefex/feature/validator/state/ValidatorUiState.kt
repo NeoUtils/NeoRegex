@@ -16,15 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+@file:OptIn(ExperimentalUuidApi::class)
+
 package com.neoutils.neorefex.feature.validator.state
 
-import com.neoutils.neoregex.core.common.model.TestCase
+import com.neoutils.neorefex.feature.validator.model.TestPattern
 import com.neoutils.neoregex.core.common.model.History
+import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.model.Text
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
 data class ValidatorUiState(
     val testCases: List<TestCase>,
     val pattern: Text,
@@ -39,4 +41,48 @@ data class ValidatorUiState(
         SUCCESS,
         ERROR
     }
+}
+
+fun ValidatorUiState(
+    testCases: List<TestCase>,
+    pattern: Text,
+    history: History,
+    expanded: Uuid? = null,
+    testPattern: TestPattern,
+): ValidatorUiState {
+
+    val testableCases = testCases.filter { it.testable }
+
+    return ValidatorUiState(
+        testCases = testCases,
+        pattern = pattern,
+        history = history,
+        expanded = expanded,
+        error = testPattern.regex.exceptionOrNull()?.message,
+        result = when {
+            testPattern.regex.isFailure -> {
+                ValidatorUiState.Result.ERROR
+            }
+
+            testPattern.isInvalid or testableCases.isEmpty() -> {
+                ValidatorUiState.Result.WAITING
+            }
+
+            testableCases.any { it.result.isRunning } -> {
+                ValidatorUiState.Result.RUNNING
+            }
+
+            testableCases.any { it.result.isError } -> {
+                ValidatorUiState.Result.ERROR
+            }
+
+            testableCases.all { it.result.isSuccess } -> {
+                ValidatorUiState.Result.SUCCESS
+            }
+
+            else -> {
+                ValidatorUiState.Result.WAITING
+            }
+        }
+    )
 }
