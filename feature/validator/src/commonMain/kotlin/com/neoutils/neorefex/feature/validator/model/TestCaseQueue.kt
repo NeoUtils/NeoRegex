@@ -18,6 +18,7 @@
 
 package com.neoutils.neorefex.feature.validator.model
 
+import com.neoutils.neoregex.core.common.model.TestCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock

@@ -52,11 +52,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.neoutils.neorefex.feature.validator.action.ValidatorAction
-import com.neoutils.neorefex.feature.validator.model.TestCase
+import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neorefex.feature.validator.state.ValidatorUiState
 import com.neoutils.neoregex.core.designsystem.component.ErrorTooltip
 import com.neoutils.neoregex.core.designsystem.component.Link

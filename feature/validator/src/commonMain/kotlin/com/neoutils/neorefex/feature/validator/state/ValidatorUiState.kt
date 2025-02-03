@@ -18,7 +18,7 @@
 
 package com.neoutils.neorefex.feature.validator.state
 
-import com.neoutils.neorefex.feature.validator.model.TestCase
+import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.model.History
 import com.neoutils.neoregex.core.common.model.Text
 import kotlin.uuid.ExperimentalUuidApi

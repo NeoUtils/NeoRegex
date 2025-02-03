@@ -20,9 +20,12 @@ package com.neoutils.neoregex.core.repository.di
 
 import com.neoutils.neoregex.core.repository.pattern.PatternRepository
 import com.neoutils.neoregex.core.repository.pattern.PatternRepositoryImpl
+import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
+import com.neoutils.neoregex.core.repository.testcase.TestCasesRepositoryImpl
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val repositoryModule = module {
     single { PatternRepositoryImpl() } bind PatternRepository::class
+    single { TestCasesRepositoryImpl() } bind TestCasesRepository::class
 }

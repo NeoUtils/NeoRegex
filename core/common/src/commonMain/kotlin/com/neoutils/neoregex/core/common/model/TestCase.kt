@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neorefex.feature.validator.model
+package com.neoutils.neoregex.core.common.model
 
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid

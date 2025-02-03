@@ -16,36 +16,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neorefex.feature.validator.action
+package com.neoutils.neoregex.core.repository.testcase
 
 import com.neoutils.neoregex.core.common.model.TestCase
+import kotlinx.coroutines.flow.StateFlow
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-sealed class ValidatorAction {
+interface TestCasesRepository {
 
-    data class UpdateTestCase(
-        val newTestCase: TestCase
-    ) : ValidatorAction()
+    val flow: StateFlow<List<TestCase>>
+    val all : List<TestCase>
 
-    data class ExpandedTestCase(
-        val targetUuid: Uuid
-    ) : ValidatorAction()
+    fun update(uuid: Uuid, block: (TestCase) -> TestCase) : TestCase
 
-    data class CollapseTestCase(
-        val targetUuid: Uuid
-    ) : ValidatorAction()
-
-    data class RemoveTestCase(
-        val targetUuid: Uuid
-    ) : ValidatorAction()
-
-    data class AddTestCase(
-        val newTestCase: TestCase = TestCase()
-    ) : ValidatorAction()
-
-    data class Duplicate(
-        val targetUuid: Uuid
-    ) : ValidatorAction()
+    fun add(testCase: TestCase)
+    fun get(uuid: Uuid) : TestCase?
+    fun remove(uuid: Uuid)
+    fun duplicate(uuid: Uuid): TestCase
+    fun invalidate()
 }
