@@ -30,6 +30,7 @@ interface TestCasesRepository {
     val all : List<TestCase>
 
     fun update(uuid: Uuid, block: (TestCase) -> TestCase) : TestCase
+    fun update(newTestCase: TestCase)
 
     fun add(testCase: TestCase)
     fun get(uuid: Uuid) : TestCase?

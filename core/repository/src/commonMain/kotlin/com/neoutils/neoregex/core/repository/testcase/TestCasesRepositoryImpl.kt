@@ -61,6 +61,18 @@ internal class TestCasesRepositoryImpl : TestCasesRepository {
         return checkNotNull(get(uuid))
     }
 
+    override fun update(newTestCase: TestCase) {
+        _flow.update {
+            it.map { testCase ->
+                if (newTestCase.uuid == testCase.uuid) {
+                    newTestCase
+                } else {
+                    testCase
+                }
+            }
+        }
+    }
+
     override fun remove(uuid: Uuid) {
         _flow.update {
             it.filter { testCase ->

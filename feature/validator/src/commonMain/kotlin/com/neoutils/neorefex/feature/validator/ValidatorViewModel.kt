@@ -28,15 +28,16 @@ import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.repository.pattern.PatternRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
 import com.neoutils.neoregex.core.sharedui.component.FooterAction
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
-@OptIn(ExperimentalUuidApi::class)
+@OptIn(
+    ExperimentalCoroutinesApi::class,
+    ExperimentalUuidApi::class,
+    FlowPreview::class
+)
 class ValidatorViewModel(
     private val patternRepository: PatternRepository,
     private val testCasesRepository: TestCasesRepository
@@ -50,12 +51,13 @@ class ValidatorViewModel(
     private var addToQueueJob = mutableMapOf<Uuid, Job>()
 
     private val testPattern = patternRepository.flow
+        .debounce(DELAY_TYPING)
         .distinctUntilChangedBy { it.text }
-        .map { TestPattern(it.text) }
+        .mapLatest { TestPattern(it.text) }
         .stateIn(
             scope = screenModelScope,
             started = SharingStarted.WhileSubscribed(),
-            initialValue = TestPattern()
+            initialValue = TestPattern(patternRepository.flow.value.text)
         )
 
     val uiState = combine(
@@ -130,20 +132,12 @@ class ValidatorViewModel(
             validationJob.clear()
 
             // add to queue
-            addToQueueJob[Uuid.NIL]?.cancel()
-
             if (testPattern.isValid) {
-                addToQueueJob[Uuid.NIL] = launch {
-                    delay(DELAY_TYPING)
-                    testCaseQueue.enqueue(
-                        testCasesRepository.all.filter {
-                            it.mustValidate
-                        }
-                    )
-                }
-
-                addToQueueJob[Uuid.NIL]?.join()
-                addToQueueJob.remove(Uuid.NIL)
+                testCaseQueue.enqueue(
+                    testCasesRepository.all.filter {
+                        it.mustValidate
+                    }
+                )
             }
         }
     }
@@ -262,7 +256,7 @@ class ValidatorViewModel(
             }
         )
 
-        testCasesRepository.update(newTestCase.uuid) { newTestCase }
+        testCasesRepository.update(testCase)
 
         if (mustValidate && testPattern.isValid) {
             addToQueue(testCase)
