@@ -16,9 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neorefex.feature.validator.di
+package com.neoutils.neoregex.feature.validator.di
 
-import com.neoutils.neorefex.feature.validator.ValidatorViewModel
+import com.neoutils.neoregex.feature.validator.ValidatorViewModel
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 

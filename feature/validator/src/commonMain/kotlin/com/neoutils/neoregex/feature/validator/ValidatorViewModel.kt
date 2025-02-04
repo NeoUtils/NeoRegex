@@ -16,14 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neorefex.feature.validator
+package com.neoutils.neoregex.feature.validator
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.neoutils.neorefex.feature.validator.action.ValidatorAction
-import com.neoutils.neorefex.feature.validator.model.TestCaseQueue
-import com.neoutils.neorefex.feature.validator.model.TestPattern
-import com.neoutils.neorefex.feature.validator.state.ValidatorUiState
+import com.neoutils.neoregex.feature.validator.action.ValidatorAction
+import com.neoutils.neoregex.feature.validator.model.TestCaseQueue
+import com.neoutils.neoregex.feature.validator.model.TestPattern
+import com.neoutils.neoregex.feature.validator.state.ValidatorUiState
 import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.repository.pattern.PatternRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository

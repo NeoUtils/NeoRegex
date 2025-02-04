@@ -30,7 +30,7 @@ import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.internal.BackHandler
 import cafe.adriel.voyager.transitions.FadeTransition
-import com.neoutils.neorefex.feature.validator.ValidatorScreen
+import com.neoutils.neoregex.feature.validator.ValidatorScreen
 import com.neoutils.neoregex.core.designsystem.theme.NeoBackground
 import com.neoutils.neoregex.core.dispatcher.NavigationManager
 import com.neoutils.neoregex.core.dispatcher.model.Navigation

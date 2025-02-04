@@ -16,54 +16,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neorefex.feature.validator
+package com.neoutils.neoregex.feature.validator
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.ExpandCircleDown
-import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
-import com.neoutils.neorefex.feature.validator.action.ValidatorAction
-import com.neoutils.neorefex.feature.validator.state.TestCase
-import com.neoutils.neoregex.core.common.model.TestCase
-import com.neoutils.neorefex.feature.validator.state.ValidatorUiState
+import com.neoutils.neoregex.feature.validator.action.ValidatorAction
+import com.neoutils.neoregex.feature.validator.state.TestCase
+import com.neoutils.neoregex.feature.validator.state.ValidatorUiState
 import com.neoutils.neoregex.core.designsystem.component.ErrorTooltip
-import com.neoutils.neoregex.core.designsystem.component.Link
-import com.neoutils.neoregex.core.designsystem.component.LinkColor
-import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.Green
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.sharedui.component.Footer
 import kotlin.uuid.ExperimentalUuidApi
 

@@ -33,7 +33,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.neoutils.neorefex.feature.validator.di.validatorModule
+import com.neoutils.neoregex.feature.validator.di.validatorModule
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource

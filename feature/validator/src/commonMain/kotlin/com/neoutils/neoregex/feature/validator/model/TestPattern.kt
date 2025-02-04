@@ -1,4 +1,4 @@
-package com.neoutils.neorefex.feature.validator.model
+package com.neoutils.neoregex.feature.validator.model
 
 data class TestPattern(
     val pattern: String = ""

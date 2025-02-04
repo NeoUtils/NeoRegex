@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.neoutils.neorefex.feature.validator.di.validatorModule
+import com.neoutils.neoregex.feature.validator.di.validatorModule
 import com.neoutils.neoregex.core.common.extension.toCss
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme

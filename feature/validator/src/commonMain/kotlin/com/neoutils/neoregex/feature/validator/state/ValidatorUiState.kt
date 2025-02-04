@@ -18,9 +18,9 @@
 
 @file:OptIn(ExperimentalUuidApi::class)
 
-package com.neoutils.neorefex.feature.validator.state
+package com.neoutils.neoregex.feature.validator.state
 
-import com.neoutils.neorefex.feature.validator.model.TestPattern
+import com.neoutils.neoregex.feature.validator.model.TestPattern
 import com.neoutils.neoregex.core.common.model.History
 import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.model.Text

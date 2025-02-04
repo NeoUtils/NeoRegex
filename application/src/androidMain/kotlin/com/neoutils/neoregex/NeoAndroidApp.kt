@@ -19,7 +19,7 @@
 package com.neoutils.neoregex
 
 import android.app.Application
-import com.neoutils.neorefex.feature.validator.di.validatorModule
+import com.neoutils.neoregex.feature.validator.di.validatorModule
 import com.neoutils.neoregex.core.datasource.di.dataSourceModule
 import com.neoutils.neoregex.core.dispatcher.di.navigationModule
 import com.neoutils.neoregex.core.repository.di.repositoryModule

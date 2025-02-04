@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neorefex.feature.validator.model
+package com.neoutils.neoregex.feature.validator.model
 
 import com.neoutils.neoregex.core.common.model.TestCase
 import kotlinx.coroutines.channels.Channel
