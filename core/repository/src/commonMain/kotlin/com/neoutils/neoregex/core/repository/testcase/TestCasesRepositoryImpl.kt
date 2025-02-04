@@ -19,92 +19,58 @@
 package com.neoutils.neoregex.core.repository.testcase
 
 import com.neoutils.neoregex.core.common.model.TestCase
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import com.neoutils.neoregex.core.common.util.ObservableMutableMap
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 internal class TestCasesRepositoryImpl : TestCasesRepository {
 
-    private val _flow = MutableStateFlow(listOf(TestCase()))
-    override val flow = _flow.asStateFlow()
+    private val testCases = ObservableMutableMap(TestCase().toPair())
+
+    override val flow = testCases.valuesFlow
 
     override val all get() = flow.value
 
-    override fun add(testCase: TestCase) {
-        _flow.update {
-            it + testCase
-        }
+    override fun set(testCase: TestCase) {
+        testCases[testCase.uuid] = testCase
     }
 
-    override fun get(
-        uuid: Uuid
-    ) = flow.value.find {
-        it.uuid == uuid
-    }
+    override fun get(uuid: Uuid) = testCases[uuid]
 
     override fun update(
         uuid: Uuid,
         block: (TestCase) -> TestCase
     ): TestCase {
-        _flow.update {
-            it.map { testCase ->
-                if (uuid == testCase.uuid) {
-                    block(testCase)
-                } else {
-                    testCase
-                }
-            }
-        }
+
+        testCases[uuid] = block(checkNotNull(get(uuid)))
 
         return checkNotNull(get(uuid))
     }
 
-    override fun update(newTestCase: TestCase) {
-        _flow.update {
-            it.map { testCase ->
-                if (newTestCase.uuid == testCase.uuid) {
-                    newTestCase
-                } else {
-                    testCase
-                }
-            }
-        }
-    }
-
     override fun remove(uuid: Uuid) {
-        _flow.update {
-            it.filter { testCase ->
-                testCase.uuid != uuid
-            }
-        }
+        testCases.remove(uuid)
     }
 
     override fun duplicate(uuid: Uuid): TestCase {
 
         val newUuid = Uuid.random()
 
-        val index = all.indexOfFirst { testCase -> testCase.uuid == uuid }
-
-        val newTestCase = all[index].copy(uuid = newUuid)
-
-        val before = all.subList(0, index.inc())
-        val after = all.subList(index.inc(), all.size)
-
-        _flow.value = before + newTestCase + after
+        testCases[newUuid] = checkNotNull(get(uuid)).copy(uuid = newUuid)
 
         return checkNotNull(get(newUuid))
     }
 
     override fun invalidate() {
-        _flow.update {
-            it.map { testCase ->
-                testCase.copy(
-                    result = TestCase.Result.IDLE
+        testCases.putAll(
+            testCases.entries.map {
+                Pair(
+                    it.key,
+                    it.value.copy(
+                        result = TestCase.Result.IDLE
+                    )
                 )
             }
-        }
+        )
     }
 }

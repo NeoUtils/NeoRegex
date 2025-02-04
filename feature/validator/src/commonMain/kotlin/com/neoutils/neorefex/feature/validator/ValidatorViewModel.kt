@@ -197,7 +197,7 @@ class ValidatorViewModel(
             }
 
             is ValidatorAction.AddTestCase -> {
-                testCasesRepository.add(action.newTestCase)
+                testCasesRepository.set(action.newTestCase)
                 expanded.value = action.newTestCase.uuid
             }
 
@@ -229,7 +229,7 @@ class ValidatorViewModel(
             }
         )
 
-        testCasesRepository.update(testCase)
+        testCasesRepository.set(testCase)
 
         if (mustValidate && testPattern.isValid) {
             addToQueue(testCase)

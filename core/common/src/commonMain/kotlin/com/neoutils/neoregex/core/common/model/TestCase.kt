@@ -33,6 +33,8 @@ data class TestCase(
     val mustValidate = text.isNotEmpty() && result == Result.IDLE
     val testable = text.isNotEmpty()
 
+    fun toPair() = uuid to this
+
     enum class Case(val text: String) {
         MATCH_ANY(text = "Match Any"),
         MATCH_ALL(text = "Match All"),

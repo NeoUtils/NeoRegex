@@ -19,6 +19,7 @@
 package com.neoutils.neoregex.core.repository.testcase
 
 import com.neoutils.neoregex.core.common.model.TestCase
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
@@ -30,9 +31,8 @@ interface TestCasesRepository {
     val all : List<TestCase>
 
     fun update(uuid: Uuid, block: (TestCase) -> TestCase) : TestCase
-    fun update(newTestCase: TestCase)
 
-    fun add(testCase: TestCase)
+    fun set(testCase: TestCase)
     fun get(uuid: Uuid) : TestCase?
     fun remove(uuid: Uuid)
     fun duplicate(uuid: Uuid): TestCase
