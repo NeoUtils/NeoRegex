@@ -236,12 +236,12 @@ class ValidatorViewModel(
 
         testCaseQueue.dequeue(newTestCase.uuid)
 
-        validationJob[newTestCase.uuid]?.cancel()
+        validationJob[newTestCase.uuid]?.cancelAndJoin()
         validationJob.remove(newTestCase.uuid)
 
         results[newTestCase.uuid] = TestState(newTestCase.uuid)
 
-        addToQueueJob[newTestCase.uuid]?.cancel()
+        addToQueueJob[newTestCase.uuid]?.cancelAndJoin()
         addToQueueJob.remove(newTestCase.uuid)
 
         if (testPattern.value.isValid && newTestCase.text.isNotEmpty()) {
