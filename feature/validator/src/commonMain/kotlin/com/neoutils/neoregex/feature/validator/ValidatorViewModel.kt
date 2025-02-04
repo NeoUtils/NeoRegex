@@ -109,7 +109,7 @@ class ValidatorViewModel(
                 testCaseQueue.enqueue(
                     testCasesRepository.all.filter {
                         it.mustValidate
-                    }
+                    }.reversed()
                 )
             }
         }
