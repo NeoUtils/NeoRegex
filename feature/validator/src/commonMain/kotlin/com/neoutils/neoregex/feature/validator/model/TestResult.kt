@@ -16,15 +16,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.feature.validator.action
+package com.neoutils.neoregex.feature.validator.model
 
-import com.neoutils.neoregex.core.common.model.TestCase
-import kotlin.uuid.ExperimentalUuidApi
+enum class TestResult {
+    IDLE,
+    RUNNING,
+    SUCCESS,
+    ERROR;
 
-@OptIn(ExperimentalUuidApi::class)
-sealed class ValidatorAction {
-
-    data class AddTestCase(
-        val newTestCase: TestCase = TestCase()
-    ) : ValidatorAction()
+    val isRunning get() = this == RUNNING
+    val isSuccess get() = this == SUCCESS
+    val isError get() = this == ERROR
+    val isIdle get() = this == IDLE
 }

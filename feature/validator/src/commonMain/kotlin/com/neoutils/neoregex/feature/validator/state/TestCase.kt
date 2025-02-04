@@ -48,12 +48,74 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.neoutils.neoregex.core.common.model.TestCase
+import com.neoutils.neoregex.core.common.util.ObservableMutableMap
 import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.component.LinkColor
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.Green
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.feature.validator.model.TestResult
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+
+@OptIn(ExperimentalUuidApi::class)
+data class TestCaseUi(
+    val uuid: Uuid,
+    val title: String,
+    val text: String,
+    val case: TestCase.Case,
+    val result: TestResult,
+    val selected: Boolean
+)
+
+@OptIn(ExperimentalUuidApi::class)
+fun List<TestCase>.toTestCaseUi(
+    results: Map<Uuid, TestResult>,
+    expanded: Uuid?
+): List<TestCaseUi> = map { testCase ->
+    TestCaseUi(
+        uuid = testCase.uuid,
+        title = testCase.title,
+        text = testCase.text,
+        case = testCase.case,
+        result = results[testCase.uuid] ?: TestResult.IDLE,
+        selected = expanded == testCase.uuid
+    )
+}
+
+@OptIn(ExperimentalUuidApi::class)
+sealed class TestCaseAction {
+    data class ChangeTitle(
+        val uuid: Uuid,
+        val title: String
+    ) : TestCaseAction()
+
+    data class ChangeText(
+        val uuid: Uuid,
+        val text: String
+    ) : TestCaseAction()
+
+    data class ChangeCase(
+        val uuid: Uuid,
+        val case: TestCase.Case
+    ) : TestCaseAction()
+
+    data class Delete(
+        val uuid: Uuid,
+    ) : TestCaseAction()
+
+    data class Collapse(
+        val uuid: Uuid,
+    ) : TestCaseAction()
+
+    data class Expanded(
+        val uuid: Uuid,
+    ) : TestCaseAction()
+
+    data class Duplicate(
+        val uuid: Uuid,
+    ) : TestCaseAction()
+}
 
 @OptIn(
     ExperimentalMaterial3Api::class,
@@ -61,23 +123,19 @@ import kotlin.uuid.ExperimentalUuidApi
 )
 @Composable
 fun TestCase(
-    test: TestCase,
+    test: TestCaseUi,
     expanded: Boolean,
-    onTestChange: (TestCase) -> Unit,
+    onAction: (TestCaseAction) -> Unit,
     modifier: Modifier = Modifier,
-    onExpanded: () -> Unit = {},
-    onClose: () -> Unit = {},
-    onDelete: () -> Unit = {},
-    onCopy: () -> Unit = {},
     textStyle: TextStyle = TextStyle(),
     contentPadding: PaddingValues = PaddingValues(dimensions.default),
     hint: String = "Enter input"
 ) {
     val color by animateColorAsState(
         when (test.result) {
-            TestCase.Result.IDLE -> colorScheme.outlineVariant
+            TestResult.IDLE -> colorScheme.outlineVariant
 
-            TestCase.Result.RUNNING -> {
+            TestResult.RUNNING -> {
                 rememberInfiniteTransition().animateColor(
                     initialValue = colorScheme.outlineVariant,
                     targetValue = Color.White,
@@ -88,8 +146,8 @@ fun TestCase(
                 ).value
             }
 
-            TestCase.Result.SUCCESS -> Green
-            TestCase.Result.ERROR -> colorScheme.error
+            TestResult.SUCCESS -> Green
+            TestResult.ERROR -> colorScheme.error
         }
     )
 
@@ -116,8 +174,9 @@ fun TestCase(
                     NeoTextField(
                         value = test.title,
                         onValueChange = {
-                            onTestChange(
-                                test.copy(
+                            onAction(
+                                TestCaseAction.ChangeTitle(
+                                    uuid = test.uuid,
                                     title = it
                                 )
                             )
@@ -135,15 +194,28 @@ fun TestCase(
                     Options(
                         case = test.case,
                         onCaseChange = {
-                            onTestChange(
-                                test.copy(
+                            onAction(
+                                TestCaseAction.ChangeCase(
+                                    uuid = test.uuid,
                                     case = it
                                 )
                             )
                         },
-                        onDelete = onDelete,
-                        onClose = onClose,
-                        onCopy = onCopy
+                        onDelete = {
+                            onAction(
+                                TestCaseAction.Delete(test.uuid)
+                            )
+                        },
+                        onClose = {
+                            onAction(
+                                TestCaseAction.Collapse(test.uuid)
+                            )
+                        },
+                        onDuplicate = {
+                            onAction(
+                                TestCaseAction.Duplicate(test.uuid)
+                            )
+                        }
                     )
                 }
             }
@@ -167,8 +239,9 @@ fun TestCase(
                     NeoTextField(
                         value = test.text,
                         onValueChange = {
-                            onTestChange(
-                                test.copy(
+                            onAction(
+                                TestCaseAction.ChangeText(
+                                    uuid = test.uuid,
                                     text = it
                                 )
                             )
@@ -207,13 +280,21 @@ fun TestCase(
                         container = {
                             Box(
                                 modifier.clickable(
-                                    onClick = onExpanded
+                                    onClick = {
+                                        onAction(
+                                            TestCaseAction.Expanded(test.uuid)
+                                        )
+                                    }
                                 )
                             )
                         },
                         trailingIcon = {
                             Text(
-                                text = test.case.text,
+                                text = when (test.case) {
+                                    TestCase.Case.MATCH_ANY -> "Match Any"
+                                    TestCase.Case.MATCH_ALL -> "Match All"
+                                    TestCase.Case.MATCH_NONE -> "Match None"
+                                },
                                 modifier = Modifier.padding(contentPadding),
                                 style = typography.labelMedium
                             )
@@ -232,7 +313,7 @@ private fun Options(
     modifier: Modifier = Modifier,
     onDelete: () -> Unit = {},
     onClose: () -> Unit = {},
-    onCopy: () -> Unit = {},
+    onDuplicate: () -> Unit = {},
 ) = Row(
     modifier = modifier,
     verticalAlignment = Alignment.CenterVertically,
@@ -246,7 +327,7 @@ private fun Options(
     )
 
     IconButton(
-        onClick = onCopy,
+        onClick = onDuplicate,
         modifier = Modifier.size(24.dp)
     ) {
         Icon(
@@ -292,7 +373,11 @@ private fun MatchDropDown(
     val expanded = remember { mutableStateOf(false) }
 
     Link(
-        text = case.text,
+        text = when (case) {
+            TestCase.Case.MATCH_ANY -> "Match Any"
+            TestCase.Case.MATCH_ALL -> "Match All"
+            TestCase.Case.MATCH_NONE -> "Match None"
+        },
         onClick = {
             expanded.value = true
         },
@@ -321,7 +406,11 @@ private fun MatchDropDown(
             DropdownMenuItem(
                 text = {
                     Text(
-                        text = it.text,
+                        text = when (it) {
+                            TestCase.Case.MATCH_ANY -> "Match Any"
+                            TestCase.Case.MATCH_ALL -> "Match All"
+                            TestCase.Case.MATCH_NONE -> "Match None"
+                        },
                     )
                 },
                 onClick = {

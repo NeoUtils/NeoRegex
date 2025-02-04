@@ -36,12 +36,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
-import com.neoutils.neoregex.feature.validator.action.ValidatorAction
 import com.neoutils.neoregex.feature.validator.state.TestCase
 import com.neoutils.neoregex.feature.validator.state.ValidatorUiState
 import com.neoutils.neoregex.core.designsystem.component.ErrorTooltip
 import com.neoutils.neoregex.core.designsystem.theme.Green
 import com.neoutils.neoregex.core.sharedui.component.Footer
+import com.neoutils.neoregex.feature.validator.action.ValidatorAction
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
@@ -69,48 +69,11 @@ class ValidatorScreen : Screen {
                 items = uiState.testCases,
                 key = { _, testCase -> testCase.uuid }
             ) { _, testCase ->
-
-                val selected = testCase.uuid == uiState.expanded
-
                 TestCase(
                     test = testCase,
-                    onTestChange = { newTestCase ->
-                        viewModel.onAction(
-                            ValidatorAction.UpdateTestCase(
-                                newTestCase
-                            )
-                        )
-                    },
+                    onAction = viewModel::onAction,
                     modifier = Modifier.fillMaxWidth(),
-                    expanded = selected,
-                    onExpanded = {
-                        viewModel.onAction(
-                            ValidatorAction.ExpandedTestCase(
-                                testCase.uuid
-                            )
-                        )
-                    },
-                    onDelete = {
-                        viewModel.onAction(
-                            ValidatorAction.RemoveTestCase(
-                                testCase.uuid
-                            )
-                        )
-                    },
-                    onClose = {
-                        viewModel.onAction(
-                            ValidatorAction.CollapseTestCase(
-                                testCase.uuid
-                            )
-                        )
-                    },
-                    onCopy = {
-                        viewModel.onAction(
-                            ValidatorAction.Duplicate(
-                                testCase.uuid
-                            )
-                        )
-                    }
+                    expanded = testCase.selected,
                 )
             }
 

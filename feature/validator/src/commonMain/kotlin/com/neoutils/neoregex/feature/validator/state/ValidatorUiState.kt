@@ -28,10 +28,9 @@ import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 data class ValidatorUiState(
-    val testCases: List<TestCase>,
+    val testCases: List<TestCaseUi>,
     val pattern: Text,
     val history: History,
-    val expanded: Uuid? = null,
     val error: String? = null,
     val result: Result = Result.WAITING
 ) {
@@ -44,20 +43,18 @@ data class ValidatorUiState(
 }
 
 fun ValidatorUiState(
-    testCases: List<TestCase>,
+    testCases: List<TestCaseUi>,
     pattern: Text,
     history: History,
-    expanded: Uuid? = null,
     testPattern: TestPattern,
 ): ValidatorUiState {
 
-    val testableCases = testCases.filter { it.testable }
+    val testableCases = testCases.filter { it.text.isNotEmpty() }
 
     return ValidatorUiState(
         testCases = testCases,
         pattern = pattern,
         history = history,
-        expanded = expanded,
         error = testPattern.regex.exceptionOrNull()?.message,
         result = when {
             testPattern.regex.isFailure -> {

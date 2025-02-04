@@ -60,17 +60,4 @@ internal class TestCasesRepositoryImpl : TestCasesRepository {
 
         return checkNotNull(get(newUuid))
     }
-
-    override fun invalidate() {
-        testCases.putAll(
-            testCases.entries.map {
-                Pair(
-                    it.key,
-                    it.value.copy(
-                        result = TestCase.Result.IDLE
-                    )
-                )
-            }
-        )
-    }
 }

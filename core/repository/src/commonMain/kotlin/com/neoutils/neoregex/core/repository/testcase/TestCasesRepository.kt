@@ -36,5 +36,4 @@ interface TestCasesRepository {
     fun get(uuid: Uuid) : TestCase?
     fun remove(uuid: Uuid)
     fun duplicate(uuid: Uuid): TestCase
-    fun invalidate()
 }

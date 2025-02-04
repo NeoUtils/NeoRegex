@@ -27,28 +27,12 @@ data class TestCase(
     val text: String = "",
     val case: Case = Case.MATCH_ANY,
     val uuid: Uuid = Uuid.random(),
-    val result: Result = Result.IDLE
 ) {
-
-    val mustValidate = text.isNotEmpty() && result == Result.IDLE
-    val testable = text.isNotEmpty()
-
     fun toPair() = uuid to this
 
-    enum class Case(val text: String) {
-        MATCH_ANY(text = "Match Any"),
-        MATCH_ALL(text = "Match All"),
-        MATCH_NONE(text = "Match None")
-    }
-
-    enum class Result {
-        IDLE,
-        RUNNING,
-        SUCCESS,
-        ERROR;
-
-        val isRunning get() = this == RUNNING
-        val isSuccess get() = this == SUCCESS
-        val isError get() = this == ERROR
+    enum class Case {
+        MATCH_ANY,
+        MATCH_ALL,
+        MATCH_NONE
     }
 }
