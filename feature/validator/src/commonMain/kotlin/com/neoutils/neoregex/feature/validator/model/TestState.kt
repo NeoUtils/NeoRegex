@@ -18,14 +18,25 @@
 
 package com.neoutils.neoregex.feature.validator.model
 
-enum class TestResult {
-    IDLE,
-    RUNNING,
-    SUCCESS,
-    ERROR;
+import com.neoutils.neoregex.core.sharedui.model.Match
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-    val isRunning get() = this == RUNNING
-    val isSuccess get() = this == SUCCESS
-    val isError get() = this == ERROR
-    val isIdle get() = this == IDLE
+@OptIn(ExperimentalUuidApi::class)
+data class TestState(
+    val uuid: Uuid,
+    val result: Result = TestState.Result.IDLE,
+    val matches: List<Match> = listOf()
+) {
+    enum class Result {
+        IDLE,
+        RUNNING,
+        SUCCESS,
+        ERROR;
+
+        val isRunning get() = this == RUNNING
+        val isSuccess get() = this == SUCCESS
+        val isError get() = this == ERROR
+        val isIdle get() = this == IDLE
+    }
 }

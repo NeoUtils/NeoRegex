@@ -25,10 +25,11 @@ import com.neoutils.neoregex.core.common.util.ObservableMutableMap
 import com.neoutils.neoregex.core.repository.pattern.PatternRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
 import com.neoutils.neoregex.core.sharedui.component.FooterAction
+import com.neoutils.neoregex.core.sharedui.model.Match
 import com.neoutils.neoregex.feature.validator.action.ValidatorAction
 import com.neoutils.neoregex.feature.validator.model.TestCaseQueue
 import com.neoutils.neoregex.feature.validator.model.TestPattern
-import com.neoutils.neoregex.feature.validator.model.TestResult
+import com.neoutils.neoregex.feature.validator.model.TestState
 import com.neoutils.neoregex.feature.validator.state.TestCaseAction
 import com.neoutils.neoregex.feature.validator.state.ValidatorUiState
 import com.neoutils.neoregex.feature.validator.state.toTestCaseUi
@@ -50,7 +51,7 @@ class ValidatorViewModel(
     private val testCaseQueue = TestCaseQueue()
 
     private val expanded = MutableStateFlow(testCasesRepository.all.firstOrNull()?.uuid)
-    private val results = ObservableMutableMap<Uuid, TestResult>()
+    private val results = ObservableMutableMap<Uuid, TestState>()
 
     private var validationJob = mutableMapOf<Uuid, Job>()
     private var addToQueueJob = mutableMapOf<Uuid, Job>()
@@ -137,7 +138,12 @@ class ValidatorViewModel(
 
             if (testCase != null) {
                 validationJob[testCase.uuid] = launch {
-                    results[testCase.uuid] = TestResult.RUNNING
+
+                    results[testCase.uuid] = TestState(
+                        uuid = testCase.uuid,
+                        result = TestState.Result.RUNNING
+                    )
+
                     results[testCase.uuid] = validate(testCase)
                 }
 
@@ -155,29 +161,69 @@ class ValidatorViewModel(
     private fun validate(
         testCase: TestCase,
         regex: Regex = testPattern.value.regex.getOrThrow()
-    ): TestResult {
+    ): TestState {
+
+        val result = regex.findAll(testCase.text)
+
+        val matches = buildList {
+            result.forEachIndexed { index, match ->
+                add(
+                    Match(
+                        text = match.value,
+                        range = match.range,
+                        groups = match.groupValues.drop(n = 1),
+                        number = index.inc(),
+                    )
+                )
+            }
+        }
+
         return when (testCase.case) {
             TestCase.Case.MATCH_ANY -> {
-                if (regex.find(testCase.text) != null) {
-                    TestResult.SUCCESS
+                if (matches.isEmpty()) {
+                    TestState(
+                        uuid = testCase.uuid,
+                        result = TestState.Result.ERROR,
+                        matches = matches
+                    )
                 } else {
-                    TestResult.ERROR
+                    TestState(
+                        uuid = testCase.uuid,
+                        result = TestState.Result.SUCCESS,
+                        matches = matches
+                    )
                 }
             }
 
             TestCase.Case.MATCH_ALL -> {
                 if (regex.matches(testCase.text)) {
-                    TestResult.SUCCESS
+                    TestState(
+                        uuid = testCase.uuid,
+                        result = TestState.Result.SUCCESS,
+                        matches = matches
+                    )
                 } else {
-                    TestResult.ERROR
+                    TestState(
+                        uuid = testCase.uuid,
+                        result = TestState.Result.ERROR,
+                        matches = matches
+                    )
                 }
             }
 
             TestCase.Case.MATCH_NONE -> {
-                if (regex.find(testCase.text) == null) {
-                    TestResult.SUCCESS
+                if (matches.isEmpty()) {
+                    TestState(
+                        uuid = testCase.uuid,
+                        result = TestState.Result.SUCCESS,
+                        matches = matches
+                    )
                 } else {
-                    TestResult.ERROR
+                    TestState(
+                        uuid = testCase.uuid,
+                        result = TestState.Result.ERROR,
+                        matches = matches
+                    )
                 }
             }
         }
@@ -193,15 +239,17 @@ class ValidatorViewModel(
         validationJob[newTestCase.uuid]?.cancel()
         validationJob.remove(newTestCase.uuid)
 
-        results[newTestCase.uuid] = TestResult.IDLE
+        results[newTestCase.uuid] = TestState(newTestCase.uuid)
 
         addToQueueJob[newTestCase.uuid]?.cancel()
+        addToQueueJob.remove(newTestCase.uuid)
 
         if (testPattern.value.isValid && newTestCase.text.isNotEmpty()) {
             addToQueueJob[newTestCase.uuid] = launch {
                 if (withDelay) {
                     delay(DELAY_TYPING)
                 }
+
                 testCaseQueue.enqueue(newTestCase)
             }
 
@@ -284,11 +332,12 @@ class ValidatorViewModel(
             }
 
             is TestCaseAction.Duplicate -> {
-                val newTestCase = testCasesRepository.duplicate(action.uuid)
-
-                addToQueue(newTestCase)
-
-                expanded.value = newTestCase.uuid
+                testCasesRepository
+                    .duplicate(action.uuid)
+                    .also {
+                        addToQueue(it)
+                        expanded.value = it.uuid
+                    }
             }
 
             is TestCaseAction.Expanded -> {

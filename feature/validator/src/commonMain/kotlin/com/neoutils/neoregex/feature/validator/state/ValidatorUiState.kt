@@ -22,10 +22,8 @@ package com.neoutils.neoregex.feature.validator.state
 
 import com.neoutils.neoregex.feature.validator.model.TestPattern
 import com.neoutils.neoregex.core.common.model.History
-import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.model.Text
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 data class ValidatorUiState(
     val testCases: List<TestCaseUi>,
@@ -65,15 +63,15 @@ fun ValidatorUiState(
                 ValidatorUiState.Result.WAITING
             }
 
-            testableCases.any { it.result.isRunning } -> {
+            testableCases.any { it.state.result.isRunning } -> {
                 ValidatorUiState.Result.RUNNING
             }
 
-            testableCases.any { it.result.isError } -> {
+            testableCases.any { it.state.result.isError } -> {
                 ValidatorUiState.Result.ERROR
             }
 
-            testableCases.all { it.result.isSuccess } -> {
+            testableCases.all { it.state.result.isSuccess } -> {
                 ValidatorUiState.Result.SUCCESS
             }
 

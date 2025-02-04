@@ -39,22 +39,28 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.neoutils.neoregex.core.common.model.TestCase
-import com.neoutils.neoregex.core.common.util.ObservableMutableMap
 import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.component.LinkColor
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.Green
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.feature.validator.model.TestResult
+import com.neoutils.neoregex.core.sharedui.extension.getBoundingBoxes
+import com.neoutils.neoregex.core.sharedui.model.MatchBox
+import com.neoutils.neoregex.feature.validator.model.TestState
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -64,13 +70,13 @@ data class TestCaseUi(
     val title: String,
     val text: String,
     val case: TestCase.Case,
-    val result: TestResult,
-    val selected: Boolean
+    val state: TestState,
+    val selected: Boolean,
 )
 
 @OptIn(ExperimentalUuidApi::class)
 fun List<TestCase>.toTestCaseUi(
-    results: Map<Uuid, TestResult>,
+    results: Map<Uuid, TestState>,
     expanded: Uuid?
 ): List<TestCaseUi> = map { testCase ->
     TestCaseUi(
@@ -78,7 +84,7 @@ fun List<TestCase>.toTestCaseUi(
         title = testCase.title,
         text = testCase.text,
         case = testCase.case,
-        result = results[testCase.uuid] ?: TestResult.IDLE,
+        state = results[testCase.uuid] ?: TestState(testCase.uuid),
         selected = expanded == testCase.uuid
     )
 }
@@ -131,12 +137,14 @@ fun TestCase(
     contentPadding: PaddingValues = PaddingValues(dimensions.default),
     hint: String = "Enter input"
 ) {
-    val color by animateColorAsState(
-        when (test.result) {
-            TestResult.IDLE -> colorScheme.outlineVariant
+    val infiniteTransition = rememberInfiniteTransition()
 
-            TestResult.RUNNING -> {
-                rememberInfiniteTransition().animateColor(
+    val borderColor by animateColorAsState(
+        when (test.state.result) {
+            TestState.Result.IDLE -> colorScheme.outlineVariant
+
+            TestState.Result.RUNNING -> {
+                infiniteTransition.animateColor(
                     initialValue = colorScheme.outlineVariant,
                     targetValue = Color.White,
                     animationSpec = infiniteRepeatable(
@@ -146,10 +154,16 @@ fun TestCase(
                 ).value
             }
 
-            TestResult.SUCCESS -> Green
-            TestResult.ERROR -> colorScheme.error
+            TestState.Result.SUCCESS -> Green
+            TestState.Result.ERROR -> colorScheme.error
         }
     )
+
+    val matchesColor = when(test.state.result) {
+        TestState.Result.SUCCESS -> Green
+        TestState.Result.ERROR ->  colorScheme.error
+        else -> Color.Transparent
+    }
 
     Surface(
         modifier = modifier,
@@ -158,7 +172,7 @@ fun TestCase(
         contentColor = colorScheme.onSurface,
         border = BorderStroke(
             width = 1.dp,
-            color = color
+            color = borderColor
         ),
     ) {
         Column {
@@ -236,6 +250,8 @@ fun TestCase(
                         focusRequester.requestFocus()
                     }
 
+                    var textLayout by remember { mutableStateOf<TextLayoutResult?>(null) }
+
                     NeoTextField(
                         value = test.text,
                         onValueChange = {
@@ -247,10 +263,51 @@ fun TestCase(
                             )
                         },
                         modifier = Modifier
+                            .padding(contentPadding)
+                            .heightIn(min = 24.dp)
+                            .drawBehind {
+                                val matchBoxes = textLayout?.let { textLayout ->
+                                    test.state.matches.flatMap { match ->
+                                        textLayout.getBoundingBoxes(
+                                            match.range.first,
+                                            match.range.last
+                                        ).map {
+                                            MatchBox(
+                                                match,
+                                                it.deflate(
+                                                    delta = 0.8f
+                                                )
+                                            )
+                                        }
+                                    }
+                                } ?: listOf()
+
+                                matchBoxes.forEach { (_, rect) ->
+                                    drawRect(
+                                        color = matchesColor,
+                                        topLeft = Offset(
+                                            x = rect.left,
+                                            y = rect.top
+                                        ),
+                                        size = Size(
+                                            rect.width,
+                                            rect.height
+                                        )
+                                    )
+                                }
+                            }
                             .focusRequester(focusRequester)
                             .fillMaxWidth(),
-                        contentPadding = contentPadding,
-                        textStyle = mergedTextStyle,
+                        onTextLayout = {
+                            textLayout = it
+                        },
+                        contentPadding = PaddingValues(0.dp),
+                        textStyle = mergedTextStyle.copy(
+                            lineHeightStyle = LineHeightStyle(
+                                alignment = LineHeightStyle.Alignment.Proportional,
+                                trim = LineHeightStyle.Trim.None,
+                            ),
+                        ),
                         hint = hint
                     )
                 } else {

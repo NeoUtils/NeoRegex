@@ -18,26 +18,24 @@
 
 package com.neoutils.neoregex.core.designsystem.textfield
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Info
-import androidx.compose.material3.*
-import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import kotlinx.coroutines.launch
-
 
 @Composable
 fun NeoTextField(
@@ -45,6 +43,7 @@ fun NeoTextField(
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
     endIcon: @Composable (() -> Unit)? = null,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
     textStyle: TextStyle = TextStyle(),
     singleLine: Boolean = false,
     contentPadding: PaddingValues = PaddingValues(dimensions.default),
@@ -61,6 +60,7 @@ fun NeoTextField(
             onValueChange(it.text)
         },
         endIcon = endIcon,
+        onTextLayout = onTextLayout,
         modifier = modifier,
         textStyle = textStyle,
         singleLine = singleLine,
@@ -75,6 +75,7 @@ fun NeoTextField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
     endIcon: @Composable (() -> Unit)? = null,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(),
     singleLine: Boolean = false,
@@ -99,6 +100,7 @@ fun NeoTextField(
         modifier = modifier.onFocusChanged {
             focused = it.isFocused
         },
+        onTextLayout = onTextLayout,
         decorationBox = { innerTextField ->
             TextFieldDefaults.DecorationBox(
                 value = value.text,
