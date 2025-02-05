@@ -264,7 +264,6 @@ fun TestCase(
                         },
                         modifier = Modifier
                             .padding(contentPadding)
-                            .heightIn(min = 24.dp)
                             .drawBehind {
                                 val matchBoxes = textLayout?.let { textLayout ->
                                     test.state.matches.flatMap { match ->

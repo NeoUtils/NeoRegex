@@ -18,22 +18,22 @@
 
 package com.neoutils.neoregex.core.designsystem.textfield
 
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 
@@ -69,7 +69,6 @@ fun NeoTextField(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NeoTextField(
     value: TextFieldValue,
@@ -102,19 +101,16 @@ fun NeoTextField(
         },
         onTextLayout = onTextLayout,
         decorationBox = { innerTextField ->
-            TextFieldDefaults.DecorationBox(
-                value = value.text,
-                innerTextField = innerTextField,
-                enabled = true,
-                singleLine = singleLine,
-                visualTransformation = VisualTransformation.None,
-                interactionSource = remember { MutableInteractionSource() },
-                contentPadding = contentPadding,
-                isError = false,
-                container = {},
-                placeholder = {
+            Box(
+                modifier = Modifier.padding(contentPadding),
+                propagateMinConstraints = true
+            ) {
+
+                innerTextField()
+
+                if (value.text.isEmpty()) {
                     Text(
-                        text = hint,
+                        text = hint.substringBefore(delimiter = "\n"),
                         style = mergedTextStyle.copy(
                             color = mergedTextStyle.color.copy(
                                 alpha = 0.5f
@@ -123,9 +119,10 @@ fun NeoTextField(
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
                     )
-                },
-                trailingIcon = endIcon
-            )
+                }
+
+                // TODO: implement end icon 
+            }
         },
     )
 }
