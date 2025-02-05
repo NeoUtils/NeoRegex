@@ -23,7 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.text.TextStyle
 import com.neoutils.neoregex.core.common.model.Text
-import com.neoutils.neoregex.core.sharedui.model.Match
+import com.neoutils.neoregex.core.common.model.Match
 
 @Composable
 expect fun TextEditor(

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.sharedui.model
+package com.neoutils.neoregex.core.common.model
 
 data class Match(
     val number: Int,

@@ -23,6 +23,7 @@ package com.neoutils.neoregex.feature.validator.state
 import com.neoutils.neoregex.feature.validator.model.TestPattern
 import com.neoutils.neoregex.core.common.model.History
 import com.neoutils.neoregex.core.common.model.Text
+import com.neoutils.neoregex.feature.validator.component.TestCaseUi
 import kotlin.uuid.ExperimentalUuidApi
 
 data class ValidatorUiState(

@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.sharedui.extension
+package com.neoutils.neoregex.core.common.extension
 
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.text.TextLayoutResult

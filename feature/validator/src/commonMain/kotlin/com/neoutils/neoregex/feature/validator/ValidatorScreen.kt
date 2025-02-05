@@ -18,7 +18,10 @@
 
 package com.neoutils.neoregex.feature.validator
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -28,20 +31,24 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material3.*
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.runtime.*
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
-import com.neoutils.neoregex.feature.validator.state.TestCase
-import com.neoutils.neoregex.feature.validator.state.ValidatorUiState
 import com.neoutils.neoregex.core.designsystem.component.ErrorTooltip
 import com.neoutils.neoregex.core.designsystem.theme.Green
 import com.neoutils.neoregex.core.sharedui.component.Footer
 import com.neoutils.neoregex.feature.validator.action.ValidatorAction
+import com.neoutils.neoregex.feature.validator.component.TestCase
+import com.neoutils.neoregex.feature.validator.state.ValidatorUiState
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
@@ -115,39 +122,38 @@ class ValidatorScreen : Screen {
                         fadeIn() togetherWith fadeOut()
                     }
                 ) { (result, error) ->
-                    when (result) {
-                        ValidatorUiState.Result.WAITING -> {
-                            Spacer(Modifier.size(24.dp))
-                        }
-
-                        ValidatorUiState.Result.RUNNING -> {
-                            CircularProgressIndicator(
-                                strokeWidth = 2.dp,
-                                color = colorScheme.onSurface,
-                                modifier = Modifier
-                                    .size(24.dp)
-                                    .padding(2.dp)
-                            )
-                        }
-
-                        ValidatorUiState.Result.SUCCESS -> {
-                            Icon(
-                                imageVector = Icons.Rounded.CheckCircle,
-                                contentDescription = null,
-                                tint = Green
-                            )
-                        }
-
-                        ValidatorUiState.Result.ERROR -> {
-                            if (error != null) {
-                                ErrorTooltip(error)
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Rounded.Cancel,
-                                    contentDescription = null,
-                                    tint = colorScheme.error
+                    Box(Modifier.size(24.dp)) {
+                        when (result) {
+                            ValidatorUiState.Result.RUNNING -> {
+                                CircularProgressIndicator(
+                                    strokeWidth = 2.dp,
+                                    color = colorScheme.onSurface,
+                                    modifier = Modifier
+                                        .size(24.dp)
+                                        .padding(2.dp)
                                 )
                             }
+
+                            ValidatorUiState.Result.SUCCESS -> {
+                                Icon(
+                                    imageVector = Icons.Rounded.CheckCircle,
+                                    contentDescription = null,
+                                    tint = Green
+                                )
+                            }
+                            ValidatorUiState.Result.ERROR -> {
+                                if (error != null) {
+                                    ErrorTooltip(error)
+                                } else {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Cancel,
+                                        contentDescription = null,
+                                        tint = colorScheme.error
+                                    )
+                                }
+                            }
+
+                            ValidatorUiState.Result.WAITING -> Unit
                         }
                     }
                 }

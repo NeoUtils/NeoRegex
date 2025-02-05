@@ -119,13 +119,9 @@ class MatcherScreen : Screen {
                         fadeIn() togetherWith fadeOut()
                     }
                 ) { result ->
-                    when (result) {
-                        is MatcherUiState.Result.Failure -> {
+                    Box(Modifier.size(24.dp)) {
+                        if (result is MatcherUiState.Result.Failure) {
                             ErrorTooltip(result.error)
-                        }
-
-                        is MatcherUiState.Result.Success -> {
-                            Spacer(Modifier.size(24.dp))
                         }
                     }
                 }

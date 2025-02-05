@@ -129,7 +129,7 @@ fun Footer(
             Row(
                 modifier = Modifier
                     .padding(vertical = dimensions.small)
-                    .padding(end = dimensions.small)
+                    .padding(end = dimensions.default)
             ) {
                 it()
             }

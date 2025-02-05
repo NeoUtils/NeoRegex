@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.feature.validator.state
+package com.neoutils.neoregex.feature.validator.component
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.RepeatMode
@@ -25,7 +25,6 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -39,16 +38,11 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -58,9 +52,10 @@ import com.neoutils.neoregex.core.designsystem.component.LinkColor
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.Green
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.sharedui.extension.getBoundingBoxes
-import com.neoutils.neoregex.core.sharedui.model.MatchBox
+import com.neoutils.neoregex.core.resources.*
 import com.neoutils.neoregex.feature.validator.model.TestState
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -69,10 +64,23 @@ data class TestCaseUi(
     val uuid: Uuid,
     val title: String,
     val text: String,
-    val case: TestCase.Case,
+    val case: Case,
     val state: TestState,
     val selected: Boolean,
-)
+) {
+    enum class Case(val text: StringResource) {
+        MATCH_ANY(Res.string.test_case_match_any),
+        MATCH_FULL(Res.string.test_case_match_full),
+        MATCH_NONE(Res.string.test_case_match_none),
+    }
+}
+
+val TestCase.Case.ui
+    get() = when (this) {
+        TestCase.Case.MATCH_ANY -> TestCaseUi.Case.MATCH_ANY
+        TestCase.Case.MATCH_FULL -> TestCaseUi.Case.MATCH_FULL
+        TestCase.Case.MATCH_NONE -> TestCaseUi.Case.MATCH_NONE
+    }
 
 @OptIn(ExperimentalUuidApi::class)
 fun List<TestCase>.toTestCaseUi(
@@ -83,7 +91,7 @@ fun List<TestCase>.toTestCaseUi(
         uuid = testCase.uuid,
         title = testCase.title,
         text = testCase.text,
-        case = testCase.case,
+        case = testCase.case.ui,
         state = results[testCase.uuid] ?: TestState(testCase.uuid),
         selected = expanded == testCase.uuid
     )
@@ -124,7 +132,6 @@ sealed class TestCaseAction {
 }
 
 @OptIn(
-    ExperimentalMaterial3Api::class,
     ExperimentalUuidApi::class
 )
 @Composable
@@ -159,9 +166,9 @@ fun TestCase(
         }
     )
 
-    val matchesColor = when(test.state.result) {
+    val matchColor = when (test.state.result) {
         TestState.Result.SUCCESS -> Green
-        TestState.Result.ERROR ->  colorScheme.error
+        TestState.Result.ERROR -> colorScheme.error
         else -> Color.Transparent
     }
 
@@ -197,7 +204,7 @@ fun TestCase(
                         },
                         contentPadding = PaddingValues(0.dp),
                         textStyle = typography.labelMedium,
-                        hint = "Untitled",
+                        hint = stringResource(Res.string.test_case_untitled),
                         singleLine = true,
                         modifier = Modifier
                             .padding(start = 8.dp)
@@ -234,7 +241,13 @@ fun TestCase(
                 }
             }
 
-            val mergedTextStyle = typography.bodyLarge.merge(textStyle)
+            val mergedTextStyle = typography.bodyLarge.copy(
+                lineHeightStyle = LineHeightStyle(
+                    alignment = LineHeightStyle.Alignment.Proportional,
+                    trim = LineHeightStyle.Trim.None,
+                ),
+                color = LocalContentColor.current
+            ).merge(textStyle)
 
             AnimatedContent(
                 targetState = expanded,
@@ -250,8 +263,6 @@ fun TestCase(
                         focusRequester.requestFocus()
                     }
 
-                    var textLayout by remember { mutableStateOf<TextLayoutResult?>(null) }
-
                     NeoTextField(
                         value = test.text,
                         onValueChange = {
@@ -263,99 +274,48 @@ fun TestCase(
                             )
                         },
                         modifier = Modifier
-                            .padding(contentPadding)
-                            .drawBehind {
-                                val matchBoxes = textLayout?.let { textLayout ->
-                                    test.state.matches.flatMap { match ->
-                                        textLayout.getBoundingBoxes(
-                                            match.range.first,
-                                            match.range.last
-                                        ).map {
-                                            MatchBox(
-                                                match,
-                                                it.deflate(
-                                                    delta = 0.8f
-                                                )
-                                            )
-                                        }
-                                    }
-                                } ?: listOf()
-
-                                matchBoxes.forEach { (_, rect) ->
-                                    drawRect(
-                                        color = matchesColor,
-                                        topLeft = Offset(
-                                            x = rect.left,
-                                            y = rect.top
-                                        ),
-                                        size = Size(
-                                            rect.width,
-                                            rect.height
-                                        )
-                                    )
-                                }
-                            }
                             .focusRequester(focusRequester)
                             .fillMaxWidth(),
-                        onTextLayout = {
-                            textLayout = it
-                        },
-                        contentPadding = PaddingValues(0.dp),
-                        textStyle = mergedTextStyle.copy(
-                            lineHeightStyle = LineHeightStyle(
-                                alignment = LineHeightStyle.Alignment.Proportional,
-                                trim = LineHeightStyle.Trim.None,
-                            ),
-                        ),
+                        contentPadding = contentPadding,
+                        textStyle = mergedTextStyle,
+                        matches = test.state.matches,
+                        matchColor = matchColor,
                         hint = hint
                     )
                 } else {
 
                     val title = test.title.ifEmpty {
                         test.text.ifEmpty {
-                            "Untitled"
+                            stringResource(Res.string.test_case_untitled)
                         }
                     }
 
-                    TextFieldDefaults.DecorationBox(
-                        value = title,
-                        innerTextField = {
-                            Text(
-                                text = title,
-                                modifier = Modifier.fillMaxWidth(),
-                                style = mergedTextStyle,
-                                overflow = TextOverflow.Ellipsis,
-                                maxLines = 1
-                            )
-                        },
-                        enabled = true,
-                        singleLine = true,
-                        visualTransformation = VisualTransformation.None,
-                        interactionSource = remember { MutableInteractionSource() },
-                        contentPadding = contentPadding,
-                        container = {
-                            Box(
-                                modifier.clickable(
-                                    onClick = {
-                                        onAction(
-                                            TestCaseAction.Expanded(test.uuid)
-                                        )
-                                    }
+                    Row(
+                        modifier = Modifier
+                            .clickable {
+                                onAction(
+                                    TestCaseAction.Expanded(test.uuid)
                                 )
-                            )
-                        },
-                        trailingIcon = {
-                            Text(
-                                text = when (test.case) {
-                                    TestCase.Case.MATCH_ANY -> "Match Any"
-                                    TestCase.Case.MATCH_ALL -> "Match All"
-                                    TestCase.Case.MATCH_NONE -> "Match None"
-                                },
-                                modifier = Modifier.padding(contentPadding),
-                                style = typography.labelMedium
-                            )
-                        }
-                    )
+                            }
+                            .padding(contentPadding)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(dimensions.default)
+                    ) {
+                        Text(
+                            text = title.substringBefore(delimiter = "\n").trim(),
+                            modifier = Modifier.weight(weight = 1f),
+                            style = mergedTextStyle,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1
+                        )
+
+                        Text(
+                            text = stringResource(test.case.text),
+                            modifier = Modifier,
+                            style = typography.labelMedium
+                        )
+                    }
                 }
             }
         }
@@ -364,7 +324,7 @@ fun TestCase(
 
 @Composable
 private fun Options(
-    case: TestCase.Case,
+    case: TestCaseUi.Case,
     onCaseChange: (TestCase.Case) -> Unit,
     modifier: Modifier = Modifier,
     onDelete: () -> Unit = {},
@@ -422,18 +382,14 @@ private fun Options(
 
 @Composable
 private fun MatchDropDown(
-    case: TestCase.Case,
+    case: TestCaseUi.Case,
     onChange: (TestCase.Case) -> Unit
 ) = Column(verticalArrangement = Arrangement.Center) {
 
     val expanded = remember { mutableStateOf(false) }
 
     Link(
-        text = when (case) {
-            TestCase.Case.MATCH_ANY -> "Match Any"
-            TestCase.Case.MATCH_ALL -> "Match All"
-            TestCase.Case.MATCH_NONE -> "Match None"
-        },
+        text = stringResource(case.text),
         onClick = {
             expanded.value = true
         },
@@ -462,11 +418,7 @@ private fun MatchDropDown(
             DropdownMenuItem(
                 text = {
                     Text(
-                        text = when (it) {
-                            TestCase.Case.MATCH_ANY -> "Match Any"
-                            TestCase.Case.MATCH_ALL -> "Match All"
-                            TestCase.Case.MATCH_NONE -> "Match None"
-                        },
+                        text = stringResource(it.ui.text),
                     )
                 },
                 onClick = {

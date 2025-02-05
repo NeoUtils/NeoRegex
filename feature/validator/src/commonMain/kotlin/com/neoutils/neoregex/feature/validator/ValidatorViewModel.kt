@@ -25,14 +25,14 @@ import com.neoutils.neoregex.core.common.util.ObservableMutableMap
 import com.neoutils.neoregex.core.repository.pattern.PatternRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
 import com.neoutils.neoregex.core.sharedui.component.FooterAction
-import com.neoutils.neoregex.core.sharedui.model.Match
+import com.neoutils.neoregex.core.common.model.Match
 import com.neoutils.neoregex.feature.validator.action.ValidatorAction
 import com.neoutils.neoregex.feature.validator.model.TestCaseQueue
 import com.neoutils.neoregex.feature.validator.model.TestPattern
 import com.neoutils.neoregex.feature.validator.model.TestState
-import com.neoutils.neoregex.feature.validator.state.TestCaseAction
+import com.neoutils.neoregex.feature.validator.component.TestCaseAction
 import com.neoutils.neoregex.feature.validator.state.ValidatorUiState
-import com.neoutils.neoregex.feature.validator.state.toTestCaseUi
+import com.neoutils.neoregex.feature.validator.component.toTestCaseUi
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlin.uuid.ExperimentalUuidApi
@@ -59,8 +59,8 @@ class ValidatorViewModel(
     private val testCasesUi = combine(
         expanded,
         testCasesRepository.flow,
-        results.valuesFlow,
-    ) { expanded, testCases, _ ->
+        results.mapFlow,
+    ) { expanded, testCases, results ->
         testCases.toTestCaseUi(
             results = results,
             expanded = expanded
@@ -195,7 +195,7 @@ class ValidatorViewModel(
                 }
             }
 
-            TestCase.Case.MATCH_ALL -> {
+            TestCase.Case.MATCH_FULL -> {
                 if (regex.matches(testCase.text)) {
                     TestState(
                         uuid = testCase.uuid,

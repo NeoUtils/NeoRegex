@@ -18,7 +18,7 @@
 
 package com.neoutils.neoregex.feature.validator.model
 
-import com.neoutils.neoregex.core.sharedui.model.Match
+import com.neoutils.neoregex.core.common.model.Match
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

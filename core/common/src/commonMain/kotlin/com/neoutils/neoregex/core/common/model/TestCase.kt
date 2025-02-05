@@ -32,7 +32,7 @@ data class TestCase(
 
     enum class Case {
         MATCH_ANY,
-        MATCH_ALL,
+        MATCH_FULL,
         MATCH_NONE
     }
 }

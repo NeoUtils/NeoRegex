@@ -18,10 +18,15 @@
 
 package com.neoutils.neoregex.core.common.extension
 
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import com.neoutils.neoregex.core.common.model.Text
 
-fun TextFieldValue.toText() = Text(
-    text = text,
-    selection = selection
+fun Text.toTextFieldValue(
+    spanStyles: List<AnnotatedString.Range<SpanStyle>> = listOf()
+) = TextFieldValue(
+    annotatedString = text.withSpanStyles(spanStyles),
+    selection = selection,
+    composition = null
 )
