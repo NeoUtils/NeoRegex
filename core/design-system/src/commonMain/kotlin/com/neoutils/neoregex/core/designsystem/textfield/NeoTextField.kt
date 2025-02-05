@@ -42,7 +42,6 @@ fun NeoTextField(
     value: String,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier,
-    endIcon: @Composable (() -> Unit)? = null,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     textStyle: TextStyle = TextStyle(),
     singleLine: Boolean = false,
@@ -59,7 +58,6 @@ fun NeoTextField(
             textFieldValue = it
             onValueChange(it.text)
         },
-        endIcon = endIcon,
         onTextLayout = onTextLayout,
         modifier = modifier,
         textStyle = textStyle,
@@ -73,7 +71,6 @@ fun NeoTextField(
 fun NeoTextField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
-    endIcon: @Composable (() -> Unit)? = null,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(),
@@ -120,8 +117,6 @@ fun NeoTextField(
                         maxLines = 1
                     )
                 }
-
-                // TODO: implement end icon 
             }
         },
     )

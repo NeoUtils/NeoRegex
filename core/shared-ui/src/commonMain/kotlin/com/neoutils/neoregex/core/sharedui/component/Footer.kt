@@ -33,7 +33,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import com.neoutils.highlight.compose.remember.rememberTextFieldValue
-import com.neoutils.neoregex.core.common.extension.toTextState
+import com.neoutils.neoregex.core.common.extension.toText
 import com.neoutils.neoregex.core.common.model.History
 import com.neoutils.neoregex.core.common.model.Target
 import com.neoutils.neoregex.core.common.model.Text
@@ -43,7 +43,7 @@ import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.matcher_footer_insert_regex_hint
-import com.neoutils.neoregex.core.sharedui.extension.toTextFieldValue
+import com.neoutils.neoregex.core.common.extension.toTextFieldValue
 import org.jetbrains.compose.resources.stringResource
 
 sealed class FooterAction {
@@ -81,7 +81,10 @@ fun Footer(
     color = colorScheme.surfaceContainer,
     contentColor = colorScheme.onSurface,
 ) {
-    Row(Modifier.fillMaxWidth()) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
 
         val textFieldValue = remember(pattern) { pattern.toTextFieldValue() }
 
@@ -92,13 +95,11 @@ fun Footer(
             onValueChange = {
                 onAction(
                     FooterAction.UpdateRegex(
-                        it.toTextState(allowMultiline = false)
+                        it.toText()
                     )
                 )
             },
-            endIcon = tooling,
             modifier = Modifier
-                .align(Alignment.CenterVertically)
                 .weight(weight = 1f)
                 .onFocusChanged(onFocus)
                 .onPreviewKeyEvent {
@@ -124,11 +125,20 @@ fun Footer(
             hint = stringResource(Res.string.matcher_footer_insert_regex_hint),
         )
 
+        tooling?.let {
+            Row(
+                modifier = Modifier
+                    .padding(vertical = dimensions.small)
+                    .padding(end = dimensions.small)
+            ) {
+                it()
+            }
+        }
+
         History(
             history = history,
             onAction = onAction,
             modifier = Modifier
-                .align(Alignment.CenterVertically)
                 .padding(vertical = dimensions.small)
                 .padding(end = dimensions.small)
                 .focusProperties {

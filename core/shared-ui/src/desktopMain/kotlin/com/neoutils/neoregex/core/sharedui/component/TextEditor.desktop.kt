@@ -47,12 +47,12 @@ import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.LineHeightStyle
-import com.neoutils.neoregex.core.common.extension.toTextState
+import com.neoutils.neoregex.core.common.extension.toText
 import com.neoutils.neoregex.core.common.model.Text
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.sharedui.extension.getBoundingBoxes
 import com.neoutils.neoregex.core.sharedui.extension.toText
-import com.neoutils.neoregex.core.sharedui.extension.toTextFieldValue
+import com.neoutils.neoregex.core.common.extension.toTextFieldValue
 import com.neoutils.neoregex.core.sharedui.extension.tooltip
 import com.neoutils.neoregex.core.sharedui.model.Match
 import com.neoutils.neoregex.core.sharedui.model.MatchBox
@@ -108,7 +108,7 @@ actual fun TextEditor(
         BasicTextField(
             value = textFileValue,
             onValueChange = {
-                onValueChange(it.toTextState())
+                onValueChange(it.toText())
             },
             scrollState = scrollState,
             textStyle = mergedTextStyle.copy(

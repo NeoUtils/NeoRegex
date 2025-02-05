@@ -18,14 +18,16 @@
 
 package com.neoutils.neoregex.core.common.extension
 
-import androidx.compose.ui.text.input.TextFieldValue
-import com.neoutils.neoregex.core.common.model.Text
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
 
-fun TextFieldValue.toTextState(allowMultiline: Boolean = true) = Text(
-    text = if (allowMultiline) {
-        text
-    } else {
-        text.replace("\n", "")
-    },
-    selection = selection
-)
+fun String.withSpanStyles(
+    spanStyles: List<AnnotatedString.Range<SpanStyle>>
+): AnnotatedString {
+    return AnnotatedString(
+        text = this,
+        spanStyles = spanStyles.filter {
+            it.start <= length && it.end <= length
+        }
+    )
+}
