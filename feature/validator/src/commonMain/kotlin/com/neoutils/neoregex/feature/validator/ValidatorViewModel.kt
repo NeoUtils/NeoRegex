@@ -258,7 +258,7 @@ class ValidatorViewModel(
         }
     }
 
-    private fun stopValidation(
+    private fun onRemoveTestCase(
         uuid: Uuid
     ) = screenModelScope.launch {
 
@@ -266,13 +266,15 @@ class ValidatorViewModel(
 
         validationJob[uuid]?.cancel()
         validationJob.remove(uuid)
+
+        results.remove(uuid)
     }
 
     fun onAction(action: ValidatorAction) {
         when (action) {
             is ValidatorAction.AddTestCase -> {
-                testCasesRepository.set(action.newTestCase)
                 expanded.value = action.newTestCase.uuid
+                testCasesRepository.set(action.newTestCase)
             }
         }
     }
@@ -283,11 +285,12 @@ class ValidatorViewModel(
 
                 val oldTestCase = testCasesRepository.get(action.uuid)
 
-                val newTestCase = testCasesRepository.update(action.uuid) {
-                    it.copy(
-                        case = action.case
-                    )
-                }
+                val newTestCase = testCasesRepository
+                    .update(action.uuid) {
+                        it.copy(
+                            case = action.case
+                        )
+                    }
 
                 if (oldTestCase != newTestCase) {
                     addToQueue(
@@ -300,11 +303,12 @@ class ValidatorViewModel(
 
                 val oldTestCase = testCasesRepository.get(action.uuid)
 
-                val newTestCase = testCasesRepository.update(action.uuid) {
-                    it.copy(
-                        text = action.text
-                    )
-                }
+                val newTestCase = testCasesRepository
+                    .update(action.uuid) {
+                        it.copy(
+                            text = action.text
+                        )
+                    }
 
                 if (oldTestCase != newTestCase) {
                     addToQueue(
@@ -315,11 +319,12 @@ class ValidatorViewModel(
             }
 
             is TestCaseAction.ChangeTitle -> {
-                testCasesRepository.update(action.uuid) {
-                    it.copy(
-                        title = action.title
-                    )
-                }
+                testCasesRepository
+                    .update(action.uuid) {
+                        it.copy(
+                            title = action.title
+                        )
+                    }
             }
 
             is TestCaseAction.Collapse -> {
@@ -327,17 +332,19 @@ class ValidatorViewModel(
             }
 
             is TestCaseAction.Delete -> {
+                expanded.value = null
                 testCasesRepository.remove(action.uuid)
-                stopValidation(action.uuid)
+                onRemoveTestCase(action.uuid)
             }
 
             is TestCaseAction.Duplicate -> {
-                testCasesRepository
-                    .duplicate(action.uuid)
-                    .also {
-                        addToQueue(it)
-                        expanded.value = it.uuid
-                    }
+                addToQueue(
+                    testCasesRepository
+                        .duplicate(action.uuid)
+                        .also {
+                            expanded.value = it.uuid
+                        }
+                )
             }
 
             is TestCaseAction.Expanded -> {
