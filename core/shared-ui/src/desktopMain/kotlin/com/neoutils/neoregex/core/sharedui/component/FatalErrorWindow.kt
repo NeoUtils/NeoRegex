@@ -58,7 +58,8 @@ fun ApplicationScope.FatalErrorWindow(
             Res.string.fatal_error_title,
             throwable::class.java.name
         ),
-        icon = rememberVectorPainter(Icons.TwoTone.Error)
+        icon = rememberVectorPainter(Icons.TwoTone.Error),
+        alwaysOnTop = true
     ) {
         Column(Modifier.fillMaxSize()) {
 

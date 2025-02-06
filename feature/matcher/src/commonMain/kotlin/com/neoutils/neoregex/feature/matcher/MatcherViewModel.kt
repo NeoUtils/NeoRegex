@@ -30,7 +30,10 @@ import com.neoutils.neoregex.feature.matcher.model.Targeted
 import com.neoutils.neoregex.feature.matcher.model.TextState
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
 @OptIn(FlowPreview::class)
