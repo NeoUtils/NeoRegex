@@ -62,65 +62,67 @@ internal class NavigationManagerWeb : NavigationManager {
     }
 
     override fun update(screen: Navigation.Screen) {
-        _canPop.value = when (screen) {
-            Navigation.Screen.About -> true
-            Navigation.Screen.Libraries -> true
-            Navigation.Screen.Matcher -> false
-            Navigation.Screen.Validator -> false
-        }
-
         _current.value = screen
     }
 
     override suspend fun emit(event: Navigation.Event) {
         _event.send(event)
 
-        if (event is Navigation.Event.Navigate) {
-            registerHistory(event.screen)
-        }
+        registerHistory(event)
     }
 
-    private fun registerHistory(screen: Navigation.Screen) {
-        when (screen) {
-            Navigation.Screen.Matcher -> {
-                window.history.go(delta = -stack)
-                stack = 0
-            }
+    private fun registerHistory(event: Navigation.Event) {
 
-            Navigation.Screen.About -> {
-                if (screen is Navigation.Screen.Libraries) {
-                    window.history.back()
-                    return
+        if (event is Navigation.Event.Navigate) {
+            when (event.screen) {
+                Navigation.Screen.Matcher -> {
+                    window.history.pushState(
+                        data = null,
+                        title = "",
+                        url = "?screen=matcher"
+                    )
+                    stack++
                 }
 
-                window.history.pushState(
-                    data = null,
-                    title = "",
-                    url = "?screen=about"
-                )
-                stack = 1
+                Navigation.Screen.Validator -> {
+                    window.history.pushState(
+                        data = null,
+                        title = "",
+                        url = "?screen=validator"
+                    )
+
+                    stack++
+                }
+
+                Navigation.Screen.About -> {
+                    window.history.pushState(
+                        data = null,
+                        title = "",
+                        url = "?screen=about"
+                    )
+
+                    stack++
+                }
+
+                Navigation.Screen.Libraries -> {
+                    window.history.pushState(
+                        data = null,
+                        title = "",
+                        url = "?screen=libraries"
+                    )
+
+                    stack++
+                }
             }
 
-            Navigation.Screen.Validator -> {
-                window.history.pushState(
-                    data = null,
-                    title = "",
-                    url = "?screen=validator"
-                )
-
-                stack = 1
-            }
-
-            Navigation.Screen.Libraries -> {
-                window.history.pushState(
-                    data = null,
-                    title = "",
-                    url = "?screen=libraries"
-                )
-                stack = 2
-            }
-
+            return
         }
+
+        if (event == Navigation.Event.OnBack) {
+            window.history.go(delta = --stack)
+        }
+
+        _canPop.value = stack > 0
     }
 
     private suspend fun navigate(query: String) {
