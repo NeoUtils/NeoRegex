@@ -73,7 +73,7 @@ fun AndroidApp() {
 }
 
 @Composable
-fun NeoAppBar(
+private fun NeoAppBar(
     modifier: Modifier = Modifier,
     background: Color = colorScheme.surfaceContainer,
     shadowElevation: Dp = dimensions.tiny,

@@ -25,14 +25,14 @@ import com.neoutils.neoregex.core.common.util.ObservableMutableMap
 import com.neoutils.neoregex.core.repository.pattern.PatternRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
 import com.neoutils.neoregex.core.sharedui.component.FooterAction
-import com.neoutils.neoregex.core.common.model.Match
 import com.neoutils.neoregex.feature.validator.action.ValidatorAction
-import com.neoutils.neoregex.feature.validator.model.TestCaseQueue
-import com.neoutils.neoregex.feature.validator.model.TestPattern
-import com.neoutils.neoregex.feature.validator.model.TestCaseValidation
 import com.neoutils.neoregex.feature.validator.component.TestCaseAction
-import com.neoutils.neoregex.feature.validator.state.ValidatorUiState
 import com.neoutils.neoregex.feature.validator.component.toTestCaseUi
+import com.neoutils.neoregex.feature.validator.model.TestCaseQueue
+import com.neoutils.neoregex.feature.validator.model.TestCaseValidation
+import com.neoutils.neoregex.feature.validator.model.TestPattern
+import com.neoutils.neoregex.feature.validator.usecase.ValidateUseCase
+import com.neoutils.neoregex.feature.validator.state.ValidatorUiState
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlin.uuid.ExperimentalUuidApi
@@ -45,10 +45,10 @@ import kotlin.uuid.Uuid
 )
 class ValidatorViewModel(
     private val patternRepository: PatternRepository,
-    private val testCasesRepository: TestCasesRepository
+    private val testCasesRepository: TestCasesRepository,
+    private val validateUserCase: ValidateUseCase,
+    private val testCaseQueue: TestCaseQueue
 ) : ScreenModel {
-
-    private val testCaseQueue = TestCaseQueue()
 
     private val expanded = MutableStateFlow(testCasesRepository.all.firstOrNull()?.uuid)
     private val results = ObservableMutableMap<Uuid, TestCaseValidation>()
@@ -91,19 +91,19 @@ class ValidatorViewModel(
         testPattern,
     ) { history, pattern, testCases, testPattern ->
         ValidatorUiState(
-            pattern = pattern,
-            history = history,
             testCases = testCases,
             testPattern = testPattern,
+            pattern = pattern,
+            history = history,
         )
     }.stateIn(
         scope = screenModelScope,
         started = SharingStarted.WhileSubscribed(),
         initialValue = ValidatorUiState(
-            history = patternRepository.historyFlow.value,
-            pattern = patternRepository.flow.value,
             testCases = testCasesUi.value,
             testPattern = testPattern.value,
+            pattern = patternRepository.flow.value,
+            history = patternRepository.historyFlow.value,
         )
     )
 
@@ -137,14 +137,17 @@ class ValidatorViewModel(
             val testCase = testCaseQueue.dequeue()
 
             if (testCase != null) {
+
+                results[testCase.uuid] = TestCaseValidation(
+                    testCase = testCase,
+                    result = TestCaseValidation.Result.RUNNING,
+                )
+
                 validationJob[testCase.uuid] = launch {
-
-                    results[testCase.uuid] = TestCaseValidation(
+                    results[testCase.uuid] = validateUserCase(
                         testCase = testCase,
-                        result = TestCaseValidation.Result.RUNNING
+                        regex = testPattern.value.regex.getOrThrow()
                     )
-
-                    results[testCase.uuid] = validate(testCase)
                 }
 
                 // wait execution
@@ -154,77 +157,6 @@ class ValidatorViewModel(
 
                 // wait new test cases
                 testCaseQueue.receive()
-            }
-        }
-    }
-
-    private fun validate(
-        testCase: TestCase,
-        regex: Regex = testPattern.value.regex.getOrThrow()
-    ): TestCaseValidation {
-
-        val result = regex.findAll(testCase.text)
-
-        val matches = buildList {
-            result.forEachIndexed { index, match ->
-                add(
-                    Match(
-                        text = match.value,
-                        range = match.range,
-                        groups = match.groupValues.drop(n = 1),
-                        number = index.inc(),
-                    )
-                )
-            }
-        }
-
-        return when (testCase.case) {
-            TestCase.Case.MATCH_ANY -> {
-                if (matches.isEmpty()) {
-                    TestCaseValidation(
-                        testCase = testCase,
-                        result = TestCaseValidation.Result.ERROR,
-                        matches = matches
-                    )
-                } else {
-                    TestCaseValidation(
-                        testCase = testCase,
-                        result = TestCaseValidation.Result.SUCCESS,
-                        matches = matches
-                    )
-                }
-            }
-
-            TestCase.Case.MATCH_FULL -> {
-                if (regex.matches(testCase.text)) {
-                    TestCaseValidation(
-                        testCase = testCase,
-                        result = TestCaseValidation.Result.SUCCESS,
-                        matches = matches
-                    )
-                } else {
-                    TestCaseValidation(
-                        testCase = testCase,
-                        result = TestCaseValidation.Result.ERROR,
-                        matches = matches
-                    )
-                }
-            }
-
-            TestCase.Case.MATCH_NONE -> {
-                if (matches.isEmpty()) {
-                    TestCaseValidation(
-                        testCase = testCase,
-                        result = TestCaseValidation.Result.SUCCESS,
-                        matches = matches
-                    )
-                } else {
-                    TestCaseValidation(
-                        testCase = testCase,
-                        result = TestCaseValidation.Result.ERROR,
-                        matches = matches
-                    )
-                }
             }
         }
     }
@@ -273,8 +205,8 @@ class ValidatorViewModel(
     fun onAction(action: ValidatorAction) {
         when (action) {
             is ValidatorAction.AddTestCase -> {
-                expanded.value = action.newTestCase.uuid
                 testCasesRepository.set(action.newTestCase)
+                expanded.value = action.newTestCase.uuid
             }
         }
     }
@@ -293,9 +225,7 @@ class ValidatorViewModel(
                     }
 
                 if (oldTestCase != newTestCase) {
-                    addToQueue(
-                        newTestCase
-                    )
+                    addToQueue(newTestCase)
                 }
             }
 

@@ -19,9 +19,19 @@
 package com.neoutils.neoregex.feature.validator.di
 
 import com.neoutils.neoregex.feature.validator.ValidatorViewModel
+import com.neoutils.neoregex.feature.validator.model.TestCaseQueue
+import com.neoutils.neoregex.feature.validator.usecase.ValidateUseCase
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
 val validatorModule = module {
+
+    // others
+    factory { TestCaseQueue() }
+
+    // use cases
+    factory { ValidateUseCase() }
+
+    // view model
     factoryOf(::ValidatorViewModel)
 }

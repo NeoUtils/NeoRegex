@@ -164,7 +164,7 @@ private fun Header(
 )
 
 @Composable
-fun TopLabel(
+private fun TopLabel(
     text: String,
     visible: Boolean = true,
     onClose: () -> Unit = {},

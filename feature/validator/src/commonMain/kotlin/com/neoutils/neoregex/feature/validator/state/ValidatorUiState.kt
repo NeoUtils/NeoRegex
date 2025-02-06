@@ -43,9 +43,9 @@ data class ValidatorUiState(
 
 fun ValidatorUiState(
     testCases: List<TestCaseUi>,
+    testPattern: TestPattern,
     pattern: Text,
     history: History,
-    testPattern: TestPattern,
 ): ValidatorUiState {
 
     val testableCases = testCases.filter { it.text.isNotEmpty() }
