@@ -29,7 +29,7 @@ import com.neoutils.neoregex.core.common.model.Match
 import com.neoutils.neoregex.feature.validator.action.ValidatorAction
 import com.neoutils.neoregex.feature.validator.model.TestCaseQueue
 import com.neoutils.neoregex.feature.validator.model.TestPattern
-import com.neoutils.neoregex.feature.validator.model.TestState
+import com.neoutils.neoregex.feature.validator.model.TestCaseValidation
 import com.neoutils.neoregex.feature.validator.component.TestCaseAction
 import com.neoutils.neoregex.feature.validator.state.ValidatorUiState
 import com.neoutils.neoregex.feature.validator.component.toTestCaseUi
@@ -51,7 +51,7 @@ class ValidatorViewModel(
     private val testCaseQueue = TestCaseQueue()
 
     private val expanded = MutableStateFlow(testCasesRepository.all.firstOrNull()?.uuid)
-    private val results = ObservableMutableMap<Uuid, TestState>()
+    private val results = ObservableMutableMap<Uuid, TestCaseValidation>()
 
     private var validationJob = mutableMapOf<Uuid, Job>()
     private var addToQueueJob = mutableMapOf<Uuid, Job>()
@@ -139,9 +139,9 @@ class ValidatorViewModel(
             if (testCase != null) {
                 validationJob[testCase.uuid] = launch {
 
-                    results[testCase.uuid] = TestState(
-                        uuid = testCase.uuid,
-                        result = TestState.Result.RUNNING
+                    results[testCase.uuid] = TestCaseValidation(
+                        testCase = testCase,
+                        result = TestCaseValidation.Result.RUNNING
                     )
 
                     results[testCase.uuid] = validate(testCase)
@@ -161,7 +161,7 @@ class ValidatorViewModel(
     private fun validate(
         testCase: TestCase,
         regex: Regex = testPattern.value.regex.getOrThrow()
-    ): TestState {
+    ): TestCaseValidation {
 
         val result = regex.findAll(testCase.text)
 
@@ -181,15 +181,15 @@ class ValidatorViewModel(
         return when (testCase.case) {
             TestCase.Case.MATCH_ANY -> {
                 if (matches.isEmpty()) {
-                    TestState(
-                        uuid = testCase.uuid,
-                        result = TestState.Result.ERROR,
+                    TestCaseValidation(
+                        testCase = testCase,
+                        result = TestCaseValidation.Result.ERROR,
                         matches = matches
                     )
                 } else {
-                    TestState(
-                        uuid = testCase.uuid,
-                        result = TestState.Result.SUCCESS,
+                    TestCaseValidation(
+                        testCase = testCase,
+                        result = TestCaseValidation.Result.SUCCESS,
                         matches = matches
                     )
                 }
@@ -197,15 +197,15 @@ class ValidatorViewModel(
 
             TestCase.Case.MATCH_FULL -> {
                 if (regex.matches(testCase.text)) {
-                    TestState(
-                        uuid = testCase.uuid,
-                        result = TestState.Result.SUCCESS,
+                    TestCaseValidation(
+                        testCase = testCase,
+                        result = TestCaseValidation.Result.SUCCESS,
                         matches = matches
                     )
                 } else {
-                    TestState(
-                        uuid = testCase.uuid,
-                        result = TestState.Result.ERROR,
+                    TestCaseValidation(
+                        testCase = testCase,
+                        result = TestCaseValidation.Result.ERROR,
                         matches = matches
                     )
                 }
@@ -213,15 +213,15 @@ class ValidatorViewModel(
 
             TestCase.Case.MATCH_NONE -> {
                 if (matches.isEmpty()) {
-                    TestState(
-                        uuid = testCase.uuid,
-                        result = TestState.Result.SUCCESS,
+                    TestCaseValidation(
+                        testCase = testCase,
+                        result = TestCaseValidation.Result.SUCCESS,
                         matches = matches
                     )
                 } else {
-                    TestState(
-                        uuid = testCase.uuid,
-                        result = TestState.Result.ERROR,
+                    TestCaseValidation(
+                        testCase = testCase,
+                        result = TestCaseValidation.Result.ERROR,
                         matches = matches
                     )
                 }
@@ -239,7 +239,7 @@ class ValidatorViewModel(
         validationJob[newTestCase.uuid]?.cancelAndJoin()
         validationJob.remove(newTestCase.uuid)
 
-        results[newTestCase.uuid] = TestState(newTestCase.uuid)
+        results[newTestCase.uuid] = TestCaseValidation(newTestCase)
 
         addToQueueJob[newTestCase.uuid]?.cancelAndJoin()
         addToQueueJob.remove(newTestCase.uuid)

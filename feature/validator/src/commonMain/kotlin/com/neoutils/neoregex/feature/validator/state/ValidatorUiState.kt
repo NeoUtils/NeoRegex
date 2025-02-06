@@ -64,15 +64,15 @@ fun ValidatorUiState(
                 ValidatorUiState.Result.WAITING
             }
 
-            testableCases.any { it.state.result.isRunning } -> {
+            testableCases.any { it.validation.result.isRunning } -> {
                 ValidatorUiState.Result.RUNNING
             }
 
-            testableCases.any { it.state.result.isError } -> {
+            testableCases.any { it.validation.result.isError } -> {
                 ValidatorUiState.Result.ERROR
             }
 
-            testableCases.all { it.state.result.isSuccess } -> {
+            testableCases.all { it.validation.result.isSuccess } -> {
                 ValidatorUiState.Result.SUCCESS
             }
 

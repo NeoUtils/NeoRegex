@@ -71,9 +71,7 @@ fun NeoTextField(
         onTextLayout = onTextLayout,
         modifier = modifier,
         textStyle = textStyle,
-        matches = matches.filter {
-            it.range.last < value.length
-        },
+        matches = matches,
         matchesColor = matchColor,
         singleLine = singleLine,
         contentPadding = contentPadding,

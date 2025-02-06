@@ -19,13 +19,11 @@
 package com.neoutils.neoregex.feature.validator.model
 
 import com.neoutils.neoregex.core.common.model.Match
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
+import com.neoutils.neoregex.core.common.model.TestCase
 
-@OptIn(ExperimentalUuidApi::class)
-data class TestState(
-    val uuid: Uuid,
-    val result: Result = TestState.Result.IDLE,
+data class TestCaseValidation(
+    val testCase: TestCase,
+    val result: Result = TestCaseValidation.Result.IDLE,
     val matches: List<Match> = listOf()
 ) {
     enum class Result {

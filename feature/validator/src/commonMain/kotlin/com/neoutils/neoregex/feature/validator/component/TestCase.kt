@@ -53,7 +53,7 @@ import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.Green
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.*
-import com.neoutils.neoregex.feature.validator.model.TestState
+import com.neoutils.neoregex.feature.validator.model.TestCaseValidation
 import org.jetbrains.compose.resources.StringResource
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
@@ -65,7 +65,7 @@ data class TestCaseUi(
     val title: String,
     val text: String,
     val case: Case,
-    val state: TestState,
+    val validation: TestCaseValidation,
     val selected: Boolean,
 ) {
     enum class Case(val text: StringResource) {
@@ -84,15 +84,20 @@ val TestCase.Case.ui
 
 @OptIn(ExperimentalUuidApi::class)
 fun List<TestCase>.toTestCaseUi(
-    results: Map<Uuid, TestState>,
+    results: Map<Uuid, TestCaseValidation>,
     expanded: Uuid?
 ): List<TestCaseUi> = map { testCase ->
+
+    val validation = results[testCase.uuid]
+        ?.takeIf { it.testCase == testCase }
+        ?: TestCaseValidation(testCase)
+
     TestCaseUi(
         uuid = testCase.uuid,
         title = testCase.title,
         text = testCase.text,
         case = testCase.case.ui,
-        state = results[testCase.uuid] ?: TestState(testCase.uuid),
+        validation = validation,
         selected = expanded == testCase.uuid
     )
 }
@@ -147,10 +152,10 @@ fun TestCase(
     val infiniteTransition = rememberInfiniteTransition()
 
     val borderColor by animateColorAsState(
-        when (test.state.result) {
-            TestState.Result.IDLE -> colorScheme.outlineVariant
+        when (test.validation.result) {
+            TestCaseValidation.Result.IDLE -> colorScheme.outlineVariant
 
-            TestState.Result.RUNNING -> {
+            TestCaseValidation.Result.RUNNING -> {
                 infiniteTransition.animateColor(
                     initialValue = colorScheme.outlineVariant,
                     targetValue = Color.White,
@@ -161,14 +166,14 @@ fun TestCase(
                 ).value
             }
 
-            TestState.Result.SUCCESS -> Green
-            TestState.Result.ERROR -> colorScheme.error
+            TestCaseValidation.Result.SUCCESS -> Green
+            TestCaseValidation.Result.ERROR -> colorScheme.error
         }
     )
 
-    val matchColor = when (test.state.result) {
-        TestState.Result.SUCCESS -> Green
-        TestState.Result.ERROR -> colorScheme.error
+    val matchColor = when (test.validation.result) {
+        TestCaseValidation.Result.SUCCESS -> Green
+        TestCaseValidation.Result.ERROR -> colorScheme.error
         else -> Color.Transparent
     }
 
@@ -278,7 +283,7 @@ fun TestCase(
                             .fillMaxWidth(),
                         contentPadding = contentPadding,
                         textStyle = mergedTextStyle,
-                        matches = test.state.matches,
+                        matches = test.validation.matches,
                         matchColor = matchColor,
                         hint = hint
                     )
