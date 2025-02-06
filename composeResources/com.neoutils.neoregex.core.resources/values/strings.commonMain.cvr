@@ -21,4 +21,9 @@ string|matcher_footer_insert_regex_hint|RW50ZXIgcmVndWxhciBleHByZXNzaW9u
 string|screen_about|QWJvdXQ=
 string|screen_libraries|TGlicmFyaWVz
 string|screen_matcher|TWF0Y2hlcg==
+string|screen_validator|VmFsaWRhdG9y
+string|test_case_match_any|TWF0Y2ggQW55
+string|test_case_match_full|TWF0Y2ggRnVsbA==
+string|test_case_match_none|TWF0Y2ggTm9uZQ==
+string|test_case_untitled|VW50aXRsZWQ=
 string|web_warning_text|TmVvUmVnZXggd2ViIHZlcnNpb24gaXMgZXhwZXJpbWVudGFs
