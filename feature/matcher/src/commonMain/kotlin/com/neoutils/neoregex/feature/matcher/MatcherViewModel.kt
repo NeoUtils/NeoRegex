@@ -32,7 +32,10 @@ import com.neoutils.neoregex.core.common.model.Match
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
 @OptIn(FlowPreview::class)
@@ -141,9 +144,10 @@ class MatcherViewModel(
     )
 
     init {
-        textFlow.onEach {
-            textHistory.push(it)
-        }.launchIn(screenModelScope)
+        textFlow
+            .filterNot { it.registered }
+            .onEach { textHistory.push(it) }
+            .launchIn(screenModelScope)
     }
 
     fun onAction(action: FooterAction) {

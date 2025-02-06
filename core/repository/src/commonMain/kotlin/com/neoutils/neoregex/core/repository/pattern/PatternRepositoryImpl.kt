@@ -22,14 +22,11 @@ import com.neoutils.neoregex.core.common.manager.TextHistoryManager
 import com.neoutils.neoregex.core.common.model.Text
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 
 internal class PatternRepositoryImpl(
     private val textHistoryManager: TextHistoryManager = TextHistoryManager(),
-    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Main)
+    private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default)
 ) : PatternRepository {
 
     private val _flow = MutableStateFlow(Text())
@@ -38,13 +35,13 @@ internal class PatternRepositoryImpl(
     override val historyFlow = textHistoryManager.flow
 
     init {
-        _flow.onEach {
-            textHistoryManager.push(it)
-        }.launchIn(coroutineScope)
+        _flow
+            .filterNot { it.registered }
+            .onEach { textHistoryManager.push(it) }
+            .launchIn(coroutineScope)
     }
 
     override fun update(input: Text) {
-        textHistoryManager.unlock()
         _flow.value = input
     }
 

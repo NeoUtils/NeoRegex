@@ -23,4 +23,5 @@ import androidx.compose.ui.text.TextRange
 data class Text(
     val text: String = "",
     val selection: TextRange = TextRange.Zero,
+    val registered: Boolean = false,
 )

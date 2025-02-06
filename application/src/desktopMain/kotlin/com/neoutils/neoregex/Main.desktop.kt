@@ -18,11 +18,8 @@
 
 package com.neoutils.neoregex
 
-import androidx.compose.ui.window.launchApplication
-import com.neoutils.neoregex.core.common.util.mainUIScope
+import androidx.compose.ui.window.application
 
-fun main() {
-    mainUIScope.launchApplication {
-        DesktopApp()
-    }
+fun main() = application {
+    DesktopApp()
 }

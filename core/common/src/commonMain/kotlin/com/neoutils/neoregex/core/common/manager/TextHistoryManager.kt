@@ -31,15 +31,11 @@ class TextHistoryManager {
     private val _flow = MutableStateFlow(History())
     val flow = _flow.asStateFlow()
 
-    private var lock = false
-
     fun push(value: Text) {
-
-        if (lock) return
 
         if (shouldPush(value)) {
 
-            undoStack = Entry(value, undoStack)
+            undoStack = Entry(value.copy(registered = true), undoStack)
             redoStack = null
 
             update()
@@ -48,7 +44,7 @@ class TextHistoryManager {
 
         if (shouldUpdateLast(value)) {
 
-            undoStack?.value = value
+            undoStack?.value = value.copy(registered = true)
 
             update()
         }
@@ -70,8 +66,6 @@ class TextHistoryManager {
 
         update()
 
-        lock = true
-
         return undoStack?.value
     }
 
@@ -83,13 +77,7 @@ class TextHistoryManager {
 
         update()
 
-        lock = true
-
         return entry.value
-    }
-
-    fun unlock() {
-        lock = false
     }
 
     private fun update() {
