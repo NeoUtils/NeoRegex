@@ -18,6 +18,8 @@
 
 package com.neoutils.neoregex.feature.matcher.model
 
+import com.neoutils.neoregex.core.common.model.Target
+
 class Targeted<T>(
     vararg pairs: Pair<Target, T>
 ) {

@@ -18,9 +18,12 @@
 
 package com.neoutils.neoregex.core.sharedui.component
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.dispatcher.NavigationManager
 
 @Composable
@@ -29,7 +32,9 @@ actual fun Navigation(
     navigation: NavigationManager,
     textStyle: TextStyle
 ) = CompactNavigation(
-    modifier = modifier,
+    modifier = modifier.padding(
+        start = dimensions.micro
+    ),
     navigation = navigation,
     textStyle = textStyle
 )

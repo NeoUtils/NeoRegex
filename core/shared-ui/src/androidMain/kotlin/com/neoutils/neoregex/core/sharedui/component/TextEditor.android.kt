@@ -43,17 +43,19 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.LineHeightStyle
+import com.neoutils.neoregex.core.common.extension.toText
+import com.neoutils.neoregex.core.common.model.Text
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.sharedui.extension.getBoundingBoxes
-import com.neoutils.neoregex.core.sharedui.model.Match
-import com.neoutils.neoregex.core.sharedui.model.MatchBox
+import com.neoutils.neoregex.core.common.extension.getBoundingBoxes
+import com.neoutils.neoregex.core.common.extension.toTextFieldValue
+import com.neoutils.neoregex.core.common.model.Match
+import com.neoutils.neoregex.core.common.model.MatchBox
 
 @Composable
 actual fun TextEditor(
-    value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
+    value: Text,
+    onValueChange: (Text) -> Unit,
     modifier: Modifier,
     onFocusChange: (FocusState) -> Unit,
     matches: List<Match>,
@@ -129,12 +131,14 @@ actual fun TextEditor(
                 .fillMaxHeight()
         )
 
+        val textFileValue = remember(value) { value.toTextFieldValue() }
+
         // TODO(improve): it's not performant for large text
         BasicTextField(
-            value = value.copy(
-                composition = null
-            ),
-            onValueChange = onValueChange,
+            value = textFileValue,
+            onValueChange  = {
+                onValueChange(it.toText())
+            },
             textStyle = mergedTextStyle.copy(
                 lineHeightStyle = LineHeightStyle(
                     alignment = LineHeightStyle.Alignment.Proportional,

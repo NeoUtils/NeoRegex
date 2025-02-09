@@ -26,11 +26,13 @@
             <option value="$PROJECT_DIR$/core/datasource" />
             <option value="$PROJECT_DIR$/core/design-system" />
             <option value="$PROJECT_DIR$/core/dispatcher" />
+            <option value="$PROJECT_DIR$/core/repository" />
             <option value="$PROJECT_DIR$/core/resources" />
             <option value="$PROJECT_DIR$/core/shared-ui" />
             <option value="$PROJECT_DIR$/feature" />
             <option value="$PROJECT_DIR$/feature/about" />
             <option value="$PROJECT_DIR$/feature/matcher" />
+            <option value="$PROJECT_DIR$/feature/validator" />
           </set>
         </option>
       </GradleProjectSettings>

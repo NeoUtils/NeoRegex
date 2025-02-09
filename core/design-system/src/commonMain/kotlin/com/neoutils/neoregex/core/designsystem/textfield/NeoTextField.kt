@@ -18,82 +18,88 @@
 
 package com.neoutils.neoregex.core.designsystem.textfield
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Info
-import androidx.compose.material3.*
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
+import com.neoutils.neoregex.core.common.extension.getBoundingBoxes
+import com.neoutils.neoregex.core.common.model.Match
+import com.neoutils.neoregex.core.common.model.MatchBox
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NeoTextField(
+    value: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
+    textStyle: TextStyle = TextStyle(),
+    matches: List<Match> = listOf(),
+    matchColor: Color = colorScheme.secondary,
+    singleLine: Boolean = false,
+    contentPadding: PaddingValues = PaddingValues(dimensions.default),
+    hint: String = ""
+) {
+    var selection by remember { mutableStateOf(TextRange.Zero) }
+
+    NeoTextField(
+        value = TextFieldValue(
+            value,
+            selection
+        ),
+        onValueChange = {
+            selection = it.selection
+            onValueChange(it.text)
+        },
+        onTextLayout = onTextLayout,
+        modifier = modifier,
+        textStyle = textStyle,
+        matches = matches,
+        matchesColor = matchColor,
+        singleLine = singleLine,
+        contentPadding = contentPadding,
+        hint = hint
+    )
+}
+
 @Composable
 fun NeoTextField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
+    onTextLayout: (TextLayoutResult) -> Unit = {},
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(),
+    matches: List<Match> = listOf(),
+    matchesColor: Color = colorScheme.secondary,
     singleLine: Boolean = false,
     contentPadding: PaddingValues = PaddingValues(dimensions.default),
-    hint: String = "",
-    error: String = ""
+    hint: String = ""
 ) {
 
-    val contentColor = LocalContentColor.current
-
     val mergedTextStyle = typography.bodyLarge.copy(
-        color = contentColor
+        color = LocalContentColor.current
     ).merge(textStyle)
 
     var focused by remember { mutableStateOf(false) }
 
-    val errorUi = @Composable {
-        val colorScheme = colorScheme
-
-        val tooltipState = rememberTooltipState(isPersistent = true)
-        val scope = rememberCoroutineScope()
-
-        TooltipBox(
-            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
-            tooltip = {
-                PlainTooltip(
-                    containerColor = colorScheme.secondaryContainer,
-                    contentColor = colorScheme.onSecondaryContainer,
-                ) {
-                    Text(error)
-                }
-            },
-            state = tooltipState,
-            focusable = false,
-        ) {
-            Icon(
-                imageVector = Icons.Rounded.Info,
-                contentDescription = error,
-                tint = colorScheme.error,
-                modifier = Modifier.clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = {
-                        scope.launch {
-                            tooltipState.show()
-                        }
-                    }
-                )
-            )
-        }
-    }
+    var textLayout by remember { mutableStateOf<TextLayoutResult?>(null) }
 
     BasicTextField(
         value = value,
@@ -102,24 +108,57 @@ fun NeoTextField(
         },
         singleLine = singleLine,
         textStyle = mergedTextStyle,
-        cursorBrush = SolidColor(contentColor),
+        cursorBrush = SolidColor(mergedTextStyle.color),
         modifier = modifier.onFocusChanged {
             focused = it.isFocused
         },
+        onTextLayout = {
+            onTextLayout(it)
+            textLayout = it
+        },
         decorationBox = { innerTextField ->
-            TextFieldDefaults.DecorationBox(
-                value = value.text,
-                innerTextField = innerTextField,
-                enabled = true,
-                singleLine = singleLine,
-                visualTransformation = VisualTransformation.None,
-                interactionSource = remember { MutableInteractionSource() },
-                contentPadding = contentPadding,
-                isError = false,
-                container = {},
-                placeholder = {
+            Box(
+                modifier = Modifier
+                    .padding(contentPadding)
+                    .drawBehind {
+                        val matchBoxes = textLayout?.let { textLayout ->
+                            matches.flatMap { match ->
+                                textLayout.getBoundingBoxes(
+                                    match.range.first,
+                                    match.range.last
+                                ).map {
+                                    MatchBox(
+                                        match,
+                                        it.deflate(
+                                            delta = 0.8f
+                                        )
+                                    )
+                                }
+                            }
+                        }
+
+                        matchBoxes?.forEach { (_, rect) ->
+                            drawRect(
+                                color = matchesColor,
+                                topLeft = Offset(
+                                    x = rect.left,
+                                    y = rect.top
+                                ),
+                                size = Size(
+                                    rect.width,
+                                    rect.height
+                                )
+                            )
+                        }
+                    },
+                propagateMinConstraints = true
+            ) {
+
+                innerTextField()
+
+                if (value.text.isEmpty()) {
                     Text(
-                        text = hint,
+                        text = hint.substringBefore(delimiter = "\n"),
                         style = mergedTextStyle.copy(
                             color = mergedTextStyle.color.copy(
                                 alpha = 0.5f
@@ -128,13 +167,8 @@ fun NeoTextField(
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
                     )
-                },
-                trailingIcon = error.takeIf {
-                    it.isNotEmpty()
-                }?.let {
-                    errorUi
                 }
-            )
+            }
         },
     )
 }

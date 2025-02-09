@@ -50,3 +50,4 @@ val Blue350 = Color(0xFF5EA9DD)
 val Blue400 = Color(0xFF408BC0)
 val Purple300 = Color(0xFFB182C6)
 
+val Green = Color(0xFF006400)

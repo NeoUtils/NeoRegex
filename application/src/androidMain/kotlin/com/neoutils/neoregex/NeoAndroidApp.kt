@@ -19,8 +19,11 @@
 package com.neoutils.neoregex
 
 import android.app.Application
+import com.neoutils.neoregex.feature.validator.di.validatorModule
 import com.neoutils.neoregex.core.datasource.di.dataSourceModule
 import com.neoutils.neoregex.core.dispatcher.di.navigationModule
+import com.neoutils.neoregex.core.repository.di.repositoryModule
+import com.neoutils.neoregex.feature.matcher.di.matcherModule
 import org.koin.core.context.GlobalContext.startKoin
 
 class NeoAndroidApp : Application() {
@@ -30,7 +33,10 @@ class NeoAndroidApp : Application() {
         startKoin {
             modules(
                 dataSourceModule,
-                navigationModule
+                repositoryModule,
+                navigationModule,
+                matcherModule,
+                validatorModule
             )
         }
     }

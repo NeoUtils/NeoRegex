@@ -20,14 +20,16 @@ package com.neoutils.neoregex.feature.matcher
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
+import com.neoutils.neoregex.core.common.manager.TextHistoryManager
+import com.neoutils.neoregex.core.common.model.History
+import com.neoutils.neoregex.core.common.model.Inputs
+import com.neoutils.neoregex.core.common.model.Target
+import com.neoutils.neoregex.core.common.model.Text
+import com.neoutils.neoregex.core.repository.pattern.PatternRepository
+import com.neoutils.neoregex.core.sharedui.component.FooterAction
 import com.neoutils.neoregex.core.sharedui.component.Performance
-import com.neoutils.neoregex.core.sharedui.model.Match
+import com.neoutils.neoregex.core.common.model.Match
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
-import com.neoutils.neoregex.feature.matcher.extension.toTextFieldValue
-import com.neoutils.neoregex.feature.matcher.manager.HistoryManager
-import com.neoutils.neoregex.feature.matcher.model.Target
-import com.neoutils.neoregex.feature.matcher.model.Targeted
-import com.neoutils.neoregex.feature.matcher.model.TextState
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
@@ -37,23 +39,18 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
 @OptIn(FlowPreview::class)
-class MatcherViewModel : ScreenModel {
+class MatcherViewModel(
+    private val patternRepository: PatternRepository
+) : ScreenModel {
 
     private val target = MutableStateFlow<Target?>(value = null)
 
-    private val histories = Targeted(
-        Target.TEXT to HistoryManager(),
-        Target.REGEX to HistoryManager()
-    )
-
-    private val inputs = Targeted(
-        Target.TEXT to MutableStateFlow(TextState()),
-        Target.REGEX to MutableStateFlow(TextState())
-    )
+    private val textHistory = TextHistoryManager()
+    private val textFlow = MutableStateFlow(Text())
 
     private val resultFlow = combine(
-        inputs[Target.TEXT].map { it.text }.distinctUntilChanged(),
-        inputs[Target.REGEX].map { it.text }.distinctUntilChanged()
+        textFlow.map { it.text }.distinctUntilChanged(),
+        patternRepository.flow.map { it.text }.distinctUntilChanged()
     ) { text, pattern ->
 
         if (pattern.isEmpty()) {
@@ -98,37 +95,26 @@ class MatcherViewModel : ScreenModel {
 
     private val historyFlow = combine(
         target,
-        histories[Target.TEXT].state,
-        histories[Target.REGEX].state
-    ) { target, text, regex ->
+        textHistory.flow,
+        patternRepository.historyFlow
+    ) { target, textHistory, regexHistory ->
         when (target) {
-            Target.TEXT -> {
-                MatcherUiState.History(
-                    canUndo = text.canUndo,
-                    canRedo = text.canRedo
-                )
-            }
+            Target.TEXT -> textHistory
+            Target.REGEX -> regexHistory
 
-            Target.REGEX -> {
-                MatcherUiState.History(
-                    canUndo = regex.canUndo,
-                    canRedo = regex.canRedo
-                )
-            }
-
-            null -> MatcherUiState.History()
+            null -> History()
         }
     }
 
     private val inputFlow = combine(
         target,
-        inputs[Target.TEXT],
-        inputs[Target.REGEX],
+        textFlow,
+        patternRepository.flow,
     ) { target, text, regex ->
-        MatcherUiState.Inputs(
+        Inputs(
             target = target,
-            text = text.toTextFieldValue(),
-            regex = regex.toTextFieldValue()
+            text = text,
+            regex = regex
         )
     }
 
@@ -158,30 +144,48 @@ class MatcherViewModel : ScreenModel {
     )
 
     init {
-        inputs[Target.TEXT]
-            .filter { it.register }
-            .onEach { histories[Target.TEXT].push(it) }
-            .launchIn(screenModelScope)
-
-        inputs[Target.REGEX]
-            .filter { it.register }
-            .onEach { histories[Target.REGEX].push(it) }
+        textFlow
+            .filterNot { it.registered }
+            .onEach { textHistory.push(it) }
             .launchIn(screenModelScope)
     }
 
-    fun onAction(action: MatcherAction) {
-
+    fun onAction(action: FooterAction) {
         when (action) {
-            is MatcherAction.Input.UpdateRegex -> {
-                onChange(Target.REGEX, action.textState)
+            is FooterAction.UpdateRegex -> {
+                patternRepository.update(action.text)
             }
 
-            is MatcherAction.Input.UpdateText -> {
-                onChange(Target.TEXT, action.textState)
+            is FooterAction.History.Redo -> {
+                redo(
+                    target = action.textState
+                        ?: target.value
+                        ?: return
+                )
+            }
+
+            is FooterAction.History.Undo -> {
+                undo(
+                    target = action.textState
+                        ?: target.value
+                        ?: return
+                )
+            }
+        }
+    }
+
+    fun onAction(action: MatcherAction) {
+        when (action) {
+            is MatcherAction.UpdateText -> {
+                textFlow.value = action.text
+            }
+
+            is MatcherAction.TargetChange -> {
+                target.value = action.target
             }
 
             is MatcherAction.History.Undo -> {
-                onUndo(
+                undo(
                     target = action.textState
                         ?: target.value
                         ?: return
@@ -189,15 +193,11 @@ class MatcherViewModel : ScreenModel {
             }
 
             is MatcherAction.History.Redo -> {
-                onRedo(
+                redo(
                     target = action.textState
                         ?: target.value
                         ?: return
                 )
-            }
-
-            is MatcherAction.TargetChange -> {
-                target.value = action.target
             }
 
             MatcherAction.Toggle -> {
@@ -210,26 +210,27 @@ class MatcherViewModel : ScreenModel {
         }
     }
 
-    private fun onChange(
-        target: Target,
-        textState: TextState
-    ) {
-        inputs[target].value = textState
-    }
+    private fun redo(target: Target) {
+        when (target) {
+            Target.TEXT -> {
+                textFlow.value = textHistory.redo() ?: return
+            }
 
-    private fun onRedo(target: Target) {
-        val redo = histories[target].redo()
-
-        if (redo != null) {
-            inputs[target].value = redo.copy(register = false)
+            Target.REGEX -> {
+                patternRepository.redo()
+            }
         }
     }
 
-    private fun onUndo(target: Target) {
-        val undo = histories[target].undo()
+    private fun undo(target: Target) {
+        when (target) {
+            Target.TEXT -> {
+                textFlow.value = textHistory.undo() ?: return
+            }
 
-        if (undo != null) {
-            inputs[target].value = undo.copy(register = false)
+            Target.REGEX -> {
+                patternRepository.undo()
+            }
         }
     }
 

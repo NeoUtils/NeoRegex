@@ -29,9 +29,15 @@ group = config.module(name = "core")
 kotlin {
     sourceSets {
         commonMain.dependencies {
+
+            // modules
             api(projects.core.common)
+
+            // settings
             api(libs.multiplatform.settings.noArg)
             api(libs.multiplatform.settings.serialization)
+
+            // kotlinx serialization
             api(libs.kotlinx.serialization.json)
         }
     }

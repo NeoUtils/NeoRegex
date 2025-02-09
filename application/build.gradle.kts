@@ -43,10 +43,12 @@ kotlin {
             implementation(projects.core.sharedUi)
             implementation(projects.core.datasource)
             implementation(projects.core.dispatcher)
+            implementation(projects.core.repository)
 
             // feature
             implementation(projects.feature.matcher)
             implementation(projects.feature.about)
+            implementation(projects.feature.validator)
 
             // voyager
             implementation(catalog.voyager.navigator)

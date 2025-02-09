@@ -18,10 +18,7 @@
 
 package com.neoutils.neoregex.core.dispatcher.model
 
-import com.neoutils.neoregex.core.resources.Res
-import com.neoutils.neoregex.core.resources.screen_about
-import com.neoutils.neoregex.core.resources.screen_libraries
-import com.neoutils.neoregex.core.resources.screen_matcher
+import com.neoutils.neoregex.core.resources.*
 import org.jetbrains.compose.resources.StringResource
 
 sealed class Navigation {
@@ -48,6 +45,10 @@ sealed class Navigation {
 
         data object Libraries : Screen() {
             override val title = Res.string.screen_libraries
+        }
+
+        data object Validator : Screen() {
+            override val title = Res.string.screen_validator
         }
     }
 }

@@ -28,11 +28,17 @@ group = config.module(name = "core")
 kotlin {
     sourceSets {
         commonMain.dependencies {
+
+            // modules
             implementation(projects.core.designSystem)
             implementation(projects.core.common)
             implementation(projects.core.resources)
             implementation(projects.core.datasource)
             implementation(projects.core.dispatcher)
+
+            // NeoUtils
+            implementation(libs.highlight.compose)
         }
     }
 }
+

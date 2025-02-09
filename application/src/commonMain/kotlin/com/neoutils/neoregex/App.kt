@@ -30,6 +30,7 @@ import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.internal.BackHandler
 import cafe.adriel.voyager.transitions.FadeTransition
+import com.neoutils.neoregex.feature.validator.ValidatorScreen
 import com.neoutils.neoregex.core.designsystem.theme.NeoBackground
 import com.neoutils.neoregex.core.dispatcher.NavigationManager
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
@@ -77,6 +78,10 @@ fun App(
                             Navigation.Screen.Matcher -> {
                                 navigator.popUntilRoot()
                             }
+
+                            Navigation.Screen.Validator -> {
+                                navigator.push(ValidatorScreen())
+                            }
                         }
                     }
 
@@ -90,7 +95,7 @@ fun App(
                         is MatcherScreen -> Navigation.Screen.Matcher
                         is AboutScreen -> Navigation.Screen.About
                         is LibrariesScreen -> Navigation.Screen.Libraries
-
+                        is ValidatorScreen -> Navigation.Screen.Validator
                         else -> error("Invalid screen")
                     }
                 )

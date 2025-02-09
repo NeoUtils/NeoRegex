@@ -40,6 +40,7 @@ internal class NavigationManagerImpl : NavigationManager {
             Navigation.Screen.About -> true
             Navigation.Screen.Libraries -> true
             Navigation.Screen.Matcher -> false
+            Navigation.Screen.Validator -> false
         }
 
         _current.value = screen
