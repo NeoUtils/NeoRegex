@@ -49,12 +49,9 @@ fun App(
     Navigator(
         screen = MatcherScreen(),
     ) { navigator ->
-
-        val canPop by navigation.canPopBack.collectAsStateWithLifecycle()
-
         val coroutines = rememberCoroutineScope()
 
-        BackHandler(enabled = canPop) {
+        BackHandler(enabled = true) {
             coroutines.launch {
                 navigation.emit(
                     Navigation.Event.OnBack

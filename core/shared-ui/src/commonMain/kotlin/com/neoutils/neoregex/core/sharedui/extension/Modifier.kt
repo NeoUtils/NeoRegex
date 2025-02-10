@@ -31,6 +31,8 @@ import androidx.compose.ui.input.pointer.pointerInput
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 @Stable
 fun Modifier.surface(
@@ -49,16 +51,14 @@ fun Modifier.surface(
         } else {
             Modifier
         }
-    )
-        .background(
-            color = backgroundColor,
-            shape = shape
-        )
-        .clip(shape)
+    ).background(
+        color = backgroundColor,
+        shape = shape
+    ).clip(shape)
 }
 
-fun Modifier.onLongHold(
-    delayMillis: Long = 10L,
+fun Modifier.onLongPress(
+    delay: Duration = 10.milliseconds,
     action: () -> Unit
 ) = composed {
 
@@ -76,7 +76,7 @@ fun Modifier.onLongHold(
                 job = scope.launch {
                     while (true) {
                         action()
-                        delay(delayMillis)
+                        delay(delay)
                     }
                 }
             },

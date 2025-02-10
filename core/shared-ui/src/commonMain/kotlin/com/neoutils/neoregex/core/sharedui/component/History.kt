@@ -37,7 +37,7 @@ import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.ic_redo_24
 import com.neoutils.neoregex.core.resources.ic_undo_24
-import com.neoutils.neoregex.core.sharedui.extension.onLongHold
+import com.neoutils.neoregex.core.sharedui.extension.onLongPress
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -76,7 +76,7 @@ fun History(
                     FooterAction.History.Undo()
                 )
             }
-            .onLongHold {
+            .onLongPress {
                 onAction(
                     FooterAction.History.Undo()
                 )
@@ -115,7 +115,7 @@ fun History(
                     FooterAction.History.Redo()
                 )
             }
-            .onLongHold {
+            .onLongPress {
                 onAction(
                     FooterAction.History.Redo()
                 )

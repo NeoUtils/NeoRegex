@@ -28,25 +28,26 @@ import kotlinx.coroutines.flow.receiveAsFlow
 internal class NavigationManagerImpl : NavigationManager {
 
     private val _event = Channel<Navigation.Event>(Channel.UNLIMITED)
-    private val _current = MutableStateFlow<Navigation.Screen>(Navigation.Screen.Matcher)
-    private val _canPop = MutableStateFlow(value = false)
+    private val _screen = MutableStateFlow<Navigation.Screen>(Navigation.Screen.Matcher)
+    private val _canPopBack = MutableStateFlow(value = false)
 
-    override val screen = _current.asStateFlow()
+    override val screen = _screen.asStateFlow()
     override val event = _event.receiveAsFlow()
-    override val canPopBack = _canPop.asStateFlow()
+    override val canPopBack = _canPopBack.asStateFlow()
 
     override fun update(screen: Navigation.Screen) {
-        _canPop.value = when (screen) {
+        _canPopBack.value = when (screen) {
             Navigation.Screen.About -> true
             Navigation.Screen.Libraries -> true
             Navigation.Screen.Matcher -> false
             Navigation.Screen.Validator -> false
         }
 
-        _current.value = screen
+        _screen.value = screen
     }
 
     override suspend fun emit(event: Navigation.Event) {
+        if (event is Navigation.Event.OnBack && !canPopBack.value) return
         _event.send(event)
     }
 }
