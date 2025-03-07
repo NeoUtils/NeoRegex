@@ -47,15 +47,15 @@ import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.LineHeightStyle
-import com.neoutils.neoregex.core.common.extension.toText
-import com.neoutils.neoregex.core.common.model.Text
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.common.extension.getBoundingBoxes
-import com.neoutils.neoregex.core.sharedui.extension.toText
+import com.neoutils.neoregex.core.common.extension.toText
 import com.neoutils.neoregex.core.common.extension.toTextFieldValue
-import com.neoutils.neoregex.core.sharedui.extension.tooltip
 import com.neoutils.neoregex.core.common.model.Match
 import com.neoutils.neoregex.core.common.model.MatchBox
+import com.neoutils.neoregex.core.common.model.Text
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.sharedui.extension.toText
+import com.neoutils.neoregex.core.sharedui.extension.tooltip
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class)
@@ -67,6 +67,7 @@ actual fun TextEditor(
     onFocusChange: (FocusState) -> Unit,
     matches: List<Match>,
     textStyle: TextStyle,
+    config: Config
 ) {
 
     val mergedTextStyle = typography.bodyMedium.merge(textStyle)
@@ -80,8 +81,6 @@ actual fun TextEditor(
     var hoverOffset by remember { mutableStateOf<Offset?>(null) }
 
     val textMeasurer = rememberTextMeasurer()
-
-    val colorScheme = colorScheme
 
     Row(modifier) {
 
@@ -152,7 +151,7 @@ actual fun TextEditor(
 
                     matchBoxes.forEach { (_, rect) ->
                         drawRect(
-                            color = colorScheme.secondary,
+                            color = config.matchColor,
                             topLeft = Offset(
                                 x = rect.left,
                                 y = rect.top - scrollState.offset
@@ -170,7 +169,7 @@ actual fun TextEditor(
 
                         matchBox?.let { (match, rect) ->
                             drawRect(
-                                color = colorScheme.onSurface,
+                                color = config.selectedMatchColor,
                                 topLeft = Offset(
                                     x = rect.left,
                                     y = rect.top - scrollState.offset
@@ -195,10 +194,10 @@ actual fun TextEditor(
                                 measure = textMeasurer.measure(
                                     text = match.toText(),
                                     style = mergedTextStyle.copy(
-                                        color = colorScheme.onSecondaryContainer,
+                                        color = config.tooltipTextColor,
                                     )
                                 ),
-                                backgroundColor = colorScheme.secondaryContainer,
+                                backgroundColor = config.tooltipBackgroundColor,
                             )
                         }
                     }

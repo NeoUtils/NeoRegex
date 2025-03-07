@@ -44,13 +44,13 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.LineHeightStyle
-import com.neoutils.neoregex.core.common.extension.toText
-import com.neoutils.neoregex.core.common.model.Text
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.common.extension.getBoundingBoxes
+import com.neoutils.neoregex.core.common.extension.toText
 import com.neoutils.neoregex.core.common.extension.toTextFieldValue
 import com.neoutils.neoregex.core.common.model.Match
 import com.neoutils.neoregex.core.common.model.MatchBox
+import com.neoutils.neoregex.core.common.model.Text
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 
 @Composable
 actual fun TextEditor(
@@ -60,6 +60,7 @@ actual fun TextEditor(
     onFocusChange: (FocusState) -> Unit,
     matches: List<Match>,
     textStyle: TextStyle,
+    config: Config
 ) = Column(modifier) {
 
     val mergedTextStyle = typography.bodyLarge.merge(textStyle)
@@ -73,8 +74,6 @@ actual fun TextEditor(
     var pressedMatchOffset by remember { mutableStateOf<Offset?>(null) }
 
     var selectedMatch by remember { mutableStateOf<Match?>(null) }
-
-    val colorScheme = colorScheme
 
     LaunchedEffect(interactionSource, matches) {
         interactionSource.interactions.collect { interaction ->
@@ -136,7 +135,7 @@ actual fun TextEditor(
         // TODO(improve): it's not performant for large text
         BasicTextField(
             value = textFileValue,
-            onValueChange  = {
+            onValueChange = {
                 onValueChange(it.toText())
             },
             textStyle = mergedTextStyle.copy(
@@ -175,7 +174,7 @@ actual fun TextEditor(
 
                     matchBoxes.forEach { (_, rect) ->
                         drawRect(
-                            color = colorScheme.secondary,
+                            color = config.matchColor,
                             topLeft = Offset(rect.left, rect.top),
                             size = Size(rect.width, rect.height)
                         )
@@ -191,7 +190,7 @@ actual fun TextEditor(
 
                     matchBox?.let { (_, rect) ->
                         drawRect(
-                            color = colorScheme.onSurface,
+                            color = config.selectedMatchColor,
                             topLeft = Offset(
                                 x = rect.left,
                                 y = rect.top - scrollState.value

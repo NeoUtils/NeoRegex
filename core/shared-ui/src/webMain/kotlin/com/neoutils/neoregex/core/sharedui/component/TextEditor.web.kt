@@ -47,16 +47,16 @@ import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.LineHeightStyle
+import com.neoutils.neoregex.core.common.extension.getBoundingBoxes
 import com.neoutils.neoregex.core.common.extension.toText
+import com.neoutils.neoregex.core.common.extension.toTextFieldValue
+import com.neoutils.neoregex.core.common.model.Match
+import com.neoutils.neoregex.core.common.model.MatchBox
 import com.neoutils.neoregex.core.common.model.Text
 import com.neoutils.neoregex.core.common.util.InteractionMode
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.common.extension.getBoundingBoxes
 import com.neoutils.neoregex.core.sharedui.extension.toText
-import com.neoutils.neoregex.core.common.extension.toTextFieldValue
 import com.neoutils.neoregex.core.sharedui.extension.tooltip
-import com.neoutils.neoregex.core.common.model.Match
-import com.neoutils.neoregex.core.common.model.MatchBox
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -66,7 +66,8 @@ actual fun TextEditor(
     modifier: Modifier,
     onFocusChange: (FocusState) -> Unit,
     matches: List<Match>,
-    textStyle: TextStyle
+    textStyle: TextStyle,
+    config: Config
 ) = Column(modifier) {
 
     val mergedTextStyle = typography.bodyMedium.merge(textStyle)
@@ -87,11 +88,7 @@ actual fun TextEditor(
 
     val textMeasurer = rememberTextMeasurer()
 
-    val interactionMode = InteractionMode.Current
-
-    val colorScheme = colorScheme
-
-    if (interactionMode == InteractionMode.TOUCH) {
+    if (InteractionMode.Current == InteractionMode.TOUCH) {
         LaunchedEffect(interactionSource, matches) {
             interactionSource.interactions.collect { interaction ->
                 when (interaction) {
@@ -199,7 +196,7 @@ actual fun TextEditor(
 
                     matchBoxes.forEach { (_, rect) ->
                         drawRect(
-                            color = colorScheme.secondary,
+                            color = config.matchColor,
                             topLeft = Offset(
                                 x = rect.left,
                                 y = rect.top
@@ -210,7 +207,7 @@ actual fun TextEditor(
 
                     drawContent()
 
-                    when (interactionMode) {
+                    when (InteractionMode.Current) {
                         InteractionMode.MOUSE -> {
                             hoverOffset?.let { offset ->
                                 val matchBox = matchBoxes.firstOrNull { (_, rect) ->
@@ -219,7 +216,7 @@ actual fun TextEditor(
 
                                 matchBox?.let { (match, rect) ->
                                     drawRect(
-                                        color = colorScheme.onSurface,
+                                        color = config.selectedMatchColor,
                                         topLeft = Offset(
                                             x = rect.left,
                                             y = rect.top
@@ -244,10 +241,10 @@ actual fun TextEditor(
                                         measure = textMeasurer.measure(
                                             text = match.toText(),
                                             style = mergedTextStyle.copy(
-                                                color = colorScheme.onSecondaryContainer,
+                                                color = config.tooltipTextColor,
                                             )
                                         ),
-                                        backgroundColor = colorScheme.secondaryContainer,
+                                        backgroundColor = config.tooltipBackgroundColor,
                                     )
                                 }
                             }
@@ -264,7 +261,7 @@ actual fun TextEditor(
 
                             matchBox?.let { (_, rect) ->
                                 drawRect(
-                                    color = colorScheme.onSurface,
+                                    color = config.selectedMatchColor,
                                     topLeft = Offset(
                                         x = rect.left,
                                         y = rect.top
