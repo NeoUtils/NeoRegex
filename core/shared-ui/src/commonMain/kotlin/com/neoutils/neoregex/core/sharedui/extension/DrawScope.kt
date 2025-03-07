@@ -75,10 +75,10 @@ fun DrawScope.tooltip(
     }
 
     // Calculate triangle position to ensure it aligns with the anchor
-    // but doesn't exceed tooltip bounds
+    // but doesn't exceed tooltip bounds and respects corner radius
     val triangleX = anchorRect.center.x.coerceIn(
-        xPosition + triangleHeightPx,
-        xPosition + tooltipSize.width - triangleHeightPx
+        xPosition + cornerRadiusPx + triangleHeightPx,
+        xPosition + tooltipSize.width - cornerRadiusPx - triangleHeightPx
     )
 
     drawPath(
