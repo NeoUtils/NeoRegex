@@ -20,7 +20,7 @@ package com.neoutils.neoregex.core.common.model
 
 import androidx.compose.ui.geometry.Rect
 
-data class MatchBox(
+data class DrawMatch(
     val match: Match,
-    val rect: Rect
+    val rects: List<Rect>
 )

@@ -41,7 +41,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import com.neoutils.neoregex.core.common.extension.getBoundingBoxes
 import com.neoutils.neoregex.core.common.model.Match
-import com.neoutils.neoregex.core.common.model.MatchBox
+import com.neoutils.neoregex.core.common.model.DrawMatch
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 
 @Composable
@@ -127,11 +127,11 @@ fun NeoTextField(
                                     match.range.first,
                                     match.range.last
                                 ).map {
-                                    MatchBox(
+                                    DrawMatch(
                                         match,
-                                        it.deflate(
-                                            delta = 0.8f
-                                        )
+                                      listOf(  it.deflate(
+                                          delta = 0.8f
+                                      ))
                                     )
                                 }
                             }
@@ -141,12 +141,12 @@ fun NeoTextField(
                             drawRect(
                                 color = matchesColor,
                                 topLeft = Offset(
-                                    x = rect.left,
-                                    y = rect.top
+                                    x = rect[0].left,
+                                    y = rect[0].top
                                 ),
                                 size = Size(
-                                    rect.width,
-                                    rect.height
+                                    rect[0].width,
+                                    rect[0].height
                                 )
                             )
                         }

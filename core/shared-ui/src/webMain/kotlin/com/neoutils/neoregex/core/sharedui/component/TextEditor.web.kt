@@ -50,8 +50,8 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import com.neoutils.neoregex.core.common.extension.getBoundingBoxes
 import com.neoutils.neoregex.core.common.extension.toText
 import com.neoutils.neoregex.core.common.extension.toTextFieldValue
+import com.neoutils.neoregex.core.common.model.DrawMatch
 import com.neoutils.neoregex.core.common.model.Match
-import com.neoutils.neoregex.core.common.model.MatchBox
 import com.neoutils.neoregex.core.common.model.Text
 import com.neoutils.neoregex.core.common.util.InteractionMode
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
@@ -178,31 +178,33 @@ actual fun TextEditor(
                     hoverOffset = null
                 }
                 .drawWithContent {
-                    val matchBoxes = textLayout?.let { textLayout ->
-                        matches.flatMap { match ->
-                            textLayout.getBoundingBoxes(
-                                match.range.first,
-                                match.range.last
-                            ).map {
-                                MatchBox(
-                                    match,
+                    val drawMatches = textLayout?.let { textLayout ->
+                        matches.map { match ->
+                            DrawMatch(
+                                match = match,
+                                rects = textLayout.getBoundingBoxes(
+                                    match.range.first,
+                                    match.range.last
+                                ).map {
                                     it.deflate(
                                         delta = 0.8f
                                     )
-                                )
-                            }
+                                }
+                            )
                         }
-                    } ?: listOf()
+                    }.orEmpty()
 
-                    matchBoxes.forEach { (_, rect) ->
-                        drawRect(
-                            color = config.matchColor,
-                            topLeft = Offset(
-                                x = rect.left,
-                                y = rect.top
-                            ),
-                            size = Size(rect.width, rect.height)
-                        )
+                    drawMatches.forEach { (_, rects) ->
+                        rects.forEach { rect ->
+                            drawRect(
+                                color = config.matchColor,
+                                topLeft = Offset(
+                                    x = rect.left,
+                                    y = rect.top
+                                ),
+                                size = Size(rect.width, rect.height)
+                            )
+                        }
                     }
 
                     drawContent()
@@ -210,22 +212,26 @@ actual fun TextEditor(
                     when (InteractionMode.Current) {
                         InteractionMode.MOUSE -> {
                             hoverOffset?.let { offset ->
-                                val matchBox = matchBoxes.firstOrNull { (_, rect) ->
-                                    rect.contains(offset)
+                                val drawMatch = drawMatches.firstOrNull { (_, rects) ->
+                                    rects.any { it.contains(offset) }
                                 }
 
-                                matchBox?.let { (match, rect) ->
-                                    drawRect(
-                                        color = config.selectedMatchColor,
-                                        topLeft = Offset(
-                                            x = rect.left,
-                                            y = rect.top
-                                        ),
-                                        size = Size(rect.width, rect.height),
-                                        style = Stroke(
-                                            width = 1f
+                                drawMatch?.let { (match, rects) ->
+                                    rects.forEach { rect ->
+                                        drawRect(
+                                            color = config.selectedMatchColor,
+                                            topLeft = Offset(
+                                                x = rect.left,
+                                                y = rect.top
+                                            ),
+                                            size = Size(rect.width, rect.height),
+                                            style = Stroke(
+                                                width = 1f
+                                            )
                                         )
-                                    )
+                                    }
+
+                                    val rect = rects.first { it.contains(offset) }
 
                                     tooltip(
                                         anchorRect = rect.inflate(
@@ -251,26 +257,28 @@ actual fun TextEditor(
                         }
 
                         InteractionMode.TOUCH -> {
-                            val matchBox = matchBoxes.firstOrNull { (match, rect) ->
+                            val drawMatch = drawMatches.firstOrNull { (match, rects) ->
                                 pressedMatchOffset?.let { offset ->
-                                    rect.contains(offset)
+                                    rects.any { it.contains(offset) }
                                 } ?: run {
                                     selectedMatch == match
                                 }
                             }
 
-                            matchBox?.let { (_, rect) ->
-                                drawRect(
-                                    color = config.selectedMatchColor,
-                                    topLeft = Offset(
-                                        x = rect.left,
-                                        y = rect.top
-                                    ),
-                                    size = Size(rect.width, rect.height),
-                                    style = Stroke(
-                                        width = 1f
+                            drawMatch?.let { (_, rects) ->
+                                rects.forEach { rect ->
+                                    drawRect(
+                                        color = config.selectedMatchColor,
+                                        topLeft = Offset(
+                                            x = rect.left,
+                                            y = rect.top
+                                        ),
+                                        size = Size(rect.width, rect.height),
+                                        style = Stroke(
+                                            width = 1f
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
                     }

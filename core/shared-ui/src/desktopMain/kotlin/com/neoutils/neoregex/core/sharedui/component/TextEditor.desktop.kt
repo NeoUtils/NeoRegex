@@ -51,7 +51,7 @@ import com.neoutils.neoregex.core.common.extension.getBoundingBoxes
 import com.neoutils.neoregex.core.common.extension.toText
 import com.neoutils.neoregex.core.common.extension.toTextFieldValue
 import com.neoutils.neoregex.core.common.model.Match
-import com.neoutils.neoregex.core.common.model.MatchBox
+import com.neoutils.neoregex.core.common.model.DrawMatch
 import com.neoutils.neoregex.core.common.model.Text
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.sharedui.extension.toText
@@ -133,52 +133,58 @@ actual fun TextEditor(
                     hoverOffset = null
                 }
                 .drawWithContent {
-                    val matchBoxes = textLayout?.let { textLayout ->
-                        matches.flatMap { match ->
-                            textLayout.getBoundingBoxes(
-                                match.range.first,
-                                match.range.last
-                            ).map {
-                                MatchBox(
-                                    match,
+                    val drawMatches = textLayout?.let { textLayout ->
+                        matches.map { match ->
+                            DrawMatch(
+                                match = match,
+                                rects = textLayout.getBoundingBoxes(
+                                    match.range.first,
+                                    match.range.last
+                                ).map {
                                     it.deflate(
                                         delta = 0.8f
                                     )
-                                )
-                            }
+                                }
+                            )
                         }
-                    } ?: listOf()
+                    }.orEmpty()
 
-                    matchBoxes.forEach { (_, rect) ->
-                        drawRect(
-                            color = config.matchColor,
-                            topLeft = Offset(
-                                x = rect.left,
-                                y = rect.top - scrollState.offset
-                            ),
-                            size = Size(rect.width, rect.height)
-                        )
+                    drawMatches.forEach { (_, rects) ->
+                        rects.forEach { rect ->
+                            drawRect(
+                                color = config.matchColor,
+                                topLeft = Offset(
+                                    x = rect.left,
+                                    y = rect.top - scrollState.offset
+                                ),
+                                size = Size(rect.width, rect.height)
+                            )
+                        }
                     }
 
                     drawContent()
 
                     hoverOffset?.let { offset ->
-                        val matchBox = matchBoxes.firstOrNull { (_, rect) ->
-                            rect.contains(offset)
+                        val drawMatch = drawMatches.find { (_, rects) ->
+                            rects.any { it.contains(offset) }
                         }
 
-                        matchBox?.let { (match, rect) ->
-                            drawRect(
-                                color = config.selectedMatchColor,
-                                topLeft = Offset(
-                                    x = rect.left,
-                                    y = rect.top - scrollState.offset
-                                ),
-                                size = Size(rect.width, rect.height),
-                                style = Stroke(
-                                    width = 1f
-                                )
-                            )
+                        drawMatch?.let { (match, rects) ->
+                           rects.forEach { rect ->
+                               drawRect(
+                                   color = config.selectedMatchColor,
+                                   topLeft = Offset(
+                                       x = rect.left,
+                                       y = rect.top - scrollState.offset
+                                   ),
+                                   size = Size(rect.width, rect.height),
+                                   style = Stroke(
+                                       width = 1f
+                                   )
+                               )
+                           }
+
+                            val rect = rects.first { it.contains(offset) }
 
                             tooltip(
                                 anchorRect = rect.inflate(

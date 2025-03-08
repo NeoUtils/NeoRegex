@@ -47,8 +47,8 @@ import androidx.compose.ui.text.style.LineHeightStyle
 import com.neoutils.neoregex.core.common.extension.getBoundingBoxes
 import com.neoutils.neoregex.core.common.extension.toText
 import com.neoutils.neoregex.core.common.extension.toTextFieldValue
+import com.neoutils.neoregex.core.common.model.DrawMatch
 import com.neoutils.neoregex.core.common.model.Match
-import com.neoutils.neoregex.core.common.model.MatchBox
 import com.neoutils.neoregex.core.common.model.Text
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 
@@ -154,52 +154,59 @@ actual fun TextEditor(
                 .verticalScroll(scrollState) // TODO(improve): https://github.com/NeoUtils/NeoRegex/issues/15
                 .onFocusChanged(onFocusChange)
                 .drawBehind {
-                    val matchBoxes = textLayout?.let { textLayout ->
-                        matches.flatMap { match ->
-                            textLayout
-                                .getBoundingBoxes(
-                                    match.range.first,
-                                    match.range.last
-                                )
-                                .map {
-                                    MatchBox(
-                                        match,
-                                        it.deflate(
-                                            delta = 0.8f
+                    val drawMatches = textLayout
+                        ?.let { textLayout ->
+                            matches.map { match ->
+                                DrawMatch(
+                                    match = match,
+                                    rects = textLayout
+                                        .getBoundingBoxes(
+                                            match.range.first,
+                                            match.range.last
                                         )
-                                    )
-                                }
-                        }
-                    } ?: listOf()
+                                        .map {
+                                            it.deflate(
+                                                delta = 0.8f
+                                            )
+                                        }
+                                )
 
-                    matchBoxes.forEach { (_, rect) ->
-                        drawRect(
-                            color = config.matchColor,
-                            topLeft = Offset(rect.left, rect.top),
-                            size = Size(rect.width, rect.height)
-                        )
+                            }
+                        }
+                        .orEmpty()
+
+                    drawMatches.forEach { (_, rects) ->
+                        rects.forEach { rect ->
+                            drawRect(
+                                color = config.matchColor,
+                                topLeft = Offset(rect.left, rect.top),
+                                size = Size(rect.width, rect.height)
+                            )
+                        }
                     }
 
-                    val matchBox = matchBoxes.firstOrNull { (match, rect) ->
+                    val drawMatch = drawMatches.firstOrNull { (match, rects) ->
                         pressedMatchOffset?.let { offset ->
-                            rect.contains(offset)
+                            rects.any { it.contains(offset) }
                         } ?: run {
                             selectedMatch == match
                         }
                     }
 
-                    matchBox?.let { (_, rect) ->
-                        drawRect(
-                            color = config.selectedMatchColor,
-                            topLeft = Offset(
-                                x = rect.left,
-                                y = rect.top - scrollState.value
-                            ),
-                            size = Size(rect.width, rect.height),
-                            style = Stroke(
-                                width = 1f
+                    drawMatch?.let { (_, rects) ->
+                        rects.forEach { rect ->
+                            drawRect(
+                                color = config.selectedMatchColor,
+                                topLeft = Offset(
+                                    x = rect.left,
+                                    y = rect.top - scrollState.value
+                                ),
+                                size = Size(rect.width, rect.height),
+                                style = Stroke(
+                                    width = 1f
+                                )
                             )
-                        )
+                        }
                     }
                 },
             onTextLayout = {
