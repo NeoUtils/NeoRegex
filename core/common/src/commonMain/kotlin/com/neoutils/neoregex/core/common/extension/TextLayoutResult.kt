@@ -28,25 +28,23 @@ fun TextLayoutResult.getBoundingBoxes(start: Int, end: Int): List<Rect> {
     var lastRect: Rect? = null
     var lastLine: Int? = null
 
-    for (offset in start .. end) {
+    for (offset in start..end) {
 
         var rect = getBoundingBox(offset)
         val line = getLineForOffset(offset)
 
         if (lastRect != null && lastLine == line) {
-            rect = lastRect.union(rect)
             boxes.remove(lastRect)
+            rect = lastRect.union(rect)
         }
 
         if (lastRect != null && lastLine != line) {
-
+            boxes.remove(lastRect)
             boxes.add(
                 lastRect.copy(
-                    left = size.width.toFloat()
+                    right = size.width.toFloat(),
                 )
             )
-
-            boxes.remove(lastRect)
         }
 
         lastLine = line
