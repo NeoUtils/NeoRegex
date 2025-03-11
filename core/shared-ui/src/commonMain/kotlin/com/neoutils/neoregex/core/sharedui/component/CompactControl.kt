@@ -42,31 +42,28 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.dispatcher.NavigationManager
+import com.neoutils.neoregex.core.dispatcher.control.Controller
+import com.neoutils.neoregex.core.dispatcher.event.Command
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
+import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
-fun CompactControl(
+fun CommonController(
     modifier: Modifier = Modifier,
-    navigation: NavigationManager = koinInject(),
-    textStyle: TextStyle = TextStyle()
 ) = Row(
     modifier = modifier,
     horizontalArrangement = Arrangement.spacedBy(dimensions.tiny),
     verticalAlignment = Alignment.CenterVertically
 ) {
     Menu(
-        navigation = navigation,
         modifier = Modifier.fillMaxHeight()
     )
 
     Navigation(
-        navigation = navigation,
         modifier = Modifier.fillMaxHeight(),
-        textStyle = textStyle
     )
 }
 
@@ -74,6 +71,7 @@ fun CompactControl(
 private fun Menu(
     modifier: Modifier = Modifier,
     navigation: NavigationManager = koinInject(),
+    control: Controller = koinInject()
 ) = Column(
     modifier = modifier,
     verticalArrangement = Arrangement.Center
@@ -132,11 +130,13 @@ private fun Menu(
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = null,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(18.dp)
                 )
             },
             onClick = {
-                // TODO: implement
+                coroutine.launch {
+                    control.dispatcher(Command.Clear)
+                }
                 expanded.value = false
             }
         )
@@ -147,7 +147,7 @@ private fun Menu(
                 Icon(
                     imageVector = Icons.Default.Info,
                     contentDescription = null,
-                    modifier = Modifier.size(16.dp)
+                    modifier = Modifier.size(18.dp)
                 )
             },
             onClick = {

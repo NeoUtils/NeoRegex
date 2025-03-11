@@ -53,6 +53,8 @@ kotlin {
             // voyager
             implementation(catalog.voyager.navigator)
             implementation(catalog.voyager.transitions)
+            implementation(catalog.voyager.screenModel)
+            implementation(catalog.voyager.koin)
 
             // lifecycle
             implementation(catalog.androidx.multplatform.lifecycle.runtime.compose)

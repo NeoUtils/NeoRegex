@@ -16,25 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.repository.testcase
+package com.neoutils.neoregex.core.dispatcher.control
 
-import com.neoutils.neoregex.core.common.model.TestCase
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
+import com.neoutils.neoregex.core.dispatcher.event.Command
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.consumeAsFlow
 
-@OptIn(ExperimentalUuidApi::class)
-interface TestCasesRepository {
+internal class ControllerImpl : Controller {
 
-    val flow: StateFlow<List<TestCase>>
-    val all : List<TestCase>
+    private val _event = Channel<Command>(Channel.UNLIMITED)
+    override val event = _event.consumeAsFlow()
 
-    fun update(uuid: Uuid, block: (TestCase) -> TestCase) : TestCase
-
-    fun set(testCase: TestCase)
-    fun get(uuid: Uuid) : TestCase?
-    fun remove(uuid: Uuid)
-    fun duplicate(uuid: Uuid): TestCase
-    fun clear()
+    override suspend fun dispatcher(event: Command) {
+        _event.send(event)
+    }
 }

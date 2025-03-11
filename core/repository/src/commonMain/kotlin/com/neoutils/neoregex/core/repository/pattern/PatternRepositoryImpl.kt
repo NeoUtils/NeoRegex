@@ -52,4 +52,9 @@ internal class PatternRepositoryImpl(
     override fun redo() {
         _flow.value = textHistoryManager.redo() ?: return
     }
+
+    override fun clear() {
+        _flow.value = Text()
+        textHistoryManager.clear()
+    }
 }

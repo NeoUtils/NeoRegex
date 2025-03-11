@@ -30,4 +30,6 @@ interface PatternRepository {
     fun update(input: Text)
     fun undo()
     fun redo()
+
+    fun clear()
 }

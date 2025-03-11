@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2025 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,17 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.sharedui.component
+package com.neoutils.neoregex
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import com.neoutils.neoregex.core.dispatcher.NavigationManager
-import org.koin.compose.koinInject
+import cafe.adriel.voyager.core.model.ScreenModel
+import com.neoutils.neoregex.core.repository.pattern.PatternRepository
+import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
 
-@Composable
-expect fun Control(
-    modifier: Modifier = Modifier,
-    navigation: NavigationManager = koinInject(),
-    textStyle: TextStyle = TextStyle()
-)
+class AppViewModel(
+    private val patternRepository: PatternRepository,
+    private val testCasesRepository: TestCasesRepository,
+) : ScreenModel {
+
+    fun clear() {
+        patternRepository.clear()
+        testCasesRepository.clear()
+    }
+}

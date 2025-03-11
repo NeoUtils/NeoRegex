@@ -16,25 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.repository.testcase
+package com.neoutils.neoregex.di
 
-import com.neoutils.neoregex.core.common.model.TestCase
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
+import com.neoutils.neoregex.AppViewModel
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.module
 
-@OptIn(ExperimentalUuidApi::class)
-interface TestCasesRepository {
-
-    val flow: StateFlow<List<TestCase>>
-    val all : List<TestCase>
-
-    fun update(uuid: Uuid, block: (TestCase) -> TestCase) : TestCase
-
-    fun set(testCase: TestCase)
-    fun get(uuid: Uuid) : TestCase?
-    fun remove(uuid: Uuid)
-    fun duplicate(uuid: Uuid): TestCase
-    fun clear()
+val appModule = module {
+    factoryOf(::AppViewModel)
 }

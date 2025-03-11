@@ -41,7 +41,7 @@ import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
-import com.neoutils.neoregex.core.sharedui.component.Control
+import com.neoutils.neoregex.core.sharedui.component.Controller
 import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.extension.surface
 import org.jetbrains.compose.resources.stringResource
@@ -80,7 +80,7 @@ private fun NeoAppBar(
     height: Dp = 55.dp
 ) = CenterAlignedTopAppBar(
     navigationIcon = {
-        Control(
+        Controller(
             modifier = Modifier
                 .padding(dimensions.tiny)
                 .height(32.dp)

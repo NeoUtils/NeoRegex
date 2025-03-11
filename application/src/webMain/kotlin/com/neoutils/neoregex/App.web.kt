@@ -55,15 +55,16 @@ import com.neoutils.neoregex.core.datasource.di.dataSourceModule
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.dispatcher.di.navigationModule
+import com.neoutils.neoregex.core.dispatcher.di.dispatcherModule
 import com.neoutils.neoregex.core.repository.di.repositoryModule
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.resources.web_warning_text
-import com.neoutils.neoregex.core.sharedui.component.Control
+import com.neoutils.neoregex.core.sharedui.component.Controller
 import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import com.neoutils.neoregex.core.sharedui.extension.surface
+import com.neoutils.neoregex.di.appModule
 import com.neoutils.neoregex.feature.matcher.di.matcherModule
 import kotlinx.browser.document
 import org.jetbrains.compose.resources.stringResource
@@ -73,9 +74,10 @@ import org.koin.compose.koinInject
 fun WebApp() = WithKoin(
     dataSourceModule,
     repositoryModule,
-    navigationModule,
+    dispatcherModule,
     matcherModule,
-    validatorModule
+    validatorModule,
+    appModule
 ) {
 
     val preferencesDataSource = koinInject<PreferencesDataSource>()
@@ -143,7 +145,7 @@ private fun Header(
                 ),
             )
 
-            Control()
+            Controller()
         }
     },
     actions = {

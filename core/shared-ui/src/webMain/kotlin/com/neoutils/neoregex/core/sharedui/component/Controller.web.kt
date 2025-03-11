@@ -22,13 +22,16 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -37,29 +40,37 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.component.LinkColor
-import com.neoutils.neoregex.core.dispatcher.NavigationManager
+import com.neoutils.neoregex.core.dispatcher.control.Controller
+import com.neoutils.neoregex.core.dispatcher.event.Command
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
-import com.neoutils.neoregex.core.resources.*
+import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.app_title
+import com.neoutils.neoregex.core.resources.screen_libraries
 import kotlinx.browser.window
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 @Composable
-actual fun Control(
+actual fun Controller(
     modifier: Modifier,
-    navigation: NavigationManager,
-    textStyle: TextStyle
 ) = Row(
     modifier = modifier.horizontalScroll(rememberScrollState()),
     horizontalArrangement = Arrangement.spacedBy(8.dp),
+    verticalAlignment = Alignment.CenterVertically
 ) {
+    val coroutine = rememberCoroutineScope()
+
+    val navigation = koinInject<NavigationManager>()
+
+    val controller = koinInject<Controller>()
+
     val screen by navigation.screen.collectAsStateWithLifecycle()
 
-    val mergedTextStyle = typography.labelLarge.copy(
-        fontFamily = null
-    ).merge(textStyle)
+    val textStyle = typography.labelLarge.copy(fontFamily = null)
 
     LaunchedEffect(Unit) {
         navigation.screen.collectLatest {
@@ -70,7 +81,27 @@ actual fun Control(
         }
     }
 
-    val coroutine = rememberCoroutineScope()
+    Link(
+        text = "New",
+        onClick = {
+            coroutine.launch {
+                controller.dispatcher(Command.Clear)
+            }
+        },
+        style = textStyle.copy(
+            textDecoration = TextDecoration.None,
+            fontWeight = FontWeight.Normal
+        ),
+        colors = LinkColor(
+            idle = colorScheme.onSurface,
+            hover = colorScheme.onSurface.copy(alpha = 0.8f),
+            press = colorScheme.onSurface.copy(alpha = 0.6f),
+            pressed = colorScheme.onSurface
+        ),
+        enabled = true
+    )
+
+    VerticalDivider(Modifier.height(16.dp))
 
     listOf(
         Navigation.Screen.Matcher,
@@ -89,7 +120,7 @@ actual fun Control(
                     )
                 }
             },
-            textStyle = mergedTextStyle
+            textStyle = textStyle
         )
     }
 
@@ -98,7 +129,7 @@ actual fun Control(
     ) {
         Link(
             text = stringResource(Res.string.screen_libraries),
-            style = mergedTextStyle.copy(
+            style = textStyle.copy(
                 textDecoration = TextDecoration.None,
                 fontWeight = FontWeight.Bold
             ),

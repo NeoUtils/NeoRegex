@@ -87,6 +87,13 @@ class TextHistoryManager {
         )
     }
 
+    fun clear() {
+        redoStack = null
+        undoStack = null
+
+        update()
+    }
+
     data class Entry(
         var value: Text,
         val next: Entry? = null

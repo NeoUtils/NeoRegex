@@ -22,37 +22,42 @@ package com.neoutils.neoregex
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
+import cafe.adriel.voyager.koin.koinNavigatorScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.internal.BackHandler
 import cafe.adriel.voyager.transitions.FadeTransition
-import com.neoutils.neoregex.feature.validator.ValidatorScreen
 import com.neoutils.neoregex.core.designsystem.theme.NeoBackground
-import com.neoutils.neoregex.core.dispatcher.NavigationManager
+import com.neoutils.neoregex.core.dispatcher.control.Controller
+import com.neoutils.neoregex.core.dispatcher.event.Command
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
+import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.feature.about.screen.AboutScreen
 import com.neoutils.neoregex.feature.about.screen.LibrariesScreen
 import com.neoutils.neoregex.feature.matcher.MatcherScreen
+import com.neoutils.neoregex.feature.validator.ValidatorScreen
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
 @Composable
 fun App(
     modifier: Modifier = Modifier,
-    navigation: NavigationManager = koinInject()
+    navigation: NavigationManager = koinInject(),
+    controller: Controller = koinInject()
 ) = NeoBackground(modifier) {
+
+    val coroutine = rememberCoroutineScope()
 
     Navigator(
         screen = MatcherScreen(),
     ) { navigator ->
-        val coroutines = rememberCoroutineScope()
+
+        val viewModel = navigator.koinNavigatorScreenModel<AppViewModel>()
 
         BackHandler(enabled = true) {
-            coroutines.launch {
+            coroutine.launch {
                 navigation.emit(
                     Navigation.Event.OnBack
                 )
@@ -64,27 +69,14 @@ fun App(
                 when (event) {
                     is Navigation.Event.Navigate -> {
                         when (event.screen) {
-                            Navigation.Screen.About -> {
-                                navigator.push(AboutScreen())
-                            }
-
-                            Navigation.Screen.Libraries -> {
-                                navigator.push(LibrariesScreen())
-                            }
-
-                            Navigation.Screen.Matcher -> {
-                                navigator.popUntilRoot()
-                            }
-
-                            Navigation.Screen.Validator -> {
-                                navigator.push(ValidatorScreen())
-                            }
+                            Navigation.Screen.About -> navigator.push(AboutScreen())
+                            Navigation.Screen.Libraries -> navigator.push(LibrariesScreen())
+                            Navigation.Screen.Matcher -> navigator.popUntilRoot()
+                            Navigation.Screen.Validator -> navigator.push(ValidatorScreen())
                         }
                     }
 
-                    Navigation.Event.OnBack -> {
-                        navigator.pop()
-                    }
+                    Navigation.Event.OnBack -> navigator.pop()
                 }
 
                 navigation.update(
@@ -96,6 +88,18 @@ fun App(
                         else -> error("Invalid screen")
                     }
                 )
+            }
+        }
+
+        LaunchedEffect(Unit) {
+            controller.event.collect { event ->
+                when (event) {
+                    Command.Clear -> {
+                        viewModel.clear()
+                        navigator.replace(MatcherScreen())
+                        navigation.update(Navigation.Screen.Matcher)
+                    }
+                }
             }
         }
 

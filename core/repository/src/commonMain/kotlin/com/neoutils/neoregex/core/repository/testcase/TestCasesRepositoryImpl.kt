@@ -60,4 +60,13 @@ internal class TestCasesRepositoryImpl : TestCasesRepository {
 
         return checkNotNull(get(newUuid))
     }
+
+    override fun clear() {
+
+        testCases.clear()
+
+        val uuid = Uuid.random()
+
+        testCases[uuid] = TestCase(uuid = uuid)
+    }
 }

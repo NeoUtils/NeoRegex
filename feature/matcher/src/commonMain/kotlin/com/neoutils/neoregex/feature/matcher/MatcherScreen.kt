@@ -44,8 +44,13 @@ import com.neoutils.neoregex.core.sharedui.component.Performance
 import com.neoutils.neoregex.core.sharedui.component.TextEditor
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class MatcherScreen : Screen {
+
+    override val key = Uuid.random().toString()
 
     @Composable
     override fun Content() = Column(

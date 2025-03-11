@@ -16,20 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.sharedui.component
+package com.neoutils.neoregex.core.dispatcher.event
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import com.neoutils.neoregex.core.dispatcher.NavigationManager
-
-@Composable
-actual fun Control(
-    modifier: Modifier,
-    navigation: NavigationManager,
-    textStyle: TextStyle
-) = CompactControl(
-    modifier = modifier,
-    navigation = navigation,
-    textStyle = textStyle
-)
+sealed class Command {
+    data object Clear : Command()
+}

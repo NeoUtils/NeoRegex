@@ -16,19 +16,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.dispatcher
+package com.neoutils.neoregex.core.sharedui.component
 
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
+import org.koin.compose.koinInject
 
-interface NavigationManager {
-
-    val event: Flow<Navigation.Event>
-    val screen: StateFlow<Navigation.Screen>
-    val canPopBack: StateFlow<Boolean>
-
-    fun update(screen: Navigation.Screen)
-
-    suspend fun emit(event: Navigation.Event)
-}
+@Composable
+expect fun Controller(
+    modifier: Modifier = Modifier,
+)

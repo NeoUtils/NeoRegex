@@ -64,7 +64,7 @@ fun Link(
     colors: LinkColor = LinkColor(),
     enabledUnderline: Boolean = true,
     enabled: Boolean = true,
-    style: TextStyle = typography.labelMedium,
+    style: TextStyle = TextStyle(),
     modifier: Modifier = Modifier
 ) {
 
@@ -96,7 +96,7 @@ fun Link(
         }
     }
 
-    val mergedTextStyle = TextStyle(
+    val mergedTextStyle = typography.labelMedium.copy(
         textDecoration = TextDecoration.Underline.takeIf {
             enabledUnderline && hover == LinkHover.HOVER
         }

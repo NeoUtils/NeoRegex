@@ -18,7 +18,7 @@
 
 package com.neoutils.neoregex.core.dispatcher.impl
 
-import com.neoutils.neoregex.core.dispatcher.NavigationManager
+import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
