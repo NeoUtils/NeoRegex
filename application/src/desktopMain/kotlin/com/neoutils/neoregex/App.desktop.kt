@@ -47,7 +47,7 @@ import com.neoutils.neoregex.core.dispatcher.di.navigationModule
 import com.neoutils.neoregex.core.repository.di.repositoryModule
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
-import com.neoutils.neoregex.core.sharedui.component.Navigation
+import com.neoutils.neoregex.core.sharedui.component.Control
 import com.neoutils.neoregex.core.sharedui.component.NeoHeader
 import com.neoutils.neoregex.core.sharedui.component.NeoWindow
 import com.neoutils.neoregex.core.sharedui.component.Options
@@ -108,7 +108,7 @@ private fun FrameWindowScope.HeaderImpl(
         }
     ) { padding ->
 
-        Navigation(
+        Control(
             modifier = Modifier
                 .padding(padding)
                 .align(Alignment.CenterStart),

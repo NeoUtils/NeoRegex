@@ -60,7 +60,7 @@ import com.neoutils.neoregex.core.repository.di.repositoryModule
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.resources.web_warning_text
-import com.neoutils.neoregex.core.sharedui.component.Navigation
+import com.neoutils.neoregex.core.sharedui.component.Control
 import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import com.neoutils.neoregex.core.sharedui.extension.surface
@@ -143,7 +143,7 @@ private fun Header(
                 ),
             )
 
-            Navigation()
+            Control()
         }
     },
     actions = {

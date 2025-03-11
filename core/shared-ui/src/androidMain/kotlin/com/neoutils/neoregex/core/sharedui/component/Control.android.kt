@@ -24,11 +24,11 @@ import androidx.compose.ui.text.TextStyle
 import com.neoutils.neoregex.core.dispatcher.NavigationManager
 
 @Composable
-actual fun Navigation(
+actual fun Control(
     modifier: Modifier,
     navigation: NavigationManager,
     textStyle: TextStyle
-) = CompactNavigation(
+) = CompactControl(
     modifier = modifier,
     navigation = navigation,
     textStyle = textStyle

@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2025 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,11 +22,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import com.neoutils.neoregex.core.dispatcher.NavigationManager
-import org.koin.compose.koinInject
 
 @Composable
-expect fun Navigation(
-    modifier: Modifier = Modifier,
-    navigation: NavigationManager = koinInject(),
-    textStyle: TextStyle = TextStyle()
+actual fun Control(
+    modifier: Modifier,
+    navigation: NavigationManager,
+    textStyle: TextStyle
+) = CompactControl(
+    modifier = modifier,
+    navigation = navigation,
+    textStyle = textStyle
 )

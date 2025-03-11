@@ -47,7 +47,7 @@ import org.jetbrains.compose.resources.getString
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
-actual fun Navigation(
+actual fun Control(
     modifier: Modifier,
     navigation: NavigationManager,
     textStyle: TextStyle
