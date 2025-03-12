@@ -28,6 +28,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -136,6 +137,23 @@ private fun Menu(
             onClick = {
                 coroutine.launch {
                     control.dispatcher(Command.Clear)
+                }
+                expanded.value = false
+            }
+        )
+
+        DropdownMenuItem(
+            text = { Text(text = "Save") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.Save,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+            },
+            onClick = {
+                coroutine.launch {
+                    control.dispatcher(Command.Save)
                 }
                 expanded.value = false
             }

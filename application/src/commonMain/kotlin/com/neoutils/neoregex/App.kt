@@ -99,6 +99,10 @@ fun App(
                         navigator.replace(MatcherScreen())
                         navigation.update(Navigation.Screen.Matcher)
                     }
+
+                    Command.Save -> {
+                        viewModel.save()
+                    }
                 }
             }
         }

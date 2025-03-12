@@ -72,6 +72,9 @@ kotlin {
             // koin
             implementation(catalog.koin.core)
             implementation(catalog.koin.compose)
+
+            // kotlinx
+            implementation(catalog.kotlinx.datetime)
         }
 
         val desktopMain by getting {

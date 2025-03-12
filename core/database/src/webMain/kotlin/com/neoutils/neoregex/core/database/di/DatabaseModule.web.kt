@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2025 Irineu A. Silva.
+ * Copyright (C) 2025 <AUTHOR>.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,16 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.datasource.di
+package com.neoutils.neoregex.core.database.di
 
-import com.neoutils.neoregex.core.datasource.PreferencesDataSource
-import com.neoutils.neoregex.core.datasource.WindowStateDataSource
-import com.neoutils.neoregex.core.datasource.settings.PreferencesSettings
-import com.neoutils.neoregex.core.datasource.settings.WindowStateSettings
-import org.koin.dsl.bind
-import org.koin.dsl.module
+import org.koin.core.module.Module
 
-actual val dataSourceModule = module {
-    single { PreferencesSettings() } bind PreferencesDataSource::class
-    single { WindowStateSettings() } bind WindowStateDataSource::class
-}
+actual val databaseModule: Module
+    get() = TODO("Not yet implemented")

@@ -49,6 +49,7 @@ include(
     ":core:shared-ui",
     ":core:common",
     ":core:datasource",
+    ":core:database",
     ":core:dispatcher",
     ":core:repository",
     ":feature:matcher",

@@ -21,7 +21,7 @@ import extension.module
 
 plugins {
     alias(libs.plugins.neoutils.neoregex.core)
-    kotlin("plugin.serialization") version "2.0.20"
+    alias(libs.plugins.sqldelight)
 }
 
 group = config.module(name = "core")
@@ -32,13 +32,32 @@ kotlin {
 
             // modules
             api(projects.core.common)
+            api(projects.core.datasource)
 
-            // settings
-            api(libs.multiplatform.settings.noArg)
-            api(libs.multiplatform.settings.serialization)
+            // SQLDelight
+            implementation(libs.sqldelight.coroutines)
+        }
 
-            // kotlinx serialization
-            api(libs.kotlinx.serialization.json)
+        androidMain.dependencies {
+            implementation(libs.sqldelight.driver.android)
+        }
+
+        desktopMain.dependencies {
+            implementation(libs.sqldelight.driver.sqlite)
+        }
+
+        webMain.dependencies {
+            implementation(libs.sqldelight.driver.sqljs)
         }
     }
+}
+
+sqldelight {
+    databases {
+        create("PatternDatabase") {
+            dialect("app.cash.sqldelight:sqlite-3-38-dialect:2.0.2")
+            packageName.set("com.neoutils.neoregex.core.database.db")
+        }
+    }
+    linkSqlite = true
 }

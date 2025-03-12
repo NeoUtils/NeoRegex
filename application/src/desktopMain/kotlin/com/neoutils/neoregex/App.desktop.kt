@@ -34,6 +34,7 @@ import androidx.compose.ui.window.FrameWindowScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
+import com.neoutils.neoregex.core.database.di.databaseModule
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.WindowStateDataSource
 import com.neoutils.neoregex.core.datasource.di.dataSourceModule
@@ -59,6 +60,7 @@ import org.koin.compose.koinInject
 @Composable
 fun ApplicationScope.DesktopApp() = WithKoin(
     dataSourceModule,
+    databaseModule,
     repositoryModule,
     dispatcherModule,
     matcherModule,

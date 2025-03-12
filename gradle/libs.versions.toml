@@ -11,6 +11,7 @@ voyager = "1.1.0-beta03" # 1.1.0+ is required for web support
 koin = "4.0.0"
 buildkonfig = "0.15.2"
 aboutlibraries = "11.2.3"
+sqldelight = "2.0.1"
 
 # androix
 androidx-compose = "1.7.4"
@@ -31,6 +32,7 @@ plugin-android-gradle = { module = "com.android.tools.build:gradle", version.ref
 plugin-kotlin-gradle = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 plugin-compose = { group = "org.jetbrains.compose", name = "compose-gradle-plugin", version.ref = "cmp" }
 plugin-compose-compiler = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
+plugin-sqldelight = { module = "app.cash.sqldelight:gradle-plugin", version.ref = "sqldelight" }
 
 # android
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "androidx-compose" }
@@ -64,6 +66,12 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 
+# SQLDelight
+sqldelight-driver-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-driver-sqlite = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
+sqldelight-driver-sqljs = { module = "app.cash.sqldelight:sqljs-driver", version = "2.0.0-alpha05" }
+sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
+
 # test
 
 kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlin" }
@@ -87,6 +95,7 @@ kmp-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref
 kmp-compose = { id = "org.jetbrains.compose", version.ref = "cmp" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildkonfig" }
 aboutlibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "aboutlibraries" }
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
 # internal
 neoutils-neoregex-core = { id = "com.neoutils.neoregex.core", version = "undefined" }

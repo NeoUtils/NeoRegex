@@ -42,6 +42,7 @@ kotlin {
             implementation(projects.core.common)
             implementation(projects.core.sharedUi)
             implementation(projects.core.datasource)
+            implementation(projects.core.database)
             implementation(projects.core.dispatcher)
             implementation(projects.core.repository)
 

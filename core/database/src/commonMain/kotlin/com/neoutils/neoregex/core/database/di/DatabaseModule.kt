@@ -16,16 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.datasource.di
+package com.neoutils.neoregex.core.database.di
 
-import com.neoutils.neoregex.core.datasource.PreferencesDataSource
-import com.neoutils.neoregex.core.datasource.WindowStateDataSource
-import com.neoutils.neoregex.core.datasource.settings.PreferencesSettings
-import com.neoutils.neoregex.core.datasource.settings.WindowStateSettings
-import org.koin.dsl.bind
-import org.koin.dsl.module
+import org.koin.core.module.Module
 
-actual val dataSourceModule = module {
-    single { PreferencesSettings() } bind PreferencesDataSource::class
-    single { WindowStateSettings() } bind WindowStateDataSource::class
-}
+expect val databaseModule : Module

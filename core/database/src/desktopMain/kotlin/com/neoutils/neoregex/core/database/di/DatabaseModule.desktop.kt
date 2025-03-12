@@ -16,16 +16,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.datasource.di
+package com.neoutils.neoregex.core.database.di
 
-import com.neoutils.neoregex.core.datasource.PreferencesDataSource
-import com.neoutils.neoregex.core.datasource.WindowStateDataSource
-import com.neoutils.neoregex.core.datasource.settings.PreferencesSettings
-import com.neoutils.neoregex.core.datasource.settings.WindowStateSettings
+import com.neoutils.neoregex.core.database.factory.PatternJvmDriverFactory
+import com.neoutils.neoregex.core.database.provider.PatternDatabaseProvider
+import com.neoutils.neoregex.core.database.PatternSqlDelightDataSource
+import com.neoutils.neoregex.core.database.factory.DriverFactory
+import com.neoutils.neoregex.core.datasource.PatternDataSource
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
-actual val dataSourceModule = module {
-    single { PreferencesSettings() } bind PreferencesDataSource::class
-    single { WindowStateSettings() } bind WindowStateDataSource::class
+actual val databaseModule = module {
+    single { PatternJvmDriverFactory() } bind DriverFactory::class
+    single { PatternSqlDelightDataSource(get()) } bind PatternDataSource::class
+    single { PatternDatabaseProvider(get()).database }
 }
