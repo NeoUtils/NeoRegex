@@ -38,6 +38,7 @@ class AppViewModel(
     }
 
     fun save() = screenModelScope.launch {
+        println("save")
         patternDataSource.save(
             Pattern(
                 id = -1,
@@ -52,6 +53,8 @@ class AppViewModel(
                 }
             )
         )
+
+        println("saved")
 
         println(patternDataSource.getAll())
     }

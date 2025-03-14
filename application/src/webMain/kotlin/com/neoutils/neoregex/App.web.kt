@@ -50,6 +50,7 @@ import com.neoutils.neoregex.feature.validator.di.validatorModule
 import com.neoutils.neoregex.core.common.extension.toCss
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
+import com.neoutils.neoregex.core.database.di.databaseModule
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.di.dataSourceModule
 import com.neoutils.neoregex.core.datasource.model.Preferences
@@ -73,6 +74,7 @@ import org.koin.compose.koinInject
 @Composable
 fun WebApp() = WithKoin(
     dataSourceModule,
+    databaseModule,
     repositoryModule,
     dispatcherModule,
     matcherModule,
@@ -83,7 +85,7 @@ fun WebApp() = WithKoin(
     val preferencesDataSource = koinInject<PreferencesDataSource>()
 
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
-
+    
     NeoTheme(
         colorTheme = when (preferences.colorTheme) {
             Preferences.ColorTheme.SYSTEM -> rememberColorTheme()

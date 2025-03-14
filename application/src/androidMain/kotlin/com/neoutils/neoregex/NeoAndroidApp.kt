@@ -33,7 +33,7 @@ import org.koin.dsl.module
 class NeoAndroidApp : Application() {
 
     private val module = module {
-        single<Context> { this@NeoAndroidApp }
+        single<Context> { applicationContext }
     }
 
     override fun onCreate() {

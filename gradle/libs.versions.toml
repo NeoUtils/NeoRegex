@@ -7,11 +7,13 @@ kotlinx-datetime = "0.6.1"
 kotlinx-serialization = "1.7.3"
 multiplatform-settings = "1.2.0"
 slf4j-nop = "2.0.16"
+stately-common = "2.0.6"
 voyager = "1.1.0-beta03" # 1.1.0+ is required for web support
 koin = "4.0.0"
 buildkonfig = "0.15.2"
 aboutlibraries = "11.2.3"
 sqldelight = "2.0.2"
+napier = "2.7.1"
 
 # androix
 androidx-compose = "1.7.4"
@@ -54,6 +56,8 @@ highlight-compose = { module = "com.neoutils.highlight:highlight-compose", versi
 multiplatform-settings-noArg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatform-settings" }
 multiplatform-settings-serialization = { module = "com.russhwolf:multiplatform-settings-serialization", version.ref = "multiplatform-settings" }
 
+stately-common = { module = "co.touchlab:stately-common", version.ref = "stately-common" }
+
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-screenModel = { module = "cafe.adriel.voyager:voyager-screenmodel", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
@@ -61,6 +65,8 @@ voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voy
 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+
+napier = { module = "io.github.aakira:napier", version.ref = "napier" }
 
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }

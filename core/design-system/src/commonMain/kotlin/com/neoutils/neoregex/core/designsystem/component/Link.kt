@@ -102,8 +102,9 @@ fun Link(
         }
     ).merge(style)
 
-    val color = remember(press, hover, colors) {
+    val color = remember(press, hover, colors, enabled) {
         when {
+            enabled.not() -> colors.idle.copy(alpha = 0.5f)
             press == LinkPress.PRESS -> colors.press
             hover == LinkHover.HOVER -> colors.hover
             press == LinkPress.PRESSED -> colors.pressed

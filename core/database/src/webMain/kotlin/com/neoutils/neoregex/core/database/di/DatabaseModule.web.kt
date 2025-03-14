@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2025 <AUTHOR>.
+ * Copyright (C) 2025 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +18,16 @@
 
 package com.neoutils.neoregex.core.database.di
 
-import org.koin.core.module.Module
+import com.neoutils.neoregex.core.database.PatternSqlDelightDataSource
+import com.neoutils.neoregex.core.database.factory.DriverFactory
+import com.neoutils.neoregex.core.database.factory.PatternWebDriverFactory
+import com.neoutils.neoregex.core.database.provider.PatternDatabaseProvider
+import com.neoutils.neoregex.core.datasource.PatternDataSource
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
-actual val databaseModule: Module
-    get() = TODO("Not yet implemented")
+actual val databaseModule = module {
+    single { PatternWebDriverFactory() } bind DriverFactory::class
+    single { PatternSqlDelightDataSource(get()) } bind PatternDataSource::class
+    single { PatternDatabaseProvider(get()).database }
+}

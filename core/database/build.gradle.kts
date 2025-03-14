@@ -36,6 +36,9 @@ kotlin {
 
             // SQLDelight
             implementation(libs.sqldelight.coroutines)
+
+            // Stately
+            implementation(libs.stately.common)
         }
 
         androidMain.dependencies {
@@ -55,8 +58,9 @@ kotlin {
 sqldelight {
     databases {
         create("PatternDatabase") {
-            packageName.set("com.neoutils.neoregex.core.database.db")
+            packageName = "com.neoutils.neoregex.core.database.db"
         }
     }
+
     linkSqlite = true
 }

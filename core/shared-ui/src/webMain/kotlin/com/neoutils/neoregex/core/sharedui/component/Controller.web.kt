@@ -101,6 +101,26 @@ actual fun Controller(
         enabled = true
     )
 
+    Link(
+        text = "Save",
+        onClick = {
+            coroutine.launch {
+                controller.dispatcher(Command.Save)
+            }
+        },
+        style = textStyle.copy(
+            textDecoration = TextDecoration.None,
+            fontWeight = FontWeight.Normal
+        ),
+        colors = LinkColor(
+            idle = colorScheme.onSurface,
+            hover = colorScheme.onSurface.copy(alpha = 0.8f),
+            press = colorScheme.onSurface.copy(alpha = 0.6f),
+            pressed = colorScheme.onSurface
+        ),
+        enabled = false
+    )
+
     VerticalDivider(Modifier.height(16.dp))
 
     listOf(
@@ -169,7 +189,6 @@ private fun NavigateButton(
                 FontWeight.Normal
             }
         ),
-        enabled = !selected,
         colors = colors,
     )
 }
