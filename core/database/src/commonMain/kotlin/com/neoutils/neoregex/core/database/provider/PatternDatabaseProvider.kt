@@ -25,12 +25,12 @@ internal class PatternDatabaseProvider(
     private val driverFactory: DriverFactory,
 ) {
 
-    val database: PatternDatabase by lazy { createDatabase() }
+    val database by lazy { createDatabase() }
 
     private fun createDatabase(): PatternDatabase {
 
         val database = PatternDatabase(
-            driver =  driverFactory.createDriver(
+            driver = driverFactory.createDriver(
                 databaseName = DATABASE_NAME
             )
         )

@@ -17,8 +17,10 @@ ORDER BY createAt DESC;
 
 insertPattern:
 INSERT INTO PatternEntity(title, text, createAt)
-VALUES (?, ?, ?)
-RETURNING *;
+VALUES (?, ?, ?);
+
+getLastInsertedId:
+SELECT last_insert_rowid();
 
 deletePatternById:
 DELETE FROM PatternEntity

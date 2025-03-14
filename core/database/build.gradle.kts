@@ -55,7 +55,6 @@ kotlin {
 sqldelight {
     databases {
         create("PatternDatabase") {
-            dialect("app.cash.sqldelight:sqlite-3-38-dialect:2.0.2")
             packageName.set("com.neoutils.neoregex.core.database.db")
         }
     }

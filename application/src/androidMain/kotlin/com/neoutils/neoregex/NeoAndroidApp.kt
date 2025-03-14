@@ -19,21 +19,31 @@
 package com.neoutils.neoregex
 
 import android.app.Application
-import com.neoutils.neoregex.feature.validator.di.validatorModule
+import android.content.Context
+import com.neoutils.neoregex.core.database.di.databaseModule
 import com.neoutils.neoregex.core.datasource.di.dataSourceModule
 import com.neoutils.neoregex.core.dispatcher.di.dispatcherModule
 import com.neoutils.neoregex.core.repository.di.repositoryModule
 import com.neoutils.neoregex.di.appModule
 import com.neoutils.neoregex.feature.matcher.di.matcherModule
+import com.neoutils.neoregex.feature.validator.di.validatorModule
 import org.koin.core.context.GlobalContext.startKoin
+import org.koin.dsl.module
 
 class NeoAndroidApp : Application() {
+
+    private val module = module {
+        single<Context> { this@NeoAndroidApp }
+    }
+
     override fun onCreate() {
         super.onCreate()
 
         startKoin {
             modules(
+                module,
                 dataSourceModule,
+                databaseModule,
                 repositoryModule,
                 dispatcherModule,
                 matcherModule,

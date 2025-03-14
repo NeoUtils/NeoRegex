@@ -11,7 +11,7 @@ voyager = "1.1.0-beta03" # 1.1.0+ is required for web support
 koin = "4.0.0"
 buildkonfig = "0.15.2"
 aboutlibraries = "11.2.3"
-sqldelight = "2.0.1"
+sqldelight = "2.0.2"
 
 # androix
 androidx-compose = "1.7.4"

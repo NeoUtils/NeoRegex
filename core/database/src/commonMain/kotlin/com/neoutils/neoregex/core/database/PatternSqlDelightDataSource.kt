@@ -31,15 +31,17 @@ internal class PatternSqlDelightDataSource(
     override suspend fun save(pattern: Pattern) {
         val createAt = Clock.System.now().toEpochMilliseconds()
 
-        val insertedPattern = database.patternEntityQueries.insertPattern(
+        database.patternEntityQueries.insertPattern(
             title = pattern.title,
             text = pattern.text,
             createAt = createAt
-        ).executeAsOne()
+        )
+        
+        val patternId = database.patternEntityQueries.getLastInsertedId().executeAsOne()
 
         pattern.testCases.forEach { testCase ->
             database.testCaseEntityQueries.insertTestCase(
-                patternId = insertedPattern.id,
+                patternId = patternId,
                 title = testCase.title,
                 text = testCase.text,
                 testCase = testCase.case.name,
