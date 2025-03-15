@@ -29,67 +29,76 @@ internal class PatternSqlDelightDataSource(
 ) : PatternDataSource {
 
     override suspend fun save(pattern: Pattern) {
-        val createAt = Clock.System.now().toEpochMilliseconds()
+        database.transaction {
+            val createAt = Clock.System.now().toEpochMilliseconds()
 
-        database.patternEntityQueries.insertPattern(
-            title = pattern.title,
-            text = pattern.text,
-            createAt = createAt
-        )
-        
-        val patternId = database.patternEntityQueries.getLastInsertedId().executeAsOne()
-
-        pattern.testCases.forEach { testCase ->
-            database.testCaseEntityQueries.insertTestCase(
-                patternId = patternId,
-                title = testCase.title,
-                text = testCase.text,
-                testCase = testCase.case.name,
+            database.patternEntityQueries.insertPattern(
+                title = pattern.title,
+                text = pattern.text,
                 createAt = createAt
             )
+
+            val patternId = database.patternEntityQueries.getLastInsertedId().executeAsOne()
+
+            pattern.testCases.forEach { testCase ->
+                database.testCaseEntityQueries.insertTestCase(
+                    patternId = patternId,
+                    title = testCase.title,
+                    text = testCase.text,
+                    testCase = testCase.case.name,
+                    createAt = createAt
+                )
+            }
         }
     }
 
     override suspend fun get(id: Long): Pattern? {
+        return database.transactionWithResult {
+            val pattern = database.patternEntityQueries.getPatternById(id).executeAsOneOrNull()
+            val testCases = database.testCaseEntityQueries.getTestCasesByPatternId(id).executeAsList()
 
-        val pattern = database.patternEntityQueries.getPatternById(id).executeAsOneOrNull() ?: return null
-        val testCases = database.testCaseEntityQueries.getTestCasesByPatternId(id).executeAsList()
-
-        return Pattern(
-            id = pattern.id,
-            title = pattern.title,
-            text = pattern.text,
-            testCases = testCases.map {
-                Pattern.TestCase(
-                    title = it.title,
-                    text = it.text,
-                    case = Case.valueOf(it.testCase)
+            pattern?.let {
+                Pattern(
+                    id = pattern.id,
+                    title = pattern.title,
+                    text = pattern.text,
+                    testCases = testCases.map {
+                        Pattern.TestCase(
+                            title = it.title,
+                            text = it.text,
+                            case = Case.valueOf(it.testCase)
+                        )
+                    }
                 )
             }
-        )
+        }
     }
 
     override suspend fun delete(id: Long) {
-        database.testCaseEntityQueries.deleteTestCasesByPatternId(id)
-        database.patternEntityQueries.deletePatternById(id)
+        database.transaction {
+            database.testCaseEntityQueries.deleteTestCasesByPatternId(id)
+            database.patternEntityQueries.deletePatternById(id)
+        }
     }
 
     override suspend fun getAll(): List<Pattern> {
-        return database.patternEntityQueries.getAllPatterns().executeAsList().map { pattern ->
-            val testCases = database.testCaseEntityQueries.getTestCasesByPatternId(pattern.id).executeAsList()
+        return database.transactionWithResult {
+            database.patternEntityQueries.getAllPatterns().executeAsList().map { pattern ->
+                val testCases = database.testCaseEntityQueries.getTestCasesByPatternId(pattern.id).executeAsList()
 
-            Pattern(
-                id = pattern.id,
-                title = pattern.title,
-                text = pattern.text,
-                testCases = testCases.map { testCase ->
-                    Pattern.TestCase(
-                        title = testCase.title,
-                        text = testCase.text,
-                        case = Case.valueOf(testCase.testCase)
-                    )
-                }
-            )
+                Pattern(
+                    id = pattern.id,
+                    title = pattern.title,
+                    text = pattern.text,
+                    testCases = testCases.map { testCase ->
+                        Pattern.TestCase(
+                            title = testCase.title,
+                            text = testCase.text,
+                            case = Case.valueOf(testCase.testCase)
+                        )
+                    }
+                )
+            }
         }
     }
 }
