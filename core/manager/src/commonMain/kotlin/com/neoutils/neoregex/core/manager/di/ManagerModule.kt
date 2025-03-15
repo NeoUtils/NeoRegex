@@ -16,14 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.sharedui.component
+package com.neoutils.neoregex.core.manager.di
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import com.neoutils.neoregex.core.manager.salvage.SalvageManager
+import com.neoutils.neoregex.core.manager.salvage.SalvageManagerImpl
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
-@Composable
-actual fun Controller(
-    modifier: Modifier,
-) = CommonController(
-    modifier = modifier,
-)
+val managerModule = module {
+    singleOf(::SalvageManagerImpl) bind SalvageManager::class
+}

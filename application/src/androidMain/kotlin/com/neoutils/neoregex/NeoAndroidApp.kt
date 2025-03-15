@@ -23,6 +23,7 @@ import android.content.Context
 import com.neoutils.neoregex.core.database.di.databaseModule
 import com.neoutils.neoregex.core.datasource.di.dataSourceModule
 import com.neoutils.neoregex.core.dispatcher.di.dispatcherModule
+import com.neoutils.neoregex.core.manager.di.managerModule
 import com.neoutils.neoregex.core.repository.di.repositoryModule
 import com.neoutils.neoregex.di.appModule
 import com.neoutils.neoregex.feature.matcher.di.matcherModule
@@ -42,6 +43,7 @@ class NeoAndroidApp : Application() {
         startKoin {
             modules(
                 module,
+                managerModule,
                 dataSourceModule,
                 databaseModule,
                 repositoryModule,

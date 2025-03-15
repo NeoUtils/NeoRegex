@@ -94,7 +94,7 @@ fun App(
         LaunchedEffect(Unit) {
             controller.event.collect { event ->
                 when (event) {
-                    Command.Clear -> {
+                    Command.New -> {
                         viewModel.clear()
                         navigator.replace(MatcherScreen())
                         navigation.update(Navigation.Screen.Matcher)

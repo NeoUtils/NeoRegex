@@ -21,7 +21,7 @@ package com.neoutils.neoregex.core.datasource
 import com.neoutils.neoregex.core.datasource.model.Pattern
 
 interface PatternDataSource {
-    suspend fun save(pattern: Pattern)
+    suspend fun save(pattern: Pattern) : Pattern
     suspend fun get(id: Long): Pattern?
     suspend fun delete(id: Long)
     suspend fun getAll(): List<Pattern>

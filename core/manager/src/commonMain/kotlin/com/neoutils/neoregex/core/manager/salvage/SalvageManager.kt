@@ -16,14 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.sharedui.component
+package com.neoutils.neoregex.core.manager.salvage
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import com.neoutils.neoregex.core.common.model.Salvage
+import kotlinx.coroutines.flow.Flow
 
-@Composable
-actual fun Controller(
-    modifier: Modifier,
-) = CommonController(
-    modifier = modifier,
-)
+interface SalvageManager {
+    val salvage: Flow<Salvage?>
+
+    fun open(id: Long)
+    fun close()
+
+    suspend fun save()
+}
+

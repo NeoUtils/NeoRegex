@@ -20,12 +20,16 @@
 
 package com.neoutils.neoregex
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -43,13 +47,12 @@ import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.datasource.remember.rememberWindowState
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.dispatcher.di.dispatcherModule
+import com.neoutils.neoregex.core.manager.di.managerModule
+import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.core.repository.di.repositoryModule
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
-import com.neoutils.neoregex.core.sharedui.component.Controller
-import com.neoutils.neoregex.core.sharedui.component.NeoHeader
-import com.neoutils.neoregex.core.sharedui.component.NeoWindow
-import com.neoutils.neoregex.core.sharedui.component.Options
+import com.neoutils.neoregex.core.sharedui.component.*
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import com.neoutils.neoregex.di.appModule
 import com.neoutils.neoregex.feature.matcher.di.matcherModule
@@ -59,6 +62,7 @@ import org.koin.compose.koinInject
 
 @Composable
 fun ApplicationScope.DesktopApp() = WithKoin(
+    managerModule,
     dataSourceModule,
     databaseModule,
     repositoryModule,
@@ -96,10 +100,12 @@ fun ApplicationScope.DesktopApp() = WithKoin(
 @Composable
 private fun FrameWindowScope.HeaderImpl(
     modifier: Modifier = Modifier,
-    preferencesDataSource: PreferencesDataSource = koinInject()
+    preferencesDataSource: PreferencesDataSource = koinInject(),
+    salvageManager: SalvageManager = koinInject()
 ) {
 
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
+    val salvage by salvageManager.salvage.collectAsStateWithLifecycle(initialValue = null)
 
     NeoHeader(
         modifier = modifier,
@@ -116,15 +122,39 @@ private fun FrameWindowScope.HeaderImpl(
                 .align(Alignment.CenterStart)
         )
 
-        Text(
-            text = stringResource(Res.string.app_name),
-            style = typography.titleSmall.copy(
-                fontFamily = null
-            ),
-            modifier = Modifier.align(
-                Alignment.Center
-            )
-        )
+        AnimatedContent(
+            targetState = salvage,
+            contentKey = { it != null },
+            transitionSpec = {
+                slideIntoContainer(
+                    SlideDirection.Down
+                ) togetherWith slideOutOfContainer(
+                    SlideDirection.Down
+                )
+            },
+            contentAlignment = Alignment.Center,
+            modifier = Modifier.align(Alignment.Center)
+        ) { salvage ->
+            if (salvage == null) {
+                Text(
+                    text = stringResource(Res.string.app_name),
+                    style = typography.titleSmall.copy(
+                        fontFamily = null
+                    )
+                )
+            } else {
+                SalvageUi(
+                    salvage = salvage,
+                    onAction = {
+                        when (it) {
+                            SalvageAction.Close -> salvageManager.close()
+                            SalvageAction.EditTitle -> TODO("implement")
+                            SalvageAction.Update -> TODO("implement")
+                        }
+                    }
+                )
+            }
+        }
 
         Options(
             modifier = Modifier
@@ -133,3 +163,4 @@ private fun FrameWindowScope.HeaderImpl(
         )
     }
 }
+

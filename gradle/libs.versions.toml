@@ -26,6 +26,7 @@ kotlinx-coroutines = "1.9.0"
 # neoutils
 highlight = "2.3.0-snapshot16"
 xregex = "1.0.0-rc1"
+foundation-layout-android = "1.7.8"
 
 [libraries]
 
@@ -88,6 +89,7 @@ slf4j-nop = { module = "org.slf4j:slf4j-nop", version.ref = "slf4j-nop" }
 
 dbus-java-core = { module = "com.github.hypfvieh:dbus-java-core", version.ref = "dbus-java-core" }
 dbus-java-transport-native-unixsocket = { module = "com.github.hypfvieh:dbus-java-transport-native-unixsocket", version.ref = "dbus-java-core" }
+androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundation-layout-android" }
 
 [plugins]
 

@@ -28,8 +28,8 @@ internal class PatternSqlDelightDataSource(
     private val database: PatternDatabase
 ) : PatternDataSource {
 
-    override suspend fun save(pattern: Pattern) {
-        database.transaction {
+    override suspend fun save(pattern: Pattern): Pattern {
+        return database.transactionWithResult {
             val createAt = Clock.System.now().toEpochMilliseconds()
 
             database.patternEntityQueries.insertPattern(
@@ -49,6 +49,10 @@ internal class PatternSqlDelightDataSource(
                     createAt = createAt
                 )
             }
+
+            pattern.copy(
+                id = patternId
+            )
         }
     }
 

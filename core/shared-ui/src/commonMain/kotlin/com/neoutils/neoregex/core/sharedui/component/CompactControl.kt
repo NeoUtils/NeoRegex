@@ -25,10 +25,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -47,6 +44,7 @@ import com.neoutils.neoregex.core.dispatcher.control.Controller
 import com.neoutils.neoregex.core.dispatcher.event.Command
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
+import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -72,13 +70,16 @@ fun CommonController(
 private fun Menu(
     modifier: Modifier = Modifier,
     navigation: NavigationManager = koinInject(),
-    control: Controller = koinInject()
+    control: Controller = koinInject(),
+    salvageManager: SalvageManager = koinInject()
 ) = Column(
     modifier = modifier,
     verticalArrangement = Arrangement.Center
 ) {
 
     val canPopBack by navigation.canPopBack.collectAsStateWithLifecycle()
+
+    val salvage by salvageManager.salvage.collectAsStateWithLifecycle(initialValue = null)
 
     val coroutine = rememberCoroutineScope()
 
@@ -136,14 +137,31 @@ private fun Menu(
             },
             onClick = {
                 coroutine.launch {
-                    control.dispatcher(Command.Clear)
+                    control.dispatcher(Command.New)
+                    salvageManager.close()
                 }
                 expanded.value = false
             }
         )
 
         DropdownMenuItem(
+            text = { Text(text = "Open") },
+            leadingIcon = {
+                Icon(
+                    imageVector = Icons.Default.FolderOpen,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+            },
+            onClick = {
+                // TODO: implement
+                expanded.value = false
+            }
+        )
+
+        DropdownMenuItem(
             text = { Text(text = "Save") },
+            enabled = salvage == null,
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Save,

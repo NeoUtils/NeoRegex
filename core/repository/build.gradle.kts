@@ -32,6 +32,7 @@ kotlin {
 
             // modules
             api(projects.core.common)
+            api(projects.core.datasource)
         }
     }
 }

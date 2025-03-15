@@ -20,30 +20,43 @@
 
 package com.neoutils.neoregex
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.sharedui.component.Controller
 import com.neoutils.neoregex.core.sharedui.component.Options
+import com.neoutils.neoregex.core.sharedui.component.SalvageAction
+import com.neoutils.neoregex.core.sharedui.component.SalvageUi
 import com.neoutils.neoregex.core.sharedui.extension.surface
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -75,6 +88,7 @@ fun AndroidApp() {
 @Composable
 private fun NeoAppBar(
     modifier: Modifier = Modifier,
+    salvageManager: SalvageManager = koinInject(),
     background: Color = colorScheme.surfaceContainer,
     shadowElevation: Dp = dimensions.tiny,
     height: Dp = 55.dp
@@ -87,12 +101,47 @@ private fun NeoAppBar(
         )
     },
     title = {
-        Text(
-            text = stringResource(Res.string.app_name),
-            style = typography.titleMedium.copy(
-                fontFamily = null,
-            ),
-        )
+        val coroutine = rememberCoroutineScope()
+
+        AnimatedContent(
+            targetState = salvageManager
+                .salvage
+                .collectAsStateWithLifecycle(
+                    initialValue = null
+                ).value,
+            contentKey = { it != null },
+            transitionSpec = {
+                slideIntoContainer(
+                    SlideDirection.Down
+                ) togetherWith slideOutOfContainer(
+                    SlideDirection.Down
+                )
+            },
+            contentAlignment = Alignment.Center,
+        ) { salvage ->
+            if (salvage == null) {
+                Text(
+                    text = stringResource(Res.string.app_name),
+                    style = typography.titleMedium.copy(
+                        fontFamily = null,
+                    ),
+                )
+            } else {
+                SalvageUi(
+                    salvage = salvage,
+                    onAction = {
+                        when (it) {
+                            SalvageAction.Close -> salvageManager.close()
+                            SalvageAction.EditTitle -> TODO("implement")
+                            SalvageAction.Update -> TODO("implement")
+                        }
+                    },
+                    modifier = Modifier
+                        .padding(dimensions.tiny)
+                        .height(32.dp)
+                )
+            }
+        }
     },
     actions = {
         Options(

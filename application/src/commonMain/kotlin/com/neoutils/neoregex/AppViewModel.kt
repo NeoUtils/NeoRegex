@@ -21,7 +21,7 @@ package com.neoutils.neoregex
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.neoutils.neoregex.core.datasource.PatternDataSource
-import com.neoutils.neoregex.core.datasource.model.Pattern
+import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.core.repository.pattern.PatternRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 class AppViewModel(
     private val patternRepository: PatternRepository,
     private val testCasesRepository: TestCasesRepository,
-    private val patternDataSource: PatternDataSource
+    private val salvageManager: SalvageManager
 ) : ScreenModel {
 
     fun clear() {
@@ -38,24 +38,6 @@ class AppViewModel(
     }
 
     fun save() = screenModelScope.launch {
-        println("save")
-        patternDataSource.save(
-            Pattern(
-                id = -1,
-                title = "test",
-                text = patternRepository.flow.value.text,
-                testCases = testCasesRepository.all.map {
-                    Pattern.TestCase(
-                        title = it.title,
-                        text = it.text,
-                        case = it.case
-                    )
-                }
-            )
-        )
-
-        println("saved")
-
-        println(patternDataSource.getAll())
+        salvageManager.save()
     }
 }

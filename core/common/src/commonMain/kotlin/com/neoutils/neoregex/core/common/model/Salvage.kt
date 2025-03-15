@@ -16,14 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.sharedui.component
+package com.neoutils.neoregex.core.common.model
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-
-@Composable
-actual fun Controller(
-    modifier: Modifier,
-) = CommonController(
-    modifier = modifier,
+data class Salvage(
+    val id: Long,
+    val title: String,
+    val updated: Boolean
 )

@@ -85,7 +85,7 @@ actual fun Controller(
         text = "New",
         onClick = {
             coroutine.launch {
-                controller.dispatcher(Command.Clear)
+                controller.dispatcher(Command.New)
             }
         },
         style = textStyle.copy(

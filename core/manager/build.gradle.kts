@@ -1,7 +1,10 @@
+import extension.config
+import extension.module
+
 /*
  * NeoRegex.
  *
- * Copyright (C) 2025 Irineu A. Silva.
+ * Copyright (C) 2024 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +19,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.sharedui.component
+plugins {
+    alias(libs.plugins.neoutils.neoregex.core)
+}
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+group = config.module(name = "core")
 
-@Composable
-actual fun Controller(
-    modifier: Modifier,
-) = CommonController(
-    modifier = modifier,
-)
+kotlin {
+    sourceSets {
+        commonMain.dependencies {
+
+            // modules
+            api(projects.core.common)
+            api(projects.core.datasource)
+            api(projects.core.repository)
+        }
+    }
+}

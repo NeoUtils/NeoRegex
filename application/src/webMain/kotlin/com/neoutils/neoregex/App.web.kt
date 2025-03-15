@@ -57,6 +57,7 @@ import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.dispatcher.di.dispatcherModule
+import com.neoutils.neoregex.core.manager.di.managerModule
 import com.neoutils.neoregex.core.repository.di.repositoryModule
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
@@ -73,6 +74,7 @@ import org.koin.compose.koinInject
 
 @Composable
 fun WebApp() = WithKoin(
+    managerModule,
     dataSourceModule,
     databaseModule,
     repositoryModule,

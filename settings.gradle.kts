@@ -52,6 +52,7 @@ include(
     ":core:database",
     ":core:dispatcher",
     ":core:repository",
+    ":core:manager",
     ":feature:matcher",
     ":feature:about",
     ":feature:validator",

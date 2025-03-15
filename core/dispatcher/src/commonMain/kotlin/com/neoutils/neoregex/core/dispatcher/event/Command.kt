@@ -19,6 +19,6 @@
 package com.neoutils.neoregex.core.dispatcher.event
 
 sealed class Command {
-    data object Clear : Command()
+    data object New : Command()
     data object Save : Command()
 }
