@@ -22,15 +22,17 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -115,11 +117,31 @@ private fun FrameWindowScope.HeaderImpl(
         }
     ) { padding ->
 
+        var controllerWidth by remember { mutableStateOf(0.dp) }
+        var optionsWidth by remember { mutableStateOf(0.dp) }
+
+        val density = LocalDensity.current
+        val direction = LocalLayoutDirection.current
+
         Controller(
             modifier = Modifier
-                .padding(padding)
                 .align(Alignment.CenterStart)
+                .padding(padding)
+                .onSizeChanged {
+                    controllerWidth = density.run {
+                        it.width.toDp()
+                    }
+                }
         )
+
+        val horizontalPadding = remember(padding, direction) {
+            padding.calculateLeftPadding(direction) +
+                    padding.calculateRightPadding(direction)
+        }
+
+        val safeArea = horizontalPadding + maxOf(controllerWidth, optionsWidth) * 2
+
+        val maxTitleWidth = maxWidth - safeArea
 
         AnimatedContent(
             targetState = salvage,
@@ -132,7 +154,9 @@ private fun FrameWindowScope.HeaderImpl(
                 )
             },
             contentAlignment = Alignment.Center,
-            modifier = Modifier.align(Alignment.Center)
+            modifier = Modifier
+                .align(Alignment.Center)
+                .sizeIn(maxWidth = maxTitleWidth)
         ) { salvage ->
             if (salvage == null) {
                 Text(
@@ -157,8 +181,13 @@ private fun FrameWindowScope.HeaderImpl(
 
         Options(
             modifier = Modifier
-                .padding(padding)
                 .align(Alignment.CenterEnd)
+                .padding(padding)
+                .onSizeChanged {
+                    optionsWidth = density.run {
+                        it.width.toDp()
+                    }
+                }
         )
     }
 }

@@ -62,7 +62,7 @@ private val DefaultHeaderHeight = 40.dp
 fun FrameWindowScope.NeoHeader(
     modifier: Modifier = Modifier,
     colorTheme: ColorTheme = rememberColorTheme(),
-    content: @Composable BoxScope.(padding: PaddingValues) -> Unit = {},
+    content: @Composable BoxWithConstraintsScope.(padding: PaddingValues) -> Unit = {},
 ) {
 
     val focus = rememberWindowFocus()
@@ -145,7 +145,7 @@ fun FrameWindowScope.NeoHeader(
             }
         }
     ) {
-        Box(
+        BoxWithConstraints(
             modifier = Modifier
                 .padding(dimensions.medium)
                 .fillMaxSize(),

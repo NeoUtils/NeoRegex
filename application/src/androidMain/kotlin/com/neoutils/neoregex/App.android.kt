@@ -101,8 +101,6 @@ private fun NeoAppBar(
         )
     },
     title = {
-        val coroutine = rememberCoroutineScope()
-
         AnimatedContent(
             targetState = salvageManager
                 .salvage

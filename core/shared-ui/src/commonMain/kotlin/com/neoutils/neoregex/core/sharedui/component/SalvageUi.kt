@@ -80,6 +80,7 @@ fun SalvageUi(
             .weight(weight = 1f, fill = false)
             .padding(start = 8.dp)
     )
+
     Row(
         modifier = Modifier.padding(4.dp)
     ) {
@@ -92,7 +93,6 @@ fun SalvageUi(
                 .clickable { onAction(SalvageAction.EditTitle) }
                 .aspectRatio(ratio = 1f)
                 .padding(2.5.dp)
-
         )
 
         Icon(
