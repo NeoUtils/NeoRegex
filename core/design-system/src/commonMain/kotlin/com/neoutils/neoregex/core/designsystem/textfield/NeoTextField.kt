@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
@@ -37,6 +39,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import com.neoutils.neoregex.core.common.extension.getBoundingBoxes
@@ -51,6 +54,7 @@ fun NeoTextField(
     modifier: Modifier = Modifier,
     onTextLayout: (TextLayoutResult) -> Unit = {},
     textStyle: TextStyle = TextStyle(),
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     matches: List<Match> = listOf(),
     matchColor: Color = colorScheme.secondary,
     singleLine: Boolean = false,
@@ -71,6 +75,7 @@ fun NeoTextField(
         onTextLayout = onTextLayout,
         modifier = modifier,
         textStyle = textStyle,
+        keyboardActions = keyboardActions,
         matches = matches,
         matchesColor = matchColor,
         singleLine = singleLine,
@@ -86,6 +91,7 @@ fun NeoTextField(
     onTextLayout: (TextLayoutResult) -> Unit = {},
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(),
+    keyboardActions: KeyboardActions = KeyboardActions.Default,
     matches: List<Match> = listOf(),
     matchesColor: Color = colorScheme.secondary,
     singleLine: Boolean = false,
@@ -109,6 +115,8 @@ fun NeoTextField(
         singleLine = singleLine,
         textStyle = mergedTextStyle,
         cursorBrush = SolidColor(mergedTextStyle.color),
+        keyboardActions = keyboardActions,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
         modifier = modifier.onFocusChanged {
             focused = it.isFocused
         },

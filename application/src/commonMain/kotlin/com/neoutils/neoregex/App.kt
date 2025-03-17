@@ -100,8 +100,8 @@ fun App(
                         navigation.update(Navigation.Screen.Matcher)
                     }
 
-                    Command.Save -> {
-                        viewModel.save()
+                    is Command.Save -> {
+                        viewModel.save(event.name)
                     }
                 }
             }

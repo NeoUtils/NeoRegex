@@ -20,7 +20,9 @@ package com.neoutils.neoregex.core.sharedui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -37,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.neoutils.neoregex.core.common.model.Salvage
 
@@ -61,7 +64,7 @@ fun SalvageUi(
             colorScheme.surfaceVariant
         ),
         shape = RoundedCornerShape(4.dp)
-    ).padding(4.dp)
+    )
 ) {
 
     val mergedTextStyle = typography.labelLarge.copy(
@@ -71,47 +74,49 @@ fun SalvageUi(
     Text(
         text = salvage.title,
         style = mergedTextStyle,
-        modifier = Modifier.padding(
-            bottom = 2.dp,
-            start = 4.dp
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 1,
+        modifier = Modifier
+            .weight(weight = 1f, fill = false)
+            .padding(start = 8.dp)
+    )
+    Row(
+        modifier = Modifier.padding(4.dp)
+    ) {
+        Icon(
+            imageVector = Icons.TwoTone.Edit,
+            contentDescription = null,
+            tint = colorScheme.onSurface,
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable { onAction(SalvageAction.EditTitle) }
+                .aspectRatio(ratio = 1f)
+                .padding(2.5.dp)
+
         )
-    )
 
-    Spacer(Modifier.width(4.dp))
+        Icon(
+            imageVector = Icons.TwoTone.Save,
+            contentDescription = null,
+            tint = colorScheme.onSurface.copy(
+                alpha = if (salvage.updated) 0.5f else 1f
+            ),
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable { onAction(SalvageAction.Update) }
+                .aspectRatio(ratio = 1f)
+                .padding(2.dp)
+        )
 
-    Icon(
-        imageVector = Icons.TwoTone.Edit,
-        contentDescription = null,
-        tint = colorScheme.onSurface,
-        modifier = Modifier
-            .clip(CircleShape)
-            .clickable { onAction(SalvageAction.EditTitle) }
-            .aspectRatio(ratio = 1f)
-            .padding(2.5.dp)
-
-    )
-
-    Icon(
-        imageVector = Icons.TwoTone.Save,
-        contentDescription = null,
-        tint = colorScheme.onSurface.copy(
-            alpha = if (salvage.updated) 0.5f else 1f
-        ),
-        modifier = Modifier
-            .clip(CircleShape)
-            .clickable { onAction(SalvageAction.Update) }
-            .aspectRatio(ratio = 1f)
-            .padding(2.dp)
-    )
-
-    Icon(
-        imageVector = Icons.TwoTone.Close,
-        contentDescription = null,
-        tint = colorScheme.onSurface,
-        modifier = Modifier
-            .clip(CircleShape)
-            .clickable { onAction(SalvageAction.Close) }
-            .aspectRatio(ratio = 1f)
-            .padding(2.dp)
-    )
+        Icon(
+            imageVector = Icons.TwoTone.Close,
+            contentDescription = null,
+            tint = colorScheme.onSurface,
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable { onAction(SalvageAction.Close) }
+                .aspectRatio(ratio = 1f)
+                .padding(2.dp)
+        )
+    }
 }

@@ -20,7 +20,6 @@ package com.neoutils.neoregex
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.neoutils.neoregex.core.datasource.PatternDataSource
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.core.repository.pattern.PatternRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
@@ -37,7 +36,7 @@ class AppViewModel(
         testCasesRepository.clear()
     }
 
-    fun save() = screenModelScope.launch {
-        salvageManager.save()
+    fun save(name: String) = screenModelScope.launch {
+        salvageManager.save(name)
     }
 }

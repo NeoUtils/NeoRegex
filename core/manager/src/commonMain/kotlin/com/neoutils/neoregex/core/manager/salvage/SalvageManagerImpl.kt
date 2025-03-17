@@ -58,10 +58,10 @@ class SalvageManagerImpl(
         opened.value = null
     }
 
-    override suspend fun save() {
+    override suspend fun save(name: String) {
         val pattern = patternDataSource.save(
             Pattern(
-                title = "test",
+                title = name,
                 text = patternRepository.flow.value.text,
                 testCases = testCasesRepository.all.map {
                     Pattern.TestCase(

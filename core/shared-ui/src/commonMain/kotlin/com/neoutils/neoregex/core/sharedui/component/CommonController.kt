@@ -19,26 +19,32 @@
 package com.neoutils.neoregex.core.sharedui.component
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
+import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.dispatcher.control.Controller
 import com.neoutils.neoregex.core.dispatcher.event.Command
@@ -81,9 +87,11 @@ private fun Menu(
 
     val salvage by salvageManager.salvage.collectAsStateWithLifecycle(initialValue = null)
 
-    val coroutine = rememberCoroutineScope()
+    var expanded by remember { mutableStateOf(false) }
 
-    val expanded = remember { mutableStateOf(false) }
+    var showSavePatternDialog by remember { mutableStateOf(false) }
+
+    val coroutine = rememberCoroutineScope()
 
     AnimatedContent(
         targetState = canPopBack,
@@ -113,7 +121,7 @@ private fun Menu(
                 contentDescription = null,
                 modifier = Modifier
                     .clip(CircleShape)
-                    .clickable { expanded.value = true }
+                    .clickable { expanded = true }
                     .padding(dimensions.tiny)
                     .padding(1.dp)
                     .aspectRatio(ratio = 1f)
@@ -122,8 +130,8 @@ private fun Menu(
     }
 
     DropdownMenu(
-        expanded = expanded.value,
-        onDismissRequest = { expanded.value = false },
+        expanded = expanded,
+        onDismissRequest = { expanded = false },
         modifier = Modifier.padding(top = dimensions.tiny)
     ) {
         DropdownMenuItem(
@@ -140,7 +148,7 @@ private fun Menu(
                     control.dispatcher(Command.New)
                     salvageManager.close()
                 }
-                expanded.value = false
+                expanded = false
             }
         )
 
@@ -155,7 +163,7 @@ private fun Menu(
             },
             onClick = {
                 // TODO: implement
-                expanded.value = false
+                expanded = false
             }
         )
 
@@ -170,10 +178,8 @@ private fun Menu(
                 )
             },
             onClick = {
-                coroutine.launch {
-                    control.dispatcher(Command.Save)
-                }
-                expanded.value = false
+                showSavePatternDialog = true
+                expanded = false
             }
         )
 
@@ -193,7 +199,20 @@ private fun Menu(
                             screen = Navigation.Screen.About
                         )
                     )
-                    expanded.value = false
+                    expanded = false
+                }
+            }
+        )
+    }
+
+    if (showSavePatternDialog) {
+        SavePatternDialog(
+            onDismissRequest = {
+                showSavePatternDialog = false
+            },
+            onSave = {
+                coroutine.launch {
+                    control.dispatcher(Command.Save(it))
                 }
             }
         )
@@ -291,5 +310,111 @@ private fun Navigation(
                 }
             },
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SavePatternDialog(
+    onDismissRequest: () -> Unit,
+    onSave: (String) -> Unit,
+    modifier: Modifier = Modifier
+) = BasicAlertDialog(
+    onDismissRequest = onDismissRequest,
+    modifier = modifier
+) {
+
+    var name by remember { mutableStateOf("") }
+
+    Surface(
+        color = colorScheme.background,
+        border = BorderStroke(width = 1.dp, colorScheme.outline)
+    ) {
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(40.dp)
+                    .background(colorScheme.surfaceVariant)
+                    .padding(6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Save pattern",
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .weight(weight = 1f),
+                    style = typography.titleSmall.copy(
+                        fontFamily = null
+                    )
+                )
+
+                Icon(
+                    imageVector = Icons.Default.Close,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .clickable(onClick = onDismissRequest)
+                        .size(28.dp)
+                        .padding(dimensions.medium)
+                )
+            }
+
+            HorizontalDivider(color = colorScheme.outlineVariant)
+
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                var focused by remember { mutableStateOf(false) }
+
+                val focusRequester = remember { FocusRequester() }
+
+                LaunchedEffect(Unit) {
+                    focusRequester.requestFocus()
+                }
+
+                NeoTextField(
+                    hint = "Pattern name",
+                    value = name,
+                    onValueChange = { name = it },
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            onSave(name)
+                            onDismissRequest()
+                        }
+                    ),
+                    singleLine = true,
+                    modifier = Modifier
+                        .focusRequester(focusRequester)
+                        .onFocusChanged {
+                            focused = it.isFocused
+                        }
+                        .border(
+                            width = 1.dp,
+                            color = if (focused) colorScheme.outline else colorScheme.outlineVariant,
+                            shape = RoundedCornerShape(4.dp)
+                        )
+                        .fillMaxWidth()
+                )
+
+                Spacer(Modifier.height(16.dp))
+
+                OutlinedButton(
+                    onClick = {
+                        onSave(name)
+                        onDismissRequest()
+                    },
+                    enabled = name.isNotBlank(),
+                    shape = RoundedCornerShape(8.dp),
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = colorScheme.onSurface
+                    )
+                ) {
+                    Text(text = "Save")
+                }
+            }
+        }
     }
 }

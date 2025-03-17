@@ -16,8 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:OptIn(ExperimentalComposeUiApi::class)
-
 package com.neoutils.neoregex
 
 import androidx.compose.animation.AnimatedContent
@@ -60,6 +58,7 @@ import com.neoutils.neoregex.feature.validator.di.validatorModule
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ApplicationScope.DesktopApp() = WithKoin(
     managerModule,
