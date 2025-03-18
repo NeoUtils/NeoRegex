@@ -28,10 +28,7 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -146,28 +143,25 @@ fun FrameWindowScope.NeoHeader(
         }
     ) {
         BoxWithConstraints(
-            modifier = Modifier
-                .padding(dimensions.medium)
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
 
             if (customTitleBar == null) {
 
-                val width = remember { mutableStateOf(0.dp) }
+                var width by remember { mutableStateOf(0.dp) }
+
+                content(
+                    PaddingValues(
+                        end = width,
+                    )
+                )
 
                 Buttons(
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
-                        .onSizeChanged {
-                            width.value = it.width.dp
-                        }
-                )
-
-                content(
-                    PaddingValues(
-                        end = width.value + dimensions.short,
-                    )
+                        .onSizeChanged { width = it.width.dp }
+                        .padding(end = dimensions.small)
                 )
             } else {
                 content(
@@ -207,7 +201,7 @@ private fun WindowScope.Buttons(modifier: Modifier) = Row(
                     )
                 }
             )
-            .padding(dimensions.medium)
-            .aspectRatio(ratio = 1f)
+            .size(24.dp)
+            .padding(dimensions.tiny)
     )
 }

@@ -21,18 +21,22 @@ package com.neoutils.neoregex
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -46,6 +50,7 @@ import com.neoutils.neoregex.core.datasource.extension.observe
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.datasource.remember.rememberWindowState
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.dispatcher.di.dispatcherModule
 import com.neoutils.neoregex.core.manager.di.managerModule
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
@@ -54,6 +59,8 @@ import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.sharedui.component.*
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
+import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
+import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
 import com.neoutils.neoregex.di.appModule
 import com.neoutils.neoregex.feature.matcher.di.matcherModule
 import com.neoutils.neoregex.feature.validator.di.validatorModule
@@ -98,6 +105,7 @@ fun ApplicationScope.DesktopApp() = WithKoin(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FrameWindowScope.HeaderImpl(
     modifier: Modifier = Modifier,
@@ -117,77 +125,65 @@ private fun FrameWindowScope.HeaderImpl(
         }
     ) { padding ->
 
-        var controllerWidth by remember { mutableStateOf(0.dp) }
-        var optionsWidth by remember { mutableStateOf(0.dp) }
-
-        val density = LocalDensity.current
         val direction = LocalLayoutDirection.current
 
-        Controller(
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(padding)
-                .onSizeChanged {
-                    controllerWidth = density.run {
-                        it.width.toDp()
-                    }
-                }
-        )
+        val focus = rememberWindowFocus()
 
-        val horizontalPadding = remember(padding, direction) {
-            padding.calculateLeftPadding(direction) +
-                    padding.calculateRightPadding(direction)
-        }
-
-        val safeArea = horizontalPadding + maxOf(controllerWidth, optionsWidth) * 2
-
-        val maxTitleWidth = maxWidth - safeArea
-
-        AnimatedContent(
-            targetState = salvage,
-            contentKey = { it != null },
-            transitionSpec = {
-                slideIntoContainer(
-                    SlideDirection.Down
-                ) togetherWith slideOutOfContainer(
-                    SlideDirection.Down
-                )
-            },
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .align(Alignment.Center)
-                .sizeIn(maxWidth = maxTitleWidth)
-        ) { salvage ->
-            if (salvage == null) {
-                Text(
-                    text = stringResource(Res.string.app_name),
-                    style = typography.titleSmall.copy(
-                        fontFamily = null
+        CenterAlignedTopAppBar(
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = when (focus) {
+                    WindowFocus.FOCUSED -> colorScheme.surfaceVariant
+                    WindowFocus.UNFOCUSED -> colorScheme.surfaceBright
+                },
+            ) ,
+            navigationIcon = {
+                Controller(
+                    modifier = Modifier.padding(
+                        start = padding.calculateStartPadding(direction) + dimensions.tiny
                     )
                 )
-            } else {
-                SalvageUi(
-                    salvage = salvage,
-                    onAction = {
-                        when (it) {
-                            SalvageAction.Close -> salvageManager.close()
-                            SalvageAction.EditTitle -> TODO("implement")
-                            SalvageAction.Update -> TODO("implement")
-                        }
-                    }
-                )
-            }
-        }
-
-        Options(
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(padding)
-                .onSizeChanged {
-                    optionsWidth = density.run {
-                        it.width.toDp()
+            },
+            title = {
+                AnimatedContent(
+                    targetState = salvage,
+                    contentKey = { it != null },
+                    transitionSpec = {
+                        slideIntoContainer(
+                            SlideDirection.Down
+                        ) togetherWith slideOutOfContainer(
+                            SlideDirection.Down
+                        )
+                    },
+                    contentAlignment = Alignment.Center,
+                ) { salvage ->
+                    if (salvage == null) {
+                        Text(
+                            text = stringResource(Res.string.app_name),
+                            style = typography.titleSmall.copy(
+                                fontFamily = null
+                            )
+                        )
+                    } else {
+                        SalvageUi(
+                            salvage = salvage,
+                            onAction = {
+                                when (it) {
+                                    SalvageAction.Close -> salvageManager.close()
+                                    SalvageAction.EditTitle -> TODO("implement")
+                                    SalvageAction.Update -> TODO("implement")
+                                }
+                            }
+                        )
                     }
                 }
+            },
+            actions = {
+                Options(
+                    modifier = Modifier.padding(
+                        end = padding.calculateEndPadding(direction) + dimensions.tiny
+                    )
+                )
+            }
         )
     }
 }

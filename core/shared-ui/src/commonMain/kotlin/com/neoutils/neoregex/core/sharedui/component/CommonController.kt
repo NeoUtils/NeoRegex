@@ -45,6 +45,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.dispatcher.control.Controller
 import com.neoutils.neoregex.core.dispatcher.event.Command
@@ -80,9 +81,8 @@ private fun Menu(
     salvageManager: SalvageManager = koinInject()
 ) = Column(
     modifier = modifier,
-    verticalArrangement = Arrangement.Center
+    verticalArrangement = Arrangement.Center,
 ) {
-
     val canPopBack by navigation.canPopBack.collectAsStateWithLifecycle()
 
     val salvage by salvageManager.salvage.collectAsStateWithLifecycle(initialValue = null)
@@ -97,7 +97,7 @@ private fun Menu(
         targetState = canPopBack,
         transitionSpec = {
             fadeIn() togetherWith fadeOut()
-        }
+        },
     ) { showBackButton ->
         if (showBackButton) {
             Icon(
@@ -112,8 +112,8 @@ private fun Menu(
                             }
                         }
                     )
-                    .padding(dimensions.medium)
-                    .aspectRatio(ratio = 1f)
+                    .size(buttons.size)
+                    .padding(buttons.padding)
             )
         } else {
             Icon(
@@ -122,9 +122,8 @@ private fun Menu(
                 modifier = Modifier
                     .clip(CircleShape)
                     .clickable { expanded = true }
-                    .padding(dimensions.tiny)
-                    .padding(1.dp)
-                    .aspectRatio(ratio = 1f)
+                    .size(buttons.size)
+                    .padding(buttons.padding)
             )
         }
     }
@@ -132,7 +131,6 @@ private fun Menu(
     DropdownMenu(
         expanded = expanded,
         onDismissRequest = { expanded = false },
-        modifier = Modifier.padding(top = dimensions.tiny)
     ) {
         DropdownMenuItem(
             text = { Text(text = "New") },
@@ -393,7 +391,9 @@ private fun SavePatternDialog(
                         }
                         .border(
                             width = 1.dp,
-                            color = if (focused) colorScheme.outline else colorScheme.outlineVariant,
+                            color = colorScheme.outline.copy(
+                                alpha = if (focused) 1f else 0.5f
+                            ),
                             shape = RoundedCornerShape(4.dp)
                         )
                         .fillMaxWidth()

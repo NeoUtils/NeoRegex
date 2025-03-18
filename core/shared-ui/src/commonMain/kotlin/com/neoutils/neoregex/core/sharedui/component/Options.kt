@@ -21,8 +21,8 @@ package com.neoutils.neoregex.core.sharedui.component
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -32,9 +32,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.model.Preferences
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.*
 import org.jetbrains.compose.resources.painterResource
@@ -44,13 +46,10 @@ import org.koin.compose.koinInject
 fun Options(
     modifier: Modifier = Modifier,
     preferencesDataSource: PreferencesDataSource = koinInject(),
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(
-        dimensions.medium,
-        Alignment.End
-    )
 ) = Row(
     modifier = modifier,
-    horizontalArrangement = horizontalArrangement,
+    horizontalArrangement = Arrangement.spacedBy(dimensions.small, Alignment.End),
+    verticalAlignment = Alignment.CenterVertically
 ) {
 
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
@@ -70,8 +69,8 @@ fun Options(
                     )
                 }
             )
-            .padding(dimensions.medium)
-            .aspectRatio(ratio = 1f)
+            .size(buttons.size)
+            .padding(buttons.padding)
     )
 
     Icon(
@@ -96,7 +95,7 @@ fun Options(
                     }
                 }
             )
-            .padding(dimensions.medium)
-            .aspectRatio(ratio = 1f)
+            .size(buttons.size)
+            .padding(buttons.padding)
     )
 }

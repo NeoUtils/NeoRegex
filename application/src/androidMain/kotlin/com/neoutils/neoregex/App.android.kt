@@ -33,7 +33,6 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,7 +55,6 @@ import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.component.SalvageAction
 import com.neoutils.neoregex.core.sharedui.component.SalvageUi
 import com.neoutils.neoregex.core.sharedui.extension.surface
-import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -95,9 +93,9 @@ private fun NeoAppBar(
 ) = CenterAlignedTopAppBar(
     navigationIcon = {
         Controller(
-            modifier = Modifier
-                .padding(dimensions.tiny)
-                .height(32.dp)
+            modifier = Modifier.padding(
+                start = dimensions.tiny
+            )
         )
     },
     title = {
@@ -133,19 +131,16 @@ private fun NeoAppBar(
                             SalvageAction.EditTitle -> TODO("implement")
                             SalvageAction.Update -> TODO("implement")
                         }
-                    },
-                    modifier = Modifier
-                        .padding(dimensions.tiny)
-                        .height(32.dp)
+                    }
                 )
             }
         }
     },
     actions = {
         Options(
-            modifier = Modifier
-                .padding(dimensions.tiny)
-                .height(32.dp)
+            modifier = Modifier.padding(
+                end = dimensions.small
+            )
         )
     },
     modifier = modifier.surface(
