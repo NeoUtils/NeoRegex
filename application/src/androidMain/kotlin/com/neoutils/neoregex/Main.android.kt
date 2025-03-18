@@ -18,12 +18,13 @@
 
 package com.neoutils.neoregex
 
-import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.flowWithLifecycle
 import com.neoutils.neoregex.core.common.util.ColorTheme
@@ -61,14 +62,14 @@ class MainActivity : ComponentActivity() {
             val style = when (colorTheme) {
                 ColorTheme.DARK, ColorTheme.DARK_SYSTEM -> {
                     SystemBarStyle.dark(
-                        Color.BLACK,
+                        Color.Transparent.toArgb(),
                     )
                 }
 
                 ColorTheme.LIGHT, ColorTheme.LIGHT_SYSTEM -> {
                     SystemBarStyle.light(
-                        Color.WHITE,
-                        Color.BLACK,
+                        Color.Transparent.toArgb(),
+                        Color.Transparent.toArgb(),
                     )
                 }
             }

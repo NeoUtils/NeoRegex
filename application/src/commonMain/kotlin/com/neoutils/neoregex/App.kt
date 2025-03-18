@@ -16,30 +16,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:OptIn(InternalVoyagerApi::class)
-
 package com.neoutils.neoregex
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.internal.BackHandler
 import cafe.adriel.voyager.transitions.FadeTransition
-import com.neoutils.neoregex.feature.validator.ValidatorScreen
 import com.neoutils.neoregex.core.designsystem.theme.NeoBackground
 import com.neoutils.neoregex.core.dispatcher.NavigationManager
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.feature.about.screen.AboutScreen
 import com.neoutils.neoregex.feature.about.screen.LibrariesScreen
 import com.neoutils.neoregex.feature.matcher.MatcherScreen
+import com.neoutils.neoregex.feature.validator.ValidatorScreen
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
+@OptIn(InternalVoyagerApi::class)
 @Composable
 fun App(
     modifier: Modifier = Modifier,

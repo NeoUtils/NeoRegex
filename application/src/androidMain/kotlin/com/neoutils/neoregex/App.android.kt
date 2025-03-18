@@ -16,11 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.neoutils.neoregex
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
@@ -28,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -62,20 +62,18 @@ fun AndroidApp() {
         }
     ) {
         Scaffold(
-            topBar = {
-                NeoAppBar()
-            },
-            contentWindowInsets = WindowInsets.safeDrawing
+            topBar = { NeoAppBar() },
+            contentWindowInsets = WindowInsets.safeDrawing,
         ) { padding ->
             App(Modifier.padding(padding))
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun NeoAppBar(
     modifier: Modifier = Modifier,
-    background: Color = colorScheme.surfaceContainer,
     shadowElevation: Dp = dimensions.tiny,
     height: Dp = 55.dp
 ) = CenterAlignedTopAppBar(
@@ -103,14 +101,14 @@ private fun NeoAppBar(
     },
     modifier = modifier.surface(
         shape = RectangleShape,
-        backgroundColor = background,
+        backgroundColor = colorScheme.surfaceVariant,
         shadowElevation = LocalDensity.current.run {
             shadowElevation.toPx()
         }
     ),
     expandedHeight = height,
     colors = TopAppBarDefaults.topAppBarColors(
-        containerColor = background
+        containerColor = colorScheme.surfaceVariant
     )
 )
 

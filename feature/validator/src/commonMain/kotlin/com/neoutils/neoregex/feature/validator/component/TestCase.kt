@@ -50,7 +50,6 @@ import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.component.LinkColor
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
-import com.neoutils.neoregex.core.designsystem.theme.Green
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.*
 import com.neoutils.neoregex.feature.validator.model.TestCaseValidation
@@ -166,13 +165,13 @@ fun TestCase(
                 ).value
             }
 
-            TestCaseValidation.Result.SUCCESS -> Green
+            TestCaseValidation.Result.SUCCESS -> colorScheme.tertiary
             TestCaseValidation.Result.ERROR -> colorScheme.error
         }
     )
 
     val matchColor = when (test.validation.result) {
-        TestCaseValidation.Result.SUCCESS -> Green
+        TestCaseValidation.Result.SUCCESS -> colorScheme.tertiary
         TestCaseValidation.Result.ERROR -> colorScheme.error
         else -> Color.Transparent
     }
