@@ -19,6 +19,7 @@
 package com.neoutils.neoregex.core.manager.salvage
 
 import com.neoutils.neoregex.core.common.model.Salvage
+import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.datasource.PatternDataSource
 import com.neoutils.neoregex.core.datasource.model.Pattern
 import com.neoutils.neoregex.core.repository.pattern.PatternRepository
@@ -43,13 +44,20 @@ class SalvageManagerImpl(
         patternRepository.flow,
         testCasesRepository.flow,
         uuid
-    ) { opened, pattern, _, _ ->
-        opened?.let {
-            patternDataSource.get(opened)?.let {
+    ) { opened, pattern, testCases, _ ->
+        opened?.let { patternId ->
+            patternDataSource.get(patternId)?.let { savedPattern ->
                 Salvage(
-                    id = checkNotNull(it.id),
-                    name = it.title,
-                    updated = pattern.text == it.text
+                    id = checkNotNull(savedPattern.id),
+                    name = savedPattern.title,
+                    updated = pattern.text == savedPattern.text &&  savedPattern.testCases.takeIf {
+                        it.size == testCases.size
+                    }?.let { savedTestCases ->
+                        testCases
+                            .sortedBy { it.uuid.toHexString() }
+                            .zip(savedTestCases.sortedBy { it.uuid.toHexString() })
+                            .all { (current, saved) -> current == saved }
+                    } ?: false
                 )
             }
         }
@@ -66,9 +74,28 @@ class SalvageManagerImpl(
     override suspend fun changeName(name: String) {
         val id = opened.value ?: return
 
-        uuid.value = Uuid.random()
-
         patternDataSource.changeName(id, name)
+
+        uuid.value = Uuid.random()
+    }
+
+    override suspend fun update() {
+        val id = opened.value ?: return
+
+        patternDataSource.update(
+            patternId = id,
+            text = patternRepository.flow.value.text,
+            testCases = testCasesRepository.all.map {
+                TestCase(
+                    uuid = it.uuid,
+                    title = it.title,
+                    text = it.text,
+                    case = it.case
+                )
+            }
+        )
+
+        uuid.value = Uuid.random()
     }
 
     override suspend fun save(name: String) {
@@ -77,10 +104,11 @@ class SalvageManagerImpl(
                 title = name,
                 text = patternRepository.flow.value.text,
                 testCases = testCasesRepository.all.map {
-                    Pattern.TestCase(
+                    TestCase(
                         title = it.title,
                         text = it.text,
-                        case = it.case
+                        case = it.case,
+                        uuid = it.uuid
                     )
                 }
             )

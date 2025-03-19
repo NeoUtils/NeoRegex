@@ -126,8 +126,14 @@ private fun NeoAppBar(
                     salvage = salvage,
                     onAction = {
                         when (it) {
-                            SalvageAction.Close -> salvageManager.close()
-                            SalvageAction.Update -> TODO("implement")
+                            SalvageAction.Close -> {
+                                salvageManager.close()
+                            }
+                            SalvageAction.Update -> {
+                                coroutine.launch {
+                                    salvageManager.update()
+                                }
+                            }
                             is SalvageAction.ChangeName -> {
                                 coroutine.launch {
                                     salvageManager.changeName(it.name)

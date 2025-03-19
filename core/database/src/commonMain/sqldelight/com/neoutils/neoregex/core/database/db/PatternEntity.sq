@@ -30,3 +30,8 @@ updatePatternTitle:
 UPDATE PatternEntity
 SET title = ?
 WHERE id = ?;
+
+updatePatternText:
+UPDATE PatternEntity
+SET text = ?
+WHERE id = ?;

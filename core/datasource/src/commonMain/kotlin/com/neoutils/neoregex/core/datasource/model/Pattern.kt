@@ -18,17 +18,11 @@
 
 package com.neoutils.neoregex.core.datasource.model
 
-import com.neoutils.neoregex.core.common.model.TestCase.Case
+import com.neoutils.neoregex.core.common.model.TestCase
 
 data class Pattern(
     val id: Long? = null,
     val title: String,
     val text: String,
     val testCases: List<TestCase>
-) {
-    data class TestCase(
-        val title: String,
-        val text: String,
-        val case: Case = Case.MATCH_ANY,
-    )
-}
+)

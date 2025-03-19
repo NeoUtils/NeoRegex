@@ -139,7 +139,7 @@ private fun FrameWindowScope.HeaderImpl(
                     WindowFocus.FOCUSED -> colorScheme.surfaceVariant
                     WindowFocus.UNFOCUSED -> colorScheme.surfaceBright
                 },
-            ) ,
+            ),
             navigationIcon = {
                 Controller(
                     modifier = Modifier.padding(
@@ -172,8 +172,15 @@ private fun FrameWindowScope.HeaderImpl(
                             salvage = salvage,
                             onAction = {
                                 when (it) {
-                                    SalvageAction.Close -> salvageManager.close()
-                                    SalvageAction.Update -> TODO("implement")
+                                    SalvageAction.Close -> {
+                                        salvageManager.close()
+                                    }
+                                    SalvageAction.Update -> {
+                                        coroutine.launch {
+                                            salvageManager.update()
+                                        }
+                                    }
+
                                     is SalvageAction.ChangeName -> {
                                         coroutine.launch {
                                             salvageManager.changeName(it.name)

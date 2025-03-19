@@ -1,5 +1,5 @@
 CREATE TABLE TestCaseEntity (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    uuid TEXT NOT NULL PRIMARY KEY,
     patternId INTEGER NOT NULL,
     title TEXT NOT NULL,
     text TEXT NOT NULL,
@@ -8,25 +8,30 @@ CREATE TABLE TestCaseEntity (
     FOREIGN KEY (patternId) REFERENCES PatternEntity(id)
 );
 
-getTestCaseById:
+getTestCase:
 SELECT *
 FROM TestCaseEntity
-WHERE id = ?;
+WHERE uuid = ?;
 
-getTestCasesByPatternId:
+getTestCases:
 SELECT *
 FROM TestCaseEntity
 WHERE patternId = ?
 ORDER BY createAt DESC;
 
 insertTestCase:
-INSERT INTO TestCaseEntity(patternId, title, text, testCase, createAt)
-VALUES (?, ?, ?, ?, ?);
+INSERT INTO TestCaseEntity(uuid, patternId, title, text, testCase, createAt)
+VALUES (?, ?, ?, ?, ?, ?);
 
-deleteTestCaseById:
+deleteTestCase:
 DELETE FROM TestCaseEntity
-WHERE id = ?;
+WHERE uuid = ?;
 
-deleteTestCasesByPatternId:
+deleteTestCases:
 DELETE FROM TestCaseEntity
 WHERE patternId = ?;
+
+updateTestCase:
+UPDATE TestCaseEntity
+SET title = ?, text = ?, testCase = ?
+WHERE uuid = ?;
