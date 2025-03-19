@@ -25,3 +25,8 @@ SELECT last_insert_rowid();
 deletePatternById:
 DELETE FROM PatternEntity
 WHERE id = ?;
+
+updatePatternTitle:
+UPDATE PatternEntity
+SET title = ?
+WHERE id = ?;

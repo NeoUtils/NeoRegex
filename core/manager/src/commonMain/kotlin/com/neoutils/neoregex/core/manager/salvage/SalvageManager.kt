@@ -28,5 +28,6 @@ interface SalvageManager {
     fun close()
 
     suspend fun save(name: String)
+    suspend fun changeName(name: String)
 }
 

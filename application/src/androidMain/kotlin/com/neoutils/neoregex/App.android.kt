@@ -22,7 +22,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.*
@@ -31,6 +30,7 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -52,6 +52,7 @@ import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.component.SalvageAction
 import com.neoutils.neoregex.core.sharedui.component.SalvageUi
 import com.neoutils.neoregex.core.sharedui.extension.surface
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -94,6 +95,9 @@ private fun NeoAppBar(
         )
     },
     title = {
+
+        val coroutine = rememberCoroutineScope()
+
         AnimatedContent(
             targetState = salvageManager
                 .salvage
@@ -123,8 +127,12 @@ private fun NeoAppBar(
                     onAction = {
                         when (it) {
                             SalvageAction.Close -> salvageManager.close()
-                            SalvageAction.EditTitle -> TODO("implement")
                             SalvageAction.Update -> TODO("implement")
+                            is SalvageAction.ChangeName -> {
+                                coroutine.launch {
+                                    salvageManager.changeName(it.name)
+                                }
+                            }
                         }
                     }
                 )

@@ -105,4 +105,13 @@ internal class PatternSqlDelightDataSource(
             }
         }
     }
+
+    override suspend fun changeName(id: Long, name: String) {
+        database.transaction {
+            database.patternEntityQueries.updatePatternTitle(
+                title = name,
+                id = id
+            )
+        }
+    }
 }

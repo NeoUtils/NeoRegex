@@ -19,32 +19,23 @@
 package com.neoutils.neoregex.core.sharedui.component
 
 import androidx.compose.animation.*
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material3.*
-import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.designsystem.theme.configButton
 import com.neoutils.neoregex.core.dispatcher.control.Controller
@@ -197,11 +188,11 @@ private fun Menu(
     }
 
     if (showSavePatternDialog) {
-        SavePatternDialog(
+        PatternNameDialog(
             onDismissRequest = {
                 showSavePatternDialog = false
             },
-            onSave = {
+            onConfirm = {
                 coroutine.launch {
                     control.dispatcher(Command.Save(it))
                 }
@@ -301,119 +292,5 @@ private fun Navigation(
                 }
             },
         )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun SavePatternDialog(
-    onDismissRequest: () -> Unit,
-    onSave: (String) -> Unit,
-    modifier: Modifier = Modifier
-) = BasicAlertDialog(
-    onDismissRequest = onDismissRequest,
-    modifier = modifier
-) {
-
-    var name by remember { mutableStateOf("") }
-
-    Surface(
-        color = colorScheme.background,
-        contentColor = colorScheme.onBackground,
-        border = BorderStroke(width = 1.dp, colorScheme.outline)
-    ) {
-        Column {
-            Box(
-                modifier = Modifier
-                    .background(colorScheme.surfaceVariant)
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth()
-                    .height(40.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Save pattern",
-                    color = colorScheme.onSurfaceVariant,
-                    style = typography.titleSmall.copy(
-                        fontFamily = null,
-                    )
-                )
-            }
-
-            HorizontalDivider(color = colorScheme.outlineVariant)
-
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                var focused by remember { mutableStateOf(false) }
-
-                val focusRequester = remember { FocusRequester() }
-
-                LaunchedEffect(Unit) { focusRequester.requestFocus() }
-
-                NeoTextField(
-                    hint = "Pattern name",
-                    value = name,
-                    onValueChange = { name = it },
-                    keyboardActions = KeyboardActions(
-                        onDone = {
-                            onSave(name)
-                            onDismissRequest()
-                        }
-                    ),
-                    singleLine = true,
-                    textStyle = typography.bodyMedium.copy(
-                        color = colorScheme.onBackground
-                    ),
-                    contentPadding = PaddingValues(dimensions.wide),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusRequester(focusRequester)
-                        .onFocusChanged { focused = it.isFocused }
-                        .border(
-                            width = 1.dp,
-                            color = colorScheme.outline.copy(
-                                alpha = if (focused) 1f else 0.5f
-                            ),
-                            shape = RoundedCornerShape(4.dp)
-                        )
-                )
-
-                Spacer(Modifier.height(16.dp))
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    OutlinedButton(
-                        onClick = {
-                            onDismissRequest()
-                        },
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = colorScheme.onBackground
-                        )
-                    ) {
-                        Text(text = "Cancel")
-                    }
-
-                    OutlinedButton(
-                        onClick = {
-                            onSave(name)
-                            onDismissRequest()
-                        },
-                        enabled = name.isNotBlank(),
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = colorScheme.onBackground
-                        )
-                    ) {
-                        Text(text = "Save")
-                    }
-                }
-            }
-        }
     }
 }

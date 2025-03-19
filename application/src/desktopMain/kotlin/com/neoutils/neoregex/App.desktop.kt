@@ -33,6 +33,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -64,6 +65,7 @@ import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
 import com.neoutils.neoregex.di.appModule
 import com.neoutils.neoregex.feature.matcher.di.matcherModule
 import com.neoutils.neoregex.feature.validator.di.validatorModule
+import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
@@ -129,6 +131,8 @@ private fun FrameWindowScope.HeaderImpl(
 
         val focus = rememberWindowFocus()
 
+        val coroutine = rememberCoroutineScope()
+
         CenterAlignedTopAppBar(
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = when (focus) {
@@ -169,8 +173,12 @@ private fun FrameWindowScope.HeaderImpl(
                             onAction = {
                                 when (it) {
                                     SalvageAction.Close -> salvageManager.close()
-                                    SalvageAction.EditTitle -> TODO("implement")
                                     SalvageAction.Update -> TODO("implement")
+                                    is SalvageAction.ChangeName -> {
+                                        coroutine.launch {
+                                            salvageManager.changeName(it.name)
+                                        }
+                                    }
                                 }
                             }
                         )

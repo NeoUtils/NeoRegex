@@ -20,6 +20,6 @@ package com.neoutils.neoregex.core.common.model
 
 data class Salvage(
     val id: Long,
-    val title: String,
+    val name: String,
     val updated: Boolean
 )

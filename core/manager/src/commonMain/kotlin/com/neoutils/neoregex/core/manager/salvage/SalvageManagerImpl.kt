@@ -18,14 +18,17 @@
 
 package com.neoutils.neoregex.core.manager.salvage
 
+import com.neoutils.neoregex.core.common.model.Salvage
 import com.neoutils.neoregex.core.datasource.PatternDataSource
 import com.neoutils.neoregex.core.datasource.model.Pattern
-import com.neoutils.neoregex.core.common.model.Salvage
 import com.neoutils.neoregex.core.repository.pattern.PatternRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class SalvageManagerImpl(
     private val patternDataSource: PatternDataSource,
     private val patternRepository: PatternRepository,
@@ -33,17 +36,19 @@ class SalvageManagerImpl(
 ) : SalvageManager {
 
     private val opened = MutableStateFlow<Long?>(null)
+    private val uuid = MutableStateFlow(Uuid.random())
 
     override val salvage = combine(
         opened,
         patternRepository.flow,
-        testCasesRepository.flow
-    ) { opened, pattern, _ ->
+        testCasesRepository.flow,
+        uuid
+    ) { opened, pattern, _, _ ->
         opened?.let {
             patternDataSource.get(opened)?.let {
                 Salvage(
                     id = checkNotNull(it.id),
-                    title = it.title,
+                    name = it.title,
                     updated = pattern.text == it.text
                 )
             }
@@ -56,6 +61,14 @@ class SalvageManagerImpl(
 
     override fun close() {
         opened.value = null
+    }
+
+    override suspend fun changeName(name: String) {
+        val id = opened.value ?: return
+
+        uuid.value = Uuid.random()
+
+        patternDataSource.changeName(id, name)
     }
 
     override suspend fun save(name: String) {

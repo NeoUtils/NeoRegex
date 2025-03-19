@@ -208,7 +208,20 @@ fun TestCase(
                         },
                         contentPadding = PaddingValues(0.dp),
                         textStyle = typography.labelMedium,
-                        hint = stringResource(Res.string.test_case_untitled),
+                        hint = {
+                            Text(
+                                text = stringResource(Res.string.test_case_untitled),
+                                style = LocalTextStyle.current.let {
+                                    it.copy(
+                                        color = it.color.copy(
+                                            alpha = 0.5f
+                                        )
+                                    )
+                                },
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1
+                            )
+                        },
                         singleLine = true,
                         modifier = Modifier
                             .padding(start = 8.dp)
@@ -284,7 +297,20 @@ fun TestCase(
                         textStyle = mergedTextStyle,
                         matches = test.validation.matches,
                         matchColor = matchColor,
-                        hint = hint
+                        hint = {
+                            Text(
+                                text = hint,
+                                style = LocalTextStyle.current.let {
+                                    it.copy(
+                                        color = it.color.copy(
+                                            alpha = 0.5f
+                                        )
+                                    )
+                                },
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1
+                            )
+                        },
                     )
                 } else {
 

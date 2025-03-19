@@ -25,4 +25,5 @@ interface PatternDataSource {
     suspend fun get(id: Long): Pattern?
     suspend fun delete(id: Long)
     suspend fun getAll(): List<Pattern>
+    suspend fun changeName(id: Long, name: String)
 }

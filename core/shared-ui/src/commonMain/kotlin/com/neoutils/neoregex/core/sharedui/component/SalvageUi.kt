@@ -32,7 +32,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,7 +46,7 @@ import com.neoutils.neoregex.core.designsystem.theme.configButton
 
 sealed class SalvageAction {
     data object Update : SalvageAction()
-    data object EditTitle : SalvageAction()
+    data class ChangeName(val name: String) : SalvageAction()
     data object Close : SalvageAction()
 }
 
@@ -72,8 +72,10 @@ fun SalvageUi(
         fontFamily = null,
     ).merge(textStyle)
 
+    var showChangeName by remember { mutableStateOf(false) }
+
     Text(
-        text = salvage.title,
+        text = salvage.name,
         style = mergedTextStyle,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1,
@@ -91,7 +93,7 @@ fun SalvageUi(
             tint = colorScheme.onSurface,
             modifier = Modifier
                 .clip(CircleShape)
-                .clickable { onAction(SalvageAction.EditTitle) }
+                .clickable { showChangeName = true }
                 .configButton(buttons.small)
         )
 
@@ -115,6 +117,29 @@ fun SalvageUi(
                 .clip(CircleShape)
                 .clickable { onAction(SalvageAction.Close) }
                 .configButton(buttons.small)
+        )
+    }
+
+    if (showChangeName) {
+        PatternNameDialog(
+            name = remember { mutableStateOf(salvage.name) },
+            onDismissRequest = {
+                showChangeName = false
+            },
+            title = {
+                Text(
+                    text = "Edit name",
+                    style = typography.titleSmall.copy(
+                        fontFamily = null,
+                    )
+                )
+            },
+            onConfirm = {
+                onAction(SalvageAction.ChangeName(it))
+            },
+            confirmLabel = {
+                Text(text = "Confirm")
+            }
         )
     }
 }
