@@ -44,7 +44,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.neoutils.neoregex.core.designsystem.component.ErrorTooltip
-import com.neoutils.neoregex.core.designsystem.theme.Green
 import com.neoutils.neoregex.core.sharedui.component.Footer
 import com.neoutils.neoregex.feature.validator.action.ValidatorAction
 import com.neoutils.neoregex.feature.validator.component.TestCase
@@ -138,9 +137,10 @@ class ValidatorScreen : Screen {
                                 Icon(
                                     imageVector = Icons.Rounded.CheckCircle,
                                     contentDescription = null,
-                                    tint = Green
+                                    tint = colorScheme.tertiary
                                 )
                             }
+
                             ValidatorUiState.Result.ERROR -> {
                                 if (error != null) {
                                     ErrorTooltip(error)

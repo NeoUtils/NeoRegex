@@ -16,8 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:OptIn(InternalVoyagerApi::class)
-
 package com.neoutils.neoregex
 
 import androidx.compose.runtime.Composable
@@ -41,6 +39,7 @@ import com.neoutils.neoregex.feature.validator.ValidatorScreen
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
+@OptIn(InternalVoyagerApi::class)
 @Composable
 fun App(
     modifier: Modifier = Modifier,
