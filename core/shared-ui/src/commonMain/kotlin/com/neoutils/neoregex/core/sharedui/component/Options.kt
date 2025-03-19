@@ -21,8 +21,6 @@ package com.neoutils.neoregex.core.sharedui.component
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -32,12 +30,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.model.Preferences
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.designsystem.theme.configButton
 import com.neoutils.neoregex.core.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
@@ -69,8 +66,7 @@ fun Options(
                     )
                 }
             )
-            .size(buttons.size)
-            .padding(buttons.padding)
+            .configButton()
     )
 
     Icon(
@@ -95,7 +91,6 @@ fun Options(
                     }
                 }
             )
-            .size(buttons.size)
-            .padding(buttons.padding)
+            .configButton()
     )
 }

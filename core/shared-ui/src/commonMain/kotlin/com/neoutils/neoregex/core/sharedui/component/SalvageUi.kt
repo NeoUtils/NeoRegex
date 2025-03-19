@@ -21,9 +21,7 @@ package com.neoutils.neoregex.core.sharedui.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -43,6 +41,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.neoutils.neoregex.core.common.model.Salvage
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
+import com.neoutils.neoregex.core.designsystem.theme.configButton
 
 sealed class SalvageAction {
     data object Update : SalvageAction()
@@ -92,8 +92,7 @@ fun SalvageUi(
             modifier = Modifier
                 .clip(CircleShape)
                 .clickable { onAction(SalvageAction.EditTitle) }
-                .size(18.dp)
-                .padding(2.dp)
+                .configButton(buttons.small)
         )
 
         Icon(
@@ -105,8 +104,7 @@ fun SalvageUi(
             modifier = Modifier
                 .clip(CircleShape)
                 .clickable { onAction(SalvageAction.Update) }
-                .size(18.dp)
-                .padding(2.dp)
+                .configButton(buttons.small)
         )
 
         Icon(
@@ -116,8 +114,7 @@ fun SalvageUi(
             modifier = Modifier
                 .clip(CircleShape)
                 .clickable { onAction(SalvageAction.Close) }
-                .size(18.dp)
-                .padding(2.dp)
+                .configButton(buttons.small)
         )
     }
 }

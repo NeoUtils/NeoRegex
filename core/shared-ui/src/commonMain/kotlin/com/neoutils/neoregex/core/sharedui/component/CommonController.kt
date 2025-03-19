@@ -42,12 +42,11 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.designsystem.theme.configButton
 import com.neoutils.neoregex.core.dispatcher.control.Controller
 import com.neoutils.neoregex.core.dispatcher.event.Command
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
@@ -65,13 +64,8 @@ fun CommonController(
     horizontalArrangement = Arrangement.spacedBy(dimensions.tiny),
     verticalAlignment = Alignment.CenterVertically
 ) {
-    Menu(
-        modifier = Modifier.fillMaxHeight()
-    )
-
-    Navigation(
-        modifier = Modifier.fillMaxHeight(),
-    )
+    Menu()
+    Navigation()
 }
 
 @Composable
@@ -113,8 +107,7 @@ private fun Menu(
                             }
                         }
                     )
-                    .size(buttons.size)
-                    .padding(buttons.padding)
+                    .configButton()
             )
         } else {
             Icon(
@@ -123,8 +116,7 @@ private fun Menu(
                 modifier = Modifier
                     .clip(CircleShape)
                     .clickable { expanded = true }
-                    .size(buttons.size)
-                    .padding(buttons.padding)
+                    .configButton()
             )
         }
     }

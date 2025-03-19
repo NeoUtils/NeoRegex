@@ -18,33 +18,59 @@
 
 package com.neoutils.neoregex.core.designsystem.theme
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.neoutils.neoregex.core.common.platform.Platform
 import com.neoutils.neoregex.core.common.platform.platform
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
 
 data class Buttons(
-    val size: Dp,
-    val padding: Dp
+    val default: Config,
+    val small: Config
 ) {
+    data class Config(
+        val size: Dp,
+        val padding: Dp
+    )
 
     companion object {
         val Default
             @Composable
             get() = when (platform) {
                 Platform.Android -> Buttons(
-                    size = 28.dp,
-                    padding = 4.dp
+                    default = Config(
+                        size = 28.dp,
+                        padding = 4.dp
+                    ),
+                    small = Config(
+                        size = 20.dp,
+                        padding = 2.dp
+                    )
                 )
 
                 else -> Buttons(
-                    size = 24.dp,
-                    padding = 4.dp
+                    default = Config(
+                        size = 24.dp,
+                        padding = 4.dp
+                    ),
+                    small = Config(
+                        size = 18.dp,
+                        padding = 2.dp
+                    )
                 )
             }
     }
 }
 
 val LocalButtons = compositionLocalOf<Buttons> { error("Buttons not defined") }
+
+@Composable
+fun Modifier.configButton(
+    config: Buttons.Config = buttons.default
+) = size(config.size)
+    .padding(config.padding)
