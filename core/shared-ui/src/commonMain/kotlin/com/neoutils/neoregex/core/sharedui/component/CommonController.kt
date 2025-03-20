@@ -42,6 +42,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
@@ -326,35 +327,24 @@ private fun SavePatternDialog(
 
     Surface(
         color = colorScheme.background,
+        contentColor = colorScheme.onBackground,
         border = BorderStroke(width = 1.dp, colorScheme.outline)
     ) {
         Column {
-            Row(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(40.dp)
                     .background(colorScheme.surfaceVariant)
-                    .padding(6.dp),
-                verticalAlignment = Alignment.CenterVertically
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+                    .height(40.dp),
+                contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = "Save pattern",
-                    modifier = Modifier
-                        .padding(start = 10.dp)
-                        .weight(weight = 1f),
+                    color = colorScheme.onSurfaceVariant,
                     style = typography.titleSmall.copy(
-                        fontFamily = null
+                        fontFamily = null,
                     )
-                )
-
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .clickable(onClick = onDismissRequest)
-                        .size(28.dp)
-                        .padding(dimensions.medium)
                 )
             }
 
@@ -369,9 +359,7 @@ private fun SavePatternDialog(
 
                 val focusRequester = remember { FocusRequester() }
 
-                LaunchedEffect(Unit) {
-                    focusRequester.requestFocus()
-                }
+                LaunchedEffect(Unit) { focusRequester.requestFocus() }
 
                 NeoTextField(
                     hint = "Pattern name",
@@ -384,11 +372,14 @@ private fun SavePatternDialog(
                         }
                     ),
                     singleLine = true,
+                    textStyle = typography.bodyMedium.copy(
+                        color = colorScheme.onBackground
+                    ),
+                    contentPadding = PaddingValues(dimensions.wide),
                     modifier = Modifier
+                        .fillMaxWidth()
                         .focusRequester(focusRequester)
-                        .onFocusChanged {
-                            focused = it.isFocused
-                        }
+                        .onFocusChanged { focused = it.isFocused }
                         .border(
                             width = 1.dp,
                             color = colorScheme.outline.copy(
@@ -396,23 +387,39 @@ private fun SavePatternDialog(
                             ),
                             shape = RoundedCornerShape(4.dp)
                         )
-                        .fillMaxWidth()
                 )
 
                 Spacer(Modifier.height(16.dp))
 
-                OutlinedButton(
-                    onClick = {
-                        onSave(name)
-                        onDismissRequest()
-                    },
-                    enabled = name.isNotBlank(),
-                    shape = RoundedCornerShape(8.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(
-                        contentColor = colorScheme.onSurface
-                    )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    Text(text = "Save")
+                    OutlinedButton(
+                        onClick = {
+                            onDismissRequest()
+                        },
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = colorScheme.onBackground
+                        )
+                    ) {
+                        Text(text = "Cancel")
+                    }
+
+                    OutlinedButton(
+                        onClick = {
+                            onSave(name)
+                            onDismissRequest()
+                        },
+                        enabled = name.isNotBlank(),
+                        shape = RoundedCornerShape(8.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(
+                            contentColor = colorScheme.onBackground
+                        )
+                    ) {
+                        Text(text = "Save")
+                    }
                 }
             }
         }
