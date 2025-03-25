@@ -17,7 +17,7 @@ getTestCases:
 SELECT *
 FROM TestCaseEntity
 WHERE patternId = ?
-ORDER BY createAt DESC;
+ORDER BY createAt ASC;
 
 insertTestCase:
 INSERT INTO TestCaseEntity(uuid, patternId, title, text, testCase, createAt)

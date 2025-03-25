@@ -18,13 +18,13 @@
 
 package com.neoutils.neoregex.feature.matcher.model
 
-import com.neoutils.neoregex.core.common.model.Target
+import com.neoutils.neoregex.core.common.model.Field
 
 class Targeted<T>(
-    vararg pairs: Pair<Target, T>
+    vararg pairs: Pair<Field, T>
 ) {
 
     private val map = pairs.toMap()
 
-    operator fun get(target: Target) = checkNotNull(map[target])
+    operator fun get(field: Field) = checkNotNull(map[field])
 }

@@ -18,6 +18,7 @@
 
 package com.neoutils.neoregex.core.repository.testcase
 
+import com.neoutils.neoregex.core.common.extension.put
 import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.util.ObservableMutableMap
 import kotlin.uuid.ExperimentalUuidApi
@@ -29,8 +30,6 @@ internal class TestCasesRepositoryImpl : TestCasesRepository {
     private val testCases = ObservableMutableMap(TestCase().toPair())
 
     override val flow = testCases.valuesFlow
-
-    override val all get() = flow.value
 
     override fun set(testCase: TestCase) {
         testCases[testCase.uuid] = testCase
@@ -61,12 +60,18 @@ internal class TestCasesRepositoryImpl : TestCasesRepository {
         return checkNotNull(get(newUuid))
     }
 
+    override fun setAll(testCases: List<TestCase>) {
+        this.testCases.update {
+            clear()
+            testCases.forEach { put(it) }
+        }
+    }
+
     override fun clear() {
 
-        testCases.clear()
-
-        val uuid = Uuid.random()
-
-        testCases[uuid] = TestCase(uuid = uuid)
+        testCases.update {
+            clear()
+            put(TestCase())
+        }
     }
 }

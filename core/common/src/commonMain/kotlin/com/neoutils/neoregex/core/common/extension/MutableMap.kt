@@ -16,9 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.common.model
+package com.neoutils.neoregex.core.common.extension
 
-data class History(
-    val canUndo: Boolean = false,
-    val canRedo: Boolean = false,
-)
+import com.neoutils.neoregex.core.common.model.TestCase
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+
+@OptIn(ExperimentalUuidApi::class)
+fun MutableMap<Uuid, TestCase>.put(testCase: TestCase): TestCase? {
+    return put(testCase.uuid, testCase)
+}

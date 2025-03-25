@@ -139,6 +139,12 @@ private fun NeoAppBar(
                                     salvageManager.changeName(it.name)
                                 }
                             }
+
+                            SalvageAction.Reset -> {
+                                coroutine.launch {
+                                    salvageManager.reset()
+                                }
+                            }
                         }
                     }
                 )

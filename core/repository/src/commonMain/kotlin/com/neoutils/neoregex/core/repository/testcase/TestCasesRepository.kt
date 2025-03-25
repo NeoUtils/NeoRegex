@@ -28,7 +28,7 @@ import kotlin.uuid.Uuid
 interface TestCasesRepository {
 
     val flow: StateFlow<List<TestCase>>
-    val all : List<TestCase>
+    val all : List<TestCase> get() = flow.value
 
     fun update(uuid: Uuid, block: (TestCase) -> TestCase) : TestCase
 
@@ -36,5 +36,6 @@ interface TestCasesRepository {
     fun get(uuid: Uuid) : TestCase?
     fun remove(uuid: Uuid)
     fun duplicate(uuid: Uuid): TestCase
+    fun setAll(testCases: List<TestCase>)
     fun clear()
 }

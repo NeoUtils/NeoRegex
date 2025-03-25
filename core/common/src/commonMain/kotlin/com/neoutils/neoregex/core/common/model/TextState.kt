@@ -18,7 +18,9 @@
 
 package com.neoutils.neoregex.core.common.model
 
-enum class Target {
-    TEXT,
-    REGEX
-}
+import androidx.compose.ui.text.TextRange
+
+data class TextState(
+    val value: String = "",
+    val selection: TextRange = TextRange.Zero,
+)

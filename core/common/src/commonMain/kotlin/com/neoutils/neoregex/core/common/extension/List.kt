@@ -16,20 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.repository.pattern
+package com.neoutils.neoregex.core.common.extension
 
-import com.neoutils.neoregex.core.common.model.History
-import com.neoutils.neoregex.core.common.model.Text
-import kotlinx.coroutines.flow.StateFlow
+import com.neoutils.neoregex.core.common.model.TestCase
 
-interface PatternRepository {
+infix fun List<TestCase>.deepEquals(testCases: List<TestCase>): Boolean {
 
-    val flow: StateFlow<Text>
-    val historyFlow: StateFlow<History>
+    if (testCases.size != size) return false
 
-    fun update(input: Text)
-    fun undo()
-    fun redo()
-
-    fun clear()
+    return zip(testCases).all { it.first == it.second }
 }

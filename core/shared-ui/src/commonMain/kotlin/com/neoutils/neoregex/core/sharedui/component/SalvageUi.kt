@@ -27,6 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Close
 import androidx.compose.material.icons.twotone.Edit
+import androidx.compose.material.icons.twotone.History
 import androidx.compose.material.icons.twotone.Save
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -46,6 +47,7 @@ import com.neoutils.neoregex.core.designsystem.theme.configButton
 
 sealed class SalvageAction {
     data object Update : SalvageAction()
+    data object Reset : SalvageAction()
     data class ChangeName(val name: String) : SalvageAction()
     data object Close : SalvageAction()
 }
@@ -98,6 +100,19 @@ fun SalvageUi(
         )
 
         Icon(
+            imageVector = Icons.TwoTone.History,
+            contentDescription = null,
+            tint = colorScheme.onSurface.copy(
+                alpha = if (salvage.updated) 0.5f else 1f
+            ),
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable(!salvage.updated) { onAction(SalvageAction.Reset) }
+                .configButton(buttons.small)
+        )
+
+
+        Icon(
             imageVector = Icons.TwoTone.Save,
             contentDescription = null,
             tint = colorScheme.onSurface.copy(
@@ -105,7 +120,7 @@ fun SalvageUi(
             ),
             modifier = Modifier
                 .clip(CircleShape)
-                .clickable { onAction(SalvageAction.Update) }
+                .clickable(!salvage.updated) { onAction(SalvageAction.Update) }
                 .configButton(buttons.small)
         )
 

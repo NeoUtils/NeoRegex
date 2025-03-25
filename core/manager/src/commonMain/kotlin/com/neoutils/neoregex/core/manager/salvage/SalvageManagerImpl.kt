@@ -18,11 +18,13 @@
 
 package com.neoutils.neoregex.core.manager.salvage
 
+import com.neoutils.neoregex.core.common.extension.deepEquals
 import com.neoutils.neoregex.core.common.model.Salvage
 import com.neoutils.neoregex.core.common.model.TestCase
+import com.neoutils.neoregex.core.common.model.TextState
 import com.neoutils.neoregex.core.datasource.PatternDataSource
 import com.neoutils.neoregex.core.datasource.model.Pattern
-import com.neoutils.neoregex.core.repository.pattern.PatternRepository
+import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -32,7 +34,7 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 class SalvageManagerImpl(
     private val patternDataSource: PatternDataSource,
-    private val patternRepository: PatternRepository,
+    private val patternStateRepository: PatternStateRepository,
     private val testCasesRepository: TestCasesRepository
 ) : SalvageManager {
 
@@ -41,7 +43,7 @@ class SalvageManagerImpl(
 
     override val salvage = combine(
         opened,
-        patternRepository.flow,
+        patternStateRepository.flow,
         testCasesRepository.flow,
         uuid
     ) { opened, pattern, testCases, _ ->
@@ -50,14 +52,8 @@ class SalvageManagerImpl(
                 Salvage(
                     id = checkNotNull(savedPattern.id),
                     name = savedPattern.title,
-                    updated = pattern.text == savedPattern.text &&  savedPattern.testCases.takeIf {
-                        it.size == testCases.size
-                    }?.let { savedTestCases ->
-                        testCases
-                            .sortedBy { it.uuid.toHexString() }
-                            .zip(savedTestCases.sortedBy { it.uuid.toHexString() })
-                            .all { (current, saved) -> current == saved }
-                    } ?: false
+                    updated = pattern.text.value == savedPattern.text &&
+                            testCases deepEquals savedPattern.testCases
                 )
             }
         }
@@ -84,7 +80,7 @@ class SalvageManagerImpl(
 
         patternDataSource.update(
             patternId = id,
-            text = patternRepository.flow.value.text,
+            text = patternStateRepository.pattern.text.value,
             testCases = testCasesRepository.all.map {
                 TestCase(
                     uuid = it.uuid,
@@ -98,11 +94,20 @@ class SalvageManagerImpl(
         uuid.value = Uuid.random()
     }
 
+    override suspend fun reset() {
+        val id = opened.value ?: return
+
+        val pattern = patternDataSource.get(id) ?: return
+
+        patternStateRepository.update(TextState(pattern.text))
+        testCasesRepository.setAll(pattern.testCases)
+    }
+
     override suspend fun save(name: String) {
         val pattern = patternDataSource.save(
             Pattern(
                 title = name,
-                text = patternRepository.flow.value.text,
+                text = patternStateRepository.pattern.text.value,
                 testCases = testCasesRepository.all.map {
                     TestCase(
                         title = it.title,

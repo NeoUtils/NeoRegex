@@ -21,12 +21,12 @@ package com.neoutils.neoregex.core.common.extension
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.input.TextFieldValue
-import com.neoutils.neoregex.core.common.model.Text
+import com.neoutils.neoregex.core.common.model.TextState
 
-fun Text.toTextFieldValue(
+fun TextState.toTextFieldValue(
     spanStyles: List<AnnotatedString.Range<SpanStyle>> = listOf()
 ) = TextFieldValue(
-    annotatedString = text.withSpanStyles(spanStyles),
+    annotatedString = value.withSpanStyles(spanStyles),
     selection = selection,
     composition = null
 )

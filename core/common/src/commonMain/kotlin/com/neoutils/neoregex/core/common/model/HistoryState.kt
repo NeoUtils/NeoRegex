@@ -16,16 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.repository.di
+package com.neoutils.neoregex.core.common.model
 
-import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
-import com.neoutils.neoregex.core.repository.pattern.PatternStateRepositoryImpl
-import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
-import com.neoutils.neoregex.core.repository.testcase.TestCasesRepositoryImpl
-import org.koin.dsl.bind
-import org.koin.dsl.module
-
-val repositoryModule = module {
-    single { PatternStateRepositoryImpl() } bind PatternStateRepository::class
-    single { TestCasesRepositoryImpl() } bind TestCasesRepository::class
-}
+data class HistoryState(
+    val canUndo: Boolean = false,
+    val canRedo: Boolean = false,
+)

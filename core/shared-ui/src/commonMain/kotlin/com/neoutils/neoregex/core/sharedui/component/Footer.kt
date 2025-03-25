@@ -37,9 +37,9 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.text.style.TextOverflow
 import com.neoutils.highlight.compose.remember.rememberTextFieldValue
 import com.neoutils.neoregex.core.common.extension.toText
-import com.neoutils.neoregex.core.common.model.History
-import com.neoutils.neoregex.core.common.model.Target
-import com.neoutils.neoregex.core.common.model.Text
+import com.neoutils.neoregex.core.common.model.HistoryState
+import com.neoutils.neoregex.core.common.model.Field
+import com.neoutils.neoregex.core.common.model.TextState
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.common.util.Syntax
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
@@ -47,32 +47,31 @@ import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.matcher_footer_insert_regex_hint
 import com.neoutils.neoregex.core.common.extension.toTextFieldValue
-import com.neoutils.neoregex.core.resources.test_case_untitled
 import org.jetbrains.compose.resources.stringResource
 
 sealed class FooterAction {
     data class UpdateRegex(
-        val text: Text
+        val text: TextState
     ) : FooterAction()
 
     sealed class History : FooterAction() {
 
-        abstract val textState: Target?
+        abstract val field: Field?
 
         data class Undo(
-            override val textState: Target? = null
+            override val field: Field? = null
         ) : History()
 
         data class Redo(
-            override val textState: Target? = null
+            override val field: Field? = null
         ) : History()
     }
 }
 
 @Composable
 fun Footer(
-    pattern: Text,
-    history: History,
+    pattern: TextState,
+    history: HistoryState,
     modifier: Modifier = Modifier,
     onFocus: (FocusState) -> Unit = {},
     onAction: (FooterAction) -> Unit = {},
@@ -110,14 +109,14 @@ fun Footer(
                     when (Command.from(it)) {
                         Command.UNDO -> {
                             onAction(
-                                FooterAction.History.Undo(Target.REGEX)
+                                FooterAction.History.Undo(Field.REGEX)
                             )
                             true
                         }
 
                         Command.REDO -> {
                             onAction(
-                                FooterAction.History.Redo(Target.REGEX)
+                                FooterAction.History.Redo(Field.REGEX)
                             )
                             true
                         }

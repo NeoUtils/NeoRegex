@@ -19,7 +19,7 @@
 package com.neoutils.neoregex.core.common.model
 
 data class Inputs(
-    val target: Target? = null,
-    val text: Text = Text(),
-    val regex: Text = Text(),
+    val field: Field? = null,
+    val text: TextState = TextState(),
+    val regex: TextState = TextState(),
 )

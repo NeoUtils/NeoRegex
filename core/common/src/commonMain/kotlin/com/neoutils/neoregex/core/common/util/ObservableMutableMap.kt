@@ -48,23 +48,18 @@ class ObservableMutableMap<K, T>(
 
     override fun isEmpty() = map.isEmpty()
 
-    override fun clear() = map.clear().also {
-        _valuesFlow.value = values.toList()
-        _mapFlow.value = map.toMap()
-    }
+    override fun clear() = update { clear() }
 
-    override fun remove(key: K) = map.remove(key).also {
-        _valuesFlow.value = values.toList()
-        _mapFlow.value = map.toMap()
-    }
+    override fun remove(key: K) = update { remove(key) }
 
-    override fun putAll(from: Map<out K, T>) = map.putAll(from).also {
-        _valuesFlow.value = values.toList()
-        _mapFlow.value = map.toMap()
-    }
+    override fun putAll(from: Map<out K, T>) = update { putAll(from) }
 
-    override fun put(key: K, value: T) = map.put(key, value).also {
-        _valuesFlow.value = values.toList()
-        _mapFlow.value = map.toMap()
+    override fun put(key: K, value: T) = update { put(key, value) }
+
+    fun <R> update(block: MutableMap<K, T>.() -> R): R {
+        return map.block().also {
+            _valuesFlow.value = values.toList()
+            _mapFlow.value = map.toMap()
+        }
     }
 }

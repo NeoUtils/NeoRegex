@@ -21,18 +21,18 @@ package com.neoutils.neoregex
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
-import com.neoutils.neoregex.core.repository.pattern.PatternRepository
+import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
 import kotlinx.coroutines.launch
 
 class AppViewModel(
-    private val patternRepository: PatternRepository,
+    private val patternStateRepository: PatternStateRepository,
     private val testCasesRepository: TestCasesRepository,
     private val salvageManager: SalvageManager
 ) : ScreenModel {
 
     fun clear() {
-        patternRepository.clear()
+        patternStateRepository.clear()
         testCasesRepository.clear()
     }
 

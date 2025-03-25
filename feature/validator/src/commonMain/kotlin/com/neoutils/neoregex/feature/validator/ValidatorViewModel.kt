@@ -22,7 +22,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.util.ObservableMutableMap
-import com.neoutils.neoregex.core.repository.pattern.PatternRepository
+import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
 import com.neoutils.neoregex.core.sharedui.component.FooterAction
 import com.neoutils.neoregex.feature.validator.action.ValidatorAction
@@ -44,7 +44,7 @@ import kotlin.uuid.Uuid
     FlowPreview::class
 )
 class ValidatorViewModel(
-    private val patternRepository: PatternRepository,
+    private val patternStateRepository: PatternStateRepository,
     private val testCasesRepository: TestCasesRepository,
     private val validateUserCase: ValidateUseCase,
     private val testCaseQueue: TestCaseQueue
@@ -74,27 +74,26 @@ class ValidatorViewModel(
         )
     )
 
-    private val testPattern = patternRepository.flow
+    private val testPattern = patternStateRepository.flow
         .debounce(DELAY_TYPING)
         .distinctUntilChangedBy { it.text }
-        .mapLatest { TestPattern(it.text) }
+        .mapLatest { TestPattern(it.text.value) }
         .stateIn(
             scope = screenModelScope,
             started = SharingStarted.WhileSubscribed(),
-            initialValue = TestPattern(patternRepository.flow.value.text)
+            initialValue = TestPattern(patternStateRepository.pattern.text.value)
         )
 
     val uiState = combine(
-        patternRepository.historyFlow,
-        patternRepository.flow,
+        patternStateRepository.flow,
         testCasesUi,
         testPattern,
-    ) { history, pattern, testCases, testPattern ->
+    ) { pattern, testCases, testPattern ->
         ValidatorUiState(
             testCases = testCases,
             testPattern = testPattern,
-            pattern = pattern,
-            history = history,
+            pattern = pattern.text,
+            history = pattern.history,
         )
     }.stateIn(
         scope = screenModelScope,
@@ -102,8 +101,8 @@ class ValidatorViewModel(
         initialValue = ValidatorUiState(
             testCases = testCasesUi.value,
             testPattern = testPattern.value,
-            pattern = patternRepository.flow.value,
-            history = patternRepository.historyFlow.value,
+            pattern = patternStateRepository.pattern.text,
+            history = patternStateRepository.pattern.history,
         )
     )
 
@@ -286,15 +285,15 @@ class ValidatorViewModel(
     fun onAction(action: FooterAction) {
         when (action) {
             is FooterAction.History.Redo -> {
-                patternRepository.redo()
+                patternStateRepository.redo()
             }
 
             is FooterAction.History.Undo -> {
-                patternRepository.undo()
+                patternStateRepository.undo()
             }
 
             is FooterAction.UpdateRegex -> {
-                patternRepository.update(action.text)
+                patternStateRepository.update(action.text)
             }
         }
     }
