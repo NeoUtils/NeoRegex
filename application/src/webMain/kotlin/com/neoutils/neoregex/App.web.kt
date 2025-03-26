@@ -157,10 +157,6 @@ private fun Header(
             modifier = Modifier
                 .padding(dimensions.short)
                 .height(32.dp),
-            horizontalArrangement = Arrangement.spacedBy(
-                dimensions.short,
-                Alignment.End
-            )
         )
     },
     colors = TopAppBarDefaults.topAppBarColors(

@@ -68,7 +68,6 @@ internal class TestCasesRepositoryImpl : TestCasesRepository {
     }
 
     override fun clear() {
-
         testCases.update {
             clear()
             put(TestCase())

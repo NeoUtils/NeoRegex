@@ -33,9 +33,9 @@ interface TestCasesRepository {
     fun update(uuid: Uuid, block: (TestCase) -> TestCase) : TestCase
 
     fun set(testCase: TestCase)
+    fun setAll(testCases: List<TestCase>)
     fun get(uuid: Uuid) : TestCase?
     fun remove(uuid: Uuid)
     fun duplicate(uuid: Uuid): TestCase
-    fun setAll(testCases: List<TestCase>)
     fun clear()
 }
