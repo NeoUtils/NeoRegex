@@ -56,6 +56,7 @@ include(
     ":feature:matcher",
     ":feature:about",
     ":feature:validator",
+    ":feature:saved",
 )
 
 rootProject.name = "NeoRegex"

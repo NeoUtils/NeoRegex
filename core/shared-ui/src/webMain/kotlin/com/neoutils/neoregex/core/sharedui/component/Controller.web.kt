@@ -41,7 +41,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.component.LinkColor
 import com.neoutils.neoregex.core.dispatcher.control.Controller
-import com.neoutils.neoregex.core.dispatcher.event.Command
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.core.resources.Res
@@ -66,8 +65,6 @@ actual fun Controller(
 
     val navigation = koinInject<NavigationManager>()
 
-    val controller = koinInject<Controller>()
-
     val screen by navigation.screen.collectAsStateWithLifecycle()
 
     val textStyle = typography.labelLarge.copy(fontFamily = null)
@@ -80,46 +77,6 @@ actual fun Controller(
             )
         }
     }
-
-    Link(
-        text = "New",
-        onClick = {
-            coroutine.launch {
-                controller.dispatcher(Command.New)
-            }
-        },
-        style = textStyle.copy(
-            textDecoration = TextDecoration.None,
-            fontWeight = FontWeight.Normal
-        ),
-        colors = LinkColor(
-            idle = colorScheme.onSurface,
-            hover = colorScheme.onSurface.copy(alpha = 0.8f),
-            press = colorScheme.onSurface.copy(alpha = 0.6f),
-            pressed = colorScheme.onSurface
-        ),
-        enabled = true
-    )
-
-    Link(
-        text = "Save",
-        onClick = {
-            TODO("Not implemented")
-        },
-        style = textStyle.copy(
-            textDecoration = TextDecoration.None,
-            fontWeight = FontWeight.Normal
-        ),
-        colors = LinkColor(
-            idle = colorScheme.onSurface,
-            hover = colorScheme.onSurface.copy(alpha = 0.8f),
-            press = colorScheme.onSurface.copy(alpha = 0.6f),
-            pressed = colorScheme.onSurface
-        ),
-        enabled = false
-    )
-
-    VerticalDivider(Modifier.height(16.dp))
 
     listOf(
         Navigation.Screen.Matcher,

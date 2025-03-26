@@ -18,8 +18,8 @@
 
 package com.neoutils.neoregex.core.dispatcher.impl
 
-import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
+import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -113,6 +113,8 @@ internal class NavigationManagerWeb : NavigationManager {
 
                     stack++
                 }
+
+                Navigation.Screen.Saved -> TODO("Not supported")
             }
 
             return

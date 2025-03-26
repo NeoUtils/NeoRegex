@@ -152,7 +152,13 @@ private fun Menu(
                 )
             },
             onClick = {
-                // TODO: implement
+                coroutine.launch {
+                    navigation.emit(
+                        Navigation.Event.Navigate(
+                            screen = Navigation.Screen.Saved
+                        )
+                    )
+                }
                 expanded = false
             }
         )
@@ -189,8 +195,9 @@ private fun Menu(
                             screen = Navigation.Screen.About
                         )
                     )
-                    expanded = false
                 }
+
+                expanded = false
             }
         )
     }
@@ -233,6 +240,7 @@ private fun Navigation(
         Navigation.Screen.Libraries -> false
         Navigation.Screen.Matcher -> true
         Navigation.Screen.Validator -> true
+        Navigation.Screen.Saved -> false
     }
 
     Row(

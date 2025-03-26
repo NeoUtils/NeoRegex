@@ -43,9 +43,6 @@ kotlin {
             implementation(catalog.voyager.screenModel)
             implementation(catalog.voyager.transitions)
             implementation(catalog.voyager.koin)
-
-            // NeoUtils
-            implementation(libs.highlight.compose)
         }
     }
 }

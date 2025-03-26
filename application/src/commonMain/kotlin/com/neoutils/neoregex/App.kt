@@ -35,6 +35,7 @@ import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.feature.about.screen.AboutScreen
 import com.neoutils.neoregex.feature.about.screen.LibrariesScreen
 import com.neoutils.neoregex.feature.matcher.MatcherScreen
+import com.neoutils.neoregex.feature.saved.SavedScreen
 import com.neoutils.neoregex.feature.validator.ValidatorScreen
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
@@ -72,6 +73,7 @@ fun App(
                             Navigation.Screen.Libraries -> navigator.push(LibrariesScreen())
                             Navigation.Screen.Matcher -> navigator.popUntilRoot()
                             Navigation.Screen.Validator -> navigator.push(ValidatorScreen())
+                            Navigation.Screen.Saved -> navigator.push(SavedScreen())
                         }
                     }
 
@@ -84,6 +86,7 @@ fun App(
                         is AboutScreen -> Navigation.Screen.About
                         is LibrariesScreen -> Navigation.Screen.Libraries
                         is ValidatorScreen -> Navigation.Screen.Validator
+                        is SavedScreen -> Navigation.Screen.Saved
                         else -> error("Invalid screen")
                     }
                 )
