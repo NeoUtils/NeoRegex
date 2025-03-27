@@ -20,14 +20,14 @@ package com.neoutils.neoregex.core.database.di
 
 import com.neoutils.neoregex.core.database.factory.PatternJvmDriverFactory
 import com.neoutils.neoregex.core.database.provider.PatternDatabaseProvider
-import com.neoutils.neoregex.core.database.PatternSqlDelightDataSource
+import com.neoutils.neoregex.core.database.PatternsSqlDelightDataSource
 import com.neoutils.neoregex.core.database.factory.DriverFactory
-import com.neoutils.neoregex.core.datasource.PatternDataSource
+import com.neoutils.neoregex.core.datasource.PatternsDataSource
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 actual val databaseModule = module {
     single { PatternJvmDriverFactory() } bind DriverFactory::class
-    single { PatternSqlDelightDataSource(get()) } bind PatternDataSource::class
+    single { PatternsSqlDelightDataSource(get()) } bind PatternsDataSource::class
     single { PatternDatabaseProvider(get()).database }
 }

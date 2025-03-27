@@ -64,6 +64,7 @@ import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
 import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
 import com.neoutils.neoregex.di.appModule
 import com.neoutils.neoregex.feature.matcher.di.matcherModule
+import com.neoutils.neoregex.feature.saved.di.savedModule
 import com.neoutils.neoregex.feature.validator.di.validatorModule
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
@@ -79,6 +80,7 @@ fun ApplicationScope.DesktopApp() = WithKoin(
     dispatcherModule,
     matcherModule,
     validatorModule,
+    savedModule,
     appModule
 ) {
 

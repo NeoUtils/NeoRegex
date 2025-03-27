@@ -16,16 +16,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.datasource
+package com.neoutils.neoregex.feature.saved.state
 
-import com.neoutils.neoregex.core.common.model.TestCase
-import com.neoutils.neoregex.core.datasource.model.Pattern
-
-interface PatternDataSource {
-    suspend fun save(pattern: Pattern) : Pattern
-    suspend fun get(id: Long): Pattern?
-    suspend fun delete(id: Long)
-    suspend fun getAll(): List<Pattern>
-    suspend fun changeName(id: Long, name: String)
-    suspend fun update(patternId: Long, text: String, testCases: List<TestCase>)
+data class SavedUiState(
+    val patterns: List<Pattern>
+) {
+    data class Pattern(
+        val name: String,
+        val text: String
+    )
 }

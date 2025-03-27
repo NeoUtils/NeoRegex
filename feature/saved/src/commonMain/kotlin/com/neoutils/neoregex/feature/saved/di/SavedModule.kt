@@ -16,18 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.database.di
+package com.neoutils.neoregex.feature.saved.di
 
-import com.neoutils.neoregex.core.database.PatternsSqlDelightDataSource
-import com.neoutils.neoregex.core.database.factory.DriverFactory
-import com.neoutils.neoregex.core.database.factory.PatternAndroidDriverFactory
-import com.neoutils.neoregex.core.database.provider.PatternDatabaseProvider
-import com.neoutils.neoregex.core.datasource.PatternsDataSource
-import org.koin.dsl.bind
+import com.neoutils.neoregex.feature.saved.SavedViewModel
+import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
-actual val databaseModule = module {
-    single { PatternAndroidDriverFactory(get()) } bind DriverFactory::class
-    single { PatternsSqlDelightDataSource(get()) } bind PatternsDataSource::class
-    single { PatternDatabaseProvider(get()).database }
+val savedModule = module {
+    factoryOf(::SavedViewModel)
 }

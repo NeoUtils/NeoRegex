@@ -21,16 +21,16 @@ package com.neoutils.neoregex.core.database
 import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.model.TestCase.Case
 import com.neoutils.neoregex.core.database.db.PatternDatabase
-import com.neoutils.neoregex.core.datasource.PatternDataSource
+import com.neoutils.neoregex.core.datasource.PatternsDataSource
 import com.neoutils.neoregex.core.datasource.model.Pattern
 import kotlinx.datetime.Clock
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-internal class PatternSqlDelightDataSource(
+internal class PatternsSqlDelightDataSource(
     private val database: PatternDatabase
-) : PatternDataSource {
+) : PatternsDataSource {
 
     @OptIn(ExperimentalUuidApi::class)
     override suspend fun save(pattern: Pattern): Pattern {

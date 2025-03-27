@@ -22,7 +22,7 @@ import com.neoutils.neoregex.core.common.extension.deepEquals
 import com.neoutils.neoregex.core.common.model.Salvage
 import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.model.TextState
-import com.neoutils.neoregex.core.datasource.PatternDataSource
+import com.neoutils.neoregex.core.datasource.PatternsDataSource
 import com.neoutils.neoregex.core.datasource.model.Pattern
 import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
@@ -33,7 +33,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class SalvageManagerImpl(
-    private val patternDataSource: PatternDataSource,
+    private val patternsDataSource: PatternsDataSource,
     private val patternStateRepository: PatternStateRepository,
     private val testCasesRepository: TestCasesRepository
 ) : SalvageManager {
@@ -48,7 +48,7 @@ class SalvageManagerImpl(
         uuid
     ) { opened, pattern, testCases, _ ->
         opened?.let { patternId ->
-            patternDataSource.get(patternId)?.let { savedPattern ->
+            patternsDataSource.get(patternId)?.let { savedPattern ->
                 Salvage(
                     id = checkNotNull(savedPattern.id),
                     name = savedPattern.title,
@@ -70,7 +70,7 @@ class SalvageManagerImpl(
     override suspend fun changeName(name: String) {
         val id = opened.value ?: return
 
-        patternDataSource.changeName(id, name)
+        patternsDataSource.changeName(id, name)
 
         uuid.value = Uuid.random()
     }
@@ -78,7 +78,7 @@ class SalvageManagerImpl(
     override suspend fun update() {
         val id = opened.value ?: return
 
-        patternDataSource.update(
+        patternsDataSource.update(
             patternId = id,
             text = patternStateRepository.pattern.text.value,
             testCases = testCasesRepository.all.map {
@@ -97,14 +97,14 @@ class SalvageManagerImpl(
     override suspend fun reset() {
         val id = opened.value ?: return
 
-        val pattern = patternDataSource.get(id) ?: return
+        val pattern = patternsDataSource.get(id) ?: return
 
         patternStateRepository.update(TextState(pattern.text))
         testCasesRepository.setAll(pattern.testCases)
     }
 
     override suspend fun save(name: String) {
-        val pattern = patternDataSource.save(
+        val pattern = patternsDataSource.save(
             Pattern(
                 title = name,
                 text = patternStateRepository.pattern.text.value,

@@ -76,7 +76,7 @@ fun Footer(
     onFocus: (FocusState) -> Unit = {},
     onAction: (FooterAction) -> Unit = {},
     tooling: (@Composable () -> Unit)? = null,
-    syntax: Syntax.Regex = Syntax.Regex(),
+    syntax: Syntax.Regex = remember { Syntax.Regex() },
 ) = Surface(
     modifier = modifier,
     shape = RectangleShape,

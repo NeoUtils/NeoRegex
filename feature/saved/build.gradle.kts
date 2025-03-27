@@ -37,12 +37,16 @@ kotlin {
             implementation(projects.core.common)
             implementation(projects.core.datasource)
             implementation(projects.core.repository)
+            implementation(projects.core.manager)
 
             // voyager
             implementation(catalog.voyager.navigator)
             implementation(catalog.voyager.screenModel)
             implementation(catalog.voyager.transitions)
             implementation(catalog.voyager.koin)
+
+            // NeoUtils
+            implementation(libs.highlight.compose)
         }
     }
 }
