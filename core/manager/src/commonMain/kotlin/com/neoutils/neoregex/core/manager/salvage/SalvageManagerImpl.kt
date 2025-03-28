@@ -49,14 +49,25 @@ class SalvageManagerImpl(
     ) { opened, pattern, testCases, _ ->
         opened?.let { patternId ->
             patternsDataSource.get(patternId)?.let { savedPattern ->
+
+                val updated =
+                    pattern.text.value == savedPattern.text &&
+                            testCases deepEquals savedPattern.testCases
+
                 Salvage(
                     id = checkNotNull(savedPattern.id),
                     name = savedPattern.title,
-                    updated = pattern.text.value == savedPattern.text &&
-                            testCases deepEquals savedPattern.testCases
+                    updated = updated,
+                    canUpdate = !updated && pattern.text.value.isNotBlank(),
                 )
             }
         }
+    }
+
+    override val canSave = opened.combine(
+        patternStateRepository.flow
+    ) { opened, pattern ->
+        pattern.text.value.isNotBlank() && opened == null
     }
 
     override fun open(id: Long) {

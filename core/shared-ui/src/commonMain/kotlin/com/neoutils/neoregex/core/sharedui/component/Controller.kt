@@ -79,7 +79,7 @@ private fun Menu(
 ) {
     val canPopBack by navigation.canPopBack.collectAsStateWithLifecycle()
 
-    val salvage by salvageManager.salvage.collectAsStateWithLifecycle(initialValue = null)
+    val canSave by salvageManager.canSave.collectAsStateWithLifecycle(initialValue = false)
 
     var expanded by remember { mutableStateOf(false) }
 
@@ -165,7 +165,7 @@ private fun Menu(
 
         DropdownMenuItem(
             text = { Text(text = "Save") },
-            enabled = salvage == null,
+            enabled = canSave,
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Save,

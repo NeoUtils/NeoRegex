@@ -24,6 +24,8 @@ import kotlinx.coroutines.flow.Flow
 interface SalvageManager {
     val salvage: Flow<Salvage?>
 
+    val canSave: Flow<Boolean>
+
     fun open(id: Long)
     fun close()
 

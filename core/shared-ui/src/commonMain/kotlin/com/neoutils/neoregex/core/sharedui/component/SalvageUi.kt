@@ -107,7 +107,9 @@ fun SalvageUi(
             ),
             modifier = Modifier
                 .clip(CircleShape)
-                .clickable(!salvage.updated) { onAction(SalvageAction.Reset) }
+                .clickable(!salvage.updated) {
+                    onAction(SalvageAction.Reset)
+                }
                 .configButton(buttons.small)
         )
 
@@ -116,11 +118,13 @@ fun SalvageUi(
             imageVector = Icons.TwoTone.Save,
             contentDescription = null,
             tint = colorScheme.onSurface.copy(
-                alpha = if (salvage.updated) 0.5f else 1f
+                alpha = if (salvage.canUpdate) 1f else 0.5f
             ),
             modifier = Modifier
                 .clip(CircleShape)
-                .clickable(!salvage.updated) { onAction(SalvageAction.Update) }
+                .clickable(salvage.canUpdate) {
+                    onAction(SalvageAction.Update)
+                }
                 .configButton(buttons.small)
         )
 

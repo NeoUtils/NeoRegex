@@ -21,5 +21,6 @@ package com.neoutils.neoregex.core.common.model
 data class Salvage(
     val id: Long,
     val name: String,
-    val updated: Boolean
+    val updated: Boolean,
+    val canUpdate: Boolean,
 )

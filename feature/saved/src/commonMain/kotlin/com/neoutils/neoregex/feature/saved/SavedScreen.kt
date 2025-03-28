@@ -106,16 +106,13 @@ fun Pattern(
                 )
             }
 
-            if (patternUi.text.isNotBlank()) {
+            HorizontalDivider()
 
-                HorizontalDivider()
-
-                Text(
-                    text = syntax.highlight.rememberAnnotatedString(patternUi.text),
-                    style = typography.bodyLarge,
-                    modifier = Modifier.padding(16.dp)
-                )
-            }
+            Text(
+                text = syntax.highlight.rememberAnnotatedString(patternUi.text),
+                style = typography.bodyLarge,
+                modifier = Modifier.padding(16.dp)
+            )
         }
     }
 }
