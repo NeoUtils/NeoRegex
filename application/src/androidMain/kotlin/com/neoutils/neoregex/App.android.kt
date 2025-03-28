@@ -124,19 +124,27 @@ private fun NeoAppBar(
             } else {
                 SalvageUi(
                     salvage = salvage,
-                    onAction = {
-                        when (it) {
+                    onAction = { action ->
+                        when (action) {
                             SalvageAction.Close -> {
-                                salvageManager.close()
+                                coroutine.launch {
+                                    salvageManager.close()
+                                }
                             }
+
                             SalvageAction.Update -> {
                                 coroutine.launch {
                                     salvageManager.update()
                                 }
                             }
+
                             is SalvageAction.ChangeName -> {
                                 coroutine.launch {
-                                    salvageManager.changeName(it.name)
+                                    salvageManager.update {
+                                        it.copy(
+                                            title = action.name
+                                        )
+                                    }
                                 }
                             }
 

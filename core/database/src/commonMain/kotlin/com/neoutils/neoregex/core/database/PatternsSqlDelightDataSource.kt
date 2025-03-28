@@ -18,6 +18,7 @@
 
 package com.neoutils.neoregex.core.database
 
+import com.neoutils.neoregex.core.common.extension.deepNotEquals
 import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.model.TestCase.Case
 import com.neoutils.neoregex.core.database.db.PatternDatabase
@@ -114,45 +115,48 @@ internal class PatternsSqlDelightDataSource(
         }
     }
 
-    override suspend fun changeName(id: Long, name: String) {
-        database.transaction {
-            database.patternEntityQueries.updatePatternTitle(
-                title = name,
-                id = id
-            )
-        }
-    }
-
     override suspend fun update(
-        patternId: Long,
-        text: String,
-        testCases: List<TestCase>
-    ) {
+        id: Long,
+        block: (Pattern) -> Pattern
+    ): Pattern {
+
+        val oldPattern = checkNotNull(get(id))
+        val newPattern = block(oldPattern)
+
         database.transaction {
 
-            database.patternEntityQueries.updatePatternText(
-                text = text,
-                id = patternId
-            )
-
-            val savedTestCases = database.testCaseEntityQueries.getTestCases(patternId).executeAsList()
-
-            database.testCaseEntityQueries.deleteTestCases(patternId)
-
-            testCases.forEach { testCase ->
-                val createAt = savedTestCases.find {
-                    it.uuid == testCase.uuid.toHexString()
-                }?.createAt
-
-                database.testCaseEntityQueries.insertTestCase(
-                    uuid = testCase.uuid.toHexString(),
-                    patternId = patternId,
-                    title = testCase.title,
-                    text = testCase.text,
-                    testCase = testCase.case.name,
-                    createAt = createAt ?: Clock.System.now().toEpochMilliseconds()
+            if (oldPattern.title != newPattern.title || oldPattern.text != newPattern.text) {
+                database.patternEntityQueries.updatePattern(
+                    id = id,
+                    title = newPattern.title,
+                    text = newPattern.text
                 )
             }
+
+            if (oldPattern.testCases deepNotEquals newPattern.testCases) {
+                val savedTestCases = database.testCaseEntityQueries.getTestCases(id).executeAsList()
+
+                // TODO: improve this
+                database.testCaseEntityQueries.deleteTestCases(id)
+
+                newPattern.testCases.forEach { testCase ->
+
+                    val createAt = savedTestCases.find {
+                        it.uuid == testCase.uuid.toHexString()
+                    }?.createAt
+
+                    database.testCaseEntityQueries.insertTestCase(
+                        patternId = id,
+                        uuid = testCase.uuid.toHexString(),
+                        title = testCase.title,
+                        text = testCase.text,
+                        testCase = testCase.case.name,
+                        createAt = createAt ?: Clock.System.now().toEpochMilliseconds()
+                    )
+                }
+            }
         }
+
+        return newPattern
     }
 }

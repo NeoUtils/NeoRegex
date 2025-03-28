@@ -22,9 +22,9 @@ import com.neoutils.neoregex.core.common.extension.deepEquals
 import com.neoutils.neoregex.core.common.model.Salvage
 import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.model.TextState
-import com.neoutils.neoregex.core.datasource.PatternsDataSource
 import com.neoutils.neoregex.core.datasource.model.Pattern
 import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
+import com.neoutils.neoregex.core.repository.patterns.PatternsRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -33,7 +33,7 @@ import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class SalvageManagerImpl(
-    private val patternsDataSource: PatternsDataSource,
+    private val patternsRepository: PatternsRepository,
     private val patternStateRepository: PatternStateRepository,
     private val testCasesRepository: TestCasesRepository
 ) : SalvageManager {
@@ -48,7 +48,7 @@ class SalvageManagerImpl(
         uuid
     ) { opened, pattern, testCases, _ ->
         opened?.let { patternId ->
-            patternsDataSource.get(patternId)?.let { savedPattern ->
+            patternsRepository.get(patternId)?.let { savedPattern ->
 
                 val updated =
                     pattern.text.value == savedPattern.text &&
@@ -73,42 +73,45 @@ class SalvageManagerImpl(
     override suspend fun open(id: Long) {
         opened.value = id
 
-        val pattern = patternsDataSource.get(id) ?: return
+        val pattern = patternsRepository.get(id) ?: return
 
         patternStateRepository.clear(TextState(pattern.text))
         testCasesRepository.clear()
+
+        sync()
     }
 
-    override fun close() {
+    override suspend fun close() {
         opened.value = null
 
         patternStateRepository.clear()
         testCasesRepository.clear()
     }
 
-    override suspend fun changeName(name: String) {
+    override suspend fun update(block: (Pattern) -> Pattern) {
         val id = opened.value ?: return
 
-        patternsDataSource.changeName(id, name)
-
-        uuid.value = Uuid.random()
+        patternsRepository.update(id, block)
     }
 
     override suspend fun update() {
         val id = opened.value ?: return
 
-        patternsDataSource.update(
-            patternId = id,
-            text = patternStateRepository.pattern.text.value,
-            testCases = testCasesRepository.all.map {
-                TestCase(
-                    uuid = it.uuid,
-                    title = it.title,
-                    text = it.text,
-                    case = it.case
-                )
-            }
-        )
+        patternsRepository.update(
+            id = id
+        ) { pattern ->
+            pattern.copy(
+                text = patternStateRepository.pattern.text.value,
+                testCases = testCasesRepository.all.map { testCase ->
+                    TestCase(
+                        uuid = testCase.uuid,
+                        title = testCase.title,
+                        text = testCase.text,
+                        case = testCase.case
+                    )
+                }
+            )
+        }
 
         uuid.value = Uuid.random()
     }
@@ -116,14 +119,21 @@ class SalvageManagerImpl(
     override suspend fun sync() {
         val id = opened.value ?: return
 
-        val pattern = patternsDataSource.get(id) ?: return
+        val pattern = patternsRepository.get(id) ?: return
 
         patternStateRepository.update(TextState(pattern.text))
         testCasesRepository.setAll(pattern.testCases)
     }
 
+    override suspend fun delete(id: Long) {
+
+        if (id == opened.value) close()
+
+        patternsRepository.delete(id)
+    }
+
     override suspend fun save(name: String) {
-        val pattern = patternsDataSource.save(
+        val pattern = patternsRepository.save(
             Pattern(
                 title = name,
                 text = patternStateRepository.pattern.text.value,

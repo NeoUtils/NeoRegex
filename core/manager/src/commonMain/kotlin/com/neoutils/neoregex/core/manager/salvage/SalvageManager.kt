@@ -19,6 +19,7 @@
 package com.neoutils.neoregex.core.manager.salvage
 
 import com.neoutils.neoregex.core.common.model.Salvage
+import com.neoutils.neoregex.core.datasource.model.Pattern
 import kotlinx.coroutines.flow.Flow
 
 interface SalvageManager {
@@ -27,11 +28,12 @@ interface SalvageManager {
     val canSave: Flow<Boolean>
 
     suspend fun open(id: Long)
-    fun close()
+    suspend fun close()
+    suspend fun update(block: (Pattern) -> Pattern)
 
     suspend fun save(name: String)
-    suspend fun changeName(name: String)
     suspend fun update()
     suspend fun sync()
+    suspend fun delete(id: Long)
 }
 

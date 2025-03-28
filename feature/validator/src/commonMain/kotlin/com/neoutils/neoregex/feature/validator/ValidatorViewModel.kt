@@ -114,8 +114,8 @@ class ValidatorViewModel(
 
     private fun initialTestCase() {
         if (testCasesRepository.all.isEmpty()) {
-           TestCase().also { emptyTestCase ->
-               testCasesRepository.set(emptyTestCase)
+            TestCase().also { emptyTestCase ->
+                testCasesRepository.set(emptyTestCase)
                 expanded.value = emptyTestCase.uuid
             }
         }

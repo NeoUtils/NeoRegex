@@ -26,12 +26,7 @@ deletePatternById:
 DELETE FROM PatternEntity
 WHERE id = ?;
 
-updatePatternTitle:
+updatePattern:
 UPDATE PatternEntity
-SET title = ?
-WHERE id = ?;
-
-updatePatternText:
-UPDATE PatternEntity
-SET text = ?
+SET title = ?, text = ?
 WHERE id = ?;

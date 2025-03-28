@@ -24,6 +24,7 @@ import com.neoutils.neoregex.core.datasource.PatternsDataSource
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
+import com.neoutils.neoregex.core.repository.patterns.PatternsRepository
 import com.neoutils.neoregex.feature.saved.state.SavedUiState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
@@ -32,14 +33,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SavedViewModel(
-    private val patternsDataSource: PatternsDataSource,
+    private val patternsRepository: PatternsRepository,
     private val salvageManager: SalvageManager,
     private val navigationManager: NavigationManager
 ) : ScreenModel {
 
-    val uiState = flow {
-        emit(patternsDataSource.getAll())
-    }.map {
+    val uiState = patternsRepository.flow.map {
         SavedUiState(
             patterns = it.map { pattern ->
                 SavedUiState.Pattern(
@@ -55,9 +54,12 @@ class SavedViewModel(
         started = SharingStarted.WhileSubscribed()
     )
 
-    fun open(pattern: SavedUiState.Pattern) = screenModelScope.launch {
-        salvageManager.open(pattern.id)
-        salvageManager.sync()
+    fun open(id: Long) = screenModelScope.launch {
+        salvageManager.open(id)
         navigationManager.emit(Navigation.Event.OnBack)
+    }
+
+    fun delete(id: Long) = screenModelScope.launch {
+        salvageManager.delete(id)
     }
 }

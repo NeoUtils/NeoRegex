@@ -23,11 +23,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -73,9 +73,12 @@ class SavedScreen : Screen {
         ) {
             items(uiState.patterns) { pattern ->
                 Pattern(
-                    patternUi = pattern,
+                    pattern = pattern,
                     onClick = {
-                        viewModel.open(pattern)
+                        viewModel.open(pattern.id)
+                    },
+                    onDelete = {
+                        viewModel.delete(pattern.id)
                     }
                 )
             }
@@ -85,9 +88,10 @@ class SavedScreen : Screen {
 
 @Composable
 fun Pattern(
-    patternUi: SavedUiState.Pattern,
+    pattern: SavedUiState.Pattern,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
+    onDelete: () -> Unit = {},
     syntax: Syntax.Regex = remember { Syntax.Regex() }
 ) {
     Surface(
@@ -106,21 +110,34 @@ fun Pattern(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(dimensions.small),
                 modifier = Modifier
-                    .padding(8.dp)
+                    .padding(4.dp)
                     .fillMaxWidth(),
             ) {
                 Text(
-                    text = patternUi.name,
+                    text = pattern.name,
                     style = typography.titleSmall,
                     fontSize = 12.sp,
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = Modifier.padding(start = 12.dp)
                 )
+
+                Spacer(Modifier.weight(weight = 1f))
+
+                IconButton(
+                    onClick = onDelete,
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = null,
+                        modifier = Modifier.padding(4.dp)
+                    )
+                }
             }
 
             HorizontalDivider()
 
             Text(
-                text = syntax.highlight.rememberAnnotatedString(patternUi.text),
+                text = syntax.highlight.rememberAnnotatedString(pattern.text),
                 style = typography.bodyLarge,
                 modifier = Modifier.padding(16.dp)
             )
