@@ -52,6 +52,17 @@ class SavedScreen : Screen {
 
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+        if (uiState.patterns.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "nothing saved yet")
+            }
+
+            return
+        }
+
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,

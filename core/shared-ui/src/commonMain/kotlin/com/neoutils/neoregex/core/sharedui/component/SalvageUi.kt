@@ -27,8 +27,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Close
 import androidx.compose.material.icons.twotone.Edit
-import androidx.compose.material.icons.twotone.History
 import androidx.compose.material.icons.twotone.Save
+import androidx.compose.material.icons.twotone.Sync
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
@@ -100,16 +100,19 @@ fun SalvageUi(
         )
 
         Icon(
-            imageVector = Icons.TwoTone.History,
+            imageVector = Icons.TwoTone.Sync,
             contentDescription = null,
             tint = colorScheme.onSurface.copy(
                 alpha = if (salvage.updated) 0.5f else 1f
             ),
             modifier = Modifier
                 .clip(CircleShape)
-                .clickable(!salvage.updated) {
-                    onAction(SalvageAction.Reset)
-                }
+                .clickable(
+                    enabled = !salvage.updated,
+                    onClick = {
+                        onAction(SalvageAction.Reset)
+                    }
+                )
                 .configButton(buttons.small)
         )
 
@@ -122,9 +125,12 @@ fun SalvageUi(
             ),
             modifier = Modifier
                 .clip(CircleShape)
-                .clickable(salvage.canUpdate) {
-                    onAction(SalvageAction.Update)
-                }
+                .clickable(
+                    enabled = salvage.canUpdate,
+                    onClick = {
+                        onAction(SalvageAction.Update)
+                    }
+                )
                 .configButton(buttons.small)
         )
 
