@@ -61,7 +61,12 @@ class SavedScreen : Screen {
             contentPadding = PaddingValues(16.dp)
         ) {
             items(uiState.patterns) { pattern ->
-                Pattern(pattern)
+                Pattern(
+                    patternUi = pattern,
+                    onClick = {
+                        viewModel.open(pattern)
+                    }
+                )
             }
         }
     }
@@ -71,10 +76,12 @@ class SavedScreen : Screen {
 fun Pattern(
     patternUi: SavedUiState.Pattern,
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
     syntax: Syntax.Regex = remember { Syntax.Regex() }
 ) {
     Surface(
         modifier = modifier,
+        onClick = onClick,
         shape = RoundedCornerShape(4.dp),
         color = colorScheme.surfaceContainer,
         contentColor = colorScheme.onSurface,

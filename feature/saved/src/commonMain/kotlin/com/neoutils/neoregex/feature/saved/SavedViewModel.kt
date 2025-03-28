@@ -21,14 +21,20 @@ package com.neoutils.neoregex.feature.saved
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.neoutils.neoregex.core.datasource.PatternsDataSource
+import com.neoutils.neoregex.core.dispatcher.model.Navigation
+import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
+import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.feature.saved.state.SavedUiState
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class SavedViewModel(
-    private val patternsDataSource: PatternsDataSource
+    private val patternsDataSource: PatternsDataSource,
+    private val salvageManager: SalvageManager,
+    private val navigationManager: NavigationManager
 ) : ScreenModel {
 
     val uiState = flow {
@@ -38,7 +44,8 @@ class SavedViewModel(
             patterns = it.map { pattern ->
                 SavedUiState.Pattern(
                     name = pattern.title,
-                    text = pattern.text
+                    text = pattern.text,
+                    id = checkNotNull(pattern.id)
                 )
             }
         )
@@ -47,4 +54,10 @@ class SavedViewModel(
         initialValue = SavedUiState(patterns = listOf()),
         started = SharingStarted.WhileSubscribed()
     )
+
+    fun open(pattern: SavedUiState.Pattern) = screenModelScope.launch {
+        salvageManager.open(pattern.id)
+        salvageManager.sync()
+        navigationManager.emit(Navigation.Event.OnBack)
+    }
 }

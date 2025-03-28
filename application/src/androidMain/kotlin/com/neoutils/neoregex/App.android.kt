@@ -142,7 +142,7 @@ private fun NeoAppBar(
 
                             SalvageAction.Reset -> {
                                 coroutine.launch {
-                                    salvageManager.reset()
+                                    salvageManager.sync()
                                 }
                             }
                         }

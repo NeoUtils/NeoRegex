@@ -22,6 +22,7 @@ data class SavedUiState(
     val patterns: List<Pattern>
 ) {
     data class Pattern(
+        val id: Long,
         val name: String,
         val text: String
     )

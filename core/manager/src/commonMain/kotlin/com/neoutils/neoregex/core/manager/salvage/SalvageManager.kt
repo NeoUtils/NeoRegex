@@ -30,6 +30,6 @@ interface SalvageManager {
     suspend fun save(name: String)
     suspend fun changeName(name: String)
     suspend fun update()
-    suspend fun reset()
+    suspend fun sync()
 }
 

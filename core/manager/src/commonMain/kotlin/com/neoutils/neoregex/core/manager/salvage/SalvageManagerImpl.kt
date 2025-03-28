@@ -94,7 +94,7 @@ class SalvageManagerImpl(
         uuid.value = Uuid.random()
     }
 
-    override suspend fun reset() {
+    override suspend fun sync() {
         val id = opened.value ?: return
 
         val pattern = patternsDataSource.get(id) ?: return

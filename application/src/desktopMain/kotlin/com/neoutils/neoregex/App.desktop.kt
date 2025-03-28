@@ -191,7 +191,7 @@ private fun FrameWindowScope.HeaderImpl(
 
                                     SalvageAction.Reset -> {
                                         coroutine.launch {
-                                            salvageManager.reset()
+                                            salvageManager.sync()
                                         }
                                     }
                                 }
