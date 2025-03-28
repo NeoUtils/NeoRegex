@@ -58,7 +58,7 @@ class SalvageManagerImpl(
                     id = checkNotNull(savedPattern.id),
                     name = savedPattern.title,
                     updated = updated,
-                    canUpdate = !updated && pattern.text.value.isNotBlank(),
+                    canUpdate = !updated && pattern.isValid,
                 )
             }
         }
@@ -67,7 +67,7 @@ class SalvageManagerImpl(
     override val canSave = opened.combine(
         patternStateRepository.flow
     ) { opened, pattern ->
-        pattern.text.value.isNotBlank() && opened == null
+        opened == null && pattern.isValid
     }
 
     override fun open(id: Long) {

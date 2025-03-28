@@ -24,4 +24,11 @@ import com.neoutils.neoregex.core.common.model.TextState
 data class PatternState(
     val text: TextState,
     val history: HistoryState
-)
+) {
+    val isValid by lazy {
+        runCatching {
+            check(text.value.isNotBlank())
+            Regex(text.value)
+        }.getOrNull() != null
+    }
+}
