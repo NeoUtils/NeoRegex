@@ -98,8 +98,15 @@ fun App(
                 when (event) {
                     Command.New -> {
                         viewModel.clear()
-                        navigator.replace(MatcherScreen())
-                        navigation.update(Navigation.Screen.Matcher)
+                        navigator.replaceAll(
+                            navigator.items.map {
+                                when (it) {
+                                    is MatcherScreen -> MatcherScreen()
+                                    is ValidatorScreen -> ValidatorScreen()
+                                    else -> it
+                                }
+                            }
+                        )
                     }
 
                     is Command.Save -> {

@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.neoutils.neoregex.core.designsystem.component.ErrorTooltip
 import com.neoutils.neoregex.core.sharedui.component.Footer
@@ -49,9 +50,12 @@ import com.neoutils.neoregex.feature.validator.action.ValidatorAction
 import com.neoutils.neoregex.feature.validator.component.TestCase
 import com.neoutils.neoregex.feature.validator.state.ValidatorUiState
 import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class ValidatorScreen : Screen {
+
+    override val key = Uuid.random().toString()
 
     @Composable
     override fun Content() = Column(

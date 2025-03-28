@@ -26,7 +26,7 @@ interface SalvageManager {
 
     val canSave: Flow<Boolean>
 
-    fun open(id: Long)
+    suspend fun open(id: Long)
     fun close()
 
     suspend fun save(name: String)

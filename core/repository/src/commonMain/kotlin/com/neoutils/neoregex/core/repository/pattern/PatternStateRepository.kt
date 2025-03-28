@@ -32,5 +32,5 @@ interface PatternStateRepository {
     fun undo()
     fun redo()
 
-    fun clear()
+    fun clear(initial: TextState = TextState())
 }

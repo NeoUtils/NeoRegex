@@ -72,8 +72,8 @@ internal class PatternStateRepositoryImpl(
         text.value = textHistoryManager.redo() ?: return
     }
 
-    override fun clear() {
-        text.value = TextState()
+    override fun clear(initial: TextState) {
         textHistoryManager.clear()
+        text.value = initial
     }
 }

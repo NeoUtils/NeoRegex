@@ -70,12 +70,20 @@ class SalvageManagerImpl(
         opened == null && pattern.isValid
     }
 
-    override fun open(id: Long) {
+    override suspend fun open(id: Long) {
         opened.value = id
+
+        val pattern = patternsDataSource.get(id) ?: return
+
+        patternStateRepository.clear(TextState(pattern.text))
+        testCasesRepository.clear()
     }
 
     override fun close() {
         opened.value = null
+
+        patternStateRepository.clear()
+        testCasesRepository.clear()
     }
 
     override suspend fun changeName(name: String) {
