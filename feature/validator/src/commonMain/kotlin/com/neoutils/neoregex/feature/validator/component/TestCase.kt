@@ -86,17 +86,12 @@ fun List<TestCase>.toTestCaseUi(
     results: Map<Uuid, TestCaseValidation>,
     expanded: Uuid?
 ): List<TestCaseUi> = map { testCase ->
-
-    val validation = results[testCase.uuid]
-        ?.takeIf { it.testCase == testCase }
-        ?: TestCaseValidation(testCase)
-
     TestCaseUi(
         uuid = testCase.uuid,
         title = testCase.title,
         text = testCase.text,
         case = testCase.case.ui,
-        validation = validation,
+        validation = results[testCase.uuid] ?: TestCaseValidation(testCase),
         selected = expanded == testCase.uuid
     )
 }
