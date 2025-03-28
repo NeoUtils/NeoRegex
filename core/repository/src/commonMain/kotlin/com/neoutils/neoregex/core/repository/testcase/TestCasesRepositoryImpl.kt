@@ -27,7 +27,7 @@ import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
 internal class TestCasesRepositoryImpl : TestCasesRepository {
 
-    private val testCases = ObservableMutableMap(TestCase().toPair())
+    private val testCases = ObservableMutableMap<Uuid, TestCase>()
 
     override val flow = testCases.valuesFlow
 
@@ -67,10 +67,5 @@ internal class TestCasesRepositoryImpl : TestCasesRepository {
         }
     }
 
-    override fun clear() {
-        testCases.update {
-            clear()
-            put(TestCase())
-        }
-    }
+    override fun clear() = testCases.clear()
 }

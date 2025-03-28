@@ -31,8 +31,8 @@ import com.neoutils.neoregex.feature.validator.component.toTestCaseUi
 import com.neoutils.neoregex.feature.validator.model.TestCaseQueue
 import com.neoutils.neoregex.feature.validator.model.TestCaseValidation
 import com.neoutils.neoregex.feature.validator.model.TestPattern
-import com.neoutils.neoregex.feature.validator.usecase.ValidateUseCase
 import com.neoutils.neoregex.feature.validator.state.ValidatorUiState
+import com.neoutils.neoregex.feature.validator.usecase.ValidateUseCase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlin.uuid.ExperimentalUuidApi
@@ -50,7 +50,7 @@ class ValidatorViewModel(
     private val testCaseQueue: TestCaseQueue
 ) : ScreenModel {
 
-    private val expanded = MutableStateFlow(testCasesRepository.all.firstOrNull()?.uuid)
+    private val expanded = MutableStateFlow<Uuid?>(null)
     private val results = ObservableMutableMap<Uuid, TestCaseValidation>()
 
     private var validationJob = mutableMapOf<Uuid, Job>()
@@ -107,8 +107,18 @@ class ValidatorViewModel(
     )
 
     init {
+        initialTestCase()
         setupQueueExecution()
         setupPatternListener()
+    }
+
+    private fun initialTestCase() {
+        if (testCasesRepository.all.isEmpty()) {
+           TestCase().also { emptyTestCase ->
+               testCasesRepository.set(emptyTestCase)
+                expanded.value = emptyTestCase.uuid
+            }
+        }
     }
 
     private fun setupPatternListener() = screenModelScope.launch {
