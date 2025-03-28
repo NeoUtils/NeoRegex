@@ -18,12 +18,21 @@
 
 package com.neoutils.neoregex.core.sharedui.component
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 
 @Composable
 actual fun Controller(
     modifier: Modifier,
-) = CommonController(
+) = Row(
     modifier = modifier,
-)
+    horizontalArrangement = Arrangement.spacedBy(dimensions.tiny),
+    verticalAlignment = Alignment.CenterVertically
+) {
+    Menu()
+    Navigation()
+}
