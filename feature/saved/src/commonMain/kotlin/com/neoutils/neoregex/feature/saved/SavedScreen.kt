@@ -18,14 +18,18 @@
 
 package com.neoutils.neoregex.feature.saved
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.HoverInteraction
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.OpenInNew
+import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.*
@@ -35,6 +39,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -45,7 +52,6 @@ import com.neoutils.neoregex.core.common.util.Syntax
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
 import com.neoutils.neoregex.core.designsystem.theme.configButton
 import com.neoutils.neoregex.core.sharedui.component.PatternNameDialog
-import com.neoutils.neoregex.core.sharedui.component.SalvageAction
 import com.neoutils.neoregex.feature.saved.state.SavedUiState
 
 class SavedScreen : Screen {
@@ -81,7 +87,7 @@ class SavedScreen : Screen {
             items(uiState.patterns) { pattern ->
                 Pattern(
                     pattern = pattern,
-                    onClick = {
+                    onOpen = {
                         viewModel.open(pattern.id)
                     },
                     onDelete = {
@@ -120,73 +126,115 @@ class SavedScreen : Screen {
 }
 
 @Composable
-fun Pattern(
+private fun Pattern(
     pattern: SavedUiState.Pattern,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
+    onOpen: () -> Unit = {},
     onDelete: () -> Unit = {},
     onEdit: () -> Unit = {},
     syntax: Syntax.Regex = remember { Syntax.Regex() }
+) = Surface(
+    modifier = modifier,
+    shape = RoundedCornerShape(4.dp),
+    color = colorScheme.surfaceContainer,
+    contentColor = colorScheme.onSurface,
+    border = BorderStroke(
+        width = 1.dp,
+        color = colorScheme.outlineVariant
+    ),
 ) {
-    Surface(
-        modifier = modifier,
-        onClick = onClick,
-        shape = RoundedCornerShape(4.dp),
-        color = colorScheme.surfaceContainer,
-        contentColor = colorScheme.onSurface,
-        border = BorderStroke(
-            width = 1.dp,
-            color = colorScheme.outlineVariant
-        ),
-    ) {
-        Column {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+
+    val clipboardManager = LocalClipboardManager.current
+
+    Column {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(
+                space = 4.dp
+            ),
+            modifier = Modifier
+                .padding(4.dp)
+                .fillMaxWidth(),
+        ) {
+            Text(
+                text = pattern.title,
+                style = typography.titleSmall,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(start = 12.dp)
+            )
+
+            Icon(
+                imageVector = Icons.Outlined.Edit,
+                contentDescription = null,
                 modifier = Modifier
-                    .padding(4.dp)
-                    .fillMaxWidth(),
-            ) {
-                Text(
-                    text = pattern.title,
-                    style = typography.titleSmall,
-                    fontSize = 12.sp,
-                    modifier = Modifier.padding(start = 12.dp)
-                )
-
-                Spacer(Modifier.width(4.dp))
-
-                Icon(
-                    imageVector = Icons.Outlined.Edit,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .clickable(onClick = onEdit)
-                        .configButton(
-                            config = buttons.small
-                        )
-                )
-
-                Spacer(Modifier.weight(weight = 1f))
-
-                IconButton(
-                    onClick = onDelete,
-                    modifier = Modifier.size(24.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Delete,
-                        contentDescription = null,
-                        modifier = Modifier.padding(4.dp)
+                    .clip(CircleShape)
+                    .clickable(onClick = onEdit)
+                    .configButton(
+                        config = buttons.small
                     )
-                }
+            )
+
+            Spacer(Modifier.weight(weight = 1f))
+
+            IconButton(
+                onClick = onOpen,
+                modifier = Modifier.size(24.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
+                    contentDescription = null,
+                    modifier = Modifier.padding(4.2.dp)
+                )
             }
 
-            HorizontalDivider()
+            IconButton(
+                onClick = onDelete,
+                modifier = Modifier.size(24.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Delete,
+                    contentDescription = null,
+                    modifier = Modifier.padding(4.dp)
+                )
+            }
+        }
 
+        HorizontalDivider()
+
+        val interactionSource = remember { MutableInteractionSource() }
+        val interaction by interactionSource.interactions.collectAsState(initial = null)
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { clipboardManager.setText(AnnotatedString(pattern.text)) }
+                .hoverable(interactionSource)
+        ) {
             Text(
                 text = syntax.highlight.rememberAnnotatedString(pattern.text),
                 style = typography.bodyLarge,
-                modifier = Modifier.padding(16.dp)
+                overflow = TextOverflow.Visible,
+                maxLines = 1,
+                modifier = Modifier
+                    .horizontalScroll(rememberScrollState())
+                    .padding(16.dp)
             )
+
+            when (interaction) {
+                is HoverInteraction.Enter,
+                is PressInteraction.Press,
+                is PressInteraction.Release -> {
+                    Icon(
+                        imageVector = Icons.Outlined.ContentCopy,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(16.dp)
+                            .size(20.dp)
+                    )
+                }
+            }
         }
     }
 }
+
