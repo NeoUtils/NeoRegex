@@ -16,15 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:OptIn(ExperimentalUuidApi::class)
-
 package com.neoutils.neoregex.feature.validator.state
 
-import com.neoutils.neoregex.feature.validator.model.TestPattern
 import com.neoutils.neoregex.core.common.model.HistoryState
 import com.neoutils.neoregex.core.common.model.TextState
 import com.neoutils.neoregex.feature.validator.component.TestCaseUi
-import kotlin.uuid.ExperimentalUuidApi
+import com.neoutils.neoregex.feature.validator.model.TestPattern
 
 data class ValidatorUiState(
     val testCases: List<TestCaseUi>,

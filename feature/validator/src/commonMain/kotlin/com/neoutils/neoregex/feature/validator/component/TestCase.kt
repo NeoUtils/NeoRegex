@@ -86,12 +86,19 @@ fun List<TestCase>.toTestCaseUi(
     results: Map<Uuid, TestCaseValidation>,
     expanded: Uuid?
 ): List<TestCaseUi> = map { testCase ->
+
+    val validation = results[testCase.uuid] ?: TestCaseValidation(testCase)
+
     TestCaseUi(
         uuid = testCase.uuid,
         title = testCase.title,
         text = testCase.text,
         case = testCase.case.ui,
-        validation = results[testCase.uuid] ?: TestCaseValidation(testCase),
+        validation = validation.copy(
+            matches = validation.matches.filter {
+                it.range.last < testCase.text.length
+            }
+        ),
         selected = expanded == testCase.uuid
     )
 }
