@@ -40,11 +40,9 @@ internal class PatternsRepositoryImpl(
     }
 
     override suspend fun save(pattern: Pattern): Pattern {
-        val savedPattern = patternsDataSource.save(pattern)
-
-        uuid.value = Uuid.random()
-
-        return savedPattern
+        return patternsDataSource.save(pattern).also {
+            uuid.value = Uuid.random()
+        }
     }
 
     override suspend fun get(id: Long) = patternsDataSource.get(id)
@@ -53,6 +51,8 @@ internal class PatternsRepositoryImpl(
         id: Long,
         block: (Pattern) -> Pattern
     ): Pattern {
-        return patternsDataSource.update(id, block)
+        return patternsDataSource.update(id, block).also {
+            uuid.value = Uuid.random()
+        }
     }
 }

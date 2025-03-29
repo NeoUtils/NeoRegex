@@ -20,14 +20,12 @@ package com.neoutils.neoregex.feature.saved
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.neoutils.neoregex.core.datasource.PatternsDataSource
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.core.repository.patterns.PatternsRepository
 import com.neoutils.neoregex.feature.saved.state.SavedUiState
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -42,7 +40,7 @@ class SavedViewModel(
         SavedUiState(
             patterns = it.map { pattern ->
                 SavedUiState.Pattern(
-                    name = pattern.title,
+                    title = pattern.title,
                     text = pattern.text,
                     id = checkNotNull(pattern.id)
                 )
@@ -61,5 +59,13 @@ class SavedViewModel(
 
     fun delete(id: Long) = screenModelScope.launch {
         salvageManager.delete(id)
+    }
+
+    fun changeTitle(id: Long, title: String) = screenModelScope.launch {
+        patternsRepository.update(id) {
+            it.copy(
+                title = title
+            )
+        }
     }
 }

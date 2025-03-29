@@ -23,7 +23,7 @@ data class SavedUiState(
 ) {
     data class Pattern(
         val id: Long,
-        val name: String,
+        val title: String,
         val text: String
     )
 }
