@@ -61,7 +61,11 @@ internal class PatternStateRepositoryImpl(
     }
 
     override fun update(input: TextState) {
-        text.value = input
+        text.value = input.copy(
+            value = input.value.substringBefore(
+                delimiter = "\n"
+            )
+        )
     }
 
     override fun undo() {
