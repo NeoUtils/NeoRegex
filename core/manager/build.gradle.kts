@@ -1,6 +1,3 @@
-import extension.config
-import extension.module
-
 /*
  * NeoRegex.
  *
@@ -18,6 +15,9 @@ import extension.module
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+import extension.config
+import extension.module
 
 plugins {
     alias(libs.plugins.neoutils.neoregex.core)
