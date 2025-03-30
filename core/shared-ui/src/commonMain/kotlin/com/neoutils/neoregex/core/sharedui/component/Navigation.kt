@@ -19,20 +19,26 @@
 package com.neoutils.neoregex.core.sharedui.component
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material3.*
+import androidx.compose.material.icons.rounded.KeyboardArrowDown
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import kotlinx.coroutines.launch
@@ -68,15 +74,16 @@ fun Navigation(
 
     Row(
         modifier = Modifier
-            .clip(RoundedCornerShape(NeoTheme.dimensions.tiny))
-            .clickable(canSelectScreen) { expanded.value = true }
-            .padding(NeoTheme.dimensions.tiny),
+            .clip(RoundedCornerShape(dimensions.tiny))
+            .clickable(canSelectScreen) { expanded.value = true },
         verticalAlignment = Alignment.CenterVertically,
     ) {
-
         Text(
             text = stringResource(current.title),
-            style = mergedTextStyle
+            style = mergedTextStyle,
+            modifier = Modifier
+                .padding(vertical = dimensions.tiny)
+                .padding(start = dimensions.tiny)
         )
 
         AnimatedVisibility(
@@ -84,9 +91,10 @@ fun Navigation(
             enter = fadeIn() + slideInHorizontally(),
             exit = fadeOut() + slideOutHorizontally(),
         ) {
-            Icon(
-                imageVector = Icons.Outlined.KeyboardArrowDown,
-                modifier = Modifier.size(18.dp),
+            Image(
+                imageVector = Icons.Rounded.KeyboardArrowDown,
+                colorFilter = ColorFilter.tint(colorScheme.onSurface),
+                modifier = Modifier.size(24.dp),
                 contentDescription = null
             )
         }
