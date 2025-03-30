@@ -239,8 +239,17 @@ class ValidatorViewModel(
     fun onAction(action: ValidatorAction) {
         when (action) {
             is ValidatorAction.AddTestCase -> {
-                testCasesRepository.set(action.newTestCase)
-                expanded.value = action.newTestCase.uuid
+
+                val newTestCase = TestCase(
+                    case = if (testCasesRepository.all.isEmpty()) {
+                        TestCase.Case.MATCH_ANY
+                    } else {
+                        testCasesRepository.all.last().case
+                    }
+                )
+
+                testCasesRepository.set(newTestCase)
+                expanded.value = newTestCase.uuid
             }
         }
     }

@@ -97,9 +97,7 @@ class ValidatorScreen : Screen {
                         colorScheme.outlineVariant
                     ),
                     onClick = {
-                        viewModel.onAction(
-                            ValidatorAction.AddTestCase()
-                        )
+                        viewModel.onAction(ValidatorAction.AddTestCase)
                     }
                 ) {
                     Text(
