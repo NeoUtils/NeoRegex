@@ -81,7 +81,9 @@ class ValidatorViewModel(
         .stateIn(
             scope = screenModelScope,
             started = SharingStarted.WhileSubscribed(),
-            initialValue = TestPattern(patternStateRepository.pattern.text.value)
+            initialValue = TestPattern(
+                patternStateRepository.pattern.text.value
+            )
         )
 
     val uiState = combine(
@@ -110,6 +112,29 @@ class ValidatorViewModel(
         initialTestCase()
         setupQueueExecution()
         setupPatternListener()
+        setupTestCasesListener()
+    }
+
+    private fun setupTestCasesListener() = screenModelScope.launch {
+        testCasesRepository.flow.collectLatest { testCases ->
+            testCases.forEach { testCase ->
+                val validation = results[testCase.uuid]
+
+                when {
+                    validation == null -> {
+                        addToQueue(testCase)
+                    }
+
+                    validation.testCase.text != testCase.text -> {
+                        addToQueue(testCase, withDelay = true)
+                    }
+
+                    validation.testCase.case != testCase.case -> {
+                        addToQueue(testCase, withDelay = true)
+                    }
+                }
+            }
+        }
     }
 
     private fun initialTestCase() {
@@ -223,47 +248,27 @@ class ValidatorViewModel(
     fun onAction(action: TestCaseAction) {
         when (action) {
             is TestCaseAction.ChangeCase -> {
-
-                val oldTestCase = testCasesRepository.get(action.uuid)
-
-                val newTestCase = testCasesRepository
-                    .update(action.uuid) {
-                        it.copy(
-                            case = action.case
-                        )
-                    }
-
-                if (oldTestCase != newTestCase) {
-                    addToQueue(newTestCase)
+                testCasesRepository.update(action.uuid) {
+                    it.copy(
+                        case = action.case
+                    )
                 }
             }
 
             is TestCaseAction.ChangeText -> {
-
-                val oldTestCase = testCasesRepository.get(action.uuid)
-
-                val newTestCase = testCasesRepository
-                    .update(action.uuid) {
-                        it.copy(
-                            text = action.text
-                        )
-                    }
-
-                if (oldTestCase != newTestCase) {
-                    addToQueue(
-                        newTestCase,
-                        withDelay = true
+                testCasesRepository.update(action.uuid) {
+                    it.copy(
+                        text = action.text
                     )
                 }
             }
 
             is TestCaseAction.ChangeTitle -> {
-                testCasesRepository
-                    .update(action.uuid) {
-                        it.copy(
-                            title = action.title
-                        )
-                    }
+                testCasesRepository.update(action.uuid) {
+                    it.copy(
+                        title = action.title
+                    )
+                }
             }
 
             is TestCaseAction.Collapse -> {

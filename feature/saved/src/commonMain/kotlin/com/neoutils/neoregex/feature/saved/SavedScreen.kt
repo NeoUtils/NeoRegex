@@ -57,46 +57,43 @@ import com.neoutils.neoregex.feature.saved.state.SavedUiState
 class SavedScreen : Screen {
 
     @Composable
-    override fun Content() {
-
+    override fun Content() = Box(
+        modifier = Modifier
+            .background(colorScheme.background)
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
         val viewModel = koinScreenModel<SavedViewModel>()
 
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        if (uiState.patterns.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "nothing saved yet")
-            }
-
-            return
-        }
-
         var showChangeTitle by remember { mutableStateOf<SavedUiState.Pattern?>(null) }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(
-                space = 16.dp,
-            ),
-            contentPadding = PaddingValues(16.dp)
-        ) {
-            items(uiState.patterns) { pattern ->
-                Pattern(
-                    pattern = pattern,
-                    onOpen = {
-                        viewModel.open(pattern.id)
-                    },
-                    onDelete = {
-                        viewModel.delete(pattern.id)
-                    },
-                    onEdit = {
-                        showChangeTitle = pattern
-                    }
-                )
+        if (uiState.patterns.isEmpty()) {
+            Text(text = "nothing saved yet")
+        } else {
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(
+                    space = 16.dp,
+                ),
+                contentPadding = PaddingValues(16.dp)
+            ) {
+                items(uiState.patterns) { pattern ->
+                    Pattern(
+                        pattern = pattern,
+                        onOpen = {
+                            viewModel.open(pattern.id)
+                        },
+                        onDelete = {
+                            viewModel.delete(pattern.id)
+                        },
+                        onEdit = {
+                            showChangeTitle = pattern
+                        }
+                    )
+                }
             }
         }
 
