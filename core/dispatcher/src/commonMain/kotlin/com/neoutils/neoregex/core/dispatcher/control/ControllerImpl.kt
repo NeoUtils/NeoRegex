@@ -21,11 +21,12 @@ package com.neoutils.neoregex.core.dispatcher.control
 import com.neoutils.neoregex.core.dispatcher.event.Command
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 
 internal class ControllerImpl : Controller {
 
     private val _event = Channel<Command>(Channel.UNLIMITED)
-    override val event = _event.consumeAsFlow()
+    override val event = _event.receiveAsFlow()
 
     override suspend fun dispatcher(event: Command) {
         _event.send(event)
