@@ -43,9 +43,6 @@ kotlin {
 
             // about libraries
             implementation(libs.aboutlibraries.compose)
-
-            // highlight
-            implementation(libs.highlight.compose)
         }
     }
 }

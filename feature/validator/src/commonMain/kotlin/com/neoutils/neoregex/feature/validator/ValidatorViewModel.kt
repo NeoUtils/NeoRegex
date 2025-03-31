@@ -22,7 +22,7 @@ import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
 import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.util.ObservableMutableMap
-import com.neoutils.neoregex.core.repository.pattern.PatternRepository
+import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
 import com.neoutils.neoregex.core.sharedui.component.FooterAction
 import com.neoutils.neoregex.feature.validator.action.ValidatorAction
@@ -31,8 +31,8 @@ import com.neoutils.neoregex.feature.validator.component.toTestCaseUi
 import com.neoutils.neoregex.feature.validator.model.TestCaseQueue
 import com.neoutils.neoregex.feature.validator.model.TestCaseValidation
 import com.neoutils.neoregex.feature.validator.model.TestPattern
-import com.neoutils.neoregex.feature.validator.usecase.ValidateUseCase
 import com.neoutils.neoregex.feature.validator.state.ValidatorUiState
+import com.neoutils.neoregex.feature.validator.usecase.ValidateUseCase
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import kotlin.uuid.ExperimentalUuidApi
@@ -44,13 +44,13 @@ import kotlin.uuid.Uuid
     FlowPreview::class
 )
 class ValidatorViewModel(
-    private val patternRepository: PatternRepository,
+    private val patternStateRepository: PatternStateRepository,
     private val testCasesRepository: TestCasesRepository,
     private val validateUserCase: ValidateUseCase,
     private val testCaseQueue: TestCaseQueue
 ) : ScreenModel {
 
-    private val expanded = MutableStateFlow(testCasesRepository.all.firstOrNull()?.uuid)
+    private val expanded = MutableStateFlow<Uuid?>(null)
     private val results = ObservableMutableMap<Uuid, TestCaseValidation>()
 
     private var validationJob = mutableMapOf<Uuid, Job>()
@@ -74,27 +74,28 @@ class ValidatorViewModel(
         )
     )
 
-    private val testPattern = patternRepository.flow
+    private val testPattern = patternStateRepository.flow
         .debounce(DELAY_TYPING)
         .distinctUntilChangedBy { it.text }
-        .mapLatest { TestPattern(it.text) }
+        .mapLatest { TestPattern(it.text.value) }
         .stateIn(
             scope = screenModelScope,
             started = SharingStarted.WhileSubscribed(),
-            initialValue = TestPattern(patternRepository.flow.value.text)
+            initialValue = TestPattern(
+                patternStateRepository.pattern.text.value
+            )
         )
 
     val uiState = combine(
-        patternRepository.historyFlow,
-        patternRepository.flow,
+        patternStateRepository.flow,
         testCasesUi,
         testPattern,
-    ) { history, pattern, testCases, testPattern ->
+    ) { pattern, testCases, testPattern ->
         ValidatorUiState(
             testCases = testCases,
             testPattern = testPattern,
-            pattern = pattern,
-            history = history,
+            pattern = pattern.text,
+            history = pattern.history,
         )
     }.stateIn(
         scope = screenModelScope,
@@ -102,14 +103,47 @@ class ValidatorViewModel(
         initialValue = ValidatorUiState(
             testCases = testCasesUi.value,
             testPattern = testPattern.value,
-            pattern = patternRepository.flow.value,
-            history = patternRepository.historyFlow.value,
+            pattern = patternStateRepository.pattern.text,
+            history = patternStateRepository.pattern.history,
         )
     )
 
     init {
+        initialTestCase()
         setupQueueExecution()
         setupPatternListener()
+        setupTestCasesListener()
+    }
+
+    private fun setupTestCasesListener() = screenModelScope.launch {
+        testCasesRepository.flow.collectLatest { testCases ->
+            testCases.forEach { testCase ->
+                val validation = results[testCase.uuid]
+
+                when {
+                    validation == null -> {
+                        addToQueue(testCase)
+                    }
+
+                    validation.testCase.text != testCase.text -> {
+                        addToQueue(testCase, withDelay = true)
+                    }
+
+                    validation.testCase.case != testCase.case -> {
+                        addToQueue(testCase)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initialTestCase() {
+        if (testCasesRepository.all.isEmpty()) {
+            TestCase().also { emptyTestCase ->
+                testCasesRepository.set(emptyTestCase)
+                expanded.value = emptyTestCase.uuid
+            }
+        }
     }
 
     private fun setupPatternListener() = screenModelScope.launch {
@@ -205,8 +239,17 @@ class ValidatorViewModel(
     fun onAction(action: ValidatorAction) {
         when (action) {
             is ValidatorAction.AddTestCase -> {
-                testCasesRepository.set(action.newTestCase)
-                expanded.value = action.newTestCase.uuid
+
+                val newTestCase = TestCase(
+                    case = if (testCasesRepository.all.isEmpty()) {
+                        TestCase.Case.MATCH_ANY
+                    } else {
+                        testCasesRepository.all.last().case
+                    }
+                )
+
+                testCasesRepository.set(newTestCase)
+                expanded.value = newTestCase.uuid
             }
         }
     }
@@ -214,47 +257,27 @@ class ValidatorViewModel(
     fun onAction(action: TestCaseAction) {
         when (action) {
             is TestCaseAction.ChangeCase -> {
-
-                val oldTestCase = testCasesRepository.get(action.uuid)
-
-                val newTestCase = testCasesRepository
-                    .update(action.uuid) {
-                        it.copy(
-                            case = action.case
-                        )
-                    }
-
-                if (oldTestCase != newTestCase) {
-                    addToQueue(newTestCase)
+                testCasesRepository.update(action.uuid) {
+                    it.copy(
+                        case = action.case
+                    )
                 }
             }
 
             is TestCaseAction.ChangeText -> {
-
-                val oldTestCase = testCasesRepository.get(action.uuid)
-
-                val newTestCase = testCasesRepository
-                    .update(action.uuid) {
-                        it.copy(
-                            text = action.text
-                        )
-                    }
-
-                if (oldTestCase != newTestCase) {
-                    addToQueue(
-                        newTestCase,
-                        withDelay = true
+                testCasesRepository.update(action.uuid) {
+                    it.copy(
+                        text = action.text
                     )
                 }
             }
 
             is TestCaseAction.ChangeTitle -> {
-                testCasesRepository
-                    .update(action.uuid) {
-                        it.copy(
-                            title = action.title
-                        )
-                    }
+                testCasesRepository.update(action.uuid) {
+                    it.copy(
+                        title = action.title
+                    )
+                }
             }
 
             is TestCaseAction.Collapse -> {
@@ -286,15 +309,15 @@ class ValidatorViewModel(
     fun onAction(action: FooterAction) {
         when (action) {
             is FooterAction.History.Redo -> {
-                patternRepository.redo()
+                patternStateRepository.redo()
             }
 
             is FooterAction.History.Undo -> {
-                patternRepository.undo()
+                patternStateRepository.undo()
             }
 
             is FooterAction.UpdateRegex -> {
-                patternRepository.update(action.text)
+                patternStateRepository.update(action.text)
             }
         }
     }

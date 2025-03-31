@@ -52,7 +52,7 @@ import com.neoutils.neoregex.core.common.extension.toText
 import com.neoutils.neoregex.core.common.extension.toTextFieldValue
 import com.neoutils.neoregex.core.common.model.DrawMatch
 import com.neoutils.neoregex.core.common.model.Match
-import com.neoutils.neoregex.core.common.model.Text
+import com.neoutils.neoregex.core.common.model.TextState
 import com.neoutils.neoregex.core.common.util.InteractionMode
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.sharedui.extension.toText
@@ -61,8 +61,8 @@ import com.neoutils.neoregex.core.sharedui.extension.tooltip
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 actual fun TextEditor(
-    value: Text,
-    onValueChange: (Text) -> Unit,
+    value: TextState,
+    onValueChange: (TextState) -> Unit,
     modifier: Modifier,
     onFocusChange: (FocusState) -> Unit,
     matches: List<Match>,

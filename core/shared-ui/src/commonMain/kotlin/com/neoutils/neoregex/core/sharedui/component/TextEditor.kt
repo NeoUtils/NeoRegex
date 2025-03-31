@@ -26,12 +26,12 @@ import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import com.neoutils.neoregex.core.common.model.Match
-import com.neoutils.neoregex.core.common.model.Text
+import com.neoutils.neoregex.core.common.model.TextState
 
 @Composable
 expect fun TextEditor(
-    value: Text,
-    onValueChange: (Text) -> Unit,
+    value: TextState,
+    onValueChange: (TextState) -> Unit,
     modifier: Modifier = Modifier,
     onFocusChange: (FocusState) -> Unit = {},
     matches: List<Match> = listOf(),

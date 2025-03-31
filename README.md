@@ -9,7 +9,7 @@ Create and validate regular expressions easily, anywhere.
 </p>
 
 <p align="center">
-    <img src="images/desktop/linux_dark.png" alt="NeoRegex desktop app"/>
+    <img src="images/desktop/linux_matcher_dark.png" alt="NeoRegex desktop app"/>
 </p>
 
 <p align="center">
@@ -50,6 +50,7 @@ NeoRegex relies on several open-source projects to deliver robust, cross-platfor
 - [**Highlight**](https://github.com/NeoUtils/Highlight): Provides syntax highlighting, making patterns more readable and visually clear.
 - [**Multiplatform Settings**](https://github.com/russhwolf/multiplatform-settings): Simplifies configuration and preference management across different platforms.
 - [**dbus-java**](https://github.com/hypfvieh/dbus-java): Enables D-Bus integration on Linux, offering essential interprocess communication features.
+- [**SQLDelight**](https://github.com/sqldelight/sqldelight): A Kotlin multiplatform SQL library that generates type-safe database code, making it easier to work with structured data efficiently.
 
 ## License
 

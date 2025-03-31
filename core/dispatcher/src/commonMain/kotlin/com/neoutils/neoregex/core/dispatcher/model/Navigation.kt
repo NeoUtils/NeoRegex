@@ -50,5 +50,9 @@ sealed class Navigation {
         data object Validator : Screen() {
             override val title = Res.string.screen_validator
         }
+
+        data object Saved : Screen() {
+            override val title = Res.string.screen_saved
+        }
     }
 }

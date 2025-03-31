@@ -35,6 +35,7 @@ kotlin {
             implementation(projects.core.resources)
             implementation(projects.core.datasource)
             implementation(projects.core.dispatcher)
+            implementation(projects.core.manager)
 
             // NeoUtils
             implementation(libs.highlight.compose)

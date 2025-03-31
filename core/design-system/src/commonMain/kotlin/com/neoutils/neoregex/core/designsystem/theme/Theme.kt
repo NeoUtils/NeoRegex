@@ -97,6 +97,7 @@ fun NeoTheme(
 @Composable
 fun NeoBaseTheme(
     colorScheme: ColorScheme,
+    buttons: Buttons = Buttons.Default,
     fontSizes: FontSizes = FontSizes(),
     dimensions: Dimensions = Dimensions(),
     typography: Typography = NeoTypography(),
@@ -109,6 +110,7 @@ fun NeoBaseTheme(
         CompositionLocalProvider(
             LocalFontSizes provides fontSizes,
             LocalDimensions provides dimensions,
+            LocalButtons provides buttons,
             content = content
         )
     }
@@ -140,4 +142,9 @@ object NeoTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalFontSizes.current
+
+    val buttons: Buttons
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalButtons.current
 }

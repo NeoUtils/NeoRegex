@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
-import com.neoutils.neoregex.core.common.model.Target
+import com.neoutils.neoregex.core.common.model.Field
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.designsystem.component.ErrorTooltip
 import com.neoutils.neoregex.core.sharedui.component.Footer
@@ -44,8 +44,13 @@ import com.neoutils.neoregex.core.sharedui.component.Performance
 import com.neoutils.neoregex.core.sharedui.component.TextEditor
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class MatcherScreen : Screen {
+
+    override val key = Uuid.random().toString()
 
     @Composable
     override fun Content() = Column(
@@ -70,7 +75,7 @@ class MatcherScreen : Screen {
                 onFocusChange = {
                     if (it.isFocused) {
                         viewModel.onAction(
-                            MatcherAction.TargetChange(Target.TEXT)
+                            MatcherAction.TargetChange(Field.TEXT)
                         )
                     }
                 },
@@ -88,14 +93,14 @@ class MatcherScreen : Screen {
                     when (Command.from(it)) {
                         Command.UNDO -> {
                             viewModel.onAction(
-                                MatcherAction.History.Undo(Target.TEXT)
+                                MatcherAction.History.Undo(Field.TEXT)
                             )
                             true
                         }
 
                         Command.REDO -> {
                             viewModel.onAction(
-                                MatcherAction.History.Redo(Target.TEXT)
+                                MatcherAction.History.Redo(Field.TEXT)
                             )
                             true
                         }
@@ -129,7 +134,7 @@ class MatcherScreen : Screen {
             onFocus = {
                 if (it.isFocused) {
                     viewModel.onAction(
-                        MatcherAction.TargetChange(Target.REGEX)
+                        MatcherAction.TargetChange(Field.REGEX)
                     )
                 }
             },

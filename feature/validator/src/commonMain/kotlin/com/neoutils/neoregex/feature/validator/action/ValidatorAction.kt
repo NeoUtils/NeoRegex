@@ -18,13 +18,6 @@
 
 package com.neoutils.neoregex.feature.validator.action
 
-import com.neoutils.neoregex.core.common.model.TestCase
-import kotlin.uuid.ExperimentalUuidApi
-
-@OptIn(ExperimentalUuidApi::class)
 sealed class ValidatorAction {
-
-    data class AddTestCase(
-        val newTestCase: TestCase = TestCase()
-    ) : ValidatorAction()
+    data object AddTestCase : ValidatorAction()
 }

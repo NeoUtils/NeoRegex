@@ -42,17 +42,22 @@ kotlin {
             implementation(projects.core.common)
             implementation(projects.core.sharedUi)
             implementation(projects.core.datasource)
+            implementation(projects.core.database)
             implementation(projects.core.dispatcher)
             implementation(projects.core.repository)
+            implementation(projects.core.manager)
 
             // feature
             implementation(projects.feature.matcher)
             implementation(projects.feature.about)
             implementation(projects.feature.validator)
+            implementation(projects.feature.saved)
 
             // voyager
             implementation(catalog.voyager.navigator)
             implementation(catalog.voyager.transitions)
+            implementation(catalog.voyager.screenModel)
+            implementation(catalog.voyager.koin)
 
             // lifecycle
             implementation(catalog.androidx.multplatform.lifecycle.runtime.compose)

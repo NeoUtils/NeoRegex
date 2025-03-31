@@ -19,9 +19,9 @@
 package com.neoutils.neoregex.core.common.extension
 
 import androidx.compose.ui.text.input.TextFieldValue
-import com.neoutils.neoregex.core.common.model.Text
+import com.neoutils.neoregex.core.common.model.TextState
 
-fun TextFieldValue.toText() = Text(
-    text = text,
+fun TextFieldValue.toText() = TextState(
+    value = text,
     selection = selection
 )

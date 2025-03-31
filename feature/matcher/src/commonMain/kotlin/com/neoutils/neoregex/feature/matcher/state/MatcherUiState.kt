@@ -18,14 +18,14 @@
 
 package com.neoutils.neoregex.feature.matcher.state
 
-import com.neoutils.neoregex.core.common.model.History
+import com.neoutils.neoregex.core.common.model.HistoryState
 import com.neoutils.neoregex.core.common.model.Inputs
 import com.neoutils.neoregex.core.sharedui.component.Performance
 import com.neoutils.neoregex.core.common.model.Match
 
 data class MatcherUiState(
     val inputs: Inputs = Inputs(),
-    val history: History = History(),
+    val history: HistoryState = HistoryState(),
     val result: Result = Result.Success(),
     val performance: Performance = Performance()
 ) {

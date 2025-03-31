@@ -28,8 +28,6 @@ data class TestCase(
     val case: Case = Case.MATCH_ANY,
     val uuid: Uuid = Uuid.random(),
 ) {
-    fun toPair() = uuid to this
-
     enum class Case {
         MATCH_ANY,
         MATCH_FULL,

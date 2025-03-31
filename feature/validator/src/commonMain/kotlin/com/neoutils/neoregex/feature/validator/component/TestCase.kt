@@ -86,12 +86,19 @@ fun List<TestCase>.toTestCaseUi(
     results: Map<Uuid, TestCaseValidation>,
     expanded: Uuid?
 ): List<TestCaseUi> = map { testCase ->
+
+    val validation = results[testCase.uuid] ?: TestCaseValidation(testCase)
+
     TestCaseUi(
         uuid = testCase.uuid,
         title = testCase.title,
         text = testCase.text,
         case = testCase.case.ui,
-        validation = results[testCase.uuid] ?: TestCaseValidation(testCase),
+        validation = validation.copy(
+            matches = validation.matches.filter {
+                it.range.last < testCase.text.length
+            }
+        ),
         selected = expanded == testCase.uuid
     )
 }
@@ -203,7 +210,20 @@ fun TestCase(
                         },
                         contentPadding = PaddingValues(0.dp),
                         textStyle = typography.labelMedium,
-                        hint = stringResource(Res.string.test_case_untitled),
+                        hint = {
+                            Text(
+                                text = stringResource(Res.string.test_case_untitled),
+                                style = LocalTextStyle.current.let {
+                                    it.copy(
+                                        color = it.color.copy(
+                                            alpha = 0.5f
+                                        )
+                                    )
+                                },
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1
+                            )
+                        },
                         singleLine = true,
                         modifier = Modifier
                             .padding(start = 8.dp)
@@ -279,7 +299,20 @@ fun TestCase(
                         textStyle = mergedTextStyle,
                         matches = test.validation.matches,
                         matchColor = matchColor,
-                        hint = hint
+                        hint = {
+                            Text(
+                                text = hint,
+                                style = LocalTextStyle.current.let {
+                                    it.copy(
+                                        color = it.color.copy(
+                                            alpha = 0.5f
+                                        )
+                                    )
+                                },
+                                overflow = TextOverflow.Ellipsis,
+                                maxLines = 1
+                            )
+                        },
                     )
                 } else {
 

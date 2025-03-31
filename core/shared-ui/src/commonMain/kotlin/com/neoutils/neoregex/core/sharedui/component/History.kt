@@ -32,7 +32,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.neoutils.neoregex.core.common.model.History
+import com.neoutils.neoregex.core.common.model.HistoryState
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.ic_redo_24
@@ -42,7 +42,7 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun History(
-    history: History,
+    history: HistoryState,
     onAction: (FooterAction.History) -> Unit,
     modifier: Modifier = Modifier,
     shape: CornerBasedShape = RoundedCornerShape(dimensions.small)

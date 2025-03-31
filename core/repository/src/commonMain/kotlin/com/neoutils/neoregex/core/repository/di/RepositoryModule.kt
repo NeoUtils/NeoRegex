@@ -18,14 +18,18 @@
 
 package com.neoutils.neoregex.core.repository.di
 
-import com.neoutils.neoregex.core.repository.pattern.PatternRepository
-import com.neoutils.neoregex.core.repository.pattern.PatternRepositoryImpl
+import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
+import com.neoutils.neoregex.core.repository.pattern.PatternStateRepositoryImpl
+import com.neoutils.neoregex.core.repository.patterns.PatternsRepository
+import com.neoutils.neoregex.core.repository.patterns.PatternsRepositoryImpl
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepositoryImpl
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val repositoryModule = module {
-    single { PatternRepositoryImpl() } bind PatternRepository::class
+    single { PatternStateRepositoryImpl() } bind PatternStateRepository::class
     single { TestCasesRepositoryImpl() } bind TestCasesRepository::class
+    singleOf(::PatternsRepositoryImpl) bind PatternsRepository::class
 }

@@ -46,9 +46,6 @@ kotlin {
 
             // NeoUtils
             implementation(libs.highlight.compose)
-
-            // kotlinx
-            implementation(libs.kotlinx.datetime)
         }
     }
 }

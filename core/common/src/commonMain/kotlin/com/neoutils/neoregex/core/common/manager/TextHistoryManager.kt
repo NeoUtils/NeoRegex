@@ -18,8 +18,8 @@
 
 package com.neoutils.neoregex.core.common.manager
 
-import com.neoutils.neoregex.core.common.model.History
-import com.neoutils.neoregex.core.common.model.Text
+import com.neoutils.neoregex.core.common.model.HistoryState
+import com.neoutils.neoregex.core.common.model.TextState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -28,14 +28,14 @@ class TextHistoryManager {
     private var undoStack: Entry? = null
     private var redoStack: Entry? = null
 
-    private val _flow = MutableStateFlow(History())
+    private val _flow = MutableStateFlow(HistoryState())
     val flow = _flow.asStateFlow()
 
-    fun push(value: Text) {
+    fun push(value: TextState) {
 
         if (shouldPush(value)) {
 
-            undoStack = Entry(value.copy(registered = true), undoStack)
+            undoStack = Entry(value, undoStack)
             redoStack = null
 
             update()
@@ -44,21 +44,21 @@ class TextHistoryManager {
 
         if (shouldUpdateLast(value)) {
 
-            undoStack?.value = value.copy(registered = true)
+            undoStack?.value = value
 
             update()
         }
     }
 
-    private fun shouldPush(value: Text): Boolean {
-        return undoStack?.value?.text != value.text
+    private fun shouldPush(value: TextState): Boolean {
+        return undoStack?.value?.value != value.value
     }
 
-    private fun shouldUpdateLast(value: Text): Boolean {
+    private fun shouldUpdateLast(value: TextState): Boolean {
         return redoStack == null && value != undoStack?.value
     }
 
-    fun undo(): Text? {
+    fun undo(): TextState? {
         val entry = undoStack ?: return null
 
         undoStack = entry.next ?: return null
@@ -69,7 +69,7 @@ class TextHistoryManager {
         return undoStack?.value
     }
 
-    fun redo(): Text? {
+    fun redo(): TextState? {
         val entry = redoStack ?: return null
 
         redoStack = entry.next
@@ -81,14 +81,21 @@ class TextHistoryManager {
     }
 
     private fun update() {
-        _flow.value = History(
+        _flow.value = HistoryState(
             canUndo = undoStack?.next != null,
             canRedo = redoStack != null,
         )
     }
 
+    fun clear() {
+        redoStack = null
+        undoStack = null
+
+        update()
+    }
+
     data class Entry(
-        var value: Text,
+        var value: TextState,
         val next: Entry? = null
     )
 }
