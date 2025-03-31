@@ -23,7 +23,13 @@
 
     <categories>
         <category>Utility</category>
+        <category>Development</category>
     </categories>
+
+    <keywords>
+        <keyword>regex</keyword>
+        <keyword>regular expressions</keyword>
+    </keywords>
 
     <branding>
         <color type="primary" scheme_preference="light">#ffffff</color>
@@ -104,6 +110,7 @@
 
     <developer id="com.neoutils">
         <name>NeoUtils</name>
+        <url>https://github.com/NeoUtils</url>
     </developer>
 
     <content_rating type="oars-1.1"/>
