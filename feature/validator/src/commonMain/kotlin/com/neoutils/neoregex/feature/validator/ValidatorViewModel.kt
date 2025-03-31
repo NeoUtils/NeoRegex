@@ -130,7 +130,7 @@ class ValidatorViewModel(
                     }
 
                     validation.testCase.case != testCase.case -> {
-                        addToQueue(testCase, withDelay = true)
+                        addToQueue(testCase)
                     }
                 }
             }
