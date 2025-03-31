@@ -33,6 +33,8 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -42,11 +44,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.designsystem.theme.configButton
 import com.neoutils.neoregex.core.dispatcher.control.Controller
 import com.neoutils.neoregex.core.dispatcher.event.Command
+import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
 
 @Composable
 fun Menu(
@@ -192,6 +194,18 @@ fun Menu(
                 coroutine.launch {
                     control.dispatcher(Command.Save(it))
                 }
+            },
+            confirmLabel = {
+                Text(text = "Save")
+            },
+            title = {
+                Text(
+                    text = "Save pattern",
+                    color = colorScheme.onSurfaceVariant,
+                    style = typography.titleSmall.copy(
+                        fontFamily = null,
+                    )
+                )
             }
         )
     }

@@ -41,7 +41,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,6 +56,7 @@ import com.neoutils.highlight.compose.remember.rememberAnnotatedString
 import com.neoutils.neoregex.core.common.util.Syntax
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
 import com.neoutils.neoregex.core.designsystem.theme.configButton
+import com.neoutils.neoregex.core.sharedui.component.NeoRegexDialog
 import com.neoutils.neoregex.core.sharedui.component.PatternNameDialog
 import com.neoutils.neoregex.feature.saved.state.SavedUiState
 
@@ -68,6 +74,7 @@ class SavedScreen : Screen {
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
         var showChangeTitle by remember { mutableStateOf<SavedUiState.Pattern?>(null) }
+        var showDeletePattern by remember { mutableStateOf<SavedUiState.Pattern?>(null) }
 
         if (uiState.patterns.isEmpty()) {
             Text(text = "nothing saved yet")
@@ -87,7 +94,7 @@ class SavedScreen : Screen {
                             viewModel.open(pattern.id)
                         },
                         onDelete = {
-                            viewModel.delete(pattern.id)
+                            showDeletePattern = pattern
                         },
                         onEdit = {
                             showChangeTitle = pattern
@@ -116,8 +123,48 @@ class SavedScreen : Screen {
                 },
                 confirmLabel = {
                     Text(text = "Confirm")
-                }
+                },
             )
+        }
+
+        showDeletePattern?.let { pattern ->
+            NeoRegexDialog(
+                onDismissRequest = {
+                    showDeletePattern = null
+                },
+                onConfirm = {
+                    viewModel.delete(pattern.id)
+                },
+                title = {
+                    Text(
+                        text = "Delete pattern",
+                        color = colorScheme.onSurfaceVariant,
+                        style = typography.titleSmall.copy(
+                            fontFamily = null,
+                        )
+                    )
+                },
+            ) {
+                Text(
+                    text = buildAnnotatedString {
+                        append("Do you really want to delete ")
+
+                        withStyle(
+                            style = SpanStyle(
+                                fontWeight = FontWeight.Bold
+                            )
+                        ) {
+                            append("email")
+                        }
+
+                        append("?")
+                    },
+                    color = colorScheme.onSurfaceVariant,
+                    style = typography.bodyLarge,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }
@@ -140,10 +187,10 @@ private fun Pattern(
         color = colorScheme.outlineVariant
     ),
 ) {
-
-    val clipboardManager = LocalClipboardManager.current
-
     Column {
+
+        val clipboardManager = LocalClipboardManager.current
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(
@@ -199,7 +246,6 @@ private fun Pattern(
         HorizontalDivider()
 
         val interactionSource = remember { MutableInteractionSource() }
-        val interaction by interactionSource.interactions.collectAsState(initial = null)
 
         Box(
             modifier = Modifier
@@ -216,6 +262,8 @@ private fun Pattern(
                     .horizontalScroll(rememberScrollState())
                     .padding(16.dp)
             )
+
+            val interaction by interactionSource.interactions.collectAsState(initial = null)
 
             when (interaction) {
                 is HoverInteraction.Enter,
@@ -234,4 +282,3 @@ private fun Pattern(
         }
     }
 }
-

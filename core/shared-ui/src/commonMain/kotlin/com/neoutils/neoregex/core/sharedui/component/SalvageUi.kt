@@ -164,7 +164,7 @@ fun SalvageUi(
             },
             confirmLabel = {
                 Text(text = "Confirm")
-            }
+            },
         )
     }
 }
