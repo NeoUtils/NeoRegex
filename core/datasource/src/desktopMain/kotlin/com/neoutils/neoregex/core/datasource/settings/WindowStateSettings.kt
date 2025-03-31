@@ -52,12 +52,8 @@ internal class WindowStateSettings(
         val windowState = block(flow.value)
 
         settings.encodeValue(WindowStateData.serializer(), KEY, windowState)
-        _flow.value = windowState.copy(
-            size = Size(
-                width = 800,
-                height = 600
-            )
-        )
+
+        _flow.value = windowState
 
         return windowState
     }
