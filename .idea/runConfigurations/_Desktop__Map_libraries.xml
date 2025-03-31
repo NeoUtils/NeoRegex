@@ -1,17 +1,15 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Map libraries" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="[Desktop] Map libraries" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="executionName" />
       <option name="externalProjectPath" value="$PROJECT_DIR$" />
       <option name="externalSystemIdString" value="GRADLE" />
-      <option name="scriptParameters" value="-PaboutLibraries.exportPath=../core/resources/src/desktopMain/composeResources/files -PaboutLibraries.exportVariant=desktop; -PaboutLibraries.exportPath=../core/resources/src/androidMain/composeResources/files -PaboutLibraries.exportVariant=androidRelease; -PaboutLibraries.exportPath=../core/resources/src/webMain/composeResources/files -PaboutLibraries.exportVariant=web;" />
+      <option name="scriptParameters" value="-PaboutLibraries.exportPath=../core/resources/src/desktopMain/composeResources/files -PaboutLibraries.exportVariant=desktop" />
       <option name="taskDescriptions">
         <list />
       </option>
       <option name="taskNames">
         <list>
-          <option value="application:exportLibraryDefinitions" />
-          <option value="application:exportLibraryDefinitions" />
           <option value="application:exportLibraryDefinitions" />
         </list>
       </option>

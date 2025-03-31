@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "generated": "2024-12-23T02:14:25.126Z"
+        "generated": "2025-03-31T13:26:10.53Z"
     },
     "libraries": [
         {
@@ -151,6 +151,121 @@
             }
         },
         {
+            "uniqueId": "app.cash.sqldelight:async-extensions-jvm",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Square, Inc."
+                }
+            ],
+            "artifactVersion": "2.0.2",
+            "description": "Kotlin extensions for working with Async drivers",
+            "scm": {
+                "connection": "scm:git:git://github.com/cashapp/sqldelight.git",
+                "url": "https://github.com/cashapp/sqldelight/",
+                "developerConnection": "scm:git:ssh://git@github.com/cashapp/sqldelight.git"
+            },
+            "name": "SQLDelight Async Driver Extensions",
+            "website": "https://github.com/cashapp/sqldelight/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "app.cash.sqldelight:coroutines-extensions-jvm",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Square, Inc."
+                }
+            ],
+            "artifactVersion": "2.0.2",
+            "description": "Kotlin extension functions to expose SQLDelight's Query as a Flow",
+            "scm": {
+                "connection": "scm:git:git://github.com/cashapp/sqldelight.git",
+                "url": "https://github.com/cashapp/sqldelight/",
+                "developerConnection": "scm:git:ssh://git@github.com/cashapp/sqldelight.git"
+            },
+            "name": "SQLDelight Coroutines Extensions",
+            "website": "https://github.com/cashapp/sqldelight/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "app.cash.sqldelight:jdbc-driver",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Square, Inc."
+                }
+            ],
+            "artifactVersion": "2.0.2",
+            "description": "JDBC driver for SQLDelight",
+            "scm": {
+                "connection": "scm:git:git://github.com/cashapp/sqldelight.git",
+                "url": "https://github.com/cashapp/sqldelight/",
+                "developerConnection": "scm:git:ssh://git@github.com/cashapp/sqldelight.git"
+            },
+            "name": "SQLDelight JDBC Driver",
+            "website": "https://github.com/cashapp/sqldelight/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "app.cash.sqldelight:runtime-jvm",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Square, Inc."
+                }
+            ],
+            "artifactVersion": "2.0.2",
+            "description": "Multiplatform runtime library to support generated code",
+            "scm": {
+                "connection": "scm:git:git://github.com/cashapp/sqldelight.git",
+                "url": "https://github.com/cashapp/sqldelight/",
+                "developerConnection": "scm:git:ssh://git@github.com/cashapp/sqldelight.git"
+            },
+            "name": "SQLDelight Multiplatform Runtime (Experimental)",
+            "website": "https://github.com/cashapp/sqldelight/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "app.cash.sqldelight:sqlite-driver",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Square, Inc."
+                }
+            ],
+            "artifactVersion": "2.0.2",
+            "description": "JVM SQLite driver for SQLDelight",
+            "scm": {
+                "connection": "scm:git:git://github.com/cashapp/sqldelight.git",
+                "url": "https://github.com/cashapp/sqldelight/",
+                "developerConnection": "scm:git:ssh://git@github.com/cashapp/sqldelight.git"
+            },
+            "name": "SQLDelight SQLite Driver",
+            "website": "https://github.com/cashapp/sqldelight/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "cafe.adriel.voyager:voyager-core-desktop",
             "funding": [
                 
@@ -168,6 +283,29 @@
                 "developerConnection": "scm:git:ssh://git@github.com/adrielcafe/voyager.git"
             },
             "name": "VoyagerCore",
+            "website": "https://github.com/adrielcafe/voyager",
+            "licenses": [
+                "MIT"
+            ]
+        },
+        {
+            "uniqueId": "cafe.adriel.voyager:voyager-koin-desktop",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Adriel Cafe"
+                }
+            ],
+            "artifactVersion": "1.1.0-beta03",
+            "description": "A pragmatic navigation library for Jetpack Compose",
+            "scm": {
+                "connection": "scm:git:ssh://git@github.com/adrielcafe/voyager.git",
+                "url": "https://github.com/adrielcafe/voyager",
+                "developerConnection": "scm:git:ssh://git@github.com/adrielcafe/voyager.git"
+            },
+            "name": "VoyagerKoin",
             "website": "https://github.com/adrielcafe/voyager",
             "licenses": [
                 "MIT"
@@ -240,6 +378,29 @@
             "website": "https://github.com/adrielcafe/voyager",
             "licenses": [
                 "MIT"
+            ]
+        },
+        {
+            "uniqueId": "co.touchlab:stately-common-jvm",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Kevin Galligan"
+                }
+            ],
+            "artifactVersion": "2.0.6",
+            "description": "Multithreaded Kotlin Multiplatform Utilities",
+            "scm": {
+                "connection": "scm:git:git://github.com/touchlab/Stately.git",
+                "url": "https://github.com/touchlab/Stately",
+                "developerConnection": "scm:git:git://github.com/touchlab/Stately.git"
+            },
+            "name": "Stately",
+            "website": "https://github.com/touchlab/Stately",
+            "licenses": [
+                "Apache-2.0"
             ]
         },
         {
@@ -326,7 +487,7 @@
                 "url": "https://github.com/hypfvieh/dbus-java.git",
                 "developerConnection": "scm:git:https://github.com/hypfvieh/dbus-java.git"
             },
-            "name": "dbus-java-core",
+            "name": "${project.artifactId}",
             "website": "https://github.com/hypfvieh/dbus-java",
             "licenses": [
                 "MIT"
@@ -347,7 +508,7 @@
                 "url": "https://github.com/hypfvieh/dbus-java.git",
                 "developerConnection": "scm:git:https://github.com/hypfvieh/dbus-java.git"
             },
-            "name": "dbus-java-transport-native-unixsocket",
+            "name": "${project.artifactId}",
             "website": "https://github.com/hypfvieh/dbus-java",
             "licenses": [
                 "MIT"
@@ -1272,7 +1433,7 @@
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "0.6.0",
+            "artifactVersion": "0.6.1",
             "description": "Kotlin Datetime Library",
             "scm": {
                 "url": "https://github.com/Kotlin/kotlinx-datetime"
@@ -1468,6 +1629,29 @@
                 "url": "http://www.qos.ch",
                 "name": "QOS.ch"
             }
+        },
+        {
+            "uniqueId": "org.xerial:sqlite-jdbc",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Taro L. Saito"
+                }
+            ],
+            "artifactVersion": "3.45.2.0",
+            "description": "SQLite JDBC library",
+            "scm": {
+                "connection": "scm:git:git://github.com/xerial/sqlite-jdbc.git",
+                "url": "https://github.com/xerial/sqlite-jdbc",
+                "developerConnection": "scm:git:git@github.com:xerial/sqlite-jdbc.git"
+            },
+            "name": "SQLite JDBC",
+            "website": "https://github.com/xerial/sqlite-jdbc",
+            "licenses": [
+                "Apache-2.0"
+            ]
         }
     ],
     "licenses": {
