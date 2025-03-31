@@ -9,7 +9,7 @@
     <project_license>GPL-3.0-only</project_license>
 
     <description>
-        <p>NeoRegex is a comprehensive tool for storing, manipulating, and validating regular expressions.</p>
+        <p>NeoRegex is a complete tool for storing, manipulating, and validating regular expressions.</p>
         <p>Features:</p>
         <ul>
             <li>Match and capture group viewer</li>
@@ -42,16 +42,23 @@
     <screenshots>
         <screenshot type="default">
             <image>
-                https://raw.githubusercontent.com/NeoUtils/NeoRegex/92d39eefce26947302323188f97e7306c6f3148b/images/desktop/linux_dark.png
+                https://raw.githubusercontent.com/NeoUtils/NeoRegex/97481608a77d299cc49f40d0515317dd2a28f5ae/images/desktop/linux_matcher_dark.png
             </image>
-            <caption>NeoRegex in Dark Mode</caption>
+            <caption>Match viewer</caption>
         </screenshot>
 
         <screenshot>
             <image>
-                https://raw.githubusercontent.com/NeoUtils/NeoRegex/92d39eefce26947302323188f97e7306c6f3148b/images/desktop/linux_light.png
+                https://raw.githubusercontent.com/NeoUtils/NeoRegex/97481608a77d299cc49f40d0515317dd2a28f5ae/images/desktop/linux_validator_dark.png
             </image>
-            <caption>NeoRegex in Light Mode</caption>
+            <caption>Test case validator</caption>
+        </screenshot>
+
+        <screenshot>
+            <image>
+                https://raw.githubusercontent.com/NeoUtils/NeoRegex/97481608a77d299cc49f40d0515317dd2a28f5ae/images/desktop/linux_saved_dark.png
+            </image>
+            <caption>Local pattern storage</caption>
         </screenshot>
     </screenshots>
 
