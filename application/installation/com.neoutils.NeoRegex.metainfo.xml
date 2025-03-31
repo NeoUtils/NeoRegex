@@ -3,16 +3,19 @@
     <id>com.neoutils.NeoRegex</id>
 
     <name>NeoRegex</name>
-    <summary>Create and validate regular expressions.</summary>
+    <summary>Regular expression editor and tester.</summary>
 
     <metadata_license>FSFAP</metadata_license>
     <project_license>GPL-3.0-only</project_license>
 
     <description>
-        <p>
-            Visualize the functioning of your regular expressions in real-time with a useful and intuitive tool. With
-            support for capture groups, undo, and redo.
-        </p>
+        <p>NeoRegex is a comprehensive tool for storing, manipulating, and validating regular expressions.</p>
+        <p>Features:</p>
+        <ul>
+            <li>Match and capture group viewer</li>
+            <li>Test case validator</li>
+            <li>Local pattern storage</li>
+        </ul>
     </description>
 
     <url type="homepage">https://github.com/NeoUtils/NeoRegex</url>
@@ -53,22 +56,34 @@
     </screenshots>
 
     <releases>
+
+        <release version="3.0.0" date="2025-03-31">
+            <description>
+                <p>New features and bug fixes.</p>
+                <ul>
+                    <li>Test case validation</li>
+                    <li>Local pattern saving</li>
+                    <li>Bug fixes</li>
+                </ul>
+            </description>
+        </release>
+
         <release version="2.5.2" date="2024-12-28">
             <description>
-                <p>Improvements in user experience.</p>
+                <p>Software information.</p>
                 <ul>
-                    <li>Navigation screens</li>
-                    <li>About screen</li>
-                    <li>Libraries screen</li>
+                    <li>Screen selector</li>
+                    <li>About screen: Basic software information</li>
+                    <li>Libraries screen: Libraries used</li>
                 </ul>
             </description>
         </release>
 
         <release version="2.4.0" date="2024-12-20">
             <description>
-                <p>Improvements in user experience.</p>
+                <p>User experience improvements.</p>
                 <ul>
-                    <li>Change theme manually</li>
+                    <li>Manual theme selection</li>
                     <li>Persistence of preferences</li>
                     <li>Syntax highlighting in pattern</li>
                 </ul>
@@ -77,21 +92,21 @@
 
         <release version="2.3.0" date="2024-11-09">
             <description>
-                <p>Small improvements</p>
+                <p>Performance information.</p>
                 <ul>
                     <li>Performance information label</li>
-                    <li>Custom fatal error window</li>
+                    <li>New fatal error window</li>
                 </ul>
             </description>
         </release>
 
         <release version="2.2.1" date="2024-11-01">
             <description>
-                <p>Improvements in user experience.</p>
+                <p>User experience improvements.</p>
                 <ul>
-                    <li>Customized window for a personalized experience.</li>
+                    <li>New visual identity for the window.</li>
                     <li>Improved theme detection.</li>
-                    <li>Small improvements.</li>
+                    <li>Other minor improvements.</li>
                 </ul>
             </description>
         </release>
@@ -100,9 +115,9 @@
             <description>
                 <p>Desktop version debuts.</p>
                 <ul>
-                    <li>Visualize the regular expression matches in a text editor.</li>
-                    <li>Visualize capture groups while interacting with the match.</li>
-                    <li>An individual undo and redo system for both the visual expression and the text editor.</li>
+                    <li>Match visualization in the text editor.</li>
+                    <li>Capture group visualization of the match.</li>
+                    <li>Undo and redo for the text editor and pattern editor</li>
                 </ul>
             </description>
         </release>
