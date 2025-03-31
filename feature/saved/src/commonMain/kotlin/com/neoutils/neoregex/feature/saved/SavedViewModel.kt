@@ -58,7 +58,7 @@ class SavedViewModel(
 
     fun open(id: Long) = screenModelScope.launch {
         salvageManager.open(id)
-        navigationManager.emit(Navigation.Event.OnBack)
+        navigationManager.emit(Navigation.Event.Invalidate(pop = 1))
     }
 
     fun delete(id: Long) = screenModelScope.launch {

@@ -77,6 +77,20 @@ fun App(
                         }
                     }
 
+                    is Navigation.Event.Invalidate -> {
+                        navigator.replaceAll(
+                            navigator.items
+                                .dropLast(n = event.pop)
+                                .map {
+                                    when (it) {
+                                        is MatcherScreen -> MatcherScreen()
+                                        is ValidatorScreen -> ValidatorScreen()
+                                        else -> it
+                                    }
+                                }
+                        )
+                    }
+
                     Navigation.Event.OnBack -> navigator.pop()
                 }
 
@@ -107,10 +121,6 @@ fun App(
                                 }
                             }
                         )
-                    }
-
-                    is Command.Save -> {
-                        viewModel.save(event.name)
                     }
                 }
             }

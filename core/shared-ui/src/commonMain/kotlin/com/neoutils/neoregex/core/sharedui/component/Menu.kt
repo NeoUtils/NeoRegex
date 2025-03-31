@@ -54,7 +54,6 @@ import org.koin.compose.koinInject
 fun Menu(
     modifier: Modifier = Modifier,
     navigation: NavigationManager = koinInject(),
-    control: Controller = koinInject(),
     salvageManager: SalvageManager = koinInject()
 ) = Column(
     modifier = modifier,
@@ -118,8 +117,8 @@ fun Menu(
             },
             onClick = {
                 coroutine.launch {
-                    control.dispatcher(Command.New)
                     salvageManager.close()
+                    //navigation.emit(Navigation.Event.Invalidate())
                 }
                 expanded = false
             }
@@ -192,7 +191,7 @@ fun Menu(
             },
             onConfirm = {
                 coroutine.launch {
-                    control.dispatcher(Command.Save(it))
+                    salvageManager.save(it)
                 }
             },
             confirmLabel = {

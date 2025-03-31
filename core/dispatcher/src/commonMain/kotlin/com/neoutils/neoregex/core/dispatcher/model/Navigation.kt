@@ -29,6 +29,8 @@ sealed class Navigation {
         ) : Event()
 
         data object OnBack : Event()
+
+        data class Invalidate(val pop: Int = 0): Event()
     }
 
     sealed class Screen : Navigation() {

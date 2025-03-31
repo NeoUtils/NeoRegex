@@ -44,6 +44,8 @@ import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.dispatcher.model.Navigation
+import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
@@ -129,6 +131,7 @@ private fun NeoAppBar(
                             SalvageAction.Close -> {
                                 coroutine.launch {
                                     salvageManager.close()
+                                    //navigation.emit(Navigation.Event.Invalidate())
                                 }
                             }
 

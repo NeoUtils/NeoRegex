@@ -53,6 +53,8 @@ import com.neoutils.neoregex.core.datasource.remember.rememberWindowState
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.dispatcher.di.dispatcherModule
+import com.neoutils.neoregex.core.dispatcher.model.Navigation
+import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.core.manager.di.managerModule
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.core.repository.di.repositoryModule
@@ -114,7 +116,7 @@ fun ApplicationScope.DesktopApp() = WithKoin(
 private fun FrameWindowScope.HeaderImpl(
     modifier: Modifier = Modifier,
     preferencesDataSource: PreferencesDataSource = koinInject(),
-    salvageManager: SalvageManager = koinInject()
+    salvageManager: SalvageManager = koinInject(),
 ) {
 
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
@@ -177,6 +179,7 @@ private fun FrameWindowScope.HeaderImpl(
                                     SalvageAction.Close -> {
                                         coroutine.launch {
                                             salvageManager.close()
+                                            //navigation.emit(Navigation.Event.Invalidate())
                                         }
                                     }
                                     SalvageAction.Update -> {
