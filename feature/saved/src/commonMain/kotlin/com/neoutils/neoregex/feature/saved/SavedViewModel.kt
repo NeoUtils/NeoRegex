@@ -26,7 +26,7 @@ import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.core.repository.patterns.PatternsRepository
 import com.neoutils.neoregex.feature.saved.state.SavedUiState
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -36,13 +36,17 @@ class SavedViewModel(
     private val navigationManager: NavigationManager
 ) : ScreenModel {
 
-    val uiState = patternsRepository.flow.map {
+    val uiState = combine(
+        patternsRepository.flow,
+        salvageManager.flow
+    ) { patterns, saved ->
         SavedUiState(
-            patterns = it.map { pattern ->
+            patterns = patterns.map { pattern ->
                 SavedUiState.Pattern(
+                    id = checkNotNull(pattern.id),
                     title = pattern.title,
                     text = pattern.text,
-                    id = checkNotNull(pattern.id)
+                    opened = pattern.id == saved?.id
                 )
             }
         )

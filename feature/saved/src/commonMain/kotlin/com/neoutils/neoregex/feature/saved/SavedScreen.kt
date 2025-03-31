@@ -222,6 +222,7 @@ private fun Pattern(
 
             IconButton(
                 onClick = onOpen,
+                enabled = !pattern.opened,
                 modifier = Modifier.size(24.dp)
             ) {
                 Icon(

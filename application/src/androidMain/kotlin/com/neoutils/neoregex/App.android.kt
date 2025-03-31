@@ -100,7 +100,7 @@ private fun NeoAppBar(
 
         AnimatedContent(
             targetState = salvageManager
-                .salvage
+                .flow
                 .collectAsStateWithLifecycle(
                     initialValue = null
                 ).value,
@@ -123,7 +123,7 @@ private fun NeoAppBar(
                 )
             } else {
                 SalvageUi(
-                    salvage = salvage,
+                    opened = salvage,
                     onAction = { action ->
                         when (action) {
                             SalvageAction.Close -> {

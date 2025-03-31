@@ -19,7 +19,7 @@
 package com.neoutils.neoregex.core.manager.salvage
 
 import com.neoutils.neoregex.core.common.extension.deepEquals
-import com.neoutils.neoregex.core.common.model.Salvage
+import com.neoutils.neoregex.core.common.model.Opened
 import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.model.TextState
 import com.neoutils.neoregex.core.datasource.model.Pattern
@@ -41,7 +41,7 @@ class SalvageManagerImpl(
     private val opened = MutableStateFlow<Long?>(null)
     private val uuid = MutableStateFlow(Uuid.random())
 
-    override val salvage = combine(
+    override val flow = combine(
         opened,
         patternStateRepository.flow,
         testCasesRepository.flow,
@@ -54,7 +54,7 @@ class SalvageManagerImpl(
                     pattern.text.value == savedPattern.text &&
                             testCases deepEquals savedPattern.testCases
 
-                Salvage(
+                Opened(
                     id = checkNotNull(savedPattern.id),
                     name = savedPattern.title,
                     updated = updated,

@@ -18,7 +18,7 @@
 
 package com.neoutils.neoregex.core.common.model
 
-data class Salvage(
+data class Opened(
     val id: Long,
     val name: String,
     val updated: Boolean,

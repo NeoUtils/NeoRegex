@@ -41,7 +41,7 @@ import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.neoutils.neoregex.core.common.model.Salvage
+import com.neoutils.neoregex.core.common.model.Opened
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
 import com.neoutils.neoregex.core.designsystem.theme.configButton
 
@@ -54,7 +54,7 @@ sealed class SalvageAction {
 
 @Composable
 fun SalvageUi(
-    salvage: Salvage,
+    opened: Opened,
     modifier: Modifier = Modifier,
     onAction: (SalvageAction) -> Unit = {},
     textStyle: TextStyle = TextStyle()
@@ -77,7 +77,7 @@ fun SalvageUi(
     var showChangeName by remember { mutableStateOf(false) }
 
     Text(
-        text = salvage.name,
+        text = opened.name,
         style = mergedTextStyle,
         overflow = TextOverflow.Ellipsis,
         maxLines = 1,
@@ -103,12 +103,12 @@ fun SalvageUi(
             imageVector = Icons.TwoTone.Sync,
             contentDescription = null,
             tint = colorScheme.onSurface.copy(
-                alpha = if (salvage.updated) 0.5f else 1f
+                alpha = if (opened.updated) 0.5f else 1f
             ),
             modifier = Modifier
                 .clip(CircleShape)
                 .clickable(
-                    enabled = !salvage.updated,
+                    enabled = !opened.updated,
                     onClick = {
                         onAction(SalvageAction.Reset)
                     }
@@ -121,12 +121,12 @@ fun SalvageUi(
             imageVector = Icons.TwoTone.Save,
             contentDescription = null,
             tint = colorScheme.onSurface.copy(
-                alpha = if (salvage.canUpdate) 1f else 0.5f
+                alpha = if (opened.canUpdate) 1f else 0.5f
             ),
             modifier = Modifier
                 .clip(CircleShape)
                 .clickable(
-                    enabled = salvage.canUpdate,
+                    enabled = opened.canUpdate,
                     onClick = {
                         onAction(SalvageAction.Update)
                     }
@@ -147,7 +147,7 @@ fun SalvageUi(
 
     if (showChangeName) {
         PatternNameDialog(
-            name = remember { mutableStateOf(salvage.name) },
+            name = remember { mutableStateOf(opened.name) },
             onDismissRequest = {
                 showChangeName = false
             },

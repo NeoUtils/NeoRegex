@@ -118,7 +118,7 @@ private fun FrameWindowScope.HeaderImpl(
 ) {
 
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
-    val salvage by salvageManager.salvage.collectAsStateWithLifecycle(initialValue = null)
+    val salvage by salvageManager.flow.collectAsStateWithLifecycle(initialValue = null)
 
     NeoHeader(
         modifier = modifier,
@@ -171,7 +171,7 @@ private fun FrameWindowScope.HeaderImpl(
                         )
                     } else {
                         SalvageUi(
-                            salvage = salvage,
+                            opened = salvage,
                             onAction = { action ->
                                 when (action) {
                                     SalvageAction.Close -> {

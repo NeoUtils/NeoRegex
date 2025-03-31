@@ -24,6 +24,7 @@ data class SavedUiState(
     data class Pattern(
         val id: Long,
         val title: String,
-        val text: String
+        val text: String,
+        val opened: Boolean
     )
 }
