@@ -28,6 +28,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.common_cancel_btn
+import com.neoutils.neoregex.core.resources.common_delete_btn
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,10 +42,10 @@ fun NeoRegexDialog(
     title: @Composable () -> Unit,
     enableConfirm: Boolean = true,
     cancelLabel: @Composable () -> Unit = {
-        Text(text = "Cancel")
+        Text(text = stringResource(Res.string.common_cancel_btn))
     },
     confirmLabel: @Composable () -> Unit = {
-        Text(text = "Delete")
+        Text(text = stringResource(Res.string.common_delete_btn))
     },
     content: @Composable () -> Unit
 ) = BasicAlertDialog(

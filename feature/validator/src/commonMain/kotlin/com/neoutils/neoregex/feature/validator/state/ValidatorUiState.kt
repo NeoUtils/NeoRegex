@@ -20,7 +20,6 @@ package com.neoutils.neoregex.feature.validator.state
 
 import com.neoutils.neoregex.core.common.model.HistoryState
 import com.neoutils.neoregex.core.common.model.TextState
-import com.neoutils.neoregex.feature.validator.component.TestCaseUi
 import com.neoutils.neoregex.feature.validator.model.TestPattern
 
 data class ValidatorUiState(

@@ -42,23 +42,25 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.neoutils.highlight.compose.remember.rememberAnnotatedString
+import com.neoutils.neoregex.core.common.extension.withSpanStyles
 import com.neoutils.neoregex.core.common.util.Syntax
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
 import com.neoutils.neoregex.core.designsystem.theme.configButton
+import com.neoutils.neoregex.core.resources.*
 import com.neoutils.neoregex.core.sharedui.component.NeoRegexDialog
 import com.neoutils.neoregex.core.sharedui.component.PatternNameDialog
 import com.neoutils.neoregex.feature.saved.state.SavedUiState
+import org.jetbrains.compose.resources.stringResource
 
 class SavedScreen : Screen {
 
@@ -77,7 +79,7 @@ class SavedScreen : Screen {
         var showDeletePattern by remember { mutableStateOf<SavedUiState.Pattern?>(null) }
 
         if (uiState.patterns.isEmpty()) {
-            Text(text = "nothing saved yet")
+            Text(text = stringResource(Res.string.saved_empty))
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
@@ -112,7 +114,7 @@ class SavedScreen : Screen {
                 },
                 title = {
                     Text(
-                        text = "Edit name",
+                        text = stringResource(Res.string.salvage_edit_name_dialog_title),
                         style = typography.titleSmall.copy(
                             fontFamily = null,
                         )
@@ -122,7 +124,7 @@ class SavedScreen : Screen {
                     viewModel.changeTitle(pattern.id, it)
                 },
                 confirmLabel = {
-                    Text(text = "Confirm")
+                    Text(text = stringResource(Res.string.common_confirm_btn))
                 },
             )
         }
@@ -137,7 +139,7 @@ class SavedScreen : Screen {
                 },
                 title = {
                     Text(
-                        text = "Delete pattern",
+                        text = stringResource(Res.string.saved_delete_pattern_title),
                         color = colorScheme.onSurfaceVariant,
                         style = typography.titleSmall.copy(
                             fontFamily = null,
@@ -146,18 +148,22 @@ class SavedScreen : Screen {
                 },
             ) {
                 Text(
-                    text = buildAnnotatedString {
-                        append("Do you really want to delete ")
+                    text = stringResource(Res.string.saved_description, pattern.title).let {
 
-                        withStyle(
-                            style = SpanStyle(
-                                fontWeight = FontWeight.Bold
+                        val startIndex = it.indexOf(pattern.title)
+
+                        it.withSpanStyles(
+                            spanStyles = listOf(
+                                AnnotatedString.Range(
+                                    item = SpanStyle(
+                                        fontWeight = FontWeight.Bold,
+                                        fontStyle = FontStyle.Italic
+                                    ),
+                                    start = startIndex,
+                                    end = startIndex + pattern.title.length
+                                )
                             )
-                        ) {
-                            append("email")
-                        }
-
-                        append("?")
+                        )
                     },
                     color = colorScheme.onSurfaceVariant,
                     style = typography.bodyLarge,

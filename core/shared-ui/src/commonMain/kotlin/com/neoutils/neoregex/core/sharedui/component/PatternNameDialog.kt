@@ -36,6 +36,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.salvage_pattern_name_hint
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun PatternNameDialog(
@@ -88,7 +91,7 @@ fun PatternNameDialog(
             ),
         hint = {
             Text(
-                text = "Pattern name",
+                text = stringResource(Res.string.salvage_pattern_name_hint),
                 style = LocalTextStyle.current.let {
                     it.copy(
                         color = it.color.copy(

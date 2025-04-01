@@ -42,12 +42,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.designsystem.theme.configButton
-import com.neoutils.neoregex.core.dispatcher.control.Controller
-import com.neoutils.neoregex.core.dispatcher.event.Command
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
+import com.neoutils.neoregex.core.resources.*
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
@@ -107,7 +107,7 @@ fun Menu(
         onDismissRequest = { expanded = false },
     ) {
         DropdownMenuItem(
-            text = { Text(text = "New") },
+            text = { Text(text = stringResource(Res.string.menu_new_btn)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Add,
@@ -125,7 +125,7 @@ fun Menu(
         )
 
         DropdownMenuItem(
-            text = { Text(text = "Open") },
+            text = { Text(text = stringResource(Res.string.menu_open_btn)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.FolderOpen,
@@ -146,7 +146,7 @@ fun Menu(
         )
 
         DropdownMenuItem(
-            text = { Text(text = "Save") },
+            text = { Text(text = stringResource(Res.string.menu_save_btn)) },
             enabled = canSave,
             leadingIcon = {
                 Icon(
@@ -162,7 +162,7 @@ fun Menu(
         )
 
         DropdownMenuItem(
-            text = { Text(text = "About") },
+            text = { Text(text = stringResource(Res.string.menu_about_btn)) },
             leadingIcon = {
                 Icon(
                     imageVector = Icons.Default.Info,
@@ -195,11 +195,11 @@ fun Menu(
                 }
             },
             confirmLabel = {
-                Text(text = "Save")
+                Text(text = stringResource(Res.string.salvage_save_dialog_save_btn))
             },
             title = {
                 Text(
-                    text = "Save pattern",
+                    text = stringResource(Res.string.salvage_save_dialog_title),
                     color = colorScheme.onSurfaceVariant,
                     style = typography.titleSmall.copy(
                         fontFamily = null,

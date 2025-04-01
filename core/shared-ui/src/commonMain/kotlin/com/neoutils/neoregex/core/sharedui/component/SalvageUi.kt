@@ -44,6 +44,10 @@ import androidx.compose.ui.unit.dp
 import com.neoutils.neoregex.core.common.model.Opened
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
 import com.neoutils.neoregex.core.designsystem.theme.configButton
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.common_confirm_btn
+import com.neoutils.neoregex.core.resources.salvage_edit_name_dialog_title
+import org.jetbrains.compose.resources.stringResource
 
 sealed class SalvageAction {
     data object Update : SalvageAction()
@@ -153,7 +157,7 @@ fun SalvageUi(
             },
             title = {
                 Text(
-                    text = "Edit name",
+                    text = stringResource(Res.string.salvage_edit_name_dialog_title),
                     style = typography.titleSmall.copy(
                         fontFamily = null,
                     )
@@ -163,7 +167,7 @@ fun SalvageUi(
                 onAction(SalvageAction.ChangeName(it))
             },
             confirmLabel = {
-                Text(text = "Confirm")
+                Text(text = stringResource(Res.string.common_confirm_btn))
             },
         )
     }

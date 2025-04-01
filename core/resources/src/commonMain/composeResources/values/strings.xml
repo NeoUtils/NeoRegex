@@ -18,6 +18,11 @@
 
 <resources>
     <string name="app_name">NeoRegex</string>
+    <string name="app_title">NeoRegex - %1$s</string>
+
+    <string name="common_cancel_btn">Cancel</string>
+    <string name="common_delete_btn">Delete</string>
+    <string name="common_confirm_btn">Confirm</string>
 
     <string name="matcher_footer_insert_regex_hint">Enter regular expression</string>
 
@@ -39,6 +44,23 @@
     <string name="about_source_code_btn">Source code</string>
     <string name="about_license_btn">License</string>
 
+    <string name="validator_add_test_case_btn">Add test case</string>
+    <string name="validator_insert_input_hint">Enter input</string>
+
+    <string name="saved_empty">Nothing saved yet</string>
+    <string name="saved_delete_pattern_title">Delete pattern</string>
+    <string name="saved_description">Do you really want to delete %1$s?</string>
+
+    <string name="salvage_edit_name_dialog_title">Edit name</string>
+    <string name="salvage_save_dialog_title">Save pattern</string>
+    <string name="salvage_save_dialog_save_btn">Save</string>
+    <string name="salvage_pattern_name_hint">Pattern name</string>
+
+    <string name="menu_new_btn">New</string>
+    <string name="menu_open_btn">Open</string>
+    <string name="menu_save_btn">Save</string>
+    <string name="menu_about_btn">About</string>
+
     <string name="web_warning_text">NeoRegex web version is experimental</string>
 
     <plurals name="match_result_infos">
@@ -46,7 +68,6 @@
         <item quantity="other">%1$s matches (%2$s)</item>
     </plurals>
 
-    <string name="app_title">NeoRegex - %1$s</string>
     <string name="screen_matcher">Matcher</string>
     <string name="screen_about">About</string>
     <string name="screen_libraries">Libraries</string>

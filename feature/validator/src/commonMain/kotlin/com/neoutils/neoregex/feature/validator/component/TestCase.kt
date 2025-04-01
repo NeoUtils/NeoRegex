@@ -52,94 +52,14 @@ import com.neoutils.neoregex.core.designsystem.component.LinkColor
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.*
+import com.neoutils.neoregex.feature.validator.action.TestCaseAction
 import com.neoutils.neoregex.feature.validator.model.TestCaseValidation
-import org.jetbrains.compose.resources.StringResource
+import com.neoutils.neoregex.feature.validator.state.TestCaseUi
 import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
-data class TestCaseUi(
-    val uuid: Uuid,
-    val title: String,
-    val text: String,
-    val case: Case,
-    val validation: TestCaseValidation,
-    val selected: Boolean,
-) {
-    enum class Case(val text: StringResource) {
-        MATCH_ANY(Res.string.test_case_match_any),
-        MATCH_FULL(Res.string.test_case_match_full),
-        MATCH_NONE(Res.string.test_case_match_none),
-    }
-}
-
-val TestCase.Case.ui
-    get() = when (this) {
-        TestCase.Case.MATCH_ANY -> TestCaseUi.Case.MATCH_ANY
-        TestCase.Case.MATCH_FULL -> TestCaseUi.Case.MATCH_FULL
-        TestCase.Case.MATCH_NONE -> TestCaseUi.Case.MATCH_NONE
-    }
-
-@OptIn(ExperimentalUuidApi::class)
-fun List<TestCase>.toTestCaseUi(
-    results: Map<Uuid, TestCaseValidation>,
-    expanded: Uuid?
-): List<TestCaseUi> = map { testCase ->
-
-    val validation = results[testCase.uuid] ?: TestCaseValidation(testCase)
-
-    TestCaseUi(
-        uuid = testCase.uuid,
-        title = testCase.title,
-        text = testCase.text,
-        case = testCase.case.ui,
-        validation = validation.copy(
-            matches = validation.matches.filter {
-                it.range.last < testCase.text.length
-            }
-        ),
-        selected = expanded == testCase.uuid
-    )
-}
-
-@OptIn(ExperimentalUuidApi::class)
-sealed class TestCaseAction {
-    data class ChangeTitle(
-        val uuid: Uuid,
-        val title: String
-    ) : TestCaseAction()
-
-    data class ChangeText(
-        val uuid: Uuid,
-        val text: String
-    ) : TestCaseAction()
-
-    data class ChangeCase(
-        val uuid: Uuid,
-        val case: TestCase.Case
-    ) : TestCaseAction()
-
-    data class Delete(
-        val uuid: Uuid,
-    ) : TestCaseAction()
-
-    data class Collapse(
-        val uuid: Uuid,
-    ) : TestCaseAction()
-
-    data class Expanded(
-        val uuid: Uuid,
-    ) : TestCaseAction()
-
-    data class Duplicate(
-        val uuid: Uuid,
-    ) : TestCaseAction()
-}
-
-@OptIn(
-    ExperimentalUuidApi::class
-)
 @Composable
 fun TestCase(
     test: TestCaseUi,
@@ -148,7 +68,7 @@ fun TestCase(
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(),
     contentPadding: PaddingValues = PaddingValues(dimensions.default),
-    hint: String = "Enter input"
+    hint: String = stringResource(Res.string.validator_insert_input_hint)
 ) {
     val infiniteTransition = rememberInfiniteTransition()
 
@@ -460,4 +380,33 @@ private fun MatchDropDown(
             )
         }
     }
+}
+
+val TestCase.Case.ui
+    get() = when (this) {
+        TestCase.Case.MATCH_ANY -> TestCaseUi.Case.MATCH_ANY
+        TestCase.Case.MATCH_FULL -> TestCaseUi.Case.MATCH_FULL
+        TestCase.Case.MATCH_NONE -> TestCaseUi.Case.MATCH_NONE
+    }
+
+@OptIn(ExperimentalUuidApi::class)
+fun List<TestCase>.toTestCaseUi(
+    results: Map<Uuid, TestCaseValidation>,
+    expanded: Uuid?
+): List<TestCaseUi> = map { testCase ->
+
+    val validation = results[testCase.uuid] ?: TestCaseValidation(testCase)
+
+    TestCaseUi(
+        uuid = testCase.uuid,
+        title = testCase.title,
+        text = testCase.text,
+        case = testCase.case.ui,
+        validation = validation.copy(
+            matches = validation.matches.filter {
+                it.range.last < testCase.text.length
+            }
+        ),
+        selected = expanded == testCase.uuid
+    )
 }

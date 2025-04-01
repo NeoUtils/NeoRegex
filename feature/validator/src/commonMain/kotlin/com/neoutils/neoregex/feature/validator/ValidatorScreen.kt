@@ -45,10 +45,13 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.neoutils.neoregex.core.designsystem.component.ErrorTooltip
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.validator_add_test_case_btn
 import com.neoutils.neoregex.core.sharedui.component.Footer
 import com.neoutils.neoregex.feature.validator.action.ValidatorAction
 import com.neoutils.neoregex.feature.validator.component.TestCase
 import com.neoutils.neoregex.feature.validator.state.ValidatorUiState
+import org.jetbrains.compose.resources.stringResource
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -101,7 +104,7 @@ class ValidatorScreen : Screen {
                     }
                 ) {
                     Text(
-                        text = "Add test case",
+                        text = stringResource(Res.string.validator_add_test_case_btn),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
