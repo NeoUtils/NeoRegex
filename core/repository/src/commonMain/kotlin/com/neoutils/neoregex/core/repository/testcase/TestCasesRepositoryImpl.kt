@@ -51,15 +51,6 @@ internal class TestCasesRepositoryImpl : TestCasesRepository {
         testCases.remove(uuid)
     }
 
-    override fun duplicate(uuid: Uuid): TestCase {
-
-        val newUuid = Uuid.random()
-
-        testCases[newUuid] = checkNotNull(get(uuid)).copy(uuid = newUuid)
-
-        return checkNotNull(get(newUuid))
-    }
-
     override fun setAll(testCases: List<TestCase>) {
         this.testCases.update {
             clear()

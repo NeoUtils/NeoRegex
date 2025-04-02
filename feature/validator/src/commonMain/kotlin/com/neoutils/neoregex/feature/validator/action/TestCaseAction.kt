@@ -50,8 +50,4 @@ sealed class TestCaseAction {
     data class Expanded(
         val uuid: Uuid,
     ) : TestCaseAction()
-
-    data class Duplicate(
-        val uuid: Uuid,
-    ) : TestCaseAction()
 }

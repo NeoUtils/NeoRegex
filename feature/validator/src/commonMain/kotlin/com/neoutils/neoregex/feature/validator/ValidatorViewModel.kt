@@ -25,8 +25,8 @@ import com.neoutils.neoregex.core.common.util.ObservableMutableMap
 import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
 import com.neoutils.neoregex.core.sharedui.component.FooterAction
-import com.neoutils.neoregex.feature.validator.action.ValidatorAction
 import com.neoutils.neoregex.feature.validator.action.TestCaseAction
+import com.neoutils.neoregex.feature.validator.action.ValidatorAction
 import com.neoutils.neoregex.feature.validator.component.toTestCaseUi
 import com.neoutils.neoregex.feature.validator.model.TestCaseQueue
 import com.neoutils.neoregex.feature.validator.model.TestCaseValidation
@@ -288,16 +288,6 @@ class ValidatorViewModel(
                 expanded.value = null
                 testCasesRepository.remove(action.uuid)
                 onRemoveTestCase(action.uuid)
-            }
-
-            is TestCaseAction.Duplicate -> {
-                addToQueue(
-                    testCasesRepository
-                        .duplicate(action.uuid)
-                        .also {
-                            expanded.value = it.uuid
-                        }
-                )
             }
 
             is TestCaseAction.Expanded -> {

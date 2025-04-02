@@ -31,7 +31,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.ExpandCircleDown
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material.icons.rounded.ContentCopy
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
@@ -177,11 +176,6 @@ fun TestCase(
                                 TestCaseAction.Collapse(test.uuid)
                             )
                         },
-                        onDuplicate = {
-                            onAction(
-                                TestCaseAction.Duplicate(test.uuid)
-                            )
-                        }
                     )
                 }
             }
@@ -286,7 +280,6 @@ private fun Options(
     modifier: Modifier = Modifier,
     onDelete: () -> Unit = {},
     onClose: () -> Unit = {},
-    onDuplicate: () -> Unit = {},
 ) = Row(
     modifier = modifier,
     verticalAlignment = Alignment.CenterVertically,
@@ -319,19 +312,6 @@ private fun Options(
     )
 
     Icon(
-        imageVector = Icons.Rounded.ContentCopy,
-        contentDescription = null,
-        modifier = Modifier
-            .clickable(onClick = onDuplicate)
-            .configButton(
-                config = Config(
-                    size = 24.dp,
-                    padding = 4.dp
-                ),
-            )
-    )
-
-    Icon(
         imageVector = Icons.Outlined.Delete,
         contentDescription = null,
         modifier = Modifier
@@ -340,7 +320,7 @@ private fun Options(
                 config = Config(
                     size = 24.dp,
                     padding = 4.dp
-                ),
+                )
             )
     )
 
@@ -354,7 +334,7 @@ private fun Options(
                 config = Config(
                     size = 24.dp,
                     padding = 4.dp
-                ),
+                )
             )
     )
 }
