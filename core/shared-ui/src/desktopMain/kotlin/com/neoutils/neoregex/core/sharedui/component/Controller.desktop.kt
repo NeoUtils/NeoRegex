@@ -23,17 +23,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.onPointerEvent
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
+import com.neoutils.neoregex.core.sharedui.extension.onSwipe
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 actual fun Controller(
     modifier: Modifier,
@@ -50,30 +47,26 @@ actual fun Controller(
     Menu()
 
     Navigation(
-        modifier = Modifier.onPointerEvent(PointerEventType.Scroll) {
-            val delta = it.changes.first().scrollDelta.y.toInt()
-
+        modifier = Modifier.onSwipe {
             coroutine.launch {
-                if (delta != 0) {
-                    when (navigation.screen.value) {
-                        Navigation.Screen.Matcher -> {
-                            navigation.emit(
-                                Navigation.Event.Navigate(
-                                    Navigation.Screen.Validator
-                                )
+                when (navigation.screen.value) {
+                    Navigation.Screen.Matcher -> {
+                        navigation.emit(
+                            Navigation.Event.Navigate(
+                                Navigation.Screen.Validator
                             )
-                        }
-
-                        Navigation.Screen.Validator -> {
-                            navigation.emit(
-                                Navigation.Event.Navigate(
-                                    Navigation.Screen.Matcher
-                                )
-                            )
-                        }
-
-                        else -> Unit
+                        )
                     }
+
+                    Navigation.Screen.Validator -> {
+                        navigation.emit(
+                            Navigation.Event.Navigate(
+                                Navigation.Screen.Matcher
+                            )
+                        )
+                    }
+
+                    else -> Unit
                 }
             }
         }

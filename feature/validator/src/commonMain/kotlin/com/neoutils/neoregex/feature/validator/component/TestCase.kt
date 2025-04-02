@@ -50,8 +50,14 @@ import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.component.LinkColor
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
+import com.neoutils.neoregex.core.designsystem.theme.Buttons.Config
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.resources.*
+import com.neoutils.neoregex.core.designsystem.theme.configButton
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.test_case_untitled
+import com.neoutils.neoregex.core.resources.validator_insert_input_hint
+import com.neoutils.neoregex.core.sharedui.extension.Swipe
+import com.neoutils.neoregex.core.sharedui.extension.onSwipe
 import com.neoutils.neoregex.feature.validator.action.TestCaseAction
 import com.neoutils.neoregex.feature.validator.model.TestCaseValidation
 import com.neoutils.neoregex.feature.validator.state.TestCaseUi
@@ -264,7 +270,6 @@ fun TestCase(
 
                         Text(
                             text = stringResource(test.case.text),
-                            modifier = Modifier,
                             style = typography.labelMedium
                         )
                     }
@@ -289,54 +294,80 @@ private fun Options(
 ) {
     MatchDropDown(
         case = case,
-        onChange = {
-            onCaseChange(it)
+        onChange = onCaseChange,
+        modifier = Modifier.onSwipe {
+            onCaseChange(
+                when (it) {
+                    Swipe.Up -> {
+                        when (case) {
+                            TestCaseUi.Case.MATCH_NONE -> TestCase.Case.MATCH_FULL
+                            TestCaseUi.Case.MATCH_FULL -> TestCase.Case.MATCH_ANY
+                            TestCaseUi.Case.MATCH_ANY -> TestCase.Case.MATCH_NONE
+                        }
+                    }
+
+                    Swipe.Down -> {
+                        when (case) {
+                            TestCaseUi.Case.MATCH_ANY -> TestCase.Case.MATCH_FULL
+                            TestCaseUi.Case.MATCH_FULL -> TestCase.Case.MATCH_NONE
+                            TestCaseUi.Case.MATCH_NONE -> TestCase.Case.MATCH_ANY
+                        }
+                    }
+                }
+            )
         }
     )
 
-    IconButton(
-        onClick = onDuplicate,
-        modifier = Modifier.size(24.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Rounded.ContentCopy,
-            contentDescription = null,
-            modifier = Modifier
-                .padding(vertical = 0.5.dp)
-                .padding(4.dp)
-        )
-    }
+    Icon(
+        imageVector = Icons.Rounded.ContentCopy,
+        contentDescription = null,
+        modifier = Modifier
+            .clickable(onClick = onDuplicate)
+            .configButton(
+                config = Config(
+                    size = 24.dp,
+                    padding = 4.dp
+                ),
+            )
+    )
 
-    IconButton(
-        onClick = onDelete,
-        modifier = Modifier.size(24.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.Delete,
-            contentDescription = null,
-            modifier = Modifier.padding(4.dp)
-        )
-    }
+    Icon(
+        imageVector = Icons.Outlined.Delete,
+        contentDescription = null,
+        modifier = Modifier
+            .clickable(onClick = onDelete)
+            .configButton(
+                config = Config(
+                    size = 24.dp,
+                    padding = 4.dp
+                ),
+            )
+    )
 
-    IconButton(
-        onClick = onClose,
-        modifier = Modifier.size(24.dp)
-    ) {
-        Icon(
-            imageVector = Icons.Outlined.ExpandCircleDown,
-            contentDescription = null,
-            modifier = Modifier
-                .rotate(degrees = 180f)
-                .padding(4.dp)
-        )
-    }
+    Icon(
+        imageVector = Icons.Outlined.ExpandCircleDown,
+        contentDescription = null,
+        modifier = Modifier
+            .rotate(degrees = 180f)
+            .clickable(onClick = onClose)
+            .configButton(
+                config = Config(
+                    size = 24.dp,
+                    padding = 4.dp
+                ),
+            )
+    )
 }
 
 @Composable
 private fun MatchDropDown(
     case: TestCaseUi.Case,
-    onChange: (TestCase.Case) -> Unit
-) = Column(verticalArrangement = Arrangement.Center) {
+    onChange: (TestCase.Case) -> Unit,
+    modifier: Modifier = Modifier
+) = Column(
+    modifier = modifier,
+    verticalArrangement = Arrangement.Center
+) {
 
     val expanded = remember { mutableStateOf(false) }
 

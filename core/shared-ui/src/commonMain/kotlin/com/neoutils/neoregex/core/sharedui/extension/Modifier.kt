@@ -83,3 +83,12 @@ fun Modifier.onLongPress(
         )
     }
 }
+
+enum class Swipe {
+    Up,
+    Down
+}
+
+expect fun Modifier.onSwipe(
+    onSwipe: (Swipe) -> Unit
+): Modifier
