@@ -63,7 +63,7 @@ compose.desktop {
 
         nativeDistributions {
 
-            modules("jdk.security.auth")
+            modules("jdk.security.auth", "java.sql")
 
             targetFormats(
                 TargetFormat.Exe,
