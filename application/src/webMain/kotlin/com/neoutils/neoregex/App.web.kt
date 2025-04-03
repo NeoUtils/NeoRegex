@@ -155,7 +155,7 @@ private fun Header(
         Options(
             modifier = Modifier
                 .padding(dimensions.short)
-                .height(32.dp),
+                .height(dimensions.huge),
         )
     },
     colors = TopAppBarDefaults.topAppBarColors(
@@ -192,7 +192,7 @@ private fun TopLabel(
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .align(Alignment.Center)
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = dimensions.small),
                     )
 
                     Icon(

@@ -39,6 +39,7 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import com.neoutils.neoregex.core.common.model.Field
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.designsystem.component.ErrorTooltip
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
 import com.neoutils.neoregex.core.sharedui.component.Footer
 import com.neoutils.neoregex.core.sharedui.component.Performance
 import com.neoutils.neoregex.core.sharedui.component.TextEditor
@@ -81,7 +82,7 @@ class MatcherScreen : Screen {
                 },
                 textStyle = TextStyle(
                     letterSpacing = 1.sp,
-                    fontSize = 16.sp,
+                    fontSize = fontSizes.medium,
                 ),
                 matches = remember(uiState.result) {
                     when (val result = uiState.result) {

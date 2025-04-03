@@ -47,6 +47,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.neoutils.neoregex.core.common.model.Opened
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.designsystem.theme.configButton
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.common_confirm_btn
@@ -97,7 +98,7 @@ fun SalvageUi(
             maxLines = 1,
             modifier = Modifier
                 .weight(weight = 1f, fill = false)
-                .padding(start = 8.dp)
+                .padding(start = dimensions.small)
         )
     }
 

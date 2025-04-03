@@ -119,8 +119,8 @@ fun TestCase(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(dimensions.small),
                     modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .padding(top = 8.dp)
+                        .padding(horizontal = dimensions.small)
+                        .padding(top = dimensions.small)
                         .fillMaxWidth(),
                 ) {
                     NeoTextField(
@@ -151,7 +151,7 @@ fun TestCase(
                         },
                         singleLine = true,
                         modifier = Modifier
-                            .padding(start = 8.dp)
+                            .padding(start = dimensions.small)
                             .fillMaxWidth()
                             .weight(1f)
                     )
@@ -318,8 +318,8 @@ private fun Options(
             .clickable(onClick = onDelete)
             .configButton(
                 config = Config(
-                    size = 24.dp,
-                    padding = 4.dp
+                    size = dimensions.large,
+                    padding = dimensions.tiny
                 )
             )
     )
@@ -332,8 +332,8 @@ private fun Options(
             .clickable(onClick = onClose)
             .configButton(
                 config = Config(
-                    size = 24.dp,
-                    padding = 4.dp
+                    size = dimensions.large,
+                    padding = dimensions.tiny
                 )
             )
     )
@@ -366,7 +366,7 @@ private fun MatchDropDown(
         endIcon = {
             Icon(
                 imageVector = Icons.Outlined.KeyboardArrowDown,
-                modifier = Modifier.size(18.dp),
+                modifier = Modifier.size(dimensions.great),
                 contentDescription = null
             )
         },

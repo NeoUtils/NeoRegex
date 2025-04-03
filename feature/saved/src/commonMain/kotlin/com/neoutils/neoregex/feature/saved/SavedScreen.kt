@@ -55,6 +55,8 @@ import com.neoutils.highlight.compose.remember.rememberAnnotatedString
 import com.neoutils.neoregex.core.common.extension.withSpanStyles
 import com.neoutils.neoregex.core.common.util.Syntax
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
 import com.neoutils.neoregex.core.designsystem.theme.configButton
 import com.neoutils.neoregex.core.resources.*
 import com.neoutils.neoregex.core.sharedui.component.NeoRegexDialog
@@ -85,9 +87,9 @@ class SavedScreen : Screen {
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
-                    space = 16.dp,
+                    space = dimensions.default,
                 ),
-                contentPadding = PaddingValues(16.dp)
+                contentPadding = PaddingValues(dimensions.default)
             ) {
                 items(uiState.patterns) { pattern ->
                     Pattern(
@@ -200,17 +202,17 @@ private fun Pattern(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(
-                space = 4.dp
+                space = dimensions.tiny
             ),
             modifier = Modifier
-                .padding(4.dp)
+                .padding(dimensions.tiny)
                 .fillMaxWidth(),
         ) {
             Text(
                 text = pattern.title,
                 style = typography.titleSmall,
-                fontSize = 12.sp,
-                modifier = Modifier.padding(start = 12.dp)
+                fontSize = fontSizes.small,
+                modifier = Modifier.padding(start = dimensions.short)
             )
 
             Icon(
@@ -229,7 +231,7 @@ private fun Pattern(
             IconButton(
                 onClick = onOpen,
                 enabled = !pattern.opened,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(dimensions.large)
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
@@ -240,7 +242,7 @@ private fun Pattern(
 
             IconButton(
                 onClick = onDelete,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(dimensions.large)
             ) {
                 Icon(
                     imageVector = Icons.Outlined.Delete,
@@ -267,7 +269,7 @@ private fun Pattern(
                 maxLines = 1,
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
-                    .padding(16.dp)
+                    .padding(dimensions.default)
             )
 
             val interaction by interactionSource.interactions.collectAsState(initial = null)

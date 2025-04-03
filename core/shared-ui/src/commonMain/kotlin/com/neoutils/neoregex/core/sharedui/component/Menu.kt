@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.designsystem.theme.configButton
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
@@ -112,7 +113,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = null,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(dimensions.great)
                 )
             },
             onClick = {
@@ -129,7 +130,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.FolderOpen,
                     contentDescription = null,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(dimensions.great)
                 )
             },
             onClick = {
@@ -151,7 +152,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.Save,
                     contentDescription = null,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(dimensions.great)
                 )
             },
             onClick = {
@@ -166,7 +167,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.Info,
                     contentDescription = null,
-                    modifier = Modifier.size(18.dp)
+                    modifier = Modifier.size(dimensions.great)
                 )
             },
             onClick = {

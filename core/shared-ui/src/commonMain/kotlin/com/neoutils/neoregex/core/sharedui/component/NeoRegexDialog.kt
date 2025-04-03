@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.common_cancel_btn
 import com.neoutils.neoregex.core.resources.common_delete_btn
@@ -61,7 +62,7 @@ fun NeoRegexDialog(
             Box(
                 modifier = Modifier
                     .background(colorScheme.surfaceVariant)
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = dimensions.default)
                     .fillMaxWidth()
                     .height(40.dp),
                 contentAlignment = Alignment.Center
@@ -72,13 +73,13 @@ fun NeoRegexDialog(
             HorizontalDivider(color = colorScheme.outlineVariant)
 
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(dimensions.default),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
                 content()
 
-                Spacer(Modifier.height(16.dp))
+                Spacer(Modifier.height(dimensions.default))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -88,7 +89,7 @@ fun NeoRegexDialog(
                         onClick = {
                             onDismissRequest()
                         },
-                        shape = RoundedCornerShape(8.dp),
+                        shape = RoundedCornerShape(dimensions.small),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = colorScheme.onBackground
                         )
@@ -102,7 +103,7 @@ fun NeoRegexDialog(
                             onDismissRequest()
                         },
                         enabled = enableConfirm,
-                        shape = RoundedCornerShape(8.dp),
+                        shape = RoundedCornerShape(dimensions.small),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = colorScheme.onBackground
                         )

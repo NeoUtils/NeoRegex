@@ -94,7 +94,7 @@ fun Navigation(
             Image(
                 imageVector = Icons.Rounded.KeyboardArrowDown,
                 colorFilter = ColorFilter.tint(colorScheme.onSurface),
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(dimensions.large),
                 contentDescription = null
             )
         }

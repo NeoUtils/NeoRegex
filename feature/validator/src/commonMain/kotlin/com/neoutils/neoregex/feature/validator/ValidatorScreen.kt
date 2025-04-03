@@ -45,6 +45,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.screen.ScreenKey
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.neoutils.neoregex.core.designsystem.component.ErrorTooltip
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.validator_add_test_case_btn
 import com.neoutils.neoregex.core.sharedui.component.Footer
@@ -75,8 +76,8 @@ class ValidatorScreen : Screen {
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(16.dp)
+            verticalArrangement = Arrangement.spacedBy(dimensions.default),
+            contentPadding = PaddingValues(dimensions.default)
         ) {
             itemsIndexed(
                 items = uiState.testCases,
@@ -92,7 +93,7 @@ class ValidatorScreen : Screen {
 
             item {
                 Surface(
-                    shape = RoundedCornerShape(4.dp),
+                    shape = RoundedCornerShape(dimensions.tiny),
                     color = colorScheme.surfaceContainer,
                     contentColor = colorScheme.onSurface,
                     border = BorderStroke(
@@ -107,7 +108,7 @@ class ValidatorScreen : Screen {
                         text = stringResource(Res.string.validator_add_test_case_btn),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
+                            .padding(dimensions.default)
                     )
                 }
             }
@@ -126,15 +127,15 @@ class ValidatorScreen : Screen {
                         fadeIn() togetherWith fadeOut()
                     }
                 ) { (result, error) ->
-                    Box(Modifier.size(24.dp)) {
+                    Box(Modifier.size(dimensions.large)) {
                         when (result) {
                             ValidatorUiState.Result.RUNNING -> {
                                 CircularProgressIndicator(
-                                    strokeWidth = 2.dp,
+                                    strokeWidth = dimensions.micro,
                                     color = colorScheme.onSurface,
                                     modifier = Modifier
-                                        .size(24.dp)
-                                        .padding(2.dp)
+                                        .size(dimensions.large)
+                                        .padding(dimensions.micro)
                                 )
                             }
 

@@ -201,7 +201,7 @@ private fun WindowScope.Buttons(modifier: Modifier) = Row(
                     )
                 }
             )
-            .size(24.dp)
+            .size(dimensions.large)
             .padding(dimensions.tiny)
     )
 }
