@@ -32,7 +32,6 @@ import com.neoutils.neoregex.core.repository.text.TextStateRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 @OptIn(ExperimentalUuidApi::class)
 class SalvageManagerImpl(
@@ -44,21 +43,20 @@ class SalvageManagerImpl(
 ) : SalvageManager {
 
     private val opened = MutableStateFlow<Long?>(null)
-    private val uuid = MutableStateFlow(Uuid.random())
 
     override val flow = combine(
         opened,
         patternStateRepository.flow,
         testCasesRepository.flow,
-        uuid
-    ) { opened, pattern, testCases, _ ->
-        opened?.let { patternId ->
-            patternsRepository.get(patternId)?.let { savedPattern ->
-
+        patternsRepository.flow,
+    ) { openedPatternId, pattern, testCases, patterns ->
+        openedPatternId?.let {
+            patterns.find {
+                it.id == openedPatternId
+            }?.let { savedPattern ->
                 val updated =
                     pattern.text.value == savedPattern.text &&
                             testCases deepEquals savedPattern.testCases
-
                 Opened(
                     id = checkNotNull(savedPattern.id),
                     name = savedPattern.title,
@@ -121,8 +119,6 @@ class SalvageManagerImpl(
                 }
             )
         }
-
-        uuid.value = Uuid.random()
     }
 
     override suspend fun sync() {
