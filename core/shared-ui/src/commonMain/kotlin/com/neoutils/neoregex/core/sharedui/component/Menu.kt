@@ -118,7 +118,6 @@ fun Menu(
             onClick = {
                 coroutine.launch {
                     salvageManager.close()
-                    //navigation.emit(Navigation.Event.Invalidate())
                 }
                 expanded = false
             }

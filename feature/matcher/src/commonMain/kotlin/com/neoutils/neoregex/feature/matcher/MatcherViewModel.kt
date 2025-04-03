@@ -20,30 +20,30 @@ package com.neoutils.neoregex.feature.matcher
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.neoutils.neoregex.core.common.manager.TextHistoryManager
-import com.neoutils.neoregex.core.common.model.*
+import com.neoutils.neoregex.core.common.model.Field
+import com.neoutils.neoregex.core.common.model.HistoryState
+import com.neoutils.neoregex.core.common.model.Inputs
+import com.neoutils.neoregex.core.common.model.Match
 import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
+import com.neoutils.neoregex.core.repository.text.TextStateRepository
 import com.neoutils.neoregex.core.sharedui.component.FooterAction
 import com.neoutils.neoregex.core.sharedui.component.Performance
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 
 @OptIn(FlowPreview::class)
 class MatcherViewModel(
-    private val patternStateRepository: PatternStateRepository
+    private val patternStateRepository: PatternStateRepository,
+    private val textStateRepository: TextStateRepository
 ) : ScreenModel {
 
     private val field = MutableStateFlow<Field?>(value = null)
 
-    private val textHistory = TextHistoryManager()
-    private val textFlow = MutableStateFlow(TextState())
-
     private val resultFlow = combine(
-        textFlow.map { it.value }.distinctUntilChanged(),
+        textStateRepository.flow.map { it.text.value }.distinctUntilChanged(),
         patternStateRepository.flow.map { it.text.value }.distinctUntilChanged()
     ) { text, pattern ->
 
@@ -89,12 +89,12 @@ class MatcherViewModel(
 
     private val historyFlow = combine(
         field,
-        textHistory.flow,
-        patternStateRepository.flow
-    ) { target, textHistory, pattern ->
+        textStateRepository.flow.map { it.history },
+        patternStateRepository.flow.map { it.history }
+    ) { target, textHistory, patternHistory ->
         when (target) {
             Field.TEXT -> textHistory
-            Field.REGEX -> pattern.history
+            Field.REGEX -> patternHistory
 
             null -> HistoryState()
         }
@@ -102,13 +102,13 @@ class MatcherViewModel(
 
     private val inputFlow = combine(
         field,
-        textFlow,
-        patternStateRepository.flow,
+        textStateRepository.flow.map { it.text },
+        patternStateRepository.flow.map { it.text },
     ) { target, text, pattern ->
         Inputs(
             field = target,
             text = text,
-            regex = pattern.text
+            regex = pattern
         )
     }
 
@@ -137,14 +137,6 @@ class MatcherViewModel(
         initialValue = MatcherUiState()
     )
 
-    init {
-        screenModelScope.launch {
-            textFlow.collect {
-                textHistory.push(it)
-            }
-        }
-    }
-
     fun onAction(action: FooterAction) {
         when (action) {
             is FooterAction.UpdateRegex -> {
@@ -172,7 +164,7 @@ class MatcherViewModel(
     fun onAction(action: MatcherAction) {
         when (action) {
             is MatcherAction.UpdateText -> {
-                textFlow.value = action.text
+                textStateRepository.update(action.text)
             }
 
             is MatcherAction.TargetChange -> {
@@ -208,7 +200,7 @@ class MatcherViewModel(
     private fun redo(field: Field) {
         when (field) {
             Field.TEXT -> {
-                textFlow.value = textHistory.redo() ?: return
+                textStateRepository.redo()
             }
 
             Field.REGEX -> {
@@ -220,7 +212,7 @@ class MatcherViewModel(
     private fun undo(field: Field) {
         when (field) {
             Field.TEXT -> {
-                textFlow.value = textHistory.undo() ?: return
+                textStateRepository.undo()
             }
 
             Field.REGEX -> {

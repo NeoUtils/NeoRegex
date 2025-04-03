@@ -16,8 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.dispatcher.event
+package com.neoutils.neoregex.core.repository.model
 
-sealed class Command {
-    data object New : Command()
-}
+import com.neoutils.neoregex.core.common.model.HistoryState
+import com.neoutils.neoregex.core.common.model.TextState
+
+data class SampleState(
+    val text: TextState,
+    val history: HistoryState
+)

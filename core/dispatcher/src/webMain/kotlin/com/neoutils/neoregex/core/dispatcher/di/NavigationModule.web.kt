@@ -18,14 +18,11 @@
 
 package com.neoutils.neoregex.core.dispatcher.di
 
-import com.neoutils.neoregex.core.dispatcher.control.Controller
-import com.neoutils.neoregex.core.dispatcher.control.ControllerImpl
-import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.core.dispatcher.impl.NavigationManagerWeb
+import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
 actual val dispatcherModule = module {
     single { NavigationManagerWeb() } bind NavigationManager::class
-    single { ControllerImpl() } bind Controller::class
 }

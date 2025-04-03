@@ -33,6 +33,7 @@ kotlin {
             api(projects.core.common)
             api(projects.core.datasource)
             api(projects.core.repository)
+            api(projects.core.dispatcher)
         }
     }
 }

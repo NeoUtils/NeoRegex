@@ -131,7 +131,6 @@ private fun NeoAppBar(
                             SalvageAction.Close -> {
                                 coroutine.launch {
                                     salvageManager.close()
-                                    //navigation.emit(Navigation.Event.Invalidate())
                                 }
                             }
 

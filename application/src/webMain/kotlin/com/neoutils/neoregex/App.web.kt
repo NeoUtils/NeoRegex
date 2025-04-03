@@ -46,7 +46,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.neoutils.neoregex.feature.validator.di.validatorModule
 import com.neoutils.neoregex.core.common.extension.toCss
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
@@ -66,8 +65,8 @@ import com.neoutils.neoregex.core.sharedui.component.Controller
 import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import com.neoutils.neoregex.core.sharedui.extension.surface
-import com.neoutils.neoregex.di.appModule
 import com.neoutils.neoregex.feature.matcher.di.matcherModule
+import com.neoutils.neoregex.feature.validator.di.validatorModule
 import kotlinx.browser.document
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -81,13 +80,12 @@ fun WebApp() = WithKoin(
     dispatcherModule,
     matcherModule,
     validatorModule,
-    appModule
 ) {
 
     val preferencesDataSource = koinInject<PreferencesDataSource>()
 
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
-    
+
     NeoTheme(
         colorTheme = when (preferences.colorTheme) {
             Preferences.ColorTheme.SYSTEM -> rememberColorTheme()
@@ -125,6 +123,7 @@ fun WebApp() = WithKoin(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Header(
     modifier: Modifier = Modifier,

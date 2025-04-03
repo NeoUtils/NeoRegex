@@ -23,8 +23,8 @@ import com.neoutils.neoregex.core.datasource.model.Pattern
 import kotlinx.coroutines.flow.Flow
 
 interface SalvageManager {
-    val flow: Flow<Opened?>
 
+    val flow: Flow<Opened?>
     val canSave: Flow<Boolean>
 
     suspend fun open(id: Long)
@@ -36,4 +36,3 @@ interface SalvageManager {
     suspend fun sync()
     suspend fun delete(id: Long)
 }
-

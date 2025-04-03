@@ -16,19 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.dispatcher.control
+package com.neoutils.neoregex.core.repository.text
 
-import com.neoutils.neoregex.core.dispatcher.event.Command
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.receiveAsFlow
+import com.neoutils.neoregex.core.common.model.TextState
+import com.neoutils.neoregex.core.repository.model.SampleState
+import kotlinx.coroutines.flow.StateFlow
 
-internal class ControllerImpl : Controller {
+interface TextStateRepository {
 
-    private val _event = Channel<Command>(Channel.UNLIMITED)
-    override val event = _event.receiveAsFlow()
+    val flow : StateFlow<SampleState>
+    val sample get() = flow.value
 
-    override suspend fun dispatcher(event: Command) {
-        _event.send(event)
-    }
+    fun update(input: TextState)
+    fun clear(initial: TextState = TextState())
+
+    fun undo()
+    fun redo()
 }

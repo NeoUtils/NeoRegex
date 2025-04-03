@@ -64,7 +64,6 @@ import com.neoutils.neoregex.core.sharedui.component.*
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
 import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
-import com.neoutils.neoregex.di.appModule
 import com.neoutils.neoregex.feature.matcher.di.matcherModule
 import com.neoutils.neoregex.feature.saved.di.savedModule
 import com.neoutils.neoregex.feature.validator.di.validatorModule
@@ -83,7 +82,6 @@ fun ApplicationScope.DesktopApp() = WithKoin(
     matcherModule,
     validatorModule,
     savedModule,
-    appModule
 ) {
 
     val preferencesDataSource = koinInject<PreferencesDataSource>()
@@ -120,7 +118,6 @@ private fun FrameWindowScope.HeaderImpl(
 ) {
 
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
-    val salvage by salvageManager.flow.collectAsStateWithLifecycle(initialValue = null)
 
     NeoHeader(
         modifier = modifier,
@@ -153,7 +150,11 @@ private fun FrameWindowScope.HeaderImpl(
             },
             title = {
                 AnimatedContent(
-                    targetState = salvage,
+                    targetState = salvageManager
+                        .flow
+                        .collectAsStateWithLifecycle(
+                            initialValue = null
+                        ).value,
                     contentKey = { it != null },
                     transitionSpec = {
                         slideIntoContainer(
@@ -179,9 +180,9 @@ private fun FrameWindowScope.HeaderImpl(
                                     SalvageAction.Close -> {
                                         coroutine.launch {
                                             salvageManager.close()
-                                            //navigation.emit(Navigation.Event.Invalidate())
                                         }
                                     }
+
                                     SalvageAction.Update -> {
                                         coroutine.launch {
                                             salvageManager.update()

@@ -23,9 +23,12 @@ import com.neoutils.neoregex.core.common.model.Opened
 import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.model.TextState
 import com.neoutils.neoregex.core.datasource.model.Pattern
+import com.neoutils.neoregex.core.dispatcher.model.Navigation
+import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
 import com.neoutils.neoregex.core.repository.patterns.PatternsRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
+import com.neoutils.neoregex.core.repository.text.TextStateRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlin.uuid.ExperimentalUuidApi
@@ -35,7 +38,9 @@ import kotlin.uuid.Uuid
 class SalvageManagerImpl(
     private val patternsRepository: PatternsRepository,
     private val patternStateRepository: PatternStateRepository,
-    private val testCasesRepository: TestCasesRepository
+    private val testCasesRepository: TestCasesRepository,
+    private val textStateRepository: TextStateRepository,
+    private val navigationManager: NavigationManager
 ) : SalvageManager {
 
     private val opened = MutableStateFlow<Long?>(null)
@@ -75,6 +80,7 @@ class SalvageManagerImpl(
 
         val pattern = patternsRepository.get(id) ?: return
 
+        textStateRepository.clear()
         patternStateRepository.clear(TextState(pattern.text))
         testCasesRepository.clear()
 
@@ -84,8 +90,11 @@ class SalvageManagerImpl(
     override suspend fun close() {
         opened.value = null
 
+        textStateRepository.clear()
         patternStateRepository.clear()
         testCasesRepository.clear()
+
+        navigationManager.emit(Navigation.Event.Invalidate())
     }
 
     override suspend fun update(block: (Pattern) -> Pattern) {

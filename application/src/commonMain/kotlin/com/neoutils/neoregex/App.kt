@@ -23,13 +23,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
-import cafe.adriel.voyager.koin.koinNavigatorScreenModel
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.internal.BackHandler
 import cafe.adriel.voyager.transitions.FadeTransition
 import com.neoutils.neoregex.core.designsystem.theme.NeoBackground
-import com.neoutils.neoregex.core.dispatcher.control.Controller
-import com.neoutils.neoregex.core.dispatcher.event.Command
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.feature.about.screen.AboutScreen
@@ -45,7 +42,6 @@ import org.koin.compose.koinInject
 fun App(
     modifier: Modifier = Modifier,
     navigation: NavigationManager = koinInject(),
-    controller: Controller = koinInject()
 ) = NeoBackground(modifier) {
 
     val coroutine = rememberCoroutineScope()
@@ -53,8 +49,6 @@ fun App(
     Navigator(
         screen = MatcherScreen(),
     ) { navigator ->
-
-        val viewModel = navigator.koinNavigatorScreenModel<AppViewModel>()
 
         BackHandler(enabled = true) {
             coroutine.launch {
@@ -104,25 +98,6 @@ fun App(
                         else -> error("Invalid screen")
                     }
                 )
-            }
-        }
-
-        LaunchedEffect(Unit) {
-            controller.event.collect { event ->
-                when (event) {
-                    Command.New -> {
-                        viewModel.clear()
-                        navigator.replaceAll(
-                            navigator.items.map {
-                                when (it) {
-                                    is MatcherScreen -> MatcherScreen()
-                                    is ValidatorScreen -> ValidatorScreen()
-                                    else -> it
-                                }
-                            }
-                        )
-                    }
-                }
             }
         }
 

@@ -25,7 +25,6 @@ import com.neoutils.neoregex.core.datasource.di.dataSourceModule
 import com.neoutils.neoregex.core.dispatcher.di.dispatcherModule
 import com.neoutils.neoregex.core.manager.di.managerModule
 import com.neoutils.neoregex.core.repository.di.repositoryModule
-import com.neoutils.neoregex.di.appModule
 import com.neoutils.neoregex.feature.matcher.di.matcherModule
 import com.neoutils.neoregex.feature.saved.di.savedModule
 import com.neoutils.neoregex.feature.validator.di.validatorModule
@@ -52,7 +51,6 @@ class NeoAndroidApp : Application() {
                 matcherModule,
                 validatorModule,
                 savedModule,
-                appModule
             )
         }
     }
