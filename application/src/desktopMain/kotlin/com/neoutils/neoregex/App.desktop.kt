@@ -18,23 +18,16 @@
 
 package com.neoutils.neoregex
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -53,13 +46,9 @@ import com.neoutils.neoregex.core.datasource.remember.rememberWindowState
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.dispatcher.di.dispatcherModule
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
-import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.core.manager.di.managerModule
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.core.repository.di.repositoryModule
-import com.neoutils.neoregex.core.resources.Res
-import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.sharedui.component.*
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
@@ -67,8 +56,6 @@ import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
 import com.neoutils.neoregex.feature.matcher.di.matcherModule
 import com.neoutils.neoregex.feature.saved.di.savedModule
 import com.neoutils.neoregex.feature.validator.di.validatorModule
-import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -114,7 +101,6 @@ fun ApplicationScope.DesktopApp() = WithKoin(
 private fun FrameWindowScope.HeaderImpl(
     modifier: Modifier = Modifier,
     preferencesDataSource: PreferencesDataSource = koinInject(),
-    salvageManager: SalvageManager = koinInject(),
 ) {
 
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
@@ -132,8 +118,6 @@ private fun FrameWindowScope.HeaderImpl(
 
         val focus = rememberWindowFocus()
 
-        val coroutine = rememberCoroutineScope()
-
         CenterAlignedTopAppBar(
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = when (focus) {
@@ -149,66 +133,7 @@ private fun FrameWindowScope.HeaderImpl(
                 )
             },
             title = {
-                AnimatedContent(
-                    targetState = salvageManager
-                        .flow
-                        .collectAsStateWithLifecycle(
-                            initialValue = null
-                        ).value,
-                    contentKey = { it != null },
-                    transitionSpec = {
-                        slideIntoContainer(
-                            SlideDirection.Down
-                        ) togetherWith slideOutOfContainer(
-                            SlideDirection.Down
-                        )
-                    },
-                    contentAlignment = Alignment.Center,
-                ) { salvage ->
-                    if (salvage == null) {
-                        Text(
-                            text = stringResource(Res.string.app_name),
-                            style = typography.titleSmall.copy(
-                                fontFamily = null
-                            )
-                        )
-                    } else {
-                        SalvageUi(
-                            opened = salvage,
-                            onAction = { action ->
-                                when (action) {
-                                    SalvageAction.Close -> {
-                                        coroutine.launch {
-                                            salvageManager.close()
-                                        }
-                                    }
-
-                                    SalvageAction.Update -> {
-                                        coroutine.launch {
-                                            salvageManager.update()
-                                        }
-                                    }
-
-                                    is SalvageAction.ChangeName -> {
-                                        coroutine.launch {
-                                            salvageManager.update {
-                                                it.copy(
-                                                    title = action.name
-                                                )
-                                            }
-                                        }
-                                    }
-
-                                    SalvageAction.Reset -> {
-                                        coroutine.launch {
-                                            salvageManager.sync()
-                                        }
-                                    }
-                                }
-                            }
-                        )
-                    }
-                }
+                Context()
             },
             actions = {
                 Options(

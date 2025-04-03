@@ -18,6 +18,10 @@
 
 package com.neoutils.neoregex.core.sharedui.component
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -80,15 +84,22 @@ fun SalvageUi(
 
     var showChangeName by remember { mutableStateOf(false) }
 
-    Text(
-        text = opened.name,
-        style = mergedTextStyle,
-        overflow = TextOverflow.Ellipsis,
-        maxLines = 1,
-        modifier = Modifier
-            .weight(weight = 1f, fill = false)
-            .padding(start = 8.dp)
-    )
+    AnimatedContent(
+        targetState = opened.name,
+        transitionSpec = {
+            fadeIn() togetherWith fadeOut()
+        }
+    ) { name ->
+        Text(
+            text = name,
+            style = mergedTextStyle,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
+            modifier = Modifier
+                .weight(weight = 1f, fill = false)
+                .padding(start = 8.dp)
+        )
+    }
 
     Row(
         modifier = Modifier.padding(4.dp)
