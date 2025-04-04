@@ -20,10 +20,12 @@ package com.neoutils.neoregex
 
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -47,7 +49,6 @@ import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.dispatcher.di.dispatcherModule
 import com.neoutils.neoregex.core.manager.di.managerModule
-import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.core.repository.di.repositoryModule
 import com.neoutils.neoregex.core.sharedui.component.*
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
@@ -126,20 +127,32 @@ private fun FrameWindowScope.HeaderImpl(
                 },
             ),
             navigationIcon = {
+
+                val startPadding = padding.calculateStartPadding(direction)
+
                 Controller(
-                    modifier = Modifier.padding(
-                        start = padding.calculateStartPadding(direction) + dimensions.tiny
-                    )
+                    modifier = Modifier
+                        .padding(
+                            start = startPadding + dimensions.tiny
+                        ).height(dimensions.big)
                 )
             },
             title = {
-                Context()
+                NeoTitle(
+                    titleStyle = typography.titleSmall.copy(
+                        fontFamily = null
+                    )
+                )
             },
             actions = {
+
+                val endPadding = padding.calculateEndPadding(direction)
+
                 Options(
-                    modifier = Modifier.padding(
-                        end = padding.calculateEndPadding(direction) + dimensions.tiny
-                    )
+                    modifier = Modifier
+                        .padding(
+                            end = endPadding + dimensions.tiny
+                        ).height(dimensions.large)
                 )
             }
         )

@@ -21,13 +21,19 @@ package com.neoutils.neoregex.core.sharedui.component
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.togetherWith
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.neoutils.neoregex.core.common.platform.Platform
+import com.neoutils.neoregex.core.common.platform.platform
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
@@ -36,9 +42,10 @@ import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
-fun Context(
+fun NeoTitle(
     modifier: Modifier = Modifier,
-    salvageManager: SalvageManager = koinInject()
+    salvageManager: SalvageManager = koinInject(),
+    titleStyle: TextStyle = TextStyle()
 ) = AnimatedContent(
     modifier = modifier,
     targetState = salvageManager
@@ -59,14 +66,20 @@ fun Context(
     if (salvage == null) {
         Text(
             text = stringResource(Res.string.app_name),
-            style = MaterialTheme.typography.titleSmall.copy(
+            style = typography.titleSmall.copy(
                 fontFamily = null
-            )
+            ).merge(titleStyle)
         )
     } else {
         val coroutine = rememberCoroutineScope()
 
         SalvageUi(
+            modifier = Modifier.height(
+                when (platform) {
+                    Platform.Android -> 30.dp
+                    else -> dimensions.big
+                }
+            ),
             opened = salvage,
             onAction = { action ->
                 when (action) {

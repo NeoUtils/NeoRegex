@@ -42,22 +42,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.neoutils.highlight.compose.remember.rememberAnnotatedString
 import com.neoutils.neoregex.core.common.extension.withSpanStyles
 import com.neoutils.neoregex.core.common.util.Syntax
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
-import com.neoutils.neoregex.core.designsystem.theme.configButton
 import com.neoutils.neoregex.core.resources.*
 import com.neoutils.neoregex.core.sharedui.component.NeoRegexDialog
 import com.neoutils.neoregex.core.sharedui.component.PatternNameDialog
@@ -159,7 +155,6 @@ class SavedScreen : Screen {
                                 AnnotatedString.Range(
                                     item = SpanStyle(
                                         fontWeight = FontWeight.Bold,
-                                        fontStyle = FontStyle.Italic
                                     ),
                                     start = startIndex,
                                     end = startIndex + pattern.title.length
@@ -221,9 +216,8 @@ private fun Pattern(
                 modifier = Modifier
                     .clip(CircleShape)
                     .clickable(onClick = onEdit)
-                    .configButton(
-                        config = buttons.small
-                    )
+                    .size(dimensions.large)
+                    .padding(dimensions.tiny)
             )
 
             Spacer(Modifier.weight(weight = 1f))
