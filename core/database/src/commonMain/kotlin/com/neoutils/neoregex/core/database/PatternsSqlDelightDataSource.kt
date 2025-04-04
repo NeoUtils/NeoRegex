@@ -40,7 +40,8 @@ internal class PatternsSqlDelightDataSource(
 
             database.patternEntityQueries.insertPattern(
                 title = pattern.title,
-                text = pattern.text,
+                pattern = pattern.pattern,
+                sample = pattern.sample,
                 createAt = createAt
             )
 
@@ -72,7 +73,8 @@ internal class PatternsSqlDelightDataSource(
                 Pattern(
                     id = pattern.id,
                     title = pattern.title,
-                    text = pattern.text,
+                    pattern = pattern.pattern,
+                    sample = pattern.sample,
                     testCases = testCases.map {
                         TestCase(
                             uuid = Uuid.parseHex(it.uuid),
@@ -101,7 +103,8 @@ internal class PatternsSqlDelightDataSource(
                 Pattern(
                     id = pattern.id,
                     title = pattern.title,
-                    text = pattern.text,
+                    pattern = pattern.pattern,
+                    sample = pattern.sample,
                     testCases = testCases.map {
                         TestCase(
                             uuid = Uuid.parseHex(it.uuid),
@@ -125,11 +128,16 @@ internal class PatternsSqlDelightDataSource(
 
         database.transaction {
 
-            if (oldPattern.title != newPattern.title || oldPattern.text != newPattern.text) {
+            if (
+                oldPattern.title != newPattern.title ||
+                oldPattern.pattern != newPattern.pattern ||
+                oldPattern.sample != newPattern.sample
+            ) {
                 database.patternEntityQueries.updatePattern(
                     id = id,
                     title = newPattern.title,
-                    text = newPattern.text
+                    pattern = newPattern.pattern,
+                    sample = newPattern.sample
                 )
             }
 

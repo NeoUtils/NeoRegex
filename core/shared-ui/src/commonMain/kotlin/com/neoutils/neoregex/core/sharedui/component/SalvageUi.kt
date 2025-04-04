@@ -43,7 +43,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
-import com.neoutils.neoregex.core.common.model.Opened
+import com.neoutils.neoregex.core.manager.model.Opened
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.common_confirm_btn
@@ -87,17 +87,17 @@ fun SalvageUi(
         targetState = opened.name,
         transitionSpec = {
             fadeIn() togetherWith fadeOut()
-        }
+        },
+        modifier = Modifier.weight(
+            weight = 1f,
+            fill = false
+        )
     ) { name ->
         Text(
             text = name,
             style = mergedTextStyle,
             overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
-            modifier = Modifier.weight(
-                weight = 1f,
-                fill = false
-            )
+            maxLines = 1
         )
     }
 

@@ -29,10 +29,10 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class TextStateRepositoryImpl(
+class TextSampleRepositoryImpl(
     coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     private val history: TextHistoryManager = TextHistoryManager()
-) : TextStateRepository {
+) : TextSampleRepository {
 
     private val text = MutableStateFlow(TextState())
 

@@ -23,6 +23,7 @@ import com.neoutils.neoregex.core.common.model.TestCase
 data class Pattern(
     val id: Long? = null,
     val title: String,
-    val text: String,
+    val pattern: String,
+    val sample: String,
     val testCases: List<TestCase>
 )

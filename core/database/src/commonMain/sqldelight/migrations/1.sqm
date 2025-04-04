@@ -1,0 +1,15 @@
+CREATE TABLE PatternEntity_new (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT NOT NULL,
+    pattern TEXT NOT NULL,
+    sample TEXT NOT NULL,
+    createAt INTEGER NOT NULL
+);
+
+INSERT INTO PatternEntity_new (id, title, pattern, sample, createAt)
+SELECT id, title, text, '', createAt
+FROM PatternEntity;
+
+DROP TABLE PatternEntity;
+
+ALTER TABLE PatternEntity_new RENAME TO PatternEntity;
