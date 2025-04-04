@@ -9,6 +9,9 @@ string|about_version_text|diUxJHMgKCUyJHMp
 string|about_vm_text|Vk06ICUxJHMgYnkgJTIkcw==
 string|app_name|TmVvUmVnZXg=
 string|app_title|TmVvUmVnZXggLSAlMSRz
+string|common_cancel_btn|Q2FuY2Vs
+string|common_confirm_btn|Q29uZmlybQ==
+string|common_delete_btn|RGVsZXRl
 string|fatal_error_copied_label|Q29waWVkIQ==
 string|fatal_error_copy_btn|Q29weSBlcnJvcg==
 string|fatal_error_message|V2UnZCBsb3ZlIHRvIGZpeCB0aGlzISBJZiBwb3NzaWJsZSwgcGxlYXNlIHNoYXJlIHdoYXQgaGFwcGVuZWQu
@@ -18,6 +21,17 @@ string|fatal_error_stack_trace_tab|U3RhY2sgdHJhY2U=
 string|fatal_error_subtitle|T29wcyEgU29tZXRoaW5nIHdlbnQgd3Jvbmcu
 string|fatal_error_title|RmF0YWwgZXJyb3I6ICUxJHM=
 string|matcher_footer_insert_regex_hint|RW50ZXIgcmVndWxhciBleHByZXNzaW9u
+string|menu_about_btn|QWJvdXQ=
+string|menu_new_btn|TmV3
+string|menu_open_btn|T3Blbg==
+string|menu_save_btn|U2F2ZQ==
+string|salvage_edit_name_dialog_title|RWRpdCBuYW1l
+string|salvage_pattern_name_hint|UGF0dGVybiBuYW1l
+string|salvage_save_dialog_save_btn|U2F2ZQ==
+string|salvage_save_dialog_title|U2F2ZSBwYXR0ZXJu
+string|saved_delete_pattern_title|RGVsZXRlIHBhdHRlcm4=
+string|saved_description|RG8geW91IHJlYWxseSB3YW50IHRvIGRlbGV0ZSAlMSRzPw==
+string|saved_empty|Tm90aGluZyBzYXZlZCB5ZXQ=
 string|screen_about|QWJvdXQ=
 string|screen_libraries|TGlicmFyaWVz
 string|screen_matcher|TWF0Y2hlcg==
@@ -27,4 +41,6 @@ string|test_case_match_any|TWF0Y2ggQW55
 string|test_case_match_full|TWF0Y2ggRnVsbA==
 string|test_case_match_none|TWF0Y2ggTm9uZQ==
 string|test_case_untitled|VW50aXRsZWQ=
+string|validator_add_test_case_btn|QWRkIHRlc3QgY2FzZQ==
+string|validator_insert_input_hint|RW50ZXIgaW5wdXQ=
 string|web_warning_text|TmVvUmVnZXggd2ViIHZlcnNpb24gaXMgZXhwZXJpbWVudGFs

@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "generated": "2024-12-23T02:14:31.691Z"
+        "generated": "2025-03-31T13:25:51.143Z"
     },
     "libraries": [
         {
@@ -29,6 +29,98 @@
             }
         },
         {
+            "uniqueId": "app.cash.sqldelight:async-extensions-js",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Square, Inc."
+                }
+            ],
+            "artifactVersion": "2.0.2",
+            "description": "Kotlin extensions for working with Async drivers",
+            "scm": {
+                "connection": "scm:git:git://github.com/cashapp/sqldelight.git",
+                "url": "https://github.com/cashapp/sqldelight/",
+                "developerConnection": "scm:git:ssh://git@github.com/cashapp/sqldelight.git"
+            },
+            "name": "SQLDelight Async Driver Extensions",
+            "website": "https://github.com/cashapp/sqldelight/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "app.cash.sqldelight:coroutines-extensions-js",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Square, Inc."
+                }
+            ],
+            "artifactVersion": "2.0.2",
+            "description": "Kotlin extension functions to expose SQLDelight's Query as a Flow",
+            "scm": {
+                "connection": "scm:git:git://github.com/cashapp/sqldelight.git",
+                "url": "https://github.com/cashapp/sqldelight/",
+                "developerConnection": "scm:git:ssh://git@github.com/cashapp/sqldelight.git"
+            },
+            "name": "SQLDelight Coroutines Extensions",
+            "website": "https://github.com/cashapp/sqldelight/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "app.cash.sqldelight:runtime-js",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Square, Inc."
+                }
+            ],
+            "artifactVersion": "2.0.2",
+            "description": "Multiplatform runtime library to support generated code",
+            "scm": {
+                "connection": "scm:git:git://github.com/cashapp/sqldelight.git",
+                "url": "https://github.com/cashapp/sqldelight/",
+                "developerConnection": "scm:git:ssh://git@github.com/cashapp/sqldelight.git"
+            },
+            "name": "SQLDelight Multiplatform Runtime (Experimental)",
+            "website": "https://github.com/cashapp/sqldelight/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "app.cash.sqldelight:sqljs-driver",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Square, Inc."
+                }
+            ],
+            "artifactVersion": "2.0.0-alpha05",
+            "description": "JavaScript SQLite driver for SQLDelight",
+            "scm": {
+                "connection": "scm:git:git://github.com/cashapp/sqldelight.git",
+                "url": "https://github.com/cashapp/sqldelight/",
+                "developerConnection": "scm:git:ssh://git@github.com/cashapp/sqldelight.git"
+            },
+            "name": "SQLDelight JavaScript Driver",
+            "website": "https://github.com/cashapp/sqldelight/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "cafe.adriel.voyager:voyager-core-js",
             "funding": [
                 
@@ -46,6 +138,29 @@
                 "developerConnection": "scm:git:ssh://git@github.com/adrielcafe/voyager.git"
             },
             "name": "VoyagerCore",
+            "website": "https://github.com/adrielcafe/voyager",
+            "licenses": [
+                "MIT"
+            ]
+        },
+        {
+            "uniqueId": "cafe.adriel.voyager:voyager-koin-js",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Adriel Cafe"
+                }
+            ],
+            "artifactVersion": "1.1.0-beta03",
+            "description": "A pragmatic navigation library for Jetpack Compose",
+            "scm": {
+                "connection": "scm:git:ssh://git@github.com/adrielcafe/voyager.git",
+                "url": "https://github.com/adrielcafe/voyager",
+                "developerConnection": "scm:git:ssh://git@github.com/adrielcafe/voyager.git"
+            },
+            "name": "VoyagerKoin",
             "website": "https://github.com/adrielcafe/voyager",
             "licenses": [
                 "MIT"
@@ -118,6 +233,29 @@
             "website": "https://github.com/adrielcafe/voyager",
             "licenses": [
                 "MIT"
+            ]
+        },
+        {
+            "uniqueId": "co.touchlab:stately-common-js",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Kevin Galligan"
+                }
+            ],
+            "artifactVersion": "2.0.6",
+            "description": "Multithreaded Kotlin Multiplatform Utilities",
+            "scm": {
+                "connection": "scm:git:git://github.com/touchlab/Stately.git",
+                "url": "https://github.com/touchlab/Stately",
+                "developerConnection": "scm:git:git://github.com/touchlab/Stately.git"
+            },
+            "name": "Stately",
+            "website": "https://github.com/touchlab/Stately",
+            "licenses": [
+                "Apache-2.0"
             ]
         },
         {
@@ -1135,7 +1273,7 @@
                     "name": "JetBrains Team"
                 }
             ],
-            "artifactVersion": "0.6.0",
+            "artifactVersion": "0.6.1",
             "description": "Kotlin Datetime Library",
             "scm": {
                 "url": "https://github.com/Kotlin/kotlinx-datetime"
