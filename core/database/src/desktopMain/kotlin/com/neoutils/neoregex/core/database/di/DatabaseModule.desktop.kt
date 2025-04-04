@@ -19,6 +19,7 @@
 package com.neoutils.neoregex.core.database.di
 
 import com.neoutils.neoregex.core.database.PatternsSqlDelightDataSource
+import com.neoutils.neoregex.core.database.db.PatternDatabase
 import com.neoutils.neoregex.core.database.factory.DriverFactory
 import com.neoutils.neoregex.core.database.factory.PatternJvmDriverFactory
 import com.neoutils.neoregex.core.database.provider.PatternDatabaseProvider
@@ -28,7 +29,8 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 actual val databaseModule = module {
-    single { PatternJvmDriverFactory() } bind DriverFactory::class
+    singleOf(::PatternJvmDriverFactory) bind DriverFactory::class
     singleOf(::PatternsSqlDelightDataSource) bind PatternsDataSource::class
     single { PatternDatabaseProvider(get()).database }
+    single { PatternDatabase.Schema }
 }

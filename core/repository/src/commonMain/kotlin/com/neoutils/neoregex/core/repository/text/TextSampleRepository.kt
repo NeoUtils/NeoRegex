@@ -22,7 +22,7 @@ import com.neoutils.neoregex.core.common.model.TextState
 import com.neoutils.neoregex.core.repository.model.SampleState
 import kotlinx.coroutines.flow.StateFlow
 
-interface TextStateRepository {
+interface TextSampleRepository {
 
     val flow : StateFlow<SampleState>
     val sample get() = flow.value

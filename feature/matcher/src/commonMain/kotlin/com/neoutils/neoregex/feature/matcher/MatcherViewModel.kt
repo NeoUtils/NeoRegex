@@ -25,7 +25,7 @@ import com.neoutils.neoregex.core.common.model.HistoryState
 import com.neoutils.neoregex.core.common.model.Inputs
 import com.neoutils.neoregex.core.common.model.Match
 import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
-import com.neoutils.neoregex.core.repository.text.TextStateRepository
+import com.neoutils.neoregex.core.repository.text.TextSampleRepository
 import com.neoutils.neoregex.core.sharedui.component.FooterAction
 import com.neoutils.neoregex.core.sharedui.component.Performance
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
@@ -37,13 +37,13 @@ import kotlinx.datetime.Clock
 @OptIn(FlowPreview::class)
 class MatcherViewModel(
     private val patternStateRepository: PatternStateRepository,
-    private val textStateRepository: TextStateRepository
+    private val textSampleRepository: TextSampleRepository
 ) : ScreenModel {
 
     private val field = MutableStateFlow<Field?>(value = null)
 
     private val resultFlow = combine(
-        textStateRepository.flow.map { it.text.value }.distinctUntilChanged(),
+        textSampleRepository.flow.map { it.text.value }.distinctUntilChanged(),
         patternStateRepository.flow.map { it.text.value }.distinctUntilChanged()
     ) { text, pattern ->
 
@@ -89,7 +89,7 @@ class MatcherViewModel(
 
     private val historyFlow = combine(
         field,
-        textStateRepository.flow.map { it.history },
+        textSampleRepository.flow.map { it.history },
         patternStateRepository.flow.map { it.history }
     ) { target, textHistory, patternHistory ->
         when (target) {
@@ -102,7 +102,7 @@ class MatcherViewModel(
 
     private val inputFlow = combine(
         field,
-        textStateRepository.flow.map { it.text },
+        textSampleRepository.flow.map { it.text },
         patternStateRepository.flow.map { it.text },
     ) { target, text, pattern ->
         Inputs(
@@ -164,7 +164,7 @@ class MatcherViewModel(
     fun onAction(action: MatcherAction) {
         when (action) {
             is MatcherAction.UpdateText -> {
-                textStateRepository.update(action.text)
+                textSampleRepository.update(action.text)
             }
 
             is MatcherAction.TargetChange -> {
@@ -200,7 +200,7 @@ class MatcherViewModel(
     private fun redo(field: Field) {
         when (field) {
             Field.TEXT -> {
-                textStateRepository.redo()
+                textSampleRepository.redo()
             }
 
             Field.REGEX -> {
@@ -212,7 +212,7 @@ class MatcherViewModel(
     private fun undo(field: Field) {
         when (field) {
             Field.TEXT -> {
-                textStateRepository.undo()
+                textSampleRepository.undo()
             }
 
             Field.REGEX -> {

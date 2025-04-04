@@ -1,7 +1,8 @@
 CREATE TABLE PatternEntity (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
-    text TEXT NOT NULL,
+    pattern TEXT NOT NULL,
+    sample TEXT NOT NULL,
     createAt INTEGER NOT NULL
 );
 
@@ -16,8 +17,8 @@ FROM PatternEntity
 ORDER BY createAt DESC;
 
 insertPattern:
-INSERT INTO PatternEntity(title, text, createAt)
-VALUES (?, ?, ?);
+INSERT INTO PatternEntity(title, pattern, sample, createAt)
+VALUES (?, ?, ?, ?);
 
 getLastInsertedId:
 SELECT last_insert_rowid();
@@ -28,5 +29,5 @@ WHERE id = ?;
 
 updatePattern:
 UPDATE PatternEntity
-SET title = ?, text = ?
+SET title = ?, pattern = ?, sample = ?
 WHERE id = ?;

@@ -45,7 +45,7 @@ class SavedViewModel(
                 SavedUiState.Pattern(
                     id = checkNotNull(pattern.id),
                     title = pattern.title,
-                    text = pattern.text,
+                    text = pattern.pattern,
                     opened = pattern.id == saved?.id
                 )
             }
