@@ -26,7 +26,7 @@ import org.gradle.kotlin.dsl.the
 val config = Config(
     version = Config.Version(
         major = 3,
-        minor = 0,
+        minor = 1,
         patch = 0,
         phase = Config.Phase.RELEASE
     ),
