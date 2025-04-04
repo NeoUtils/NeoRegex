@@ -19,11 +19,13 @@
 package com.neoutils.neoregex
 
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -40,7 +42,7 @@ import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.sharedui.component.Context
+import com.neoutils.neoregex.core.sharedui.component.NeoTitle
 import com.neoutils.neoregex.core.sharedui.component.Controller
 import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.extension.surface
@@ -78,19 +80,23 @@ private fun NeoAppBar(
 ) = CenterAlignedTopAppBar(
     navigationIcon = {
         Controller(
-            modifier = Modifier.padding(
-                start = dimensions.tiny
-            )
+            modifier = Modifier
+                .padding(start = dimensions.tiny)
+                .height(dimensions.huge)
         )
     },
     title = {
-        Context()
+        NeoTitle(
+            titleStyle = typography.titleMedium.copy(
+                fontFamily = null
+            )
+        )
     },
     actions = {
         Options(
-            modifier = Modifier.padding(
-                end = dimensions.small
-            )
+            modifier = Modifier
+                .padding(end = dimensions.small)
+                .height(dimensions.big)
         )
     },
     modifier = modifier.surface(

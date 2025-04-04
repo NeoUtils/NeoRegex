@@ -23,9 +23,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -41,8 +39,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.neoutils.neoregex.core.common.platform.Platform
+import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.designsystem.theme.configButton
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
@@ -82,14 +81,14 @@ fun Menu(
                 contentDescription = null,
                 modifier = Modifier
                     .clip(CircleShape)
+                    .aspectRatio(ratio = 1f)
                     .clickable(
                         onClick = {
                             coroutine.launch {
                                 navigation.emit(Navigation.Event.OnBack)
                             }
                         }
-                    )
-                    .configButton()
+                    ).padding(dimensions.tiny)
             )
         } else {
             Icon(
@@ -97,8 +96,9 @@ fun Menu(
                 contentDescription = null,
                 modifier = Modifier
                     .clip(CircleShape)
+                    .aspectRatio(ratio = 1f)
                     .clickable { expanded = true }
-                    .configButton()
+                    .padding(dimensions.tiny)
             )
         }
     }

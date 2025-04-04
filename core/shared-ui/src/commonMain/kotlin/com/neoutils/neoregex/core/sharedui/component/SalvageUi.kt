@@ -24,8 +24,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -44,11 +43,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import com.neoutils.neoregex.core.common.model.Opened
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.designsystem.theme.configButton
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.common_confirm_btn
 import com.neoutils.neoregex.core.resources.salvage_edit_name_dialog_title
@@ -75,8 +71,8 @@ fun SalvageUi(
         ).compositeOver(
             colorScheme.surfaceVariant
         ),
-        shape = RoundedCornerShape(4.dp)
-    )
+        shape = RoundedCornerShape(dimensions.tiny)
+    ).padding(dimensions.tiny)
 ) {
 
     val mergedTextStyle = typography.labelLarge.copy(
@@ -84,6 +80,8 @@ fun SalvageUi(
     ).merge(textStyle)
 
     var showChangeName by remember { mutableStateOf(false) }
+
+    Spacer(Modifier.width(dimensions.tiny))
 
     AnimatedContent(
         targetState = opened.name,
@@ -96,70 +94,65 @@ fun SalvageUi(
             style = mergedTextStyle,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
-            modifier = Modifier
-                .weight(weight = 1f, fill = false)
-                .padding(start = dimensions.small)
+            modifier = Modifier.weight(
+                weight = 1f,
+                fill = false
+            )
         )
     }
 
-    Row(
-        modifier = Modifier.padding(4.dp)
-    ) {
-        Icon(
-            imageVector = Icons.TwoTone.Edit,
-            contentDescription = null,
-            tint = colorScheme.onSurface,
-            modifier = Modifier
-                .clip(CircleShape)
-                .clickable { showChangeName = true }
-                .configButton(buttons.small)
-        )
+    Spacer(Modifier.width(dimensions.tiny))
 
-        Icon(
-            imageVector = Icons.TwoTone.Sync,
-            contentDescription = null,
-            tint = colorScheme.onSurface.copy(
-                alpha = if (opened.updated) 0.5f else 1f
-            ),
-            modifier = Modifier
-                .clip(CircleShape)
-                .clickable(
-                    enabled = !opened.updated,
-                    onClick = {
-                        onAction(SalvageAction.Reset)
-                    }
-                )
-                .configButton(buttons.small)
-        )
+    Icon(
+        imageVector = Icons.TwoTone.Edit,
+        contentDescription = null,
+        tint = colorScheme.onSurface,
+        modifier = Modifier
+            .clip(CircleShape)
+            .aspectRatio(ratio = 1f)
+            .clickable { showChangeName = true }
+            .padding(dimensions.micro)
+    )
 
+    Icon(
+        imageVector = Icons.TwoTone.Sync,
+        contentDescription = null,
+        tint = colorScheme.onSurface.copy(
+            alpha = if (opened.updated) 0.5f else 1f
+        ),
+        modifier = Modifier
+            .clip(CircleShape)
+            .aspectRatio(ratio = 1f)
+            .clickable(!opened.updated) {
+                onAction(SalvageAction.Reset)
+            }
+            .padding(dimensions.micro)
+    )
 
-        Icon(
-            imageVector = Icons.TwoTone.Save,
-            contentDescription = null,
-            tint = colorScheme.onSurface.copy(
-                alpha = if (opened.canUpdate) 1f else 0.5f
-            ),
-            modifier = Modifier
-                .clip(CircleShape)
-                .clickable(
-                    enabled = opened.canUpdate,
-                    onClick = {
-                        onAction(SalvageAction.Update)
-                    }
-                )
-                .configButton(buttons.small)
-        )
+    Icon(
+        imageVector = Icons.TwoTone.Save,
+        contentDescription = null,
+        tint = colorScheme.onSurface.copy(
+            alpha = if (opened.canUpdate) 1f else 0.5f
+        ),
+        modifier = Modifier
+            .clip(CircleShape)
+            .aspectRatio(ratio = 1f)
+            .clickable(opened.canUpdate) {
+                onAction(SalvageAction.Update)
+            }
+            .padding(dimensions.micro)
+    )
 
-        Icon(
-            imageVector = Icons.TwoTone.Close,
-            contentDescription = null,
-            tint = colorScheme.onSurface,
-            modifier = Modifier
-                .clip(CircleShape)
-                .clickable { onAction(SalvageAction.Close) }
-                .configButton(buttons.small)
-        )
-    }
+    Icon(
+        imageVector = Icons.TwoTone.Close,
+        contentDescription = null,
+        tint = colorScheme.onSurface,
+        modifier = Modifier
+            .clip(CircleShape)
+            .clickable { onAction(SalvageAction.Close) }
+            .padding(dimensions.micro)
+    )
 
     if (showChangeName) {
         PatternNameDialog(

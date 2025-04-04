@@ -34,5 +34,6 @@ data class Dimensions(
     val default: Dp = 16.dp,
     val great: Dp = 18.dp,
     val large: Dp = 24.dp,
+    val big: Dp = 28.dp,
     val huge: Dp = 32.dp,
 )
