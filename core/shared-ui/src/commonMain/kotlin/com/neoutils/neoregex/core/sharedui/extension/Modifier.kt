@@ -20,11 +20,19 @@ package com.neoutils.neoregex.core.sharedui.extension
 
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Stable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 @Stable
 fun Modifier.surface(
@@ -43,10 +51,44 @@ fun Modifier.surface(
         } else {
             Modifier
         }
-    )
-        .background(
-            color = backgroundColor,
-            shape = shape
-        )
-        .clip(shape)
+    ).background(
+        color = backgroundColor,
+        shape = shape
+    ).clip(shape)
 }
+
+fun Modifier.onLongPress(
+    delay: Duration = 10.milliseconds,
+    action: () -> Unit
+) = composed {
+
+    val scope = rememberCoroutineScope()
+
+    pointerInput(Unit) {
+
+        var job: Job? = null
+
+        detectPressEvent(
+            onRelease = {
+                job?.cancel()
+            },
+            onLongPress = {
+                job = scope.launch {
+                    while (true) {
+                        action()
+                        delay(delay)
+                    }
+                }
+            },
+        )
+    }
+}
+
+enum class Swipe {
+    Up,
+    Down
+}
+
+expect fun Modifier.onSwipe(
+    onSwipe: (Swipe) -> Unit
+): Modifier

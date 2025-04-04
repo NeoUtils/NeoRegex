@@ -23,9 +23,9 @@ import androidx.compose.ui.window.FrameWindowScope
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 
-enum class WindowFocus(val focused: Boolean) {
-    FOCUSED(focused = true),
-    UNFOCUSED(focused = false);
+enum class WindowFocus {
+    FOCUSED,
+    UNFOCUSED;
 }
 
 @Composable

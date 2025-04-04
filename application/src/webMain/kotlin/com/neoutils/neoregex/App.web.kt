@@ -49,23 +49,38 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.common.extension.toCss
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
+import com.neoutils.neoregex.core.database.di.databaseModule
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource
+import com.neoutils.neoregex.core.datasource.di.dataSourceModule
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.dispatcher.di.dispatcherModule
+import com.neoutils.neoregex.core.manager.di.managerModule
+import com.neoutils.neoregex.core.repository.di.repositoryModule
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.resources.web_warning_text
-import com.neoutils.neoregex.core.sharedui.component.Navigation
+import com.neoutils.neoregex.core.sharedui.component.Controller
 import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import com.neoutils.neoregex.core.sharedui.extension.surface
+import com.neoutils.neoregex.feature.matcher.di.matcherModule
+import com.neoutils.neoregex.feature.validator.di.validatorModule
 import kotlinx.browser.document
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
-fun WebApp() = WithKoin {
+fun WebApp() = WithKoin(
+    managerModule,
+    dataSourceModule,
+    databaseModule,
+    repositoryModule,
+    dispatcherModule,
+    matcherModule,
+    validatorModule,
+) {
 
     val preferencesDataSource = koinInject<PreferencesDataSource>()
 
@@ -108,6 +123,7 @@ fun WebApp() = WithKoin {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Header(
     modifier: Modifier = Modifier,
@@ -132,18 +148,14 @@ private fun Header(
                 ),
             )
 
-            Navigation()
+            Controller()
         }
     },
     actions = {
         Options(
             modifier = Modifier
                 .padding(dimensions.short)
-                .height(32.dp),
-            horizontalArrangement = Arrangement.spacedBy(
-                dimensions.short,
-                Alignment.End
-            )
+                .height(dimensions.huge),
         )
     },
     colors = TopAppBarDefaults.topAppBarColors(
@@ -153,7 +165,7 @@ private fun Header(
 )
 
 @Composable
-fun TopLabel(
+private fun TopLabel(
     text: String,
     visible: Boolean = true,
     onClose: () -> Unit = {},
@@ -180,7 +192,7 @@ fun TopLabel(
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .align(Alignment.Center)
-                            .padding(vertical = 8.dp),
+                            .padding(vertical = dimensions.small),
                     )
 
                     Icon(

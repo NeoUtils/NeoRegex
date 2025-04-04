@@ -45,26 +45,29 @@ import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.input.pointer.onPointerEvent
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.LineHeightStyle
+import com.neoutils.neoregex.core.common.extension.getBoundingBoxes
+import com.neoutils.neoregex.core.common.extension.toText
+import com.neoutils.neoregex.core.common.extension.toTextFieldValue
+import com.neoutils.neoregex.core.common.model.DrawMatch
+import com.neoutils.neoregex.core.common.model.Match
+import com.neoutils.neoregex.core.common.model.TextState
 import com.neoutils.neoregex.core.common.util.InteractionMode
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.sharedui.extension.getBoundingBoxes
 import com.neoutils.neoregex.core.sharedui.extension.toText
 import com.neoutils.neoregex.core.sharedui.extension.tooltip
-import com.neoutils.neoregex.core.sharedui.model.Match
-import com.neoutils.neoregex.core.sharedui.model.MatchBox
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 actual fun TextEditor(
-    value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
+    value: TextState,
+    onValueChange: (TextState) -> Unit,
     modifier: Modifier,
     onFocusChange: (FocusState) -> Unit,
     matches: List<Match>,
-    textStyle: TextStyle
+    textStyle: TextStyle,
+    config: Config
 ) = Column(modifier) {
 
     val mergedTextStyle = typography.bodyMedium.merge(textStyle)
@@ -85,11 +88,7 @@ actual fun TextEditor(
 
     val textMeasurer = rememberTextMeasurer()
 
-    val interactionMode = InteractionMode.Current
-
-    val colorScheme = colorScheme
-
-    if (interactionMode == InteractionMode.TOUCH) {
+    if (InteractionMode.Current == InteractionMode.TOUCH) {
         LaunchedEffect(interactionSource, matches) {
             interactionSource.interactions.collect { interaction ->
                 when (interaction) {
@@ -145,13 +144,14 @@ actual fun TextEditor(
                 .background(colorScheme.surfaceVariant)
                 .fillMaxHeight()
         )
+        val textFileValue = remember(value) { value.toTextFieldValue() }
 
         // TODO(improve): it's not performant for large text
         BasicTextField(
-            value = value.copy(
-                composition = null,
-            ),
-            onValueChange = onValueChange,
+            value = textFileValue,
+            onValueChange = {
+                onValueChange(it.toText())
+            },
             textStyle = mergedTextStyle.copy(
                 lineHeightStyle = LineHeightStyle(
                     alignment = LineHeightStyle.Alignment.Proportional,
@@ -178,54 +178,60 @@ actual fun TextEditor(
                     hoverOffset = null
                 }
                 .drawWithContent {
-                    val matchBoxes = textLayout?.let { textLayout ->
-                        matches.flatMap { match ->
-                            textLayout.getBoundingBoxes(
-                                match.range.first,
-                                match.range.last
-                            ).map {
-                                MatchBox(
-                                    match,
+                    val drawMatches = textLayout?.let { textLayout ->
+                        matches.map { match ->
+                            DrawMatch(
+                                match = match,
+                                rects = textLayout.getBoundingBoxes(
+                                    match.range.first,
+                                    match.range.last
+                                ).map {
                                     it.deflate(
                                         delta = 0.8f
                                     )
-                                )
-                            }
+                                }
+                            )
                         }
-                    } ?: listOf()
+                    }.orEmpty()
 
-                    matchBoxes.forEach { (_, rect) ->
-                        drawRect(
-                            color = colorScheme.secondary,
-                            topLeft = Offset(
-                                x = rect.left,
-                                y = rect.top
-                            ),
-                            size = Size(rect.width, rect.height)
-                        )
+                    drawMatches.forEach { (_, rects) ->
+                        rects.forEach { rect ->
+                            drawRect(
+                                color = config.matchColor,
+                                topLeft = Offset(
+                                    x = rect.left,
+                                    y = rect.top
+                                ),
+                                size = Size(rect.width, rect.height)
+                            )
+                        }
                     }
 
                     drawContent()
 
-                    when (interactionMode) {
+                    when (InteractionMode.Current) {
                         InteractionMode.MOUSE -> {
                             hoverOffset?.let { offset ->
-                                val matchBox = matchBoxes.firstOrNull { (_, rect) ->
-                                    rect.contains(offset)
+                                val drawMatch = drawMatches.firstOrNull { (_, rects) ->
+                                    rects.any { it.contains(offset) }
                                 }
 
-                                matchBox?.let { (match, rect) ->
-                                    drawRect(
-                                        color = colorScheme.onSurface,
-                                        topLeft = Offset(
-                                            x = rect.left,
-                                            y = rect.top
-                                        ),
-                                        size = Size(rect.width, rect.height),
-                                        style = Stroke(
-                                            width = 1f
+                                drawMatch?.let { (match, rects) ->
+                                    rects.forEach { rect ->
+                                        drawRect(
+                                            color = config.selectedMatchColor,
+                                            topLeft = Offset(
+                                                x = rect.left,
+                                                y = rect.top
+                                            ),
+                                            size = Size(rect.width, rect.height),
+                                            style = Stroke(
+                                                width = 1f
+                                            )
                                         )
-                                    )
+                                    }
+
+                                    val rect = rects.first { it.contains(offset) }
 
                                     tooltip(
                                         anchorRect = rect.inflate(
@@ -241,36 +247,38 @@ actual fun TextEditor(
                                         measure = textMeasurer.measure(
                                             text = match.toText(),
                                             style = mergedTextStyle.copy(
-                                                color = colorScheme.onSecondaryContainer,
+                                                color = config.tooltipTextColor,
                                             )
                                         ),
-                                        backgroundColor = colorScheme.secondaryContainer,
+                                        backgroundColor = config.tooltipBackgroundColor,
                                     )
                                 }
                             }
                         }
 
                         InteractionMode.TOUCH -> {
-                            val matchBox = matchBoxes.firstOrNull { (match, rect) ->
+                            val drawMatch = drawMatches.firstOrNull { (match, rects) ->
                                 pressedMatchOffset?.let { offset ->
-                                    rect.contains(offset)
+                                    rects.any { it.contains(offset) }
                                 } ?: run {
                                     selectedMatch == match
                                 }
                             }
 
-                            matchBox?.let { (_, rect) ->
-                                drawRect(
-                                    color = colorScheme.onSurface,
-                                    topLeft = Offset(
-                                        x = rect.left,
-                                        y = rect.top
-                                    ),
-                                    size = Size(rect.width, rect.height),
-                                    style = Stroke(
-                                        width = 1f
+                            drawMatch?.let { (_, rects) ->
+                                rects.forEach { rect ->
+                                    drawRect(
+                                        color = config.selectedMatchColor,
+                                        topLeft = Offset(
+                                            x = rect.left,
+                                            y = rect.top
+                                        ),
+                                        size = Size(rect.width, rect.height),
+                                        style = Stroke(
+                                            width = 1f
+                                        )
                                     )
-                                )
+                                }
                             }
                         }
                     }

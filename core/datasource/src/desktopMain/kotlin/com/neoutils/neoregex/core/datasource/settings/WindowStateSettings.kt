@@ -20,6 +20,7 @@ package com.neoutils.neoregex.core.datasource.settings
 
 import com.neoutils.neoregex.core.datasource.WindowStateDataSource
 import com.neoutils.neoregex.core.datasource.model.WindowStateData
+import com.neoutils.neoregex.core.datasource.model.WindowStateData.Size
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.ObservableSettings
 import com.russhwolf.settings.PreferencesSettings
@@ -51,6 +52,7 @@ internal class WindowStateSettings(
         val windowState = block(flow.value)
 
         settings.encodeValue(WindowStateData.serializer(), KEY, windowState)
+
         _flow.value = windowState
 
         return windowState

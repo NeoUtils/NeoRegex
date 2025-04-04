@@ -49,9 +49,14 @@ include(
     ":core:shared-ui",
     ":core:common",
     ":core:datasource",
+    ":core:database",
     ":core:dispatcher",
+    ":core:repository",
+    ":core:manager",
     ":feature:matcher",
     ":feature:about",
+    ":feature:validator",
+    ":feature:saved",
 )
 
 rootProject.name = "NeoRegex"

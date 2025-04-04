@@ -19,19 +19,16 @@
 package com.neoutils.neoregex.core.sharedui.di
 
 import androidx.compose.runtime.Composable
-import com.neoutils.neoregex.core.datasource.di.dataSourceModule
-import com.neoutils.neoregex.core.dispatcher.di.navigationModule
 import org.koin.compose.KoinApplication
+import org.koin.core.module.Module
 
 @Composable
 fun WithKoin(
-    content: @Composable () -> Unit
+    vararg modules: Module,
+    content: @Composable () -> Unit,
 ) = KoinApplication(
     application = {
-        modules(
-            dataSourceModule,
-            navigationModule
-        )
+        modules(modules.toList())
     },
     content = content
 )

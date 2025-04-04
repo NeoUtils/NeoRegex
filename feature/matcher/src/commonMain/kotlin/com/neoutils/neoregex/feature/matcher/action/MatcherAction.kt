@@ -18,40 +18,31 @@
 
 package com.neoutils.neoregex.feature.matcher.action
 
-import com.neoutils.neoregex.feature.matcher.model.Target
-import com.neoutils.neoregex.feature.matcher.model.TextState
+import com.neoutils.neoregex.core.common.model.Field
+import com.neoutils.neoregex.core.common.model.TextState
 
 sealed class MatcherAction {
 
     data object Toggle : MatcherAction()
 
     data class TargetChange(
-        val target: Target
+        val field: Field
     ) : MatcherAction()
 
-    sealed class Input : MatcherAction() {
-
-        abstract val textState: TextState
-
-        data class UpdateText(
-            override val textState: TextState
-        ) : Input()
-
-        data class UpdateRegex(
-            override val textState: TextState
-        ) : Input()
-    }
+    data class UpdateText(
+        val text: TextState
+    ) : MatcherAction()
 
     sealed class History : MatcherAction() {
 
-        abstract val textState: Target?
+        abstract val textState: Field?
 
         data class Undo(
-            override val textState: Target? = null
+            override val textState: Field? = null
         ) : History()
 
         data class Redo(
-            override val textState: Target? = null
+            override val textState: Field? = null
         ) : History()
     }
 }

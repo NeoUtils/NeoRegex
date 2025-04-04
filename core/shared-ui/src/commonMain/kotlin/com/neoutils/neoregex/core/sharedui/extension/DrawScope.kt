@@ -49,39 +49,59 @@ fun DrawScope.tooltip(
 
     val drawAbove = anchorRect.bottom + triangleHeightPx + tooltipSize.height > size.height
 
+    // Calculate horizontal position, ensuring tooltip stays within screen bounds
+    var xPosition = anchorRect.center.x - tooltipSize.width / 2
+    
+    // Adjust x position if tooltip would extend beyond left edge
+    if (xPosition < 0) {
+        xPosition = 0f
+    }
+    
+    // Adjust x position if tooltip would extend beyond right edge
+    if (xPosition + tooltipSize.width > size.width) {
+        xPosition = size.width - tooltipSize.width
+    }
+    
     val topLeft = if (drawAbove) {
         Offset(
-            x = anchorRect.center.x - tooltipSize.width / 2,
+            x = xPosition,
             y = anchorRect.top - tooltipSize.height - triangleHeightPx
         )
     } else {
         Offset(
-            x = anchorRect.center.x - tooltipSize.width / 2,
+            x = xPosition,
             y = anchorRect.bottom + triangleHeightPx
         )
     }
 
+    // Calculate triangle position to ensure it aligns with the anchor
+    // but doesn't exceed tooltip bounds and respects corner radius
+    val triangleX = anchorRect.center.x.coerceIn(
+        xPosition + cornerRadiusPx + triangleHeightPx,
+        xPosition + tooltipSize.width - cornerRadiusPx - triangleHeightPx
+    )
+
     drawPath(
         path = Path().apply {
             if (drawAbove) {
-                moveTo(anchorRect.center.x, anchorRect.top)
+                moveTo(triangleX, anchorRect.top)
                 lineTo(
-                    x = anchorRect.center.x - triangleHeightPx,
+                    x = triangleX - triangleHeightPx,
                     y = anchorRect.top - triangleHeightPx
                 )
                 lineTo(
-                    x = anchorRect.center.x + triangleHeightPx,
+                    x = triangleX + triangleHeightPx,
                     y = anchorRect.top - triangleHeightPx
                 )
                 close()
             } else {
-                moveTo(anchorRect.center.x, anchorRect.bottom)
+                moveTo(triangleX, anchorRect.bottom)
                 lineTo(
-                    x = anchorRect.center.x - triangleHeightPx,
+                    x = triangleX - triangleHeightPx,
                     y = anchorRect.bottom + triangleHeightPx
                 )
                 lineTo(
-                    x = anchorRect.center.x + triangleHeightPx,
+                    x = triangleX + triangleHeightPx,
                     y = anchorRect.bottom + triangleHeightPx
                 )
                 close()

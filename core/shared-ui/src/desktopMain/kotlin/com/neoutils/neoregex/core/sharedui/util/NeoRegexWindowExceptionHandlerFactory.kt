@@ -21,32 +21,37 @@ package com.neoutils.neoregex.core.sharedui.util
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.WindowExceptionHandler
 import androidx.compose.ui.window.WindowExceptionHandlerFactory
-import androidx.compose.ui.window.launchApplication
-import com.neoutils.neoregex.core.common.util.mainUIScope
+import androidx.compose.ui.window.awaitApplication
 import com.neoutils.neoregex.core.sharedui.component.FatalErrorWindow
 import com.neoutils.neoregex.core.sharedui.theme.NeoErrorTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.awt.Window
 import java.awt.event.WindowEvent
 import javax.swing.SwingUtilities
-import java.awt.Window as AwtWindows
 
 @OptIn(ExperimentalComposeUiApi::class)
 object NeoRegexWindowExceptionHandlerFactory : WindowExceptionHandlerFactory {
 
-    override fun exceptionHandler(window: AwtWindows) = WindowExceptionHandler { throwable ->
+    private val defaultScope = CoroutineScope(Dispatchers.Default)
+
+    override fun exceptionHandler(window: Window) = WindowExceptionHandler { throwable ->
 
         SwingUtilities.invokeLater {
-
-            mainUIScope.launchApplication {
-                NeoErrorTheme {
-                    FatalErrorWindow(throwable)
+            defaultScope.launch {
+                awaitApplication {
+                    NeoErrorTheme {
+                        FatalErrorWindow(throwable)
+                    }
                 }
-            }
 
-            window.dispatchEvent(
-                WindowEvent(
-                    window, WindowEvent.WINDOW_CLOSING
+                window.dispatchEvent(
+                    WindowEvent(
+                        window, WindowEvent.WINDOW_CLOSING
+                    )
                 )
-            )
+            }
         }
 
         throw throwable

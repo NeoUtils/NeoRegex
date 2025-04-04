@@ -28,10 +28,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.*
 import com.jetbrains.JBR
@@ -43,6 +45,7 @@ import com.neoutils.neoregex.core.sharedui.remember.rememberNeoWindowState
 import com.neoutils.neoregex.core.sharedui.util.NeoRegexWindowExceptionHandlerFactory
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
+import java.awt.Dimension
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -52,6 +55,7 @@ fun ApplicationScope.NeoWindow(
     undecorated: Boolean = JBR.windowDecorations == null,
     windowState: WindowState = rememberWindowState(),
     border: BorderStroke = BorderStroke(1.dp, colorScheme.outline),
+    minSize: IntSize = IntSize(width = 480, height = 360),
     exceptionHandlerFactory: WindowExceptionHandlerFactory = NeoRegexWindowExceptionHandlerFactory,
     header: @Composable FrameWindowScope.() -> Unit = {
         NeoHeader {
@@ -76,6 +80,12 @@ fun ApplicationScope.NeoWindow(
             onCloseRequest = ::exitApplication,
             state = windowState
         ) {
+
+            LaunchedEffect(minSize) {
+                window.minimumSize = minSize.let {
+                    Dimension(it.width, it.height)
+                }
+            }
 
             val completeWindowState = rememberNeoWindowState()
 

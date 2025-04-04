@@ -12,6 +12,7 @@ build
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+.idea/deploymentTargetSelector.xml
 *.iws
 *.iml
 *.ipr

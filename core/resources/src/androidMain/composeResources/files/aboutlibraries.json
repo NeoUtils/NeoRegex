@@ -1,6 +1,6 @@
 {
     "metadata": {
-        "generated": "2024-12-23T02:14:26.566Z"
+        "generated": "2025-03-31T13:25:24.204Z"
     },
     "libraries": [
         {
@@ -121,6 +121,56 @@
             },
             "name": "Annotation",
             "website": "https://developer.android.com/jetpack/androidx/releases/annotation#1.8.0",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.appcompat:appcompat",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.7.0",
+            "description": "Provides backwards-compatible implementations of UI-related Android SDK functionality, including dark mode and Material theming.",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "https://cs.android.com/androidx/platform/frameworks/support"
+            },
+            "name": "AppCompat",
+            "website": "https://developer.android.com/jetpack/androidx/releases/appcompat#1.7.0",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.appcompat:appcompat-resources",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.7.0",
+            "description": "Provides backward-compatible implementations of resource-related Android SDKfunctionality, including color state list theming.",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "https://cs.android.com/androidx/platform/frameworks/support"
+            },
+            "name": "AppCompat Resources",
+            "website": "https://developer.android.com/jetpack/androidx/releases/appcompat#1.7.0",
             "licenses": [
                 "Apache-2.0"
             ],
@@ -742,6 +792,50 @@
             }
         },
         {
+            "uniqueId": "androidx.cursoradapter:cursoradapter",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.0.0",
+            "description": "The Support Library is a static library that you can add to your Android application in order to use APIs that are either not available for older platform versions or utility APIs that aren't a part of the framework APIs. Compatible on devices running API 14 or later.",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "http://source.android.com"
+            },
+            "name": "Support Cursor Adapter",
+            "website": "http://developer.android.com/tools/extras/support-library.html",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "androidx.customview:customview",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.0.0",
+            "description": "The Support Library is a static library that you can add to your Android application in order to use APIs that are either not available for older platform versions or utility APIs that aren't a part of the framework APIs. Compatible on devices running API 14 or later.",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "http://source.android.com"
+            },
+            "name": "Support Custom View",
+            "website": "http://developer.android.com/tools/extras/support-library.html",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "androidx.customview:customview-poolingcontainer",
             "funding": [
                 
@@ -759,6 +853,28 @@
             },
             "name": "androidx.customview:poolingcontainer",
             "website": "https://developer.android.com/jetpack/androidx/releases/customview#1.0.0",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "androidx.drawerlayout:drawerlayout",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.0.0",
+            "description": "The Support Library is a static library that you can add to your Android application in order to use APIs that are either not available for older platform versions or utility APIs that aren't a part of the framework APIs. Compatible on devices running API 14 or later.",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "http://source.android.com"
+            },
+            "name": "Support Drawer Layout",
+            "website": "http://developer.android.com/tools/extras/support-library.html",
             "licenses": [
                 "Apache-2.0"
             ]
@@ -784,6 +900,78 @@
             "licenses": [
                 "Apache-2.0"
             ]
+        },
+        {
+            "uniqueId": "androidx.emoji2:emoji2-views-helper",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.3.0",
+            "description": "View helpers for Emoji2",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "https://cs.android.com/androidx/platform/frameworks/support"
+            },
+            "name": "Android Emoji2 Compat view helpers",
+            "website": "https://developer.android.com/jetpack/androidx/releases/emoji2#1.3.0",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "androidx.fragment:fragment",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.8.3",
+            "description": "The Support Library is a static library that you can add to your Android application in order to use APIs that are either not available for older platform versions or utility APIs that aren't a part of the framework APIs. Compatible on devices running API 14 or later.",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "https://cs.android.com/androidx/platform/frameworks/support"
+            },
+            "name": "fragment",
+            "website": "https://developer.android.com/jetpack/androidx/releases/fragment#1.8.3",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.fragment:fragment-ktx",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.8.3",
+            "description": "Kotlin extensions for 'fragment' artifact",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "https://cs.android.com/androidx/platform/frameworks/support"
+            },
+            "name": "Fragment Kotlin Extensions",
+            "website": "https://developer.android.com/jetpack/androidx/releases/fragment#1.8.3",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
         },
         {
             "uniqueId": "androidx.graphics:graphics-path",
@@ -883,6 +1071,31 @@
             }
         },
         {
+            "uniqueId": "androidx.lifecycle:lifecycle-livedata",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "2.8.5",
+            "description": "Android Lifecycle LiveData",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "https://cs.android.com/androidx/platform/frameworks/support"
+            },
+            "name": "Lifecycle LiveData",
+            "website": "https://developer.android.com/jetpack/androidx/releases/lifecycle#2.8.5",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
             "uniqueId": "androidx.lifecycle:lifecycle-livedata-core",
             "funding": [
                 
@@ -899,6 +1112,31 @@
                 "url": "https://cs.android.com/androidx/platform/frameworks/support"
             },
             "name": "Lifecycle LiveData Core",
+            "website": "https://developer.android.com/jetpack/androidx/releases/lifecycle#2.8.5",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
+            "uniqueId": "androidx.lifecycle:lifecycle-livedata-core-ktx",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "2.8.5",
+            "description": "Kotlin extensions for 'livedata-core' artifact",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "https://cs.android.com/androidx/platform/frameworks/support"
+            },
+            "name": "LiveData Core Kotlin Extensions",
             "website": "https://developer.android.com/jetpack/androidx/releases/lifecycle#2.8.5",
             "licenses": [
                 "Apache-2.0"
@@ -1008,6 +1246,31 @@
             }
         },
         {
+            "uniqueId": "androidx.lifecycle:lifecycle-viewmodel",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "2.8.5",
+            "description": "Android Lifecycle ViewModel",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "https://cs.android.com/androidx/platform/frameworks/support"
+            },
+            "name": "Lifecycle ViewModel",
+            "website": "https://developer.android.com/jetpack/androidx/releases/lifecycle#2.8.5",
+            "licenses": [
+                "Apache-2.0"
+            ],
+            "organization": {
+                "name": "The Android Open Source Project"
+            }
+        },
+        {
             "uniqueId": "androidx.lifecycle:lifecycle-viewmodel-android",
             "funding": [
                 
@@ -1108,6 +1371,28 @@
             }
         },
         {
+            "uniqueId": "androidx.loader:loader",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.0.0",
+            "description": "The Support Library is a static library that you can add to your Android application in order to use APIs that are either not available for older platform versions or utility APIs that aren't a part of the framework APIs. Compatible on devices running API 14 or later.",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "http://source.android.com"
+            },
+            "name": "Support loader",
+            "website": "http://developer.android.com/tools/extras/support-library.html",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "androidx.profileinstaller:profileinstaller",
             "funding": [
                 
@@ -1125,6 +1410,28 @@
             },
             "name": "androidx.profileinstaller:profileinstaller",
             "website": "https://developer.android.com/jetpack/androidx/releases/profileinstaller#1.3.1",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "androidx.resourceinspection:resourceinspection-annotation",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.0.1",
+            "description": "Annotation processors for Android resource and layout inspection",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "https://cs.android.com/androidx/platform/frameworks/support"
+            },
+            "name": "Android Resource Inspection - Annotations",
+            "website": "https://developer.android.com/jetpack/androidx/releases/resourceinspection#1.0.1",
             "licenses": [
                 "Apache-2.0"
             ]
@@ -1174,6 +1481,50 @@
             ]
         },
         {
+            "uniqueId": "androidx.sqlite:sqlite",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "2.4.0",
+            "description": "Android DB",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "https://cs.android.com/androidx/platform/frameworks/support"
+            },
+            "name": "SQLite",
+            "website": "https://developer.android.com/jetpack/androidx/releases/sqlite#2.4.0",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "androidx.sqlite:sqlite-framework",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "2.4.0",
+            "description": "The implementation of Support SQLite library using the framework code.",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "https://cs.android.com/androidx/platform/frameworks/support"
+            },
+            "name": "SQLite Framework Integration",
+            "website": "https://developer.android.com/jetpack/androidx/releases/sqlite#2.4.0",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "androidx.startup:startup-runtime",
             "funding": [
                 
@@ -1218,6 +1569,50 @@
             ]
         },
         {
+            "uniqueId": "androidx.vectordrawable:vectordrawable",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.1.0",
+            "description": "Android Support VectorDrawable",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "http://source.android.com"
+            },
+            "name": "Support VectorDrawable",
+            "website": "https://developer.android.com/jetpack/androidx",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "androidx.vectordrawable:vectordrawable-animated",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.1.0",
+            "description": "Android Support AnimatedVectorDrawable",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "http://source.android.com"
+            },
+            "name": "Support AnimatedVectorDrawable",
+            "website": "https://developer.android.com/jetpack/androidx",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "androidx.versionedparcelable:versionedparcelable",
             "funding": [
                 
@@ -1240,6 +1635,120 @@
             ]
         },
         {
+            "uniqueId": "androidx.viewpager:viewpager",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "The Android Open Source Project"
+                }
+            ],
+            "artifactVersion": "1.0.0",
+            "description": "The Support Library is a static library that you can add to your Android application in order to use APIs that are either not available for older platform versions or utility APIs that aren't a part of the framework APIs. Compatible on devices running API 14 or later.",
+            "scm": {
+                "connection": "scm:git:https://android.googlesource.com/platform/frameworks/support",
+                "url": "http://source.android.com"
+            },
+            "name": "Support View Pager",
+            "website": "http://developer.android.com/tools/extras/support-library.html",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "app.cash.sqldelight:android-driver",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Square, Inc."
+                }
+            ],
+            "artifactVersion": "2.0.2",
+            "description": "Driver to support SQLDelight generated code on Android",
+            "scm": {
+                "connection": "scm:git:git://github.com/cashapp/sqldelight.git",
+                "url": "https://github.com/cashapp/sqldelight/",
+                "developerConnection": "scm:git:ssh://git@github.com/cashapp/sqldelight.git"
+            },
+            "name": "SQLDelight Android Driver",
+            "website": "https://github.com/cashapp/sqldelight/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "app.cash.sqldelight:async-extensions-jvm",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Square, Inc."
+                }
+            ],
+            "artifactVersion": "2.0.2",
+            "description": "Kotlin extensions for working with Async drivers",
+            "scm": {
+                "connection": "scm:git:git://github.com/cashapp/sqldelight.git",
+                "url": "https://github.com/cashapp/sqldelight/",
+                "developerConnection": "scm:git:ssh://git@github.com/cashapp/sqldelight.git"
+            },
+            "name": "SQLDelight Async Driver Extensions",
+            "website": "https://github.com/cashapp/sqldelight/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "app.cash.sqldelight:coroutines-extensions-jvm",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Square, Inc."
+                }
+            ],
+            "artifactVersion": "2.0.2",
+            "description": "Kotlin extension functions to expose SQLDelight's Query as a Flow",
+            "scm": {
+                "connection": "scm:git:git://github.com/cashapp/sqldelight.git",
+                "url": "https://github.com/cashapp/sqldelight/",
+                "developerConnection": "scm:git:ssh://git@github.com/cashapp/sqldelight.git"
+            },
+            "name": "SQLDelight Coroutines Extensions",
+            "website": "https://github.com/cashapp/sqldelight/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "app.cash.sqldelight:runtime-jvm",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Square, Inc."
+                }
+            ],
+            "artifactVersion": "2.0.2",
+            "description": "Multiplatform runtime library to support generated code",
+            "scm": {
+                "connection": "scm:git:git://github.com/cashapp/sqldelight.git",
+                "url": "https://github.com/cashapp/sqldelight/",
+                "developerConnection": "scm:git:ssh://git@github.com/cashapp/sqldelight.git"
+            },
+            "name": "SQLDelight Multiplatform Runtime (Experimental)",
+            "website": "https://github.com/cashapp/sqldelight/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "cafe.adriel.voyager:voyager-core-android",
             "funding": [
                 
@@ -1257,6 +1766,29 @@
                 "developerConnection": "scm:git:ssh://git@github.com/adrielcafe/voyager.git"
             },
             "name": "VoyagerCore",
+            "website": "https://github.com/adrielcafe/voyager",
+            "licenses": [
+                "MIT"
+            ]
+        },
+        {
+            "uniqueId": "cafe.adriel.voyager:voyager-koin-android",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Adriel Cafe"
+                }
+            ],
+            "artifactVersion": "1.1.0-beta03",
+            "description": "A pragmatic navigation library for Jetpack Compose",
+            "scm": {
+                "connection": "scm:git:ssh://git@github.com/adrielcafe/voyager.git",
+                "url": "https://github.com/adrielcafe/voyager",
+                "developerConnection": "scm:git:ssh://git@github.com/adrielcafe/voyager.git"
+            },
+            "name": "VoyagerKoin",
             "website": "https://github.com/adrielcafe/voyager",
             "licenses": [
                 "MIT"
@@ -1329,6 +1861,29 @@
             "website": "https://github.com/adrielcafe/voyager",
             "licenses": [
                 "MIT"
+            ]
+        },
+        {
+            "uniqueId": "co.touchlab:stately-common-jvm",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Kevin Galligan"
+                }
+            ],
+            "artifactVersion": "2.0.6",
+            "description": "Multithreaded Kotlin Multiplatform Utilities",
+            "scm": {
+                "connection": "scm:git:git://github.com/touchlab/Stately.git",
+                "url": "https://github.com/touchlab/Stately",
+                "developerConnection": "scm:git:git://github.com/touchlab/Stately.git"
+            },
+            "name": "Stately",
+            "website": "https://github.com/touchlab/Stately",
+            "licenses": [
+                "Apache-2.0"
             ]
         },
         {
@@ -1600,6 +2155,28 @@
             ]
         },
         {
+            "uniqueId": "io.insert-koin:koin-android",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Arnaud Giuliani"
+                }
+            ],
+            "artifactVersion": "4.0.0",
+            "description": "KOIN - Kotlin simple Dependency Injection Framework",
+            "scm": {
+                "connection": "https://github.com/InsertKoinIO/koin.git",
+                "url": "https://github.com/InsertKoinIO/koin"
+            },
+            "name": "Koin",
+            "website": "https://insert-koin.io/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
             "uniqueId": "io.insert-koin:koin-compose-jvm",
             "funding": [
                 
@@ -1639,6 +2216,52 @@
             },
             "name": "Koin",
             "website": "https://insert-koin.io/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "io.insert-koin:koin-core-viewmodel-jvm",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "name": "Arnaud Giuliani"
+                }
+            ],
+            "artifactVersion": "4.0.0",
+            "description": "KOIN - Kotlin simple Dependency Injection Framework",
+            "scm": {
+                "connection": "https://github.com/InsertKoinIO/koin.git",
+                "url": "https://github.com/InsertKoinIO/koin"
+            },
+            "name": "Koin",
+            "website": "https://insert-koin.io/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.androidx.core:core-bundle-android",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "organisationUrl": "https://www.jetbrains.com",
+                    "name": "Compose Multiplatform Team"
+                }
+            ],
+            "artifactVersion": "1.0.0",
+            "description": "Provides Bundle in Kotlin Multiplatform projects",
+            "scm": {
+                "connection": "scm:git:https://github.com/JetBrains/compose-jb.git",
+                "url": "https://github.com/JetBrains/compose-jb",
+                "developerConnection": "scm:git:https://github.com/JetBrains/compose-jb.git"
+            },
+            "name": "androidx.core:core-bundle",
+            "website": "https://github.com/JetBrains/compose-jb",
             "licenses": [
                 "Apache-2.0"
             ]
@@ -1686,6 +2309,54 @@
                 "developerConnection": "scm:git:https://github.com/JetBrains/kotlin.git"
             },
             "name": "Kotlin Stdlib",
+            "website": "https://kotlinlang.org/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib-jdk7",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "organisationUrl": "https://www.jetbrains.com",
+                    "name": "Kotlin Team"
+                }
+            ],
+            "artifactVersion": "1.9.10",
+            "description": "Kotlin Standard Library JDK 7 extension",
+            "scm": {
+                "connection": "scm:git:https://github.com/JetBrains/kotlin.git",
+                "url": "https://github.com/JetBrains/kotlin",
+                "developerConnection": "scm:git:https://github.com/JetBrains/kotlin.git"
+            },
+            "name": "Kotlin Stdlib Jdk7",
+            "website": "https://kotlinlang.org/",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.kotlin:kotlin-stdlib-jdk8",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "organisationUrl": "https://www.jetbrains.com",
+                    "name": "Kotlin Team"
+                }
+            ],
+            "artifactVersion": "1.9.10",
+            "description": "Kotlin Standard Library JDK 8 extension",
+            "scm": {
+                "connection": "scm:git:https://github.com/JetBrains/kotlin.git",
+                "url": "https://github.com/JetBrains/kotlin",
+                "developerConnection": "scm:git:https://github.com/JetBrains/kotlin.git"
+            },
+            "name": "Kotlin Stdlib Jdk8",
             "website": "https://kotlinlang.org/",
             "licenses": [
                 "Apache-2.0"
@@ -1797,6 +2468,28 @@
             },
             "name": "kotlinx-coroutines-core",
             "website": "https://github.com/Kotlin/kotlinx.coroutines",
+            "licenses": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "uniqueId": "org.jetbrains.kotlinx:kotlinx-datetime-jvm",
+            "funding": [
+                
+            ],
+            "developers": [
+                {
+                    "organisationUrl": "https://www.jetbrains.com",
+                    "name": "JetBrains Team"
+                }
+            ],
+            "artifactVersion": "0.6.1",
+            "description": "Kotlin Datetime Library",
+            "scm": {
+                "url": "https://github.com/Kotlin/kotlinx-datetime"
+            },
+            "name": "kotlinx-datetime",
+            "website": "https://github.com/Kotlin/kotlinx-datetime",
             "licenses": [
                 "Apache-2.0"
             ]

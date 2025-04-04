@@ -19,8 +19,10 @@
 package com.neoutils.neoregex.feature.about.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
@@ -37,7 +39,7 @@ import com.neoutils.neoregex.core.common.platform.Platform
 import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.dispatcher.NavigationManager
+import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
 import com.neoutils.neoregex.core.resources.*
 import com.neoutils.neoregex.feature.about.component.RuntimeInfos
@@ -51,6 +53,7 @@ class AboutScreen : Screen {
     @Composable
     override fun Content() = Column(
         modifier = Modifier
+            .background(colorScheme.background)
             .padding(dimensions.default)
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(

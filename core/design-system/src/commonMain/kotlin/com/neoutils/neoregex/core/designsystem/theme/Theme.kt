@@ -44,8 +44,10 @@ private val LightColors = lightColorScheme(
     surfaceContainer = Gray100,
     surfaceBright = Gray300,
     secondary = Blue100,
+    onSecondary = Color.Black,
     secondaryContainer = Gray300,
     onSecondaryContainer = Color.Black,
+    tertiary = Green,
     error = Red700,
 )
 
@@ -61,8 +63,10 @@ private val DarkColors = darkColorScheme(
     surfaceContainer = Gray800,
     surfaceBright = Gray500,
     secondary = Blue700,
+    onSecondary = Color.White,
     secondaryContainer = Gray500,
     onSecondaryContainer = Color.White,
+    tertiary = Green,
     error = Red600,
 )
 
@@ -93,6 +97,7 @@ fun NeoTheme(
 @Composable
 fun NeoBaseTheme(
     colorScheme: ColorScheme,
+    buttons: Buttons = Buttons.Default,
     fontSizes: FontSizes = FontSizes(),
     dimensions: Dimensions = Dimensions(),
     typography: Typography = NeoTypography(),
@@ -105,6 +110,7 @@ fun NeoBaseTheme(
         CompositionLocalProvider(
             LocalFontSizes provides fontSizes,
             LocalDimensions provides dimensions,
+            LocalButtons provides buttons,
             content = content
         )
     }
@@ -136,4 +142,9 @@ object NeoTheme {
         @Composable
         @ReadOnlyComposable
         get() = LocalFontSizes.current
+
+    val buttons: Buttons
+        @Composable
+        @ReadOnlyComposable
+        get() = LocalButtons.current
 }

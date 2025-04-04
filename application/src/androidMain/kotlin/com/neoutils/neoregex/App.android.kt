@@ -16,19 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:OptIn(ExperimentalMaterial3Api::class)
-
 package com.neoutils.neoregex
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
@@ -39,12 +40,10 @@ import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.resources.Res
-import com.neoutils.neoregex.core.resources.app_name
-import com.neoutils.neoregex.core.sharedui.component.Navigation
+import com.neoutils.neoregex.core.sharedui.component.Context
+import com.neoutils.neoregex.core.sharedui.component.Controller
 import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.extension.surface
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @Composable
@@ -62,55 +61,48 @@ fun AndroidApp() {
         }
     ) {
         Scaffold(
-            topBar = {
-                NeoAppBar()
-            },
-            contentWindowInsets = WindowInsets.safeDrawing
+            topBar = { NeoAppBar() },
+            contentWindowInsets = WindowInsets.safeDrawing,
         ) { padding ->
             App(Modifier.padding(padding))
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NeoAppBar(
+private fun NeoAppBar(
     modifier: Modifier = Modifier,
-    background: Color = colorScheme.surfaceContainer,
     shadowElevation: Dp = dimensions.tiny,
     height: Dp = 55.dp
 ) = CenterAlignedTopAppBar(
     navigationIcon = {
-        Navigation(
-            modifier = Modifier
-                .padding(dimensions.tiny)
-                .height(32.dp)
+        Controller(
+            modifier = Modifier.padding(
+                start = dimensions.tiny
+            )
         )
     },
     title = {
-        Text(
-            text = stringResource(Res.string.app_name),
-            style = typography.titleMedium.copy(
-                fontFamily = null,
-            ),
-        )
+        Context()
     },
     actions = {
         Options(
-            modifier = Modifier
-                .padding(dimensions.tiny)
-                .height(32.dp)
+            modifier = Modifier.padding(
+                end = dimensions.small
+            )
         )
     },
     modifier = modifier.surface(
         shape = RectangleShape,
-        backgroundColor = background,
+        backgroundColor = colorScheme.surfaceVariant,
         shadowElevation = LocalDensity.current.run {
             shadowElevation.toPx()
         }
     ),
     expandedHeight = height,
     colors = TopAppBarDefaults.topAppBarColors(
-        containerColor = background
+        containerColor = colorScheme.surfaceVariant
     )
 )
 

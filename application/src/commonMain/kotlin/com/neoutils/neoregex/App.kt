@@ -16,45 +16,42 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:OptIn(InternalVoyagerApi::class)
-
 package com.neoutils.neoregex
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.annotation.InternalVoyagerApi
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.internal.BackHandler
 import cafe.adriel.voyager.transitions.FadeTransition
 import com.neoutils.neoregex.core.designsystem.theme.NeoBackground
-import com.neoutils.neoregex.core.dispatcher.NavigationManager
 import com.neoutils.neoregex.core.dispatcher.model.Navigation
+import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
 import com.neoutils.neoregex.feature.about.screen.AboutScreen
 import com.neoutils.neoregex.feature.about.screen.LibrariesScreen
 import com.neoutils.neoregex.feature.matcher.MatcherScreen
+import com.neoutils.neoregex.feature.saved.SavedScreen
+import com.neoutils.neoregex.feature.validator.ValidatorScreen
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
 
+@OptIn(InternalVoyagerApi::class)
 @Composable
 fun App(
     modifier: Modifier = Modifier,
-    navigation: NavigationManager = koinInject()
+    navigation: NavigationManager = koinInject(),
 ) = NeoBackground(modifier) {
+
+    val coroutine = rememberCoroutineScope()
 
     Navigator(
         screen = MatcherScreen(),
     ) { navigator ->
 
-        val canPop by navigation.canPopBack.collectAsStateWithLifecycle()
-
-        val coroutines = rememberCoroutineScope()
-
-        BackHandler(enabled = canPop) {
-            coroutines.launch {
+        BackHandler(enabled = true) {
+            coroutine.launch {
                 navigation.emit(
                     Navigation.Event.OnBack
                 )
@@ -66,23 +63,29 @@ fun App(
                 when (event) {
                     is Navigation.Event.Navigate -> {
                         when (event.screen) {
-                            Navigation.Screen.About -> {
-                                navigator.push(AboutScreen())
-                            }
-
-                            Navigation.Screen.Libraries -> {
-                                navigator.push(LibrariesScreen())
-                            }
-
-                            Navigation.Screen.Matcher -> {
-                                navigator.popUntilRoot()
-                            }
+                            Navigation.Screen.About -> navigator.push(AboutScreen())
+                            Navigation.Screen.Libraries -> navigator.push(LibrariesScreen())
+                            Navigation.Screen.Matcher -> navigator.popUntilRoot()
+                            Navigation.Screen.Validator -> navigator.push(ValidatorScreen())
+                            Navigation.Screen.Saved -> navigator.push(SavedScreen())
                         }
                     }
 
-                    Navigation.Event.OnBack -> {
-                        navigator.pop()
+                    is Navigation.Event.Invalidate -> {
+                        navigator.replaceAll(
+                            navigator.items
+                                .dropLast(n = event.pop)
+                                .map {
+                                    when (it) {
+                                        is MatcherScreen -> MatcherScreen()
+                                        is ValidatorScreen -> ValidatorScreen()
+                                        else -> it
+                                    }
+                                }
+                        )
                     }
+
+                    Navigation.Event.OnBack -> navigator.pop()
                 }
 
                 navigation.update(
@@ -90,7 +93,8 @@ fun App(
                         is MatcherScreen -> Navigation.Screen.Matcher
                         is AboutScreen -> Navigation.Screen.About
                         is LibrariesScreen -> Navigation.Screen.Libraries
-
+                        is ValidatorScreen -> Navigation.Screen.Validator
+                        is SavedScreen -> Navigation.Screen.Saved
                         else -> error("Invalid screen")
                     }
                 )
