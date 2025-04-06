@@ -16,24 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
-import extension.module
+package com.neoutils.neoregex.core.manager.di
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
-}
+import com.neoutils.neoregex.core.manager.impl.NavigationManagerWeb
+import com.neoutils.neoregex.core.manager.navigator.NavigationManager
+import com.neoutils.neoregex.core.manager.salvage.SalvageManager
+import com.neoutils.neoregex.core.manager.salvage.SalvageManagerImpl
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
-group = config.module(name = "core")
-
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
-
-            // modules
-            api(projects.core.common)
-            api(projects.core.datasource)
-            api(projects.core.repository)
-            api(projects.core.resources)
-        }
-    }
+actual val managerModule = module {
+    single { NavigationManagerWeb() } bind NavigationManager::class
+    singleOf(::SalvageManagerImpl) bind SalvageManager::class
 }

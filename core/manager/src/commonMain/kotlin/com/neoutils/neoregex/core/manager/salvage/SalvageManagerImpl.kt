@@ -21,9 +21,9 @@ package com.neoutils.neoregex.core.manager.salvage
 import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.model.TextState
 import com.neoutils.neoregex.core.datasource.model.Pattern
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
-import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
+import com.neoutils.neoregex.core.manager.model.Navigation
 import com.neoutils.neoregex.core.manager.model.Opened
+import com.neoutils.neoregex.core.manager.navigator.NavigationManager
 import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
 import com.neoutils.neoregex.core.repository.patterns.PatternsRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository

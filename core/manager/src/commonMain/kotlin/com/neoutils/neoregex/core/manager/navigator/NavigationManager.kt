@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2025 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,24 +16,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-import extension.config
-import extension.module
+package com.neoutils.neoregex.core.manager.navigator
 
-plugins {
-    alias(libs.plugins.neoutils.neoregex.core)
-}
+import com.neoutils.neoregex.core.manager.model.Navigation
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
-group = config.module(name = "core")
+interface NavigationManager {
 
-kotlin {
-    sourceSets {
-        commonMain.dependencies {
+    val event: Flow<Navigation.Event>
+    val screen: StateFlow<Navigation.Screen>
+    val canPopBack: StateFlow<Boolean>
 
-            // modules
-            api(projects.core.common)
-            api(projects.core.datasource)
-            api(projects.core.repository)
-            api(projects.core.resources)
-        }
-    }
+    fun update(screen: Navigation.Screen)
+
+    suspend fun emit(event: Navigation.Event)
 }

@@ -18,12 +18,6 @@
 
 package com.neoutils.neoregex.core.manager.di
 
-import com.neoutils.neoregex.core.manager.salvage.SalvageManager
-import com.neoutils.neoregex.core.manager.salvage.SalvageManagerImpl
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.bind
-import org.koin.dsl.module
+import org.koin.core.module.Module
 
-val managerModule = module {
-    singleOf(::SalvageManagerImpl) bind SalvageManager::class
-}
+expect val managerModule: Module

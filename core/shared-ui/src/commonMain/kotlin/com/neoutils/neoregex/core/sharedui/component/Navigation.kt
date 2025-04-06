@@ -39,8 +39,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
-import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
+import com.neoutils.neoregex.core.manager.model.Navigation
+import com.neoutils.neoregex.core.manager.navigator.NavigationManager
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject

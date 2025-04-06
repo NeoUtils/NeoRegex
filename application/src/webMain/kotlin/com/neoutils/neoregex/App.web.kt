@@ -55,7 +55,6 @@ import com.neoutils.neoregex.core.datasource.di.dataSourceModule
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.dispatcher.di.dispatcherModule
 import com.neoutils.neoregex.core.manager.di.managerModule
 import com.neoutils.neoregex.core.repository.di.repositoryModule
 import com.neoutils.neoregex.core.resources.Res
@@ -77,7 +76,6 @@ fun WebApp() = WithKoin(
     dataSourceModule,
     databaseModule,
     repositoryModule,
-    dispatcherModule,
     matcherModule,
     validatorModule,
 ) {

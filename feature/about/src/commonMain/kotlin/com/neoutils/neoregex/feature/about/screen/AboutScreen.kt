@@ -39,8 +39,8 @@ import com.neoutils.neoregex.core.common.platform.Platform
 import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
+import com.neoutils.neoregex.core.manager.navigator.NavigationManager
+import com.neoutils.neoregex.core.manager.model.Navigation
 import com.neoutils.neoregex.core.resources.*
 import com.neoutils.neoregex.feature.about.component.RuntimeInfos
 import kotlinx.coroutines.launch
