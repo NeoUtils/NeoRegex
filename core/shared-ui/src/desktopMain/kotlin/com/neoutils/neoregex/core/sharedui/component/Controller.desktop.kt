@@ -25,8 +25,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
-import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
+import com.neoutils.neoregex.core.manager.model.Navigation
+import com.neoutils.neoregex.core.manager.navigator.NavigationManager
 import com.neoutils.neoregex.core.sharedui.extension.onSwipe
 import kotlinx.coroutines.launch
 import org.koin.compose.koinInject

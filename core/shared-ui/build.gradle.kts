@@ -34,7 +34,6 @@ kotlin {
             implementation(projects.core.common)
             implementation(projects.core.resources)
             implementation(projects.core.datasource)
-            implementation(projects.core.dispatcher)
             implementation(projects.core.manager)
 
             // NeoUtils

@@ -27,8 +27,8 @@ import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.internal.BackHandler
 import cafe.adriel.voyager.transitions.FadeTransition
 import com.neoutils.neoregex.core.designsystem.theme.NeoBackground
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
-import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
+import com.neoutils.neoregex.core.manager.model.Navigation
+import com.neoutils.neoregex.core.manager.navigator.NavigationManager
 import com.neoutils.neoregex.feature.about.screen.AboutScreen
 import com.neoutils.neoregex.feature.about.screen.LibrariesScreen
 import com.neoutils.neoregex.feature.matcher.MatcherScreen

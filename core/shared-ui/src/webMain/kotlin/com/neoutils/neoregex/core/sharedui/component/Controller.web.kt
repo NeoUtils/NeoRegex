@@ -38,8 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.component.LinkColor
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
-import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
+import com.neoutils.neoregex.core.manager.model.Navigation
+import com.neoutils.neoregex.core.manager.navigator.NavigationManager
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_title
 import com.neoutils.neoregex.core.resources.screen_libraries
