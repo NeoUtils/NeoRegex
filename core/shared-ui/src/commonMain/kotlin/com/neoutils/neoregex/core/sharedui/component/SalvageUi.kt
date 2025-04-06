@@ -41,10 +41,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
-import com.neoutils.neoregex.core.manager.model.Opened
+import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.manager.model.Opened
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.common_confirm_btn
 import com.neoutils.neoregex.core.resources.salvage_edit_name_dialog_title

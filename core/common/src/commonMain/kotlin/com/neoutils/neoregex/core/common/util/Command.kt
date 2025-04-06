@@ -35,6 +35,12 @@ enum class Command(
             Special.SHIFT
         ),
         key = Key.Z
+    ),
+    Save(
+        modifies = listOf(
+            Special.CTRL
+        ),
+        key = Key.S
     );
 
     companion object {
