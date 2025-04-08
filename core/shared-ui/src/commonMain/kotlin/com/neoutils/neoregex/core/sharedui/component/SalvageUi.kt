@@ -22,11 +22,9 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Close
 import androidx.compose.material.icons.twotone.Edit
@@ -40,11 +38,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.compositeOver
-import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
-import com.neoutils.neoregex.core.common.util.Command
+import com.neoutils.neoregex.core.common.platform.Platform
+import com.neoutils.neoregex.core.common.platform.isAndroid
+import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.manager.model.Opened
 import com.neoutils.neoregex.core.resources.Res
@@ -67,14 +65,7 @@ fun SalvageUi(
     textStyle: TextStyle = TextStyle()
 ) = Row(
     verticalAlignment = Alignment.CenterVertically,
-    modifier = modifier.background(
-        color = colorScheme.onSurface.copy(
-            alpha = 0.05f
-        ).compositeOver(
-            colorScheme.surfaceVariant
-        ),
-        shape = RoundedCornerShape(dimensions.tiny)
-    ).padding(dimensions.tiny)
+    modifier = modifier
 ) {
 
     val mergedTextStyle = typography.labelLarge.copy(
@@ -92,7 +83,7 @@ fun SalvageUi(
         },
         modifier = Modifier.weight(
             weight = 1f,
-            fill = false
+            fill = platform.isAndroid
         )
     ) { name ->
         Text(
@@ -105,56 +96,78 @@ fun SalvageUi(
 
     Spacer(Modifier.width(dimensions.tiny))
 
-    Icon(
-        imageVector = Icons.TwoTone.Edit,
-        contentDescription = null,
-        tint = colorScheme.onSurface,
-        modifier = Modifier
-            .clip(CircleShape)
-            .aspectRatio(ratio = 1f)
-            .clickable { showChangeName = true }
-            .padding(dimensions.micro)
-    )
+    Row {
+        Icon(
+            imageVector = Icons.TwoTone.Edit,
+            contentDescription = null,
+            tint = colorScheme.onSurface,
+            modifier = Modifier
+                .clip(CircleShape)
+                .aspectRatio(ratio = 1f)
+                .clickable { showChangeName = true }
+                .padding(
+                    when (platform) {
+                        Platform.Android -> dimensions.tiny
+                        else -> dimensions.micro
+                    }
+                )
+        )
 
-    Icon(
-        imageVector = Icons.TwoTone.Sync,
-        contentDescription = null,
-        tint = colorScheme.onSurface.copy(
-            alpha = if (opened.updated) 0.5f else 1f
-        ),
-        modifier = Modifier
-            .clip(CircleShape)
-            .aspectRatio(ratio = 1f)
-            .clickable(!opened.updated) {
-                onAction(SalvageAction.Reset)
-            }
-            .padding(dimensions.micro)
-    )
+        Icon(
+            imageVector = Icons.TwoTone.Sync,
+            contentDescription = null,
+            tint = colorScheme.onSurface.copy(
+                alpha = if (opened.updated) 0.5f else 1f
+            ),
+            modifier = Modifier
+                .clip(CircleShape)
+                .aspectRatio(ratio = 1f)
+                .clickable(!opened.updated) {
+                    onAction(SalvageAction.Reset)
+                }
+                .padding(
+                    when (platform) {
+                        Platform.Android -> dimensions.tiny
+                        else -> dimensions.micro
+                    }
+                )
+        )
 
-    Icon(
-        imageVector = Icons.TwoTone.Save,
-        contentDescription = null,
-        tint = colorScheme.onSurface.copy(
-            alpha = if (opened.canUpdate) 1f else 0.5f
-        ),
-        modifier = Modifier
-            .clip(CircleShape)
-            .aspectRatio(ratio = 1f)
-            .clickable(opened.canUpdate) {
-                onAction(SalvageAction.Update)
-            }
-            .padding(dimensions.micro)
-    )
+        Icon(
+            imageVector = Icons.TwoTone.Save,
+            contentDescription = null,
+            tint = colorScheme.onSurface.copy(
+                alpha = if (opened.canUpdate) 1f else 0.5f
+            ),
+            modifier = Modifier
+                .clip(CircleShape)
+                .aspectRatio(ratio = 1f)
+                .clickable(opened.canUpdate) {
+                    onAction(SalvageAction.Update)
+                }
+                .padding(
+                    when (platform) {
+                        Platform.Android -> dimensions.tiny
+                        else -> dimensions.micro
+                    }
+                )
+        )
 
-    Icon(
-        imageVector = Icons.TwoTone.Close,
-        contentDescription = null,
-        tint = colorScheme.onSurface,
-        modifier = Modifier
-            .clip(CircleShape)
-            .clickable { onAction(SalvageAction.Close) }
-            .padding(dimensions.micro)
-    )
+        Icon(
+            imageVector = Icons.TwoTone.Close,
+            contentDescription = null,
+            tint = colorScheme.onSurface,
+            modifier = Modifier
+                .clip(CircleShape)
+                .clickable { onAction(SalvageAction.Close) }
+                .padding(
+                    when (platform) {
+                        Platform.Android -> dimensions.tiny
+                        else -> dimensions.micro
+                    }
+                )
+        )
+    }
 
     if (showChangeName) {
         PatternNameDialog(

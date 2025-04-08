@@ -16,24 +16,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.manager.salvage
+package com.neoutils.neoregex.core.common.di
 
-import com.neoutils.neoregex.core.manager.model.Opened
-import com.neoutils.neoregex.core.datasource.model.Pattern
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import org.koin.dsl.module
 
-interface SalvageManager {
-
-    val flow: StateFlow<Opened?>
-    val canSave: Flow<Boolean>
-
-    suspend fun open(id: Long)
-    suspend fun close()
-    suspend fun update(block: (Pattern) -> Pattern)
-
-    suspend fun save(name: String)
-    suspend fun update()
-    suspend fun sync()
-    suspend fun delete(id: Long)
+val commonModule = module {
+    single { CoroutineScope(Dispatchers.Default) }
 }

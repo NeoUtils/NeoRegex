@@ -307,6 +307,8 @@ actual fun TextEditor(
                 match = match,
                 modifier = Modifier.fillMaxWidth()
             )
+        } else {
+            Spacer(Modifier.fillMaxWidth())
         }
     }
 }

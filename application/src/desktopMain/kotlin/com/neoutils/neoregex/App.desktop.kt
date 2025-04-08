@@ -21,10 +21,12 @@ package com.neoutils.neoregex
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -38,14 +40,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.neoutils.neoregex.core.common.platform.Platform
-import com.neoutils.neoregex.core.common.platform.platform
+import com.neoutils.neoregex.core.common.di.commonModule
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
@@ -77,6 +78,7 @@ import org.koin.compose.koinInject
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ApplicationScope.DesktopApp() = WithKoin(
+    commonModule,
     managerModule,
     dataSourceModule,
     databaseModule,
@@ -197,12 +199,16 @@ private fun FrameWindowScope.HeaderImpl(
                         val coroutine = rememberCoroutineScope()
 
                         SalvageUi(
-                            modifier = Modifier.height(
-                                when (platform) {
-                                    Platform.Android -> 30.dp
-                                    else -> dimensions.big
-                                }
-                            ),
+                            modifier = Modifier
+                                .height(dimensions.big)
+                                .background(
+                                    color = colorScheme.onSurface.copy(
+                                        alpha = 0.05f
+                                    ).compositeOver(
+                                        colorScheme.surfaceVariant
+                                    ),
+                                    shape = RoundedCornerShape(dimensions.tiny)
+                                ).padding(dimensions.tiny),
                             opened = salvage,
                             onAction = { action ->
                                 when (action) {
