@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.neoutils.neoregex.core.common.di.commonModule
 import com.neoutils.neoregex.core.common.extension.toCss
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
@@ -72,6 +73,7 @@ import org.koin.compose.koinInject
 
 @Composable
 fun WebApp() = WithKoin(
+    commonModule,
     managerModule,
     dataSourceModule,
     databaseModule,

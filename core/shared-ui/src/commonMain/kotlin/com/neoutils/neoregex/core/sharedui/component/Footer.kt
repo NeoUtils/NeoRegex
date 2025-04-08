@@ -26,6 +26,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,8 +39,10 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.highlight.compose.remember.rememberTextFieldValue
 import com.neoutils.neoregex.core.common.extension.toText
@@ -89,38 +92,39 @@ fun Footer(
     onAction: (FooterAction) -> Unit = {},
     tooling: (@Composable () -> Unit)? = null,
     syntax: Syntax.Regex = remember { Syntax.Regex() },
-) = Surface(
+) = Column(
     modifier = modifier,
-    shape = RectangleShape,
-    shadowElevation = dimensions.small,
-    color = colorScheme.surfaceContainer,
-    contentColor = colorScheme.onSurface,
 ) {
 
     val coroutine = rememberCoroutineScope()
 
-    Column {
-        if (platform.isAndroid) {
-            AnimatedContent(
-                modifier = Modifier.fillMaxWidth(),
-                targetState = salvageManager
-                    .flow
-                    .collectAsStateWithLifecycle(
-                        initialValue = null
-                    ).value,
-                contentKey = { it != null },
-                transitionSpec = {
-                    val showUp = fadeIn() + slideIntoContainer(SlideDirection.Up)
-                    val hideDown = fadeOut() + slideOutOfContainer(SlideDirection.Down)
+    if (platform.isAndroid) {
+        AnimatedContent(
+            targetState = salvageManager.flow.collectAsStateWithLifecycle().value,
+            transitionSpec = {
+                val showUp = fadeIn() + slideIntoContainer(SlideDirection.Up)
+                val hideDown = fadeOut() + slideOutOfContainer(SlideDirection.Down)
 
-                    showUp togetherWith hideDown
-                },
-                contentAlignment = Alignment.Center
-            ) { opened ->
-                if (opened != null) {
+                showUp togetherWith hideDown
+            },
+            contentKey = { it != null }
+        ) { opened ->
+            if (opened != null) {
+                Surface(
+                    shape = RectangleShape,
+                    shadowElevation = dimensions.small,
+                    color = colorScheme.surfaceContainerLow,
+                    contentColor = colorScheme.onSurface,
+                    modifier = Modifier.height(36.dp),
+                ) {
                     SalvageUi(
-                        modifier = Modifier.height(30.dp),
                         opened = opened,
+                        textStyle = TextStyle(
+                            fontSize = 16.sp
+                        ),
+                        modifier = Modifier
+                            .padding(dimensions.tiny)
+                            .fillMaxWidth(),
                         onAction = { action ->
                             when (action) {
                                 SalvageAction.Close -> {
@@ -154,9 +158,18 @@ fun Footer(
                         }
                     )
                 }
+            } else {
+                Spacer(Modifier.fillMaxWidth())
             }
         }
+    }
 
+    Surface(
+        shape = RectangleShape,
+        shadowElevation = dimensions.small,
+        color = colorScheme.surfaceContainer,
+        contentColor = colorScheme.onSurface,
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically

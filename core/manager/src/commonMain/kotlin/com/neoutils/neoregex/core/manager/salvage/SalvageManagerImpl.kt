@@ -28,8 +28,11 @@ import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
 import com.neoutils.neoregex.core.repository.patterns.PatternsRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
 import com.neoutils.neoregex.core.repository.text.TextSampleRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
@@ -38,7 +41,8 @@ class SalvageManagerImpl(
     private val patternStateRepository: PatternStateRepository,
     private val testCasesRepository: TestCasesRepository,
     private val textStateRepository: TextSampleRepository,
-    private val navigationManager: NavigationManager
+    private val navigationManager: NavigationManager,
+    coroutineScope: CoroutineScope
 ) : SalvageManager {
 
     private val opened = MutableStateFlow<Long?>(null)
@@ -59,7 +63,11 @@ class SalvageManagerImpl(
                 patterns = patterns
             )
         }
-    }
+    }.stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = null
+    )
 
     override val canSave = opened.combine(
         patternStateRepository.flow

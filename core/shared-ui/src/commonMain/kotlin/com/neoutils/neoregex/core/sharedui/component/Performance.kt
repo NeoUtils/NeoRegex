@@ -45,6 +45,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.round
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -68,6 +69,7 @@ data class Performance(
 @Composable
 fun BoxWithConstraintsScope.Performance(
     performance: Performance,
+    textStyle: TextStyle = TextStyle(),
     preferencesDataSource: PreferencesDataSource = koinInject()
 ) {
 
@@ -96,6 +98,8 @@ fun BoxWithConstraintsScope.Performance(
     val destination = remember { mutableStateOf<Alignment?>(null) }
 
     val scope = rememberCoroutineScope()
+
+    val mergedTextStyle = typography.labelSmall.merge(textStyle)
 
     listOf(
         Alignment.TopEnd,
@@ -129,7 +133,7 @@ fun BoxWithConstraintsScope.Performance(
             )
         ),
         fontSize = fontSizes.tiny,
-        style = typography.labelSmall,
+        style = mergedTextStyle,
         modifier = Modifier
             .align(current.value)
             .offset { animateOffset.value.round() }

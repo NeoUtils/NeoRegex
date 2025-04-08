@@ -42,7 +42,6 @@ import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
-import com.neoutils.neoregex.core.sharedui.component.NeoTitle
 import com.neoutils.neoregex.core.sharedui.component.Controller
 import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.extension.surface

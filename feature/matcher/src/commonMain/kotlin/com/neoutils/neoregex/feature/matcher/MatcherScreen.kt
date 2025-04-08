@@ -25,6 +25,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -111,7 +112,10 @@ class MatcherScreen : Screen {
                 },
             )
 
-            Performance(uiState.performance)
+            Performance(
+                performance = uiState.performance,
+                textStyle = typography.labelMedium
+            )
         }
 
         Footer(
