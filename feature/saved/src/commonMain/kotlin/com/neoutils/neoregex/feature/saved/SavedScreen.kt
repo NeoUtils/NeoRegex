@@ -266,7 +266,7 @@ private fun Pattern(
                     .padding(dimensions.default)
             )
 
-            val interaction by interactionSource.interactions.collectAsState(initial = null)
+            val interaction by interactionSource.interactions.collectAsStateWithLifecycle(initialValue = null)
 
             when (interaction) {
                 is HoverInteraction.Enter,

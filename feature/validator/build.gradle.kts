@@ -37,6 +37,7 @@ kotlin {
             implementation(projects.core.common)
             implementation(projects.core.datasource)
             implementation(projects.core.repository)
+            implementation(projects.core.manager)
 
             // voyager
             implementation(catalog.voyager.navigator)
