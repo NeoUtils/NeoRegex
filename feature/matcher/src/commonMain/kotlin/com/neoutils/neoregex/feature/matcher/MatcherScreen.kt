@@ -65,7 +65,7 @@ class MatcherScreen : Screen {
 
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        BoxWithConstraints(modifier = Modifier.weight(weight = 1f)) {
+        BoxWithConstraints(Modifier.weight(weight = 1f)) {
 
             TextEditor(
                 value = uiState.inputs.text,
