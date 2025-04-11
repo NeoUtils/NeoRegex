@@ -23,7 +23,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Close
@@ -41,7 +43,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import com.neoutils.neoregex.core.common.platform.Platform
-import com.neoutils.neoregex.core.common.platform.isAndroid
 import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.manager.model.Opened
@@ -57,9 +58,23 @@ sealed class SalvageAction {
     data object Close : SalvageAction()
 }
 
+enum class Mode {
+    EXPANDED,
+    COMPACT;
+
+    companion object {
+        val Default = when (platform) {
+            is Platform.Desktop -> COMPACT
+            Platform.Android -> EXPANDED
+            Platform.Web -> TODO("Not Supported")
+        }
+    }
+}
+
 @Composable
-fun SalvageUi(
+fun Salvage(
     opened: Opened,
+    mode: Mode = Mode.Default,
     modifier: Modifier = Modifier,
     onAction: (SalvageAction) -> Unit = {},
     textStyle: TextStyle = TextStyle()
@@ -74,17 +89,17 @@ fun SalvageUi(
 
     var showChangeName by remember { mutableStateOf(false) }
 
-    Spacer(Modifier.width(dimensions.tiny))
-
     AnimatedContent(
         targetState = opened.name,
         transitionSpec = {
             fadeIn() togetherWith fadeOut()
         },
-        modifier = Modifier.weight(
-            weight = 1f,
-            fill = platform.isAndroid
-        )
+        modifier = Modifier
+            .padding(horizontal = dimensions.tiny)
+            .weight(
+                weight = 1f,
+                fill = mode == Mode.EXPANDED
+            )
     ) { name ->
         Text(
             text = name,
@@ -94,7 +109,10 @@ fun SalvageUi(
         )
     }
 
-    Spacer(Modifier.width(dimensions.tiny))
+    val iconPadding = when (mode) {
+        Mode.EXPANDED -> dimensions.tiny
+        Mode.COMPACT -> dimensions.micro
+    }
 
     Row {
         Icon(
@@ -105,12 +123,7 @@ fun SalvageUi(
                 .clip(CircleShape)
                 .aspectRatio(ratio = 1f)
                 .clickable { showChangeName = true }
-                .padding(
-                    when (platform) {
-                        Platform.Android -> dimensions.tiny
-                        else -> dimensions.micro
-                    }
-                )
+                .padding(iconPadding)
         )
 
         Icon(
@@ -125,12 +138,7 @@ fun SalvageUi(
                 .clickable(!opened.updated) {
                     onAction(SalvageAction.Reset)
                 }
-                .padding(
-                    when (platform) {
-                        Platform.Android -> dimensions.tiny
-                        else -> dimensions.micro
-                    }
-                )
+                .padding(iconPadding)
         )
 
         Icon(
@@ -145,12 +153,7 @@ fun SalvageUi(
                 .clickable(opened.canUpdate) {
                     onAction(SalvageAction.Update)
                 }
-                .padding(
-                    when (platform) {
-                        Platform.Android -> dimensions.tiny
-                        else -> dimensions.micro
-                    }
-                )
+                .padding(iconPadding)
         )
 
         Icon(
@@ -159,13 +162,9 @@ fun SalvageUi(
             tint = colorScheme.onSurface,
             modifier = Modifier
                 .clip(CircleShape)
+                .aspectRatio(ratio = 1f)
                 .clickable { onAction(SalvageAction.Close) }
-                .padding(
-                    when (platform) {
-                        Platform.Android -> dimensions.tiny
-                        else -> dimensions.micro
-                    }
-                )
+                .padding(iconPadding)
         )
     }
 

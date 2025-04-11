@@ -32,6 +32,6 @@ sealed class Platform {
     data object Web : Platform()
 }
 
-val Platform.isAndroid get() = this == Platform.Android
-
 expect val platform: Platform
+
+val Platform.isAndroid get() = this == Platform.Android

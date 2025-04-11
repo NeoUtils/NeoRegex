@@ -110,7 +110,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = null,
-                    modifier = Modifier.size(dimensions.great)
+                    modifier = Modifier.size(dimensions.medium)
                 )
             },
             onClick = {
@@ -127,7 +127,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.FolderOpen,
                     contentDescription = null,
-                    modifier = Modifier.size(dimensions.great)
+                    modifier = Modifier.size(dimensions.medium)
                 )
             },
             onClick = {
@@ -149,7 +149,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.Save,
                     contentDescription = null,
-                    modifier = Modifier.size(dimensions.great)
+                    modifier = Modifier.size(dimensions.medium)
                 )
             },
             onClick = {
@@ -164,7 +164,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.Info,
                     contentDescription = null,
-                    modifier = Modifier.size(dimensions.great)
+                    modifier = Modifier.size(dimensions.medium)
                 )
             },
             onClick = {

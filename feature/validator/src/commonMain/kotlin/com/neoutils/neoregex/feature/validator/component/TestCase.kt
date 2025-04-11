@@ -360,7 +360,7 @@ private fun MatchDropDown(
         endIcon = {
             Icon(
                 imageVector = Icons.Outlined.KeyboardArrowDown,
-                modifier = Modifier.size(dimensions.great),
+                modifier = Modifier.size(dimensions.medium),
                 contentDescription = null
             )
         },

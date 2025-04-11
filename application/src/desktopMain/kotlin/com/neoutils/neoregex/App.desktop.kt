@@ -90,6 +90,7 @@ fun ApplicationScope.DesktopApp() = WithKoin(
 
     val preferencesDataSource = koinInject<PreferencesDataSource>()
     val windowStateDataSource = koinInject<WindowStateDataSource>()
+
     val salvageManager = koinInject<SalvageManager>()
 
     val preferences by preferencesDataSource.flow.collectAsState()
@@ -164,10 +165,9 @@ private fun FrameWindowScope.HeaderImpl(
                 val startPadding = padding.calculateStartPadding(direction)
 
                 Controller(
-                    modifier = Modifier
-                        .padding(
-                            start = startPadding + dimensions.tiny
-                        ).height(dimensions.big)
+                    modifier = Modifier.padding(
+                        start = startPadding + dimensions.tiny
+                    ).height(dimensions.big)
                 )
             },
             title = {
@@ -198,7 +198,7 @@ private fun FrameWindowScope.HeaderImpl(
                     } else {
                         val coroutine = rememberCoroutineScope()
 
-                        SalvageUi(
+                        Salvage(
                             modifier = Modifier
                                 .height(dimensions.big)
                                 .background(
@@ -250,10 +250,9 @@ private fun FrameWindowScope.HeaderImpl(
                 val endPadding = padding.calculateEndPadding(direction)
 
                 Options(
-                    modifier = Modifier
-                        .padding(
-                            end = endPadding + dimensions.tiny
-                        ).height(dimensions.large)
+                    modifier = Modifier.padding(
+                        end = endPadding + dimensions.tiny
+                    ).height(dimensions.large)
                 )
             }
         )

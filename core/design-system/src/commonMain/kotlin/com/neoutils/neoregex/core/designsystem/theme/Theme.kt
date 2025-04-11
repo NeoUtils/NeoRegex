@@ -77,33 +77,35 @@ private val DarkColors = darkColorScheme(
 @Composable
 fun NeoTheme(
     colorTheme: ColorTheme = rememberColorTheme(),
-    typography: Typography = NeoTypography(
-        fontFamily = FontFamily(Font(Res.font.roboto_mono))
-    ),
+    fontSizes: FontSizes = FontSizes(),
+    dimensions: Dimensions = Dimensions(),
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
         LocalColorTheme provides colorTheme
     ) {
-        NeoBaseTheme(
+        NeoBasicTheme(
             colorScheme = when (colorTheme) {
                 ColorTheme.LIGHT, ColorTheme.LIGHT_SYSTEM -> LightColors
                 ColorTheme.DARK, ColorTheme.DARK_SYSTEM -> DarkColors
             },
-            fontSizes = FontSizes(),
-            dimensions = Dimensions(),
-            typography = typography,
+            fontSizes = fontSizes,
+            dimensions = dimensions,
+            typography = NeoTypography(
+                fontFamily = FontFamily(Font(Res.font.roboto_mono)),
+                fontSizes = fontSizes
+            ),
             content = content
         )
     }
 }
 
 @Composable
-fun NeoBaseTheme(
+fun NeoBasicTheme(
     colorScheme: ColorScheme,
     fontSizes: FontSizes = FontSizes(),
     dimensions: Dimensions = Dimensions(),
-    typography: Typography = NeoTypography(),
+    typography: Typography = NeoTypography(fontSizes),
     content: @Composable () -> Unit
 ) {
     MaterialTheme(

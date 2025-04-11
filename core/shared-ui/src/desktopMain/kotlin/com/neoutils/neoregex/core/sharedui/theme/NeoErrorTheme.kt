@@ -46,7 +46,7 @@ private val LightColors = lightColorScheme(
 fun NeoErrorTheme(
     content: @Composable () -> Unit
 ) {
-    NeoBaseTheme(
+    NeoBasicTheme(
         colorScheme = LightColors,
         content = content
     )

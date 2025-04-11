@@ -26,7 +26,6 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -117,7 +116,7 @@ fun Footer(
                     contentColor = colorScheme.onSurface,
                     modifier = Modifier.height(36.dp),
                 ) {
-                    SalvageUi(
+                    Salvage(
                         opened = opened,
                         textStyle = TextStyle(
                             fontSize = 16.sp
