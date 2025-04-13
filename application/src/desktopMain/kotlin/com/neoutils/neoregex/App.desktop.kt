@@ -191,7 +191,7 @@ private fun FrameWindowScope.HeaderImpl(
                     if (salvage == null) {
                         Text(
                             text = stringResource(Res.string.app_name),
-                            style = typography.titleSmall.copy(
+                            style = typography.titleLarge.copy(
                                 fontFamily = null
                             )
                         )

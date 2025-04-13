@@ -31,6 +31,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import com.neoutils.neoregex.NeoConfig.code
@@ -66,74 +67,74 @@ class AboutScreen : Screen {
         val navigation = koinInject<NavigationManager>()
         val coroutines = rememberCoroutineScope()
 
-        ProvideTextStyle(typography.labelMedium) {
-            Image(
-                painter = painterResource(Res.drawable.ic_launcher),
-                modifier = Modifier.size(56.dp),
-                contentDescription = null
+        Image(
+            painter = painterResource(Res.drawable.ic_launcher),
+            modifier = Modifier.size(56.dp),
+            contentDescription = null
+        )
+
+        Text(
+            text = stringResource(
+                Res.string.about_version_text,
+                version,
+                code
+            ),
+            style = typography.labelLarge
+        )
+
+        Spacer(Modifier.height(dimensions.small))
+
+        Column(
+            modifier = Modifier.sizeIn(
+                maxWidth = 450.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(
+                dimensions.small,
+                Alignment.CenterVertically
             )
+        ) {
 
             Text(
-                stringResource(
-                    Res.string.about_version_text,
-                    version,
-                    code
-                ),
+                text = stringResource(Res.string.about_description_text),
+                style = typography.bodySmall
             )
 
-            Spacer(Modifier.height(dimensions.small))
+            RuntimeInfos()
 
-            Column(
-                modifier = Modifier.sizeIn(
-                    maxWidth = 450.dp
-                ),
-                verticalArrangement = Arrangement.spacedBy(
-                    dimensions.small,
-                    Alignment.CenterVertically
+            HorizontalDivider(
+                modifier = Modifier.padding(
+                    vertical = dimensions.small
                 )
-            ) {
+            )
 
-                Text(stringResource(Res.string.about_description_text))
-
-                if (platform is Platform.Desktop) {
-                    RuntimeInfos()
-                }
-
-                HorizontalDivider(
-                    modifier = Modifier.padding(
-                        vertical = dimensions.tiny
-                    )
-                )
-
-                Link(
-                    text = stringResource(Res.string.about_libraries_btn),
-                    onClick = {
-                        coroutines.launch {
-                            navigation.emit(
-                                Navigation.Event.Navigate(
-                                    screen = Navigation.Screen.Libraries
-                                )
+            Link(
+                text = stringResource(Res.string.about_libraries_btn),
+                onClick = {
+                    coroutines.launch {
+                        navigation.emit(
+                            Navigation.Event.Navigate(
+                                screen = Navigation.Screen.Libraries
                             )
-                        }
+                        )
                     }
-                )
+                }
+            )
 
-                val uriHandler = LocalUriHandler.current
+            val uriHandler = LocalUriHandler.current
 
-                Link(
-                    text = stringResource(Res.string.about_source_code_btn),
-                    onClick = {
-                        uriHandler.openUri(uri = "https://github.com/NeoUtils/NeoRegex")
-                    }
-                )
+            Link(
+                text = stringResource(Res.string.about_source_code_btn),
+                onClick = {
+                    uriHandler.openUri(uri = "https://github.com/NeoUtils/NeoRegex")
+                }
+            )
 
-                Link(
-                    text = stringResource(Res.string.about_license_btn),
-                    onClick = {
-                        uriHandler.openUri(uri = "https://github.com/NeoUtils/NeoRegex#GPL-3.0-1-ov-file")
-                    }
-                )
-            }
+            Link(
+                text = stringResource(Res.string.about_license_btn),
+                onClick = {
+                    uriHandler.openUri(uri = "https://github.com/NeoUtils/NeoRegex#GPL-3.0-1-ov-file")
+                }
+            )
         }
     }
 }

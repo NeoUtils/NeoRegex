@@ -55,6 +55,7 @@ import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.test_case_untitled
 import com.neoutils.neoregex.core.resources.validator_insert_input_hint
+import com.neoutils.neoregex.core.sharedui.component.minimalButton
 import com.neoutils.neoregex.core.sharedui.extension.Swipe
 import com.neoutils.neoregex.core.sharedui.extension.onSwipe
 import com.neoutils.neoregex.feature.validator.action.TestCaseAction
@@ -134,7 +135,7 @@ fun TestCase(
                             )
                         },
                         contentPadding = PaddingValues(0.dp),
-                        textStyle = typography.labelMedium,
+                        textStyle = typography.titleSmall,
                         hint = {
                             Text(
                                 text = stringResource(Res.string.test_case_untitled),
@@ -317,8 +318,7 @@ private fun Options(
         modifier = Modifier
             .clip(CircleShape)
             .clickable(onClick = onDelete)
-            .size(dimensions.large)
-            .padding(dimensions.tiny)
+            .minimalButton()
     )
 
     Icon(
@@ -328,8 +328,7 @@ private fun Options(
             .clip(CircleShape)
             .rotate(degrees = 180f)
             .clickable(onClick = onClose)
-            .size(dimensions.large)
-            .padding(dimensions.tiny)
+            .minimalButton()
     )
 }
 

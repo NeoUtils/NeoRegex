@@ -51,7 +51,7 @@ fun MatchDetails(
     color = colorScheme.surfaceContainerLowest
 ) {
 
-    val mergedTextStyle = typography.bodyLarge.merge(textStyle)
+    val mergedTextStyle = typography.bodyMedium.merge(textStyle)
 
     Row(
         horizontalArrangement = Arrangement.SpaceAround,

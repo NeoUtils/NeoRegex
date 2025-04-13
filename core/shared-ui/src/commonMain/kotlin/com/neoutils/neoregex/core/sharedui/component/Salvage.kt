@@ -109,11 +109,6 @@ fun Salvage(
         )
     }
 
-    val iconPadding = when (mode) {
-        Mode.EXPANDED -> dimensions.tiny
-        Mode.COMPACT -> dimensions.micro
-    }
-
     Row {
         Icon(
             imageVector = Icons.TwoTone.Edit,
@@ -121,9 +116,8 @@ fun Salvage(
             tint = colorScheme.onSurface,
             modifier = Modifier
                 .clip(CircleShape)
-                .aspectRatio(ratio = 1f)
                 .clickable { showChangeName = true }
-                .padding(iconPadding)
+                .minimalButton()
         )
 
         Icon(
@@ -134,11 +128,10 @@ fun Salvage(
             ),
             modifier = Modifier
                 .clip(CircleShape)
-                .aspectRatio(ratio = 1f)
                 .clickable(!opened.updated) {
                     onAction(SalvageAction.Reset)
                 }
-                .padding(iconPadding)
+                .minimalButton()
         )
 
         Icon(
@@ -149,11 +142,10 @@ fun Salvage(
             ),
             modifier = Modifier
                 .clip(CircleShape)
-                .aspectRatio(ratio = 1f)
                 .clickable(opened.canUpdate) {
                     onAction(SalvageAction.Update)
                 }
-                .padding(iconPadding)
+                .minimalButton()
         )
 
         Icon(
@@ -162,9 +154,8 @@ fun Salvage(
             tint = colorScheme.onSurface,
             modifier = Modifier
                 .clip(CircleShape)
-                .aspectRatio(ratio = 1f)
                 .clickable { onAction(SalvageAction.Close) }
-                .padding(iconPadding)
+                .minimalButton()
         )
     }
 
@@ -177,7 +168,7 @@ fun Salvage(
             title = {
                 Text(
                     text = stringResource(Res.string.salvage_edit_name_dialog_title),
-                    style = typography.titleSmall.copy(
+                    style = typography.titleMedium.copy(
                         fontFamily = null,
                     )
                 )

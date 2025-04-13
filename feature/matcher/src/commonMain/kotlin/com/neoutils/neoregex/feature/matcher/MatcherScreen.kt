@@ -114,7 +114,6 @@ class MatcherScreen : Screen {
 
             Performance(
                 performance = uiState.performance,
-                textStyle = typography.labelMedium
             )
         }
 

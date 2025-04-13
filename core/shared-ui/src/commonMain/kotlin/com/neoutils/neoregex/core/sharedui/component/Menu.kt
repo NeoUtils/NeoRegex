@@ -198,7 +198,7 @@ fun Menu(
                 Text(
                     text = stringResource(Res.string.salvage_save_dialog_title),
                     color = colorScheme.onSurfaceVariant,
-                    style = typography.titleSmall.copy(
+                    style = typography.titleMedium.copy(
                         fontFamily = null,
                     )
                 )

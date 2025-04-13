@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2025 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,19 +25,14 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 
 @Composable
-fun NeoTypography(
-    fontSizes: FontSizes = FontSizes(),
-    fontFamily: FontFamily = FontFamily.Default
+actual fun NeoTypography(
+    fontSizes: FontSizes,
+    fontFamily: FontFamily
 ) = Typography(
     titleLarge = TextStyle(
         fontFamily = fontFamily,
-        fontWeight = FontWeight.SemiBold,
-        fontSize = fontSizes.huge,
-    ),
-    titleMedium = TextStyle(
-        fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = fontSizes.large,
+        fontSize = fontSizes.big,
     ),
     titleSmall = TextStyle(
         fontFamily = fontFamily,
@@ -73,5 +68,5 @@ fun NeoTypography(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = fontSizes.tiny,
-    )
+    ),
 )

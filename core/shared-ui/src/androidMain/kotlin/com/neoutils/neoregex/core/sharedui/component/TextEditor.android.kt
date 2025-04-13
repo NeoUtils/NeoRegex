@@ -63,7 +63,7 @@ actual fun TextEditor(
     config: Config
 ) = Column(modifier) {
 
-    val mergedTextStyle = typography.bodyLarge.merge(textStyle)
+    val mergedTextStyle = typography.bodyMedium.merge(textStyle)
 
     val scrollState = rememberScrollState()
 
@@ -229,7 +229,8 @@ actual fun TextEditor(
         if (match != null) {
             MatchDetails(
                 match = match,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = mergedTextStyle
             )
         } else {
             Spacer(Modifier.fillMaxWidth())

@@ -16,14 +16,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.feature.about.component
+package com.neoutils.neoregex.core.designsystem.theme
 
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 
 @Composable
-expect fun RuntimeInfos(
-    modifier: Modifier = Modifier,
-    textStyle: TextStyle = TextStyle()
-)
+expect fun NeoTypography(
+    fontSizes: FontSizes = FontSizes(),
+    fontFamily: FontFamily = FontFamily.Default
+) : Typography
