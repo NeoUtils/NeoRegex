@@ -40,6 +40,7 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import com.neoutils.neoregex.core.common.model.Field
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.designsystem.component.ErrorTooltip
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
 import com.neoutils.neoregex.core.sharedui.component.Footer
 import com.neoutils.neoregex.core.sharedui.component.Performance
@@ -128,7 +129,7 @@ class MatcherScreen : Screen {
                         fadeIn() togetherWith fadeOut()
                     }
                 ) { result ->
-                    Box(Modifier.size(24.dp)) {
+                    Box(Modifier.size(dimensions.large)) {
                         if (result is MatcherUiState.Result.Failure) {
                             ErrorTooltip(result.error)
                         }
