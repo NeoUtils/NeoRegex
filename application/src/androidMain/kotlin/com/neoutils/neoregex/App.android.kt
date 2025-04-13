@@ -88,7 +88,7 @@ private fun NeoAppBar(
     title = {
         Text(
             text = stringResource(Res.string.app_name),
-            style = typography.titleMedium.copy(
+            style = typography.titleLarge.copy(
                 fontFamily = null
             )
         )

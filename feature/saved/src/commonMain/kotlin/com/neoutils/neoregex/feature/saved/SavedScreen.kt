@@ -32,9 +32,12 @@ import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,6 +60,7 @@ import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
 import com.neoutils.neoregex.core.resources.*
 import com.neoutils.neoregex.core.sharedui.component.NeoRegexDialog
 import com.neoutils.neoregex.core.sharedui.component.PatternNameDialog
+import com.neoutils.neoregex.core.sharedui.component.minimalButton
 import com.neoutils.neoregex.feature.saved.state.SavedUiState
 import org.jetbrains.compose.resources.stringResource
 
@@ -90,7 +94,7 @@ class SavedScreen : Screen {
                 items(uiState.patterns) { pattern ->
                     Pattern(
                         pattern = pattern,
-                        onOpen = {
+                        open = {
                             viewModel.open(pattern.id)
                         },
                         onDelete = {
@@ -113,7 +117,7 @@ class SavedScreen : Screen {
                 title = {
                     Text(
                         text = stringResource(Res.string.salvage_edit_name_dialog_title),
-                        style = typography.titleSmall.copy(
+                        style = typography.titleMedium.copy(
                             fontFamily = null,
                         )
                     )
@@ -139,7 +143,7 @@ class SavedScreen : Screen {
                     Text(
                         text = stringResource(Res.string.saved_delete_pattern_title),
                         color = colorScheme.onSurfaceVariant,
-                        style = typography.titleSmall.copy(
+                        style = typography.titleMedium.copy(
                             fontFamily = null,
                         )
                     )
@@ -176,7 +180,7 @@ class SavedScreen : Screen {
 private fun Pattern(
     pattern: SavedUiState.Pattern,
     modifier: Modifier = Modifier,
-    onOpen: () -> Unit = {},
+    open: () -> Unit = {},
     onDelete: () -> Unit = {},
     onEdit: () -> Unit = {},
     syntax: Syntax.Regex = remember { Syntax.Regex() }
@@ -206,7 +210,6 @@ private fun Pattern(
             Text(
                 text = pattern.title,
                 style = typography.titleSmall,
-                fontSize = fontSizes.small,
                 modifier = Modifier.padding(start = dimensions.short)
             )
 
@@ -216,34 +219,31 @@ private fun Pattern(
                 modifier = Modifier
                     .clip(CircleShape)
                     .clickable(onClick = onEdit)
-                    .size(dimensions.large)
-                    .padding(dimensions.tiny)
+                    .minimalButton()
             )
 
             Spacer(Modifier.weight(weight = 1f))
 
-            IconButton(
-                onClick = onOpen,
-                enabled = !pattern.opened,
-                modifier = Modifier.size(dimensions.large)
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
-                    contentDescription = null,
-                    modifier = Modifier.padding(4.2.dp)
-                )
-            }
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable(
+                        enabled = !pattern.opened,
+                        onClick = open
+                    )
+                    .minimalButton()
+            )
 
-            IconButton(
-                onClick = onDelete,
-                modifier = Modifier.size(dimensions.large)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Delete,
-                    contentDescription = null,
-                    modifier = Modifier.padding(4.dp)
-                )
-            }
+            Icon(
+                imageVector = Icons.Outlined.Delete,
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable(onClick = onDelete)
+                    .minimalButton()
+            )
         }
 
         HorizontalDivider()

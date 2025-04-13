@@ -18,48 +18,15 @@
 
 package com.neoutils.neoregex.core.sharedui.component
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedContentTransitionScope.SlideDirection
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
-import androidx.compose.ui.focus.focusProperties
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.neoutils.highlight.compose.remember.rememberTextFieldValue
-import com.neoutils.neoregex.core.common.extension.toText
-import com.neoutils.neoregex.core.common.extension.toTextFieldValue
 import com.neoutils.neoregex.core.common.model.Field
 import com.neoutils.neoregex.core.common.model.HistoryState
 import com.neoutils.neoregex.core.common.model.TextState
-import com.neoutils.neoregex.core.common.platform.isAndroid
-import com.neoutils.neoregex.core.common.platform.platform
-import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.common.util.Syntax
-import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
-import com.neoutils.neoregex.core.resources.Res
-import com.neoutils.neoregex.core.resources.matcher_footer_insert_regex_hint
-import kotlinx.coroutines.launch
-import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 sealed class FooterAction {
@@ -114,7 +81,6 @@ fun Footer(
                     shadowElevation = dimensions.small,
                     color = colorScheme.surfaceContainerLow,
                     contentColor = colorScheme.onSurface,
-                    modifier = Modifier.height(36.dp),
                 ) {
                     Salvage(
                         opened = opened,

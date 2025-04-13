@@ -132,7 +132,6 @@ fun BoxWithConstraintsScope.Performance(
                 decimals = 3
             )
         ),
-        fontSize = fontSizes.tiny,
         style = mergedTextStyle,
         modifier = Modifier
             .align(current.value)
