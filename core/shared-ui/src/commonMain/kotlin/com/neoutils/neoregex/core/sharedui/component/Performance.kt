@@ -68,6 +68,7 @@ data class Performance(
 
 @Composable
 fun BoxWithConstraintsScope.Performance(
+    modifier: Modifier = Modifier,
     performance: Performance,
     textStyle: TextStyle = TextStyle(),
     preferencesDataSource: PreferencesDataSource = koinInject()
@@ -133,7 +134,7 @@ fun BoxWithConstraintsScope.Performance(
             )
         ),
         style = mergedTextStyle,
-        modifier = Modifier
+        modifier = modifier
             .align(current.value)
             .offset { animateOffset.value.round() }
             .padding(dimensions.tiny) // external
