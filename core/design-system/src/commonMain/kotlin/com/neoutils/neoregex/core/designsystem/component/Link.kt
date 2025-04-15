@@ -33,9 +33,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.unit.dp
 import com.neoutils.neoregex.core.designsystem.theme.Blue500
 import com.neoutils.neoregex.core.designsystem.theme.Blue600
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.designsystem.theme.Purple500
 
 data class LinkColor(
@@ -117,7 +117,7 @@ fun Link(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(2.dp),
+            horizontalArrangement = Arrangement.spacedBy(dimensions.nano.s),
             modifier = modifier.clickable(
                 onClick = onClick,
                 interactionSource = interactionSource,

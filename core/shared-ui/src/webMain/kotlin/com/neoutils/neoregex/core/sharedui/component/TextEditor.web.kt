@@ -55,7 +55,7 @@ import com.neoutils.neoregex.core.common.model.DrawMatch
 import com.neoutils.neoregex.core.common.model.Match
 import com.neoutils.neoregex.core.common.model.TextState
 import com.neoutils.neoregex.core.common.util.InteractionMode
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.designsystem.theme.LocalDimensions
 import com.neoutils.neoregex.core.sharedui.extension.toText
 import com.neoutils.neoregex.core.sharedui.extension.tooltip
 
@@ -90,6 +90,8 @@ actual fun TextEditor(
     var selectedMatch by remember { mutableStateOf<Match?>(null) }
 
     val textMeasurer = rememberTextMeasurer()
+
+    val dimensions = LocalDimensions.current
 
     if (InteractionMode.Current == InteractionMode.TOUCH) {
         LaunchedEffect(interactionSource, matches) {
@@ -254,6 +256,7 @@ actual fun TextEditor(
                                             )
                                         ),
                                         backgroundColor = config.tooltipBackgroundColor,
+                                        dimensions = dimensions
                                     )
                                 }
                             }

@@ -64,7 +64,7 @@ fun NeoRegexDialog(
                     .background(colorScheme.surfaceVariant)
                     .padding(horizontal = dimensions.default.m)
                     .fillMaxWidth()
-                    .height(40.dp),
+                    .height(dimensions.large.m),
                 contentAlignment = Alignment.Center
             ) {
                 title()

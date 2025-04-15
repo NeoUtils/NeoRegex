@@ -36,7 +36,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.manager.model.Navigation
@@ -94,7 +93,7 @@ fun Navigation(
             Image(
                 imageVector = Icons.Rounded.KeyboardArrowDown,
                 colorFilter = ColorFilter.tint(colorScheme.onSurface),
-                modifier = Modifier.size(20.dp),
+                modifier = Modifier.size(dimensions.large.s),
                 contentDescription = null
             )
         }

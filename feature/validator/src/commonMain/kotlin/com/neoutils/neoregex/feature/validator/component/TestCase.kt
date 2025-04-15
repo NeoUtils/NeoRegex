@@ -106,7 +106,7 @@ fun TestCase(
 
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(4.dp),
+        shape = RoundedCornerShape(dimensions.nano.m),
         color = colorScheme.surfaceContainer,
         contentColor = colorScheme.onSurface,
         border = BorderStroke(
