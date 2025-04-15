@@ -76,8 +76,8 @@ class ValidatorScreen : Screen {
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(dimensions.default),
-            contentPadding = PaddingValues(dimensions.default)
+            verticalArrangement = Arrangement.spacedBy(dimensions.default.m),
+            contentPadding = PaddingValues(dimensions.default.m)
         ) {
             itemsIndexed(
                 items = uiState.testCases,
@@ -93,7 +93,7 @@ class ValidatorScreen : Screen {
 
             item {
                 Surface(
-                    shape = RoundedCornerShape(dimensions.tiny),
+                    shape = RoundedCornerShape(dimensions.nano.m),
                     color = colorScheme.surfaceContainer,
                     contentColor = colorScheme.onSurface,
                     border = BorderStroke(
@@ -108,7 +108,7 @@ class ValidatorScreen : Screen {
                         text = stringResource(Res.string.validator_add_test_case_btn),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(dimensions.default)
+                            .padding(dimensions.default.m)
                     )
                 }
             }
@@ -127,15 +127,15 @@ class ValidatorScreen : Screen {
                         fadeIn() togetherWith fadeOut()
                     }
                 ) { (result, error) ->
-                    Box(Modifier.size(dimensions.large)) {
+                    Box(Modifier.size(dimensions.large.m)) {
                         when (result) {
                             ValidatorUiState.Result.RUNNING -> {
                                 CircularProgressIndicator(
-                                    strokeWidth = dimensions.micro,
+                                    strokeWidth = dimensions.nano.s,
                                     color = colorScheme.onSurface,
                                     modifier = Modifier
-                                        .size(dimensions.large)
-                                        .padding(dimensions.micro)
+                                        .size(dimensions.large.m)
+                                        .padding(dimensions.nano.s)
                                 )
                             }
 

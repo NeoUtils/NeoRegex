@@ -47,7 +47,7 @@ fun Options(
 ) = Row(
     modifier = modifier,
     horizontalArrangement = Arrangement.spacedBy(
-        dimensions.small,
+        dimensions.small.s,
         Alignment.End
     ),
     verticalAlignment = Alignment.CenterVertically
@@ -70,7 +70,7 @@ fun Options(
                         uri = "https://github.com/NeoUtils/NeoRegex"
                     )
                 }
-            ).padding(dimensions.tiny)
+            ).padding(dimensions.nano.m)
     )
 
     Icon(
@@ -95,6 +95,6 @@ fun Options(
                         )
                     }
                 }
-            ).padding(dimensions.tiny)
+            ).padding(dimensions.nano.m)
     )
 }

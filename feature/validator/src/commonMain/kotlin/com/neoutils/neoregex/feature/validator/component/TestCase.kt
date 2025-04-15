@@ -73,7 +73,7 @@ fun TestCase(
     onAction: (TestCaseAction) -> Unit,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(),
-    contentPadding: PaddingValues = PaddingValues(dimensions.default),
+    contentPadding: PaddingValues = PaddingValues(dimensions.default.m),
     hint: String = stringResource(Res.string.validator_insert_input_hint)
 ) {
     val infiniteTransition = rememberInfiniteTransition()
@@ -118,10 +118,10 @@ fun TestCase(
             AnimatedVisibility(visible = expanded) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(dimensions.small),
+                    horizontalArrangement = Arrangement.spacedBy(dimensions.small.s),
                     modifier = Modifier
-                        .padding(horizontal = dimensions.small)
-                        .padding(top = dimensions.small)
+                        .padding(horizontal = dimensions.small.s)
+                        .padding(top = dimensions.small.s)
                         .fillMaxWidth(),
                 ) {
                     NeoTextField(
@@ -152,7 +152,7 @@ fun TestCase(
                         },
                         singleLine = true,
                         modifier = Modifier
-                            .padding(start = dimensions.small)
+                            .padding(start = dimensions.small.s)
                             .fillMaxWidth()
                             .weight(1f)
                     )
@@ -253,7 +253,7 @@ fun TestCase(
                             .padding(contentPadding)
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(dimensions.default)
+                        horizontalArrangement = Arrangement.spacedBy(dimensions.default.m)
                     ) {
                         Text(
                             text = title.substringBefore(delimiter = "\n").trim(),
@@ -284,7 +284,7 @@ private fun Options(
 ) = Row(
     modifier = modifier,
     verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(dimensions.tiny)
+    horizontalArrangement = Arrangement.spacedBy(dimensions.nano.m)
 ) {
     MatchDropDown(
         case = case,
@@ -359,7 +359,7 @@ private fun MatchDropDown(
         endIcon = {
             Icon(
                 imageVector = Icons.Outlined.KeyboardArrowDown,
-                modifier = Modifier.size(dimensions.medium),
+                modifier = Modifier.size(dimensions.default.x),
                 contentDescription = null
             )
         },

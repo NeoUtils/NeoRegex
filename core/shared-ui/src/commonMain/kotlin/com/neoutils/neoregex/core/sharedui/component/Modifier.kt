@@ -20,21 +20,30 @@ package com.neoutils.neoregex.core.sharedui.component
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.unit.DpSize
 import com.neoutils.neoregex.core.common.platform.Platform
 import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 
+val MinimalButtonSize
+    @Composable
+    @ReadOnlyComposable
+    get() = when (platform) {
+        Platform.Android -> dimensions.large.x
+
+        else -> dimensions.large.s
+    }.let { DpSize(it, it) }
+
 fun Modifier.minimalButton() = composed {
-    when (platform) {
-        Platform.Android -> {
-            size(dimensions.big)
-                .padding(dimensions.tiny)
+    size(MinimalButtonSize).padding(
+        when (platform) {
+            Platform.Android -> dimensions.nano.m
+
+            else -> dimensions.nano.s
         }
-        else -> {
-            size(dimensions.regular)
-                .padding(dimensions.micro)
-        }
-    }
+    )
 }

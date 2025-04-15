@@ -63,7 +63,7 @@ actual fun Footer(
 ) = Surface(
     modifier = modifier,
     shape = RectangleShape,
-    shadowElevation = dimensions.small,
+    shadowElevation = dimensions.small.s,
     color = colorScheme.surfaceContainer,
     contentColor = colorScheme.onSurface,
 ) {
@@ -127,8 +127,8 @@ actual fun Footer(
         tooling?.let {
             Row(
                 modifier = Modifier
-                    .padding(vertical = dimensions.small)
-                    .padding(end = dimensions.default)
+                    .padding(vertical = dimensions.small.s)
+                    .padding(end = dimensions.default.m)
             ) {
                 it()
             }
@@ -138,8 +138,8 @@ actual fun Footer(
             history = history,
             onAction = onAction,
             modifier = Modifier
-                .padding(vertical = dimensions.small)
-                .padding(end = dimensions.small)
+                .padding(vertical = dimensions.small.s)
+                .padding(end = dimensions.small.s)
                 .focusProperties {
                     canFocus = false
                 }

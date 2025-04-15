@@ -85,7 +85,7 @@ fun Menu(
                                 navigation.emit(Navigation.Event.OnBack)
                             }
                         }
-                    ).padding(dimensions.tiny)
+                    ).padding(dimensions.nano.m)
             )
         } else {
             Icon(
@@ -95,7 +95,7 @@ fun Menu(
                     .clip(CircleShape)
                     .aspectRatio(ratio = 1f)
                     .clickable { expanded = true }
-                    .padding(dimensions.tiny)
+                    .padding(dimensions.nano.m)
             )
         }
     }
@@ -110,7 +110,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = null,
-                    modifier = Modifier.size(dimensions.medium)
+                    modifier = Modifier.size(dimensions.default.x)
                 )
             },
             onClick = {
@@ -127,7 +127,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.FolderOpen,
                     contentDescription = null,
-                    modifier = Modifier.size(dimensions.medium)
+                    modifier = Modifier.size(dimensions.default.x)
                 )
             },
             onClick = {
@@ -149,7 +149,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.Save,
                     contentDescription = null,
-                    modifier = Modifier.size(dimensions.medium)
+                    modifier = Modifier.size(dimensions.default.x)
                 )
             },
             onClick = {
@@ -164,7 +164,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.Info,
                     contentDescription = null,
-                    modifier = Modifier.size(dimensions.medium)
+                    modifier = Modifier.size(dimensions.default.x)
                 )
             },
             onClick = {

@@ -45,14 +45,14 @@ fun History(
     history: HistoryState,
     onAction: (FooterAction.History) -> Unit,
     modifier: Modifier = Modifier,
-    shape: CornerBasedShape = RoundedCornerShape(dimensions.small)
+    shape: CornerBasedShape = RoundedCornerShape(dimensions.small.s)
 ) = Row(
     modifier = modifier
         .height(IntrinsicSize.Min)
         .border(
             width = 1.dp,
             color = colorScheme.outline,
-            shape = RoundedCornerShape(dimensions.small)
+            shape = RoundedCornerShape(dimensions.small.s)
         )
 ) {
 
@@ -82,8 +82,8 @@ fun History(
                 )
             }
             .padding(
-                vertical = dimensions.tiny,
-                horizontal = dimensions.small,
+                vertical = dimensions.nano.m,
+                horizontal = dimensions.small.s,
             )
     )
 
@@ -121,8 +121,8 @@ fun History(
                 )
             }
             .padding(
-                vertical = dimensions.tiny,
-                horizontal = dimensions.small,
+                vertical = dimensions.nano.m,
+                horizontal = dimensions.small.s,
             )
     )
 }

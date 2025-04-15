@@ -57,7 +57,7 @@ fun NeoTextField(
     matches: List<Match> = listOf(),
     matchColor: Color = colorScheme.secondary,
     singleLine: Boolean = false,
-    contentPadding: PaddingValues = PaddingValues(dimensions.default),
+    contentPadding: PaddingValues = PaddingValues(dimensions.default.m),
     hint: @Composable () -> Unit = {}
 ) {
     var selection by remember { mutableStateOf(TextRange(value.length)) }
@@ -94,7 +94,7 @@ fun NeoTextField(
     matches: List<Match> = listOf(),
     matchesColor: Color = colorScheme.secondary,
     singleLine: Boolean = false,
-    contentPadding: PaddingValues = PaddingValues(dimensions.default),
+    contentPadding: PaddingValues = PaddingValues(dimensions.default.m),
     hint: @Composable () -> Unit = {}
 ) {
     val mergedTextStyle = typography.bodyLarge.copy(

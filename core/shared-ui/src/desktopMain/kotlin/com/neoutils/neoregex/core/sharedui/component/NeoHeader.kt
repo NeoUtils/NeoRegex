@@ -161,7 +161,7 @@ fun FrameWindowScope.NeoHeader(
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
                         .onSizeChanged { width = it.width.dp }
-                        .padding(end = dimensions.small)
+                        .padding(end = dimensions.small.s)
                 )
             } else {
                 content(
@@ -182,7 +182,7 @@ private fun WindowScope.Buttons(modifier: Modifier) = Row(
     modifier = modifier,
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(
-        space = dimensions.tiny,
+        space = dimensions.nano.m,
         alignment = Alignment.CenterHorizontally
     )
 ) {
@@ -201,7 +201,7 @@ private fun WindowScope.Buttons(modifier: Modifier) = Row(
                     )
                 }
             )
-            .size(dimensions.large)
-            .padding(dimensions.tiny)
+            .size(dimensions.large.m)
+            .padding(dimensions.nano.m)
     )
 }

@@ -77,7 +77,7 @@ fun PatternNameDialog(
         textStyle = typography.bodyMedium.copy(
             color = colorScheme.onBackground
         ),
-        contentPadding = PaddingValues(dimensions.short),
+        contentPadding = PaddingValues(dimensions.small.x),
         modifier = Modifier
             .fillMaxWidth()
             .focusRequester(focusRequester)

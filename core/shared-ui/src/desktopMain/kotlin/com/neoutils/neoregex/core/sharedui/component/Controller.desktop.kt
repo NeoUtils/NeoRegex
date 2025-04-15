@@ -36,7 +36,7 @@ actual fun Controller(
     modifier: Modifier,
 ) = Row(
     modifier = modifier,
-    horizontalArrangement = Arrangement.spacedBy(dimensions.tiny),
+    horizontalArrangement = Arrangement.spacedBy(dimensions.nano.m),
     verticalAlignment = Alignment.CenterVertically
 ) {
 

@@ -49,7 +49,7 @@ fun ReportScreen(
         BottomButtons(
             throwable = throwable,
             modifier = Modifier
-                .padding(bottom = dimensions.default)
+                .padding(bottom = dimensions.default.m)
                 .fillMaxWidth()
         )
     }
@@ -57,18 +57,18 @@ fun ReportScreen(
     Column(
         modifier = Modifier
             .padding(contentPadding)
-            .padding(dimensions.default)
+            .padding(dimensions.default.m)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(
-            space = dimensions.small,
+            space = dimensions.small.s,
             alignment = Alignment.CenterVertically
         )
     ) {
         Icon(
             Icons.Rounded.ErrorOutline,
             contentDescription = null,
-            modifier = Modifier.size(40.dp),
+            modifier = Modifier.size(dimensions.large.m),
             tint = MaterialTheme.colorScheme.error
         )
 
