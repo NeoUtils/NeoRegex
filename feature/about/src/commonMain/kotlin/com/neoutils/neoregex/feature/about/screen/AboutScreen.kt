@@ -24,24 +24,20 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import com.neoutils.neoregex.NeoConfig.code
 import com.neoutils.neoregex.NeoConfig.version
-import com.neoutils.neoregex.core.common.platform.Platform
-import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.manager.navigator.NavigationManager
 import com.neoutils.neoregex.core.manager.model.Navigation
+import com.neoutils.neoregex.core.manager.navigator.NavigationManager
 import com.neoutils.neoregex.core.resources.*
 import com.neoutils.neoregex.feature.about.component.RuntimeInfos
 import kotlinx.coroutines.launch
@@ -69,7 +65,7 @@ class AboutScreen : Screen {
 
         Image(
             painter = painterResource(Res.drawable.ic_launcher),
-            modifier = Modifier.size(56.dp),
+            modifier = Modifier.size(dimensions.huge.x),
             contentDescription = null
         )
 

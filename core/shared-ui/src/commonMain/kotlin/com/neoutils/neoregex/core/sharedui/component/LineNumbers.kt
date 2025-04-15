@@ -28,7 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 
 @Composable
 fun LineNumbers(
@@ -57,7 +57,7 @@ fun LineNumbers(
             state = scrollState,
             enabled = false
         ).padding(
-            horizontal = 8.dp
+            horizontal = dimensions.small.s
         )
     )
 }

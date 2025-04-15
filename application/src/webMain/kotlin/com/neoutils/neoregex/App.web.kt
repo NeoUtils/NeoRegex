@@ -43,7 +43,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.common.di.commonModule
@@ -139,7 +138,7 @@ private fun Header(
     title = {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(18.dp)
+            horizontalArrangement = Arrangement.spacedBy(dimensions.default.x)
         ) {
             Text(
                 text = stringResource(Res.string.app_name),
@@ -188,7 +187,7 @@ private fun TopLabel(
                 ) {
                     Text(
                         text = text,
-                        fontSize = 12.sp,
+                        style = typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .align(Alignment.Center)

@@ -49,6 +49,6 @@ data class Dimensions(
     val huge: Variants<Dp> = Variants(
         s = 32.dp,
         m = 40.dp,
-        x = Dp.Unspecified
+        x = 56.dp
     )
 )
