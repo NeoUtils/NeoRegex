@@ -85,7 +85,7 @@ fun PatternNameDialog(
                 color = colorScheme.outline.copy(
                     alpha = if (focused) 1f else 0.5f
                 ),
-                shape = RoundedCornerShape(4.dp)
+                shape = RoundedCornerShape(dimensions.nano.m)
             ),
         hint = {
             Text(

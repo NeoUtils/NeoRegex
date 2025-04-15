@@ -56,7 +56,6 @@ import com.neoutils.highlight.compose.remember.rememberAnnotatedString
 import com.neoutils.neoregex.core.common.extension.withSpanStyles
 import com.neoutils.neoregex.core.common.util.Syntax
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
 import com.neoutils.neoregex.core.resources.*
 import com.neoutils.neoregex.core.sharedui.component.NeoRegexDialog
 import com.neoutils.neoregex.core.sharedui.component.PatternNameDialog
@@ -186,7 +185,7 @@ private fun Pattern(
     syntax: Syntax.Regex = remember { Syntax.Regex() }
 ) = Surface(
     modifier = modifier,
-    shape = RoundedCornerShape(4.dp),
+    shape = RoundedCornerShape(dimensions.nano.m),
     color = colorScheme.surfaceContainer,
     contentColor = colorScheme.onSurface,
     border = BorderStroke(
@@ -277,8 +276,8 @@ private fun Pattern(
                         contentDescription = null,
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
-                            .padding(16.dp)
-                            .size(20.dp)
+                            .padding(dimensions.default.m)
+                            .size(dimensions.large.s)
                     )
                 }
             }

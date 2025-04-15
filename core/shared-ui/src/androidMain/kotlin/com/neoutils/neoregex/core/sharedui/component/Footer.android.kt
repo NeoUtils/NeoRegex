@@ -95,9 +95,6 @@ actual fun Footer(
             ) {
                 Salvage(
                     opened = opened,
-                    textStyle = TextStyle(
-                        fontSize = 16.sp
-                    ),
                     modifier = Modifier
                         .padding(dimensions.nano.m)
                         .fillMaxWidth(),

@@ -54,6 +54,7 @@ import com.neoutils.neoregex.core.common.extension.toTextFieldValue
 import com.neoutils.neoregex.core.common.model.Match
 import com.neoutils.neoregex.core.common.model.DrawMatch
 import com.neoutils.neoregex.core.common.model.TextState
+import com.neoutils.neoregex.core.designsystem.theme.LocalDimensions
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.sharedui.extension.toText
 import com.neoutils.neoregex.core.sharedui.extension.tooltip
@@ -84,6 +85,8 @@ actual fun TextEditor(
     var hoverOffset by remember { mutableStateOf<Offset?>(null) }
 
     val textMeasurer = rememberTextMeasurer()
+
+    val dimensions = LocalDimensions.current
 
     Row(modifier) {
 
@@ -207,6 +210,7 @@ actual fun TextEditor(
                                     )
                                 ),
                                 backgroundColor = config.tooltipBackgroundColor,
+                                dimensions = dimensions
                             )
                         }
                     }

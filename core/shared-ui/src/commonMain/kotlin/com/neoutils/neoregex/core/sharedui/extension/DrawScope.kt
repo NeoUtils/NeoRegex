@@ -28,15 +28,29 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import com.neoutils.neoregex.core.designsystem.theme.Dimensions
 
 fun DrawScope.tooltip(
     anchorRect: Rect,
     measure: TextLayoutResult,
     backgroundColor: Color,
-    padding: Dp = 8.dp,
-    cornerRadius: Dp = 4.dp,
-    triangleHeight: Dp = 8.dp
+    dimensions: Dimensions
+) = tooltip(
+    anchorRect = anchorRect,
+    measure = measure,
+    backgroundColor = backgroundColor,
+    padding = dimensions.small.s,
+    cornerRadius = dimensions.nano.m,
+    triangleHeight = dimensions.small.s
+)
+
+fun DrawScope.tooltip(
+    anchorRect: Rect,
+    measure: TextLayoutResult,
+    backgroundColor: Color,
+    padding: Dp,
+    cornerRadius: Dp,
+    triangleHeight: Dp
 ) {
     val paddingPx = padding.toPx()
     val cornerRadiusPx = cornerRadius.toPx()
@@ -51,17 +65,17 @@ fun DrawScope.tooltip(
 
     // Calculate horizontal position, ensuring tooltip stays within screen bounds
     var xPosition = anchorRect.center.x - tooltipSize.width / 2
-    
+
     // Adjust x position if tooltip would extend beyond left edge
     if (xPosition < 0) {
         xPosition = 0f
     }
-    
+
     // Adjust x position if tooltip would extend beyond right edge
     if (xPosition + tooltipSize.width > size.width) {
         xPosition = size.width - tooltipSize.width
     }
-    
+
     val topLeft = if (drawAbove) {
         Offset(
             x = xPosition,
