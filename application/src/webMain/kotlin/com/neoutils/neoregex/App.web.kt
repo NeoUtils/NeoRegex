@@ -127,7 +127,7 @@ fun WebApp() = WithKoin(
 @Composable
 private fun Header(
     modifier: Modifier = Modifier,
-    shadowElevation: Dp = dimensions.tiny
+    shadowElevation: Dp = dimensions.nano.m
 ) = TopAppBar(
     modifier = modifier.surface(
         shape = RectangleShape,
@@ -154,8 +154,8 @@ private fun Header(
     actions = {
         Options(
             modifier = Modifier
-                .padding(dimensions.short)
-                .height(dimensions.huge),
+                .padding(dimensions.small.x)
+                .height(dimensions.large.x),
         )
     },
     colors = TopAppBarDefaults.topAppBarColors(
@@ -192,7 +192,7 @@ private fun TopLabel(
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .align(Alignment.Center)
-                            .padding(vertical = dimensions.small),
+                            .padding(vertical = dimensions.small.s),
                     )
 
                     Icon(
@@ -200,11 +200,11 @@ private fun TopLabel(
                         contentDescription = null,
                         tint = Color.Black,
                         modifier = Modifier
-                            .padding(dimensions.tiny)
-                            .size(dimensions.large)
+                            .padding(dimensions.nano.m)
+                            .size(dimensions.large.m)
                             .clip(CircleShape)
                             .clickable(onClick = onClose)
-                            .padding(dimensions.micro)
+                            .padding(dimensions.nano.s)
                             .align(Alignment.CenterEnd)
                     )
                 }

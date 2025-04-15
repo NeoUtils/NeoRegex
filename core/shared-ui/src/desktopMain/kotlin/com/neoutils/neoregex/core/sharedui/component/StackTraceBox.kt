@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.sharedui.util.Padding
 
 @Composable
@@ -60,7 +61,7 @@ fun StackTraceBox(
                 .padding(padding.values)
                 .horizontalScroll(horizontalScrollState)
                 .verticalScroll(verticalScrollState)
-                .padding(NeoTheme.dimensions.small)
+                .padding(dimensions.small.s)
         )
     }
 

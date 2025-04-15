@@ -149,7 +149,7 @@ actual fun TextEditor(
             cursorBrush = SolidColor(colorScheme.onSurface),
             modifier = Modifier
                 .background(colorScheme.surface)
-                .padding(start = dimensions.tiny)
+                .padding(start = dimensions.nano.m)
                 .fillMaxSize()
                 .verticalScroll(scrollState) // TODO(improve): https://github.com/NeoUtils/NeoRegex/issues/15
                 .onFocusChanged(onFocusChange)

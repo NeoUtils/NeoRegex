@@ -47,7 +47,7 @@ fun MatchDetails(
 ) = Surface(
     modifier = modifier,
     shape = RectangleShape,
-    shadowElevation = dimensions.small,
+    shadowElevation = dimensions.small.s,
     color = colorScheme.surfaceContainerLowest
 ) {
 
@@ -59,7 +59,7 @@ fun MatchDetails(
 
         Column(
             modifier = Modifier
-                .padding(dimensions.default)
+                .padding(dimensions.default.m)
                 .weight(weight = 1f)
         ) {
             Text(
@@ -71,7 +71,7 @@ fun MatchDetails(
 
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = dimensions.small,
+                    vertical = dimensions.small.s,
                 )
             )
 
@@ -91,7 +91,7 @@ fun MatchDetails(
         if (match.groups.isNotEmpty()) {
             Column(
                 modifier = Modifier
-                    .padding(dimensions.default)
+                    .padding(dimensions.default.m)
                     .weight(weight = 1f)
             ) {
                 Text(
@@ -103,7 +103,7 @@ fun MatchDetails(
 
                 HorizontalDivider(
                     modifier = Modifier.padding(
-                        vertical = dimensions.small,
+                        vertical = dimensions.small.s,
                     )
                 )
 

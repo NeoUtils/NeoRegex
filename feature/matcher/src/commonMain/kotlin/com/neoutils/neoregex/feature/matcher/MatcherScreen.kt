@@ -129,7 +129,7 @@ class MatcherScreen : Screen {
                         fadeIn() togetherWith fadeOut()
                     }
                 ) { result ->
-                    Box(Modifier.size(dimensions.large)) {
+                    Box(Modifier.size(dimensions.large.m)) {
                         if (result is MatcherUiState.Result.Failure) {
                             ErrorTooltip(result.error)
                         }

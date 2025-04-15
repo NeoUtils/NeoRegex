@@ -121,7 +121,7 @@ actual fun TextEditor(
             modifier = Modifier
                 .background(colorScheme.surface)
                 .onFocusChanged(onFocusChange)
-                .padding(start = dimensions.tiny)
+                .padding(start = dimensions.nano.m)
                 .weight(weight = 1f, fill = false)
                 .fillMaxSize()
                 .onPointerEvent(PointerEventType.Move) { event ->
