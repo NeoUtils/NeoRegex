@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.unit.sp
 import com.neoutils.neoregex.core.common.extension.getBoundingBoxes
 import com.neoutils.neoregex.core.common.extension.toText
 import com.neoutils.neoregex.core.common.extension.toTextFieldValue
@@ -63,7 +64,9 @@ actual fun TextEditor(
     config: Config
 ) = Column(modifier) {
 
-    val mergedTextStyle = typography.bodyMedium.merge(textStyle)
+    val mergedTextStyle = typography.bodyMedium.copy(
+        letterSpacing = 1.sp,
+    ).merge(textStyle)
 
     val scrollState = rememberScrollState()
 
