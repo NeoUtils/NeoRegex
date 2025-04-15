@@ -74,7 +74,7 @@ fun Navigation(
 
     Row(
         modifier = Modifier
-            .clip(RoundedCornerShape(dimensions.tiny))
+            .clip(RoundedCornerShape(dimensions.nano.m))
             .clickable(canSelectScreen) { expanded.value = true },
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -82,8 +82,8 @@ fun Navigation(
             text = stringResource(current.title),
             style = mergedTextStyle,
             modifier = Modifier
-                .padding(vertical = dimensions.tiny)
-                .padding(start = dimensions.tiny)
+                .padding(vertical = dimensions.nano.m)
+                .padding(start = dimensions.nano.m)
         )
 
         AnimatedVisibility(

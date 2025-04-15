@@ -87,9 +87,9 @@ class SavedScreen : Screen {
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
-                    space = dimensions.default,
+                    space = dimensions.default.m,
                 ),
-                contentPadding = PaddingValues(dimensions.default)
+                contentPadding = PaddingValues(dimensions.default.m)
             ) {
                 items(uiState.patterns) { pattern ->
                     Pattern(
@@ -201,16 +201,16 @@ private fun Pattern(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(
-                space = dimensions.tiny
+                space = dimensions.nano.m
             ),
             modifier = Modifier
-                .padding(dimensions.tiny)
+                .padding(dimensions.nano.m)
                 .fillMaxWidth(),
         ) {
             Text(
                 text = pattern.title,
                 style = typography.titleSmall,
-                modifier = Modifier.padding(start = dimensions.short)
+                modifier = Modifier.padding(start = dimensions.small.x)
             )
 
             Icon(
@@ -263,7 +263,7 @@ private fun Pattern(
                 maxLines = 1,
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
-                    .padding(dimensions.default)
+                    .padding(dimensions.default.m)
             )
 
             val interaction by interactionSource.interactions.collectAsStateWithLifecycle(initialValue = null)

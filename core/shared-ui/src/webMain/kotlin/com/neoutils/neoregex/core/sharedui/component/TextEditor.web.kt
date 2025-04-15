@@ -164,7 +164,7 @@ actual fun TextEditor(
             modifier = Modifier
                 .background(colorScheme.surface)
                 .onFocusChanged(onFocusChange)
-                .padding(start = dimensions.tiny)
+                .padding(start = dimensions.nano.m)
                 .weight(weight = 1f, fill = false)
                 .fillMaxSize()
                 .verticalScroll(scrollState) // TODO(improve): https://github.com/NeoUtils/NeoRegex/issues/15

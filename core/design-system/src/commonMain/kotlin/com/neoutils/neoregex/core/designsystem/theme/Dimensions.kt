@@ -25,15 +25,35 @@ import androidx.compose.ui.unit.dp
 val LocalDimensions = compositionLocalOf<Dimensions> { error("Dimensions not defined") }
 
 data class Dimensions(
-    val micro: Dp = 2.dp,
-    val tiny: Dp = 4.dp,
-    val mini: Dp = 6.dp,
-    val small: Dp = 8.dp,
-    val short: Dp = 12.dp,
-    val default: Dp = 16.dp,
-    val medium: Dp = 18.dp,
-    val regular: Dp = 20.dp,
-    val large: Dp = 24.dp,
-    val big: Dp = 28.dp,
-    val huge: Dp = 32.dp,
+    val nano: Variants = Variants(
+        s = 2.dp,
+        m = 4.dp,
+        x = 6.dp
+    ),
+    val small: Variants = Variants(
+        s = 8.dp,
+        m = 10.dp,
+        x = 12.dp
+    ),
+    val default: Variants = Variants(
+        s = 14.dp,
+        m = 16.dp,
+        x = 18.dp
+    ),
+    val large: Variants = Variants(
+        s = 20.dp,
+        m = 24.dp,
+        x = 28.dp
+    ),
+    val huge: Variants = Variants(
+        s = 32.dp,
+        m = 40.dp,
+        x = Dp.Unspecified
+    )
+)
+
+data class Variants(
+    val s: Dp,
+    val m: Dp,
+    val x: Dp
 )

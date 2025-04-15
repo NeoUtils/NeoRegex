@@ -166,8 +166,8 @@ private fun FrameWindowScope.HeaderImpl(
 
                 Controller(
                     modifier = Modifier.padding(
-                        start = startPadding + dimensions.tiny
-                    ).height(dimensions.big)
+                        start = startPadding + dimensions.nano.m
+                    ).height(dimensions.large.x)
                 )
             },
             title = {
@@ -200,15 +200,15 @@ private fun FrameWindowScope.HeaderImpl(
 
                         Salvage(
                             modifier = Modifier
-                                .height(dimensions.big)
+                                .height(dimensions.large.x)
                                 .background(
                                     color = colorScheme.onSurface.copy(
                                         alpha = 0.05f
                                     ).compositeOver(
                                         colorScheme.surfaceVariant
                                     ),
-                                    shape = RoundedCornerShape(dimensions.tiny)
-                                ).padding(dimensions.tiny),
+                                    shape = RoundedCornerShape(dimensions.nano.m)
+                                ).padding(dimensions.nano.m),
                             opened = salvage,
                             onAction = { action ->
                                 when (action) {
@@ -251,8 +251,8 @@ private fun FrameWindowScope.HeaderImpl(
 
                 Options(
                     modifier = Modifier.padding(
-                        end = endPadding + dimensions.tiny
-                    ).height(dimensions.large)
+                        end = endPadding + dimensions.nano.m
+                    ).height(dimensions.large.m)
                 )
             }
         )

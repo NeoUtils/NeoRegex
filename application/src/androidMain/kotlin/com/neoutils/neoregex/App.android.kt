@@ -26,7 +26,6 @@ import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -47,6 +46,8 @@ import com.neoutils.neoregex.core.sharedui.component.Options
 import com.neoutils.neoregex.core.sharedui.extension.surface
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+
+private val TopBarHeight = 55.dp
 
 @Composable
 fun AndroidApp() {
@@ -75,14 +76,14 @@ fun AndroidApp() {
 @Composable
 private fun NeoAppBar(
     modifier: Modifier = Modifier,
-    shadowElevation: Dp = dimensions.tiny,
-    height: Dp = 55.dp
+    shadowElevation: Dp = dimensions.nano.m,
+    height: Dp = TopBarHeight
 ) = CenterAlignedTopAppBar(
     navigationIcon = {
         Controller(
             modifier = Modifier
-                .padding(start = dimensions.tiny)
-                .height(dimensions.huge)
+                .padding(start = dimensions.nano.m)
+                .height(dimensions.large.x)
         )
     },
     title = {
@@ -96,8 +97,8 @@ private fun NeoAppBar(
     actions = {
         Options(
             modifier = Modifier
-                .padding(end = dimensions.small)
-                .height(dimensions.big)
+                .padding(end = dimensions.small.s)
+                .height(dimensions.large.x)
         )
     },
     modifier = modifier.surface(

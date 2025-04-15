@@ -111,7 +111,7 @@ fun BoxWithConstraintsScope.Performance(
             isVisible = isRunning,
             isTarget = alignment == destination.value,
             modifier = Modifier
-                .padding(dimensions.tiny)
+                .padding(dimensions.nano.m)
                 .size(density.run { targetRect.size.toDpSize() })
                 .onGloballyPositioned {
                     alignments = alignments + mapOf(
@@ -137,12 +137,12 @@ fun BoxWithConstraintsScope.Performance(
         modifier = modifier
             .align(current.value)
             .offset { animateOffset.value.round() }
-            .padding(dimensions.tiny) // external
+            .padding(dimensions.nano.m) // external
             .background(
                 color = colorScheme.surfaceVariant,
-                shape = RoundedCornerShape(dimensions.tiny)
+                shape = RoundedCornerShape(dimensions.nano.m)
             )
-            .clip(shape = RoundedCornerShape(dimensions.tiny))
+            .clip(shape = RoundedCornerShape(dimensions.nano.m))
             .hoverable(hover)
             .indication(
                 interactionSource = hover,
@@ -213,8 +213,8 @@ fun BoxWithConstraintsScope.Performance(
                 )
             }
             .padding(
-                vertical = dimensions.micro,
-                horizontal = dimensions.tiny
+                vertical = dimensions.nano.s,
+                horizontal = dimensions.nano.m
             ) // internal
     )
 }
@@ -235,13 +235,13 @@ private fun BoxScope.AlignmentTarget(
         modifier = Modifier
             .background(
                 color = colorScheme.surfaceVariant,
-                shape = RoundedCornerShape(dimensions.tiny)
+                shape = RoundedCornerShape(dimensions.nano.m)
             ).run {
                 if (isTarget) {
                     border(
                         width = 1.dp,
                         color = colorScheme.outline,
-                        shape = RoundedCornerShape(dimensions.tiny)
+                        shape = RoundedCornerShape(dimensions.nano.m)
                     )
                 } else this
             }

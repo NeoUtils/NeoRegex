@@ -95,7 +95,7 @@ fun Salvage(
             fadeIn() togetherWith fadeOut()
         },
         modifier = Modifier
-            .padding(horizontal = dimensions.tiny)
+            .padding(horizontal = dimensions.nano.m)
             .weight(
                 weight = 1f,
                 fill = mode == Mode.EXPANDED

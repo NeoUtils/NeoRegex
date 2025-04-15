@@ -62,7 +62,7 @@ fun NeoRegexDialog(
             Box(
                 modifier = Modifier
                     .background(colorScheme.surfaceVariant)
-                    .padding(horizontal = dimensions.default)
+                    .padding(horizontal = dimensions.default.m)
                     .fillMaxWidth()
                     .height(40.dp),
                 contentAlignment = Alignment.Center
@@ -73,13 +73,13 @@ fun NeoRegexDialog(
             HorizontalDivider(color = colorScheme.outlineVariant)
 
             Column(
-                modifier = Modifier.padding(dimensions.default),
+                modifier = Modifier.padding(dimensions.default.m),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
                 content()
 
-                Spacer(Modifier.height(dimensions.default))
+                Spacer(Modifier.height(dimensions.default.m))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -89,7 +89,7 @@ fun NeoRegexDialog(
                         onClick = {
                             onDismissRequest()
                         },
-                        shape = RoundedCornerShape(dimensions.small),
+                        shape = RoundedCornerShape(dimensions.small.s),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = colorScheme.onBackground
                         )
@@ -103,7 +103,7 @@ fun NeoRegexDialog(
                             onDismissRequest()
                         },
                         enabled = enableConfirm,
-                        shape = RoundedCornerShape(dimensions.small),
+                        shape = RoundedCornerShape(dimensions.small.s),
                         colors = ButtonDefaults.outlinedButtonColors(
                             contentColor = colorScheme.onBackground
                         )

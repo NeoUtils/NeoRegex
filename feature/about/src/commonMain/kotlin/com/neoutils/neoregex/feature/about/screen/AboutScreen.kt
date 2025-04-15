@@ -55,10 +55,10 @@ class AboutScreen : Screen {
     override fun Content() = Column(
         modifier = Modifier
             .background(colorScheme.background)
-            .padding(dimensions.default)
+            .padding(dimensions.default.m)
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(
-            dimensions.small,
+            dimensions.small.s,
             Alignment.CenterVertically
         ),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -82,14 +82,14 @@ class AboutScreen : Screen {
             style = typography.labelLarge
         )
 
-        Spacer(Modifier.height(dimensions.small))
+        Spacer(Modifier.height(dimensions.small.s))
 
         Column(
             modifier = Modifier.sizeIn(
                 maxWidth = 450.dp
             ),
             verticalArrangement = Arrangement.spacedBy(
-                dimensions.small,
+                dimensions.small.s,
                 Alignment.CenterVertically
             )
         ) {
@@ -103,7 +103,7 @@ class AboutScreen : Screen {
 
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = dimensions.small
+                    vertical = dimensions.small.s
                 )
             )
 
