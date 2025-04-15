@@ -21,15 +21,24 @@ package com.neoutils.neoregex.core.designsystem.theme
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
+import com.neoutils.neoregex.core.common.util.Variants
 
 val LocalFontSizes = compositionLocalOf<FontSizes> { error("FontSizes not defined") }
 
 data class FontSizes(
-    val huge: TextUnit = 22.sp,
-    val big: TextUnit = 20.sp,
-    val large: TextUnit = 18.sp,
-    val medium: TextUnit = 16.sp,
-    val default: TextUnit = 14.sp,
-    val small: TextUnit = 12.sp,
-    val tiny: TextUnit = 10.sp,
+    val small: Variants<TextUnit> = Variants(
+        s = 10.sp,
+        m = 12.sp,
+        x = 14.sp
+    ),
+    val medium: Variants<TextUnit> = Variants(
+        s = 16.sp,
+        m = 18.sp,
+        x = 20.sp
+    ),
+    val large: Variants<TextUnit> = Variants(
+        s = 22.sp,
+        m = 24.sp,
+        x = 26.sp
+    )
 )

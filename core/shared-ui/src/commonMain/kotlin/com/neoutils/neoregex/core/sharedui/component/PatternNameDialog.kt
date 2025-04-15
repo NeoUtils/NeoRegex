@@ -74,9 +74,7 @@ fun PatternNameDialog(
             }
         ),
         singleLine = true,
-        textStyle = typography.bodyMedium.copy(
-            color = colorScheme.onBackground
-        ),
+        textStyle = typography.bodyMedium,
         contentPadding = PaddingValues(dimensions.small.x),
         modifier = Modifier
             .fillMaxWidth()

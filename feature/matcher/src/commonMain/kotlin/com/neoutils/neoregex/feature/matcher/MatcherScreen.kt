@@ -82,10 +82,6 @@ class MatcherScreen : Screen {
                         )
                     }
                 },
-                textStyle = TextStyle(
-                    letterSpacing = 1.sp,
-                    fontSize = fontSizes.medium,
-                ),
                 matches = remember(uiState.result) {
                     when (val result = uiState.result) {
                         is MatcherUiState.Result.Failure -> listOf()

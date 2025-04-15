@@ -62,9 +62,8 @@ fun NeoRegexDialog(
             Box(
                 modifier = Modifier
                     .background(colorScheme.surfaceVariant)
-                    .padding(horizontal = dimensions.default.m)
-                    .fillMaxWidth()
-                    .height(40.dp),
+                    .height(dimensions.huge.m)
+                    .fillMaxWidth(),
                 contentAlignment = Alignment.Center
             ) {
                 title()
