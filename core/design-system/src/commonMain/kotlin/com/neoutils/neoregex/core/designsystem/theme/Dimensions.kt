@@ -21,39 +21,34 @@ package com.neoutils.neoregex.core.designsystem.theme
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.neoutils.neoregex.core.common.util.Variants
 
 val LocalDimensions = compositionLocalOf<Dimensions> { error("Dimensions not defined") }
 
 data class Dimensions(
-    val nano: Variants = Variants(
+    val nano: Variants<Dp> = Variants(
         s = 2.dp,
         m = 4.dp,
         x = 6.dp
     ),
-    val small: Variants = Variants(
+    val small: Variants<Dp> = Variants(
         s = 8.dp,
         m = 10.dp,
         x = 12.dp
     ),
-    val default: Variants = Variants(
+    val default: Variants<Dp> = Variants(
         s = 14.dp,
         m = 16.dp,
         x = 18.dp
     ),
-    val large: Variants = Variants(
+    val large: Variants<Dp> = Variants(
         s = 20.dp,
         m = 24.dp,
         x = 28.dp
     ),
-    val huge: Variants = Variants(
+    val huge: Variants<Dp> = Variants(
         s = 32.dp,
         m = 40.dp,
         x = Dp.Unspecified
     )
-)
-
-data class Variants(
-    val s: Dp,
-    val m: Dp,
-    val x: Dp
 )

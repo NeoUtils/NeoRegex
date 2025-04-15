@@ -32,46 +32,46 @@ actual fun NeoTypography(
     titleLarge = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = fontSizes.medium,
+        fontSize = fontSizes.medium.s,
     ),
     titleMedium = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = fontSizes.medium,
+        fontSize = fontSizes.medium.s,
     ),
     titleSmall = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = fontSizes.default,
+        fontSize = fontSizes.small.x,
     ),
     bodyLarge = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = fontSizes.medium,
+        fontSize = fontSizes.medium.s,
     ),
     bodyMedium = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = fontSizes.default,
+        fontSize = fontSizes.small.x,
     ),
     bodySmall = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = fontSizes.small,
+        fontSize = fontSizes.small.m,
     ),
     labelLarge = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = fontSizes.default,
+        fontSize = fontSizes.small.x,
     ),
     labelMedium = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = fontSizes.small,
+        fontSize = fontSizes.small.m,
     ),
     labelSmall = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
-        fontSize = fontSizes.tiny,
+        fontSize = fontSizes.small.s,
     ),
 )
