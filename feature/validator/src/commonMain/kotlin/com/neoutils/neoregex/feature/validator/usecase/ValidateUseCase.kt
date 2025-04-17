@@ -21,25 +21,27 @@ package com.neoutils.neoregex.feature.validator.usecase
 import com.neoutils.neoregex.core.common.model.Match
 import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.feature.validator.model.TestCaseValidation
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ValidateUseCase {
 
-    operator fun invoke(
+    suspend operator fun invoke(
         testCase: TestCase,
         regex: Regex
     ): TestCaseValidation {
 
-        val results = regex.findAll(testCase.text)
-
-        val matches = mutableListOf<Match>()
-
-        results.mapIndexedTo(matches) { index, match ->
-            Match(
-                text = match.value,
-                range = match.range,
-                groups = match.groupValues.drop(n = 1),
-                number = index.inc(),
-            )
+        val matches = withContext(Dispatchers.Default) {
+            regex
+                .findAll(testCase.text)
+                .mapIndexedTo(mutableListOf()) { index, match ->
+                    Match(
+                        text = match.value,
+                        range = match.range,
+                        groups = match.groupValues.drop(n = 1),
+                        number = index.inc(),
+                    )
+                }
         }
 
         return when (testCase.case) {

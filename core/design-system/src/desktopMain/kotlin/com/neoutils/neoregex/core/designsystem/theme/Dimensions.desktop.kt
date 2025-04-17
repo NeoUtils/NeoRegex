@@ -16,23 +16,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.sharedui.component
+package com.neoutils.neoregex.core.designsystem.theme
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.composed
-import com.neoutils.neoregex.core.common.platform.Platform
-import com.neoutils.neoregex.core.common.platform.platform
-import com.neoutils.neoregex.core.designsystem.theme.MinimalButtonHeight
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 
-fun Modifier.minimalButton() = composed {
-    size(MinimalButtonHeight)
-        .padding(
-            when (platform) {
-                Platform.Android -> dimensions.nano.m
-                else -> dimensions.nano.s
-            }
-        )
-}
+actual val MinimalButtonHeight: Dp
+    @Composable
+    @ReadOnlyComposable
+    get() = dimensions.large.s
+
+actual val TopBarHeight: Dp = 40.dp

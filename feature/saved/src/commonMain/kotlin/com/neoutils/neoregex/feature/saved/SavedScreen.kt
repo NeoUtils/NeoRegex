@@ -32,12 +32,9 @@ import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
+import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -226,6 +223,9 @@ private fun Pattern(
             Icon(
                 imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
                 contentDescription = null,
+                tint = LocalContentColor.current.copy(
+                    alpha = if (pattern.opened) 0.5f else 1f
+                ),
                 modifier = Modifier
                     .clip(CircleShape)
                     .clickable(

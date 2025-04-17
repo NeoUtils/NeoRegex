@@ -52,3 +52,6 @@ data class Dimensions(
         x = 56.dp
     )
 )
+
+expect val MinimalButtonHeight: Dp
+expect val TopBarHeight: Dp
