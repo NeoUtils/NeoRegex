@@ -20,8 +20,10 @@ package com.neoutils.neoregex.feature.about.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 
 @Composable
-actual fun RuntimeInfos(modifier: Modifier) {
-    error("Unavailable on the android target")
-}
+actual fun RuntimeInfos(
+    modifier: Modifier,
+    textStyle: TextStyle
+) = Unit

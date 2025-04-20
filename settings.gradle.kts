@@ -50,7 +50,6 @@ include(
     ":core:common",
     ":core:datasource",
     ":core:database",
-    ":core:dispatcher",
     ":core:repository",
     ":core:manager",
     ":feature:matcher",

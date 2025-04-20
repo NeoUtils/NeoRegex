@@ -47,12 +47,14 @@ import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.unit.sp
 import com.neoutils.neoregex.core.common.extension.getBoundingBoxes
 import com.neoutils.neoregex.core.common.extension.toText
 import com.neoutils.neoregex.core.common.extension.toTextFieldValue
 import com.neoutils.neoregex.core.common.model.Match
 import com.neoutils.neoregex.core.common.model.DrawMatch
 import com.neoutils.neoregex.core.common.model.TextState
+import com.neoutils.neoregex.core.designsystem.theme.LocalDimensions
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.sharedui.extension.toText
 import com.neoutils.neoregex.core.sharedui.extension.tooltip
@@ -70,7 +72,9 @@ actual fun TextEditor(
     config: Config
 ) {
 
-    val mergedTextStyle = typography.bodyMedium.merge(textStyle)
+    val mergedTextStyle = typography.bodyMedium.copy(
+        letterSpacing = 1.sp,
+    ).merge(textStyle)
 
     val scrollState = rememberTextFieldVerticalScrollState()
 
@@ -81,6 +85,8 @@ actual fun TextEditor(
     var hoverOffset by remember { mutableStateOf<Offset?>(null) }
 
     val textMeasurer = rememberTextMeasurer()
+
+    val dimensions = LocalDimensions.current
 
     Row(modifier) {
 
@@ -121,7 +127,7 @@ actual fun TextEditor(
             modifier = Modifier
                 .background(colorScheme.surface)
                 .onFocusChanged(onFocusChange)
-                .padding(start = dimensions.tiny)
+                .padding(start = dimensions.nano.m)
                 .weight(weight = 1f, fill = false)
                 .fillMaxSize()
                 .onPointerEvent(PointerEventType.Move) { event ->
@@ -204,6 +210,7 @@ actual fun TextEditor(
                                     )
                                 ),
                                 backgroundColor = config.tooltipBackgroundColor,
+                                dimensions = dimensions
                             )
                         }
                     }

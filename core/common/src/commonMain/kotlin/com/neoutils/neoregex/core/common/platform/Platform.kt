@@ -33,3 +33,5 @@ sealed class Platform {
 }
 
 expect val platform: Platform
+
+val Platform.isAndroid get() = this == Platform.Android

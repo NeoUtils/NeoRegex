@@ -42,27 +42,40 @@
     <screenshots>
         <screenshot type="default">
             <image>
-                https://raw.githubusercontent.com/NeoUtils/NeoRegex/97481608a77d299cc49f40d0515317dd2a28f5ae/images/desktop/linux_matcher_dark.png
+                https://raw.githubusercontent.com/NeoUtils/NeoRegex/87560d8aab8b96937c7e9031cdd9df4501de34b8/images/desktop/linux_matcher_xml_dark.png
             </image>
             <caption>Match viewer</caption>
         </screenshot>
 
         <screenshot>
             <image>
-                https://raw.githubusercontent.com/NeoUtils/NeoRegex/97481608a77d299cc49f40d0515317dd2a28f5ae/images/desktop/linux_validator_dark.png
+                https://raw.githubusercontent.com/NeoUtils/NeoRegex/87560d8aab8b96937c7e9031cdd9df4501de34b8/images/desktop/linux_validator_xml_dark.png
             </image>
             <caption>Test case validator</caption>
         </screenshot>
 
         <screenshot>
             <image>
-                https://raw.githubusercontent.com/NeoUtils/NeoRegex/97481608a77d299cc49f40d0515317dd2a28f5ae/images/desktop/linux_saved_dark.png
+                https://raw.githubusercontent.com/NeoUtils/NeoRegex/87560d8aab8b96937c7e9031cdd9df4501de34b8/images/desktop/linux_saved_dark.png
             </image>
             <caption>Local pattern storage</caption>
         </screenshot>
     </screenshots>
 
     <releases>
+        <release version="3.1.0" date="2025-04-20">
+            <description>
+                <p>Small improvements and adjustments.</p>
+                <ul>
+                    <li>Save sample text</li>
+                    <li>Typography improvements</li>
+                    <li>Dimensions improvements</li>
+                    <li>Change minimum window size</li>
+                    <li>Improve shortcuts</li>
+                    <li>Bug fixes</li>
+                </ul>
+            </description>
+        </release>
 
         <release version="3.0.0" date="2025-03-31">
             <description>
@@ -88,7 +101,7 @@
 
         <release version="2.4.0" date="2024-12-20">
             <description>
-                <p>User experience improvements.</p>
+                <p>User interface improvements.</p>
                 <ul>
                     <li>Manual theme selection</li>
                     <li>Persistence of preferences</li>
@@ -99,7 +112,7 @@
 
         <release version="2.3.0" date="2024-11-09">
             <description>
-                <p>Performance information.</p>
+                <p>Small improvements and adjustments.</p>
                 <ul>
                     <li>Performance information label</li>
                     <li>New fatal error window</li>
@@ -109,7 +122,7 @@
 
         <release version="2.2.1" date="2024-11-01">
             <description>
-                <p>User experience improvements.</p>
+                <p>User interface improvements.</p>
                 <ul>
                     <li>New visual identity for the window.</li>
                     <li>Improved theme detection.</li>
@@ -120,11 +133,11 @@
 
         <release version="2.0.0" date="2024-09-18">
             <description>
-                <p>Desktop version debuts.</p>
+                <p>First desktop version.</p>
                 <ul>
-                    <li>Match visualization in the text editor.</li>
-                    <li>Capture group visualization of the match.</li>
-                    <li>Undo and redo for the text editor and pattern editor</li>
+                    <li>Match visualization.</li>
+                    <li>Capture group visualization.</li>
+                    <li>Integrated undo and redo.</li>
                 </ul>
             </description>
         </release>

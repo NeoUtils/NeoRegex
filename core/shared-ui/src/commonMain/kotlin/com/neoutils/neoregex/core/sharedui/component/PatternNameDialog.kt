@@ -74,10 +74,8 @@ fun PatternNameDialog(
             }
         ),
         singleLine = true,
-        textStyle = typography.bodyMedium.copy(
-            color = colorScheme.onBackground
-        ),
-        contentPadding = PaddingValues(dimensions.wide),
+        textStyle = typography.bodyMedium,
+        contentPadding = PaddingValues(dimensions.small.x),
         modifier = Modifier
             .fillMaxWidth()
             .focusRequester(focusRequester)
@@ -87,7 +85,7 @@ fun PatternNameDialog(
                 color = colorScheme.outline.copy(
                     alpha = if (focused) 1f else 0.5f
                 ),
-                shape = RoundedCornerShape(4.dp)
+                shape = RoundedCornerShape(dimensions.nano.m)
             ),
         hint = {
             Text(

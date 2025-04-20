@@ -23,9 +23,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
@@ -39,12 +37,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.designsystem.theme.configButton
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
-import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
+import com.neoutils.neoregex.core.manager.model.Navigation
+import com.neoutils.neoregex.core.manager.navigator.NavigationManager
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.core.resources.*
 import kotlinx.coroutines.launch
@@ -82,14 +78,14 @@ fun Menu(
                 contentDescription = null,
                 modifier = Modifier
                     .clip(CircleShape)
+                    .aspectRatio(ratio = 1f)
                     .clickable(
                         onClick = {
                             coroutine.launch {
                                 navigation.emit(Navigation.Event.OnBack)
                             }
                         }
-                    )
-                    .configButton()
+                    ).padding(dimensions.nano.m)
             )
         } else {
             Icon(
@@ -97,8 +93,9 @@ fun Menu(
                 contentDescription = null,
                 modifier = Modifier
                     .clip(CircleShape)
+                    .aspectRatio(ratio = 1f)
                     .clickable { expanded = true }
-                    .configButton()
+                    .padding(dimensions.nano.m)
             )
         }
     }
@@ -113,7 +110,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.Add,
                     contentDescription = null,
-                    modifier = Modifier.size(dimensions.great)
+                    modifier = Modifier.size(dimensions.default.x)
                 )
             },
             onClick = {
@@ -130,7 +127,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.FolderOpen,
                     contentDescription = null,
-                    modifier = Modifier.size(dimensions.great)
+                    modifier = Modifier.size(dimensions.default.x)
                 )
             },
             onClick = {
@@ -152,7 +149,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.Save,
                     contentDescription = null,
-                    modifier = Modifier.size(dimensions.great)
+                    modifier = Modifier.size(dimensions.default.x)
                 )
             },
             onClick = {
@@ -167,7 +164,7 @@ fun Menu(
                 Icon(
                     imageVector = Icons.Default.Info,
                     contentDescription = null,
-                    modifier = Modifier.size(dimensions.great)
+                    modifier = Modifier.size(dimensions.default.x)
                 )
             },
             onClick = {
@@ -201,7 +198,7 @@ fun Menu(
                 Text(
                     text = stringResource(Res.string.salvage_save_dialog_title),
                     color = colorScheme.onSurfaceVariant,
-                    style = typography.titleSmall.copy(
+                    style = typography.titleMedium.copy(
                         fontFamily = null,
                     )
                 )

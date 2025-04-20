@@ -20,7 +20,9 @@ package com.neoutils.neoregex.core.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Gray50 = Color(0xFFfbfbfb)
+val Gray50 = Color(0xFFfafafa)
+val Gray40 = Color(0xFFf8f8f8)
+val Gray80 = Color(0xFFf8f8f8)
 val Gray100 = Color(0xFFf6f6f6)
 val Gray200 = Color(0xFFf1f1f1)
 val Gray300 = Color(0xFFe5e5e5)
@@ -28,7 +30,10 @@ val Gray400 = Color(0xFFc3c3c3)
 val Gray500 = Color(0xff3c3c3c)
 val Gray600 = Color(0xff343434)
 val Gray700 = Color(0xff2e2e2e)
+val Gray750 = Color(0xff2b2b2b)
 val Gray800 = Color(0xff282828)
+val Gray840 = Color(0xff262626)
+val Gray880 = Color(0xff242424)
 val Gray900 = Color(0xff222222)
 
 val GrayDark = Color(0xFF1e1f22)

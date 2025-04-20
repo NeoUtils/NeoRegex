@@ -45,6 +45,7 @@ import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.DragHandler
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
+import com.neoutils.neoregex.core.designsystem.theme.TopBarHeight
 import com.neoutils.neoregex.core.sharedui.remember.NeoWindowState
 import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
 import com.neoutils.neoregex.core.sharedui.remember.rememberNeoWindowState
@@ -52,8 +53,6 @@ import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
 import java.awt.Frame
 import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent
-
-private val DefaultHeaderHeight = 40.dp
 
 @Composable
 fun FrameWindowScope.NeoHeader(
@@ -75,7 +74,7 @@ fun FrameWindowScope.NeoHeader(
     val density = LocalDensity.current
 
     LaunchedEffect(window, colorTheme) {
-        customTitleBar?.height = density.run { DefaultHeaderHeight.toPx() }
+        customTitleBar?.height = density.run { TopBarHeight.toPx() }
         customTitleBar?.putProperty("controls.dark", colorTheme.isDark)
         JBR.windowDecorations?.setCustomTitleBar(window, customTitleBar)
     }
@@ -86,7 +85,7 @@ fun FrameWindowScope.NeoHeader(
             WindowFocus.UNFOCUSED -> colorScheme.surfaceBright
         },
         modifier = modifier.sizeIn(
-            maxHeight = DefaultHeaderHeight
+            maxHeight = TopBarHeight
         ).onSizeChanged {
             customTitleBar?.height = it.height.toFloat()
         }.run {
@@ -161,7 +160,7 @@ fun FrameWindowScope.NeoHeader(
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
                         .onSizeChanged { width = it.width.dp }
-                        .padding(end = dimensions.small)
+                        .padding(end = dimensions.small.s)
                 )
             } else {
                 content(
@@ -182,7 +181,7 @@ private fun WindowScope.Buttons(modifier: Modifier) = Row(
     modifier = modifier,
     verticalAlignment = Alignment.CenterVertically,
     horizontalArrangement = Arrangement.spacedBy(
-        space = dimensions.tiny,
+        space = dimensions.nano.m,
         alignment = Alignment.CenterHorizontally
     )
 ) {
@@ -201,7 +200,7 @@ private fun WindowScope.Buttons(modifier: Modifier) = Row(
                     )
                 }
             )
-            .size(dimensions.large)
-            .padding(dimensions.tiny)
+            .size(dimensions.large.m)
+            .padding(dimensions.nano.m)
     )
 }

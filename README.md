@@ -9,7 +9,7 @@ Create and validate regular expressions easily, anywhere.
 </p>
 
 <p align="center">
-    <img src="images/desktop/linux_matcher_dark.png" alt="NeoRegex desktop app"/>
+    <img src="images/desktop/linux_validator_email_dark.png" alt="NeoRegex desktop app"/>
 </p>
 
 <p align="center">

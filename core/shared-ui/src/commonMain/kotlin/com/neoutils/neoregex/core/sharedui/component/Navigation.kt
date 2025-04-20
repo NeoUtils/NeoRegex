@@ -36,11 +36,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
-import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
+import com.neoutils.neoregex.core.manager.model.Navigation
+import com.neoutils.neoregex.core.manager.navigator.NavigationManager
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -74,7 +73,7 @@ fun Navigation(
 
     Row(
         modifier = Modifier
-            .clip(RoundedCornerShape(dimensions.tiny))
+            .clip(RoundedCornerShape(dimensions.nano.m))
             .clickable(canSelectScreen) { expanded.value = true },
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -82,8 +81,8 @@ fun Navigation(
             text = stringResource(current.title),
             style = mergedTextStyle,
             modifier = Modifier
-                .padding(vertical = dimensions.tiny)
-                .padding(start = dimensions.tiny)
+                .padding(vertical = dimensions.nano.m)
+                .padding(start = dimensions.nano.m)
         )
 
         AnimatedVisibility(
@@ -94,7 +93,7 @@ fun Navigation(
             Image(
                 imageVector = Icons.Rounded.KeyboardArrowDown,
                 colorFilter = ColorFilter.tint(colorScheme.onSurface),
-                modifier = Modifier.size(dimensions.large),
+                modifier = Modifier.size(dimensions.large.s),
                 contentDescription = null
             )
         }

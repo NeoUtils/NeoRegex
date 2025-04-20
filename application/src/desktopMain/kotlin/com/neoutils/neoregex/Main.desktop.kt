@@ -20,6 +20,4 @@ package com.neoutils.neoregex
 
 import androidx.compose.ui.window.application
 
-fun main() = application {
-    DesktopApp()
-}
+fun main() = application { DesktopApp() }

@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -46,10 +47,11 @@ fun MatchDetails(
 ) = Surface(
     modifier = modifier,
     shape = RectangleShape,
-    shadowElevation = dimensions.small
+    shadowElevation = dimensions.small.s,
+    color = colorScheme.surfaceContainerLowest
 ) {
 
-    val mergedTextStyle = typography.bodyLarge.merge(textStyle)
+    val mergedTextStyle = typography.bodyMedium.merge(textStyle)
 
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
@@ -57,7 +59,7 @@ fun MatchDetails(
 
         Column(
             modifier = Modifier
-                .padding(dimensions.default)
+                .padding(dimensions.default.m)
                 .weight(weight = 1f)
         ) {
             Text(
@@ -69,7 +71,7 @@ fun MatchDetails(
 
             HorizontalDivider(
                 modifier = Modifier.padding(
-                    vertical = dimensions.small,
+                    vertical = dimensions.small.s,
                 )
             )
 
@@ -89,7 +91,7 @@ fun MatchDetails(
         if (match.groups.isNotEmpty()) {
             Column(
                 modifier = Modifier
-                    .padding(dimensions.default)
+                    .padding(dimensions.default.m)
                     .weight(weight = 1f)
             ) {
                 Text(
@@ -101,7 +103,7 @@ fun MatchDetails(
 
                 HorizontalDivider(
                     modifier = Modifier.padding(
-                        vertical = dimensions.small,
+                        vertical = dimensions.small.s,
                     )
                 )
 

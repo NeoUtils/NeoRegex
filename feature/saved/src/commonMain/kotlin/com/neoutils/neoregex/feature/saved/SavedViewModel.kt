@@ -20,8 +20,8 @@ package com.neoutils.neoregex.feature.saved
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.screenModelScope
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
-import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
+import com.neoutils.neoregex.core.manager.model.Navigation
+import com.neoutils.neoregex.core.manager.navigator.NavigationManager
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.core.repository.patterns.PatternsRepository
 import com.neoutils.neoregex.feature.saved.state.SavedUiState
@@ -45,7 +45,7 @@ class SavedViewModel(
                 SavedUiState.Pattern(
                     id = checkNotNull(pattern.id),
                     title = pattern.title,
-                    text = pattern.text,
+                    text = pattern.pattern,
                     opened = pattern.id == saved?.id
                 )
             }

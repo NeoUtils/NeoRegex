@@ -115,6 +115,15 @@ class ValidatorViewModel(
         setupTestCasesListener()
     }
 
+    private fun initialTestCase() {
+        if (testCasesRepository.all.isEmpty()) {
+            TestCase().also { emptyTestCase ->
+                testCasesRepository.set(emptyTestCase)
+                expanded.value = emptyTestCase.uuid
+            }
+        }
+    }
+
     private fun setupTestCasesListener() = screenModelScope.launch {
         testCasesRepository.flow.collectLatest { testCases ->
             testCases.forEach { testCase ->
@@ -137,15 +146,6 @@ class ValidatorViewModel(
         }
     }
 
-    private fun initialTestCase() {
-        if (testCasesRepository.all.isEmpty()) {
-            TestCase().also { emptyTestCase ->
-                testCasesRepository.set(emptyTestCase)
-                expanded.value = emptyTestCase.uuid
-            }
-        }
-    }
-
     private fun setupPatternListener() = screenModelScope.launch {
         testPattern.collectLatest { testPattern ->
 
@@ -160,7 +160,7 @@ class ValidatorViewModel(
                 testCaseQueue.enqueue(
                     testCasesRepository.all.filterNot {
                         it.text.isEmpty()
-                    }.reversed()
+                    }
                 )
             }
         }

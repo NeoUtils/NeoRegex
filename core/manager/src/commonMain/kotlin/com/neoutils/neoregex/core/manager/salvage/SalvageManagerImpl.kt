@@ -18,19 +18,21 @@
 
 package com.neoutils.neoregex.core.manager.salvage
 
-import com.neoutils.neoregex.core.common.extension.deepEquals
-import com.neoutils.neoregex.core.common.model.Opened
 import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.model.TextState
 import com.neoutils.neoregex.core.datasource.model.Pattern
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
-import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
+import com.neoutils.neoregex.core.manager.model.Navigation
+import com.neoutils.neoregex.core.manager.model.Opened
+import com.neoutils.neoregex.core.manager.navigator.NavigationManager
 import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
 import com.neoutils.neoregex.core.repository.patterns.PatternsRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
-import com.neoutils.neoregex.core.repository.text.TextStateRepository
+import com.neoutils.neoregex.core.repository.text.TextSampleRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
@@ -38,8 +40,9 @@ class SalvageManagerImpl(
     private val patternsRepository: PatternsRepository,
     private val patternStateRepository: PatternStateRepository,
     private val testCasesRepository: TestCasesRepository,
-    private val textStateRepository: TextStateRepository,
-    private val navigationManager: NavigationManager
+    private val textStateRepository: TextSampleRepository,
+    private val navigationManager: NavigationManager,
+    coroutineScope: CoroutineScope
 ) : SalvageManager {
 
     private val opened = MutableStateFlow<Long?>(null)
@@ -47,25 +50,24 @@ class SalvageManagerImpl(
     override val flow = combine(
         opened,
         patternStateRepository.flow,
+        textStateRepository.flow,
         testCasesRepository.flow,
         patternsRepository.flow,
-    ) { openedPatternId, pattern, testCases, patterns ->
+    ) { openedPatternId, pattern, sample, testCases, patterns ->
         openedPatternId?.let {
-            patterns.find {
-                it.id == openedPatternId
-            }?.let { savedPattern ->
-                val updated =
-                    pattern.text.value == savedPattern.text &&
-                            testCases deepEquals savedPattern.testCases
-                Opened(
-                    id = checkNotNull(savedPattern.id),
-                    name = savedPattern.title,
-                    updated = updated,
-                    canUpdate = !updated && pattern.isValid,
-                )
-            }
+            Opened(
+                id = it,
+                patternState = pattern,
+                sampleState = sample,
+                testCases = testCases,
+                patterns = patterns
+            )
         }
-    }
+    }.stateIn(
+        scope = coroutineScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = null
+    )
 
     override val canSave = opened.combine(
         patternStateRepository.flow
@@ -78,8 +80,8 @@ class SalvageManagerImpl(
 
         val pattern = patternsRepository.get(id) ?: return
 
-        textStateRepository.clear()
-        patternStateRepository.clear(TextState(pattern.text))
+        textStateRepository.clear(TextState(pattern.sample))
+        patternStateRepository.clear(TextState(pattern.pattern))
         testCasesRepository.clear()
 
         sync()
@@ -108,7 +110,8 @@ class SalvageManagerImpl(
             id = id
         ) { pattern ->
             pattern.copy(
-                text = patternStateRepository.pattern.text.value,
+                sample = textStateRepository.sample.text.value,
+                pattern = patternStateRepository.pattern.text.value,
                 testCases = testCasesRepository.all.map { testCase ->
                     TestCase(
                         uuid = testCase.uuid,
@@ -126,7 +129,8 @@ class SalvageManagerImpl(
 
         val pattern = patternsRepository.get(id) ?: return
 
-        patternStateRepository.update(TextState(pattern.text))
+        textStateRepository.update(TextState(pattern.sample))
+        patternStateRepository.update(TextState(pattern.pattern))
         testCasesRepository.setAll(pattern.testCases)
     }
 
@@ -141,7 +145,8 @@ class SalvageManagerImpl(
         val pattern = patternsRepository.save(
             Pattern(
                 title = name,
-                text = patternStateRepository.pattern.text.value,
+                sample = textStateRepository.sample.text.value,
+                pattern = patternStateRepository.pattern.text.value,
                 testCases = testCasesRepository.all.map {
                     TestCase(
                         title = it.title,

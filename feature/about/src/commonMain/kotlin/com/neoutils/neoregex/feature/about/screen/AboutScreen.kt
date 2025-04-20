@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.ProvideTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -35,12 +34,10 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import com.neoutils.neoregex.NeoConfig.code
 import com.neoutils.neoregex.NeoConfig.version
-import com.neoutils.neoregex.core.common.platform.Platform
-import com.neoutils.neoregex.core.common.platform.platform
 import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.dispatcher.navigator.NavigationManager
-import com.neoutils.neoregex.core.dispatcher.model.Navigation
+import com.neoutils.neoregex.core.manager.model.Navigation
+import com.neoutils.neoregex.core.manager.navigator.NavigationManager
 import com.neoutils.neoregex.core.resources.*
 import com.neoutils.neoregex.feature.about.component.RuntimeInfos
 import kotlinx.coroutines.launch
@@ -54,10 +51,10 @@ class AboutScreen : Screen {
     override fun Content() = Column(
         modifier = Modifier
             .background(colorScheme.background)
-            .padding(dimensions.default)
+            .padding(dimensions.default.m)
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(
-            dimensions.small,
+            dimensions.small.s,
             Alignment.CenterVertically
         ),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -66,74 +63,74 @@ class AboutScreen : Screen {
         val navigation = koinInject<NavigationManager>()
         val coroutines = rememberCoroutineScope()
 
-        ProvideTextStyle(typography.labelMedium) {
-            Image(
-                painter = painterResource(Res.drawable.ic_launcher),
-                modifier = Modifier.size(56.dp),
-                contentDescription = null
+        Image(
+            painter = painterResource(Res.drawable.ic_launcher),
+            modifier = Modifier.size(dimensions.huge.x),
+            contentDescription = null
+        )
+
+        Text(
+            text = stringResource(
+                Res.string.about_version_text,
+                version,
+                code
+            ),
+            style = typography.labelLarge
+        )
+
+        Spacer(Modifier.height(dimensions.small.s))
+
+        Column(
+            modifier = Modifier.sizeIn(
+                maxWidth = 450.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(
+                dimensions.small.s,
+                Alignment.CenterVertically
             )
+        ) {
 
             Text(
-                stringResource(
-                    Res.string.about_version_text,
-                    version,
-                    code
-                ),
+                text = stringResource(Res.string.about_description_text),
+                style = typography.bodySmall
             )
 
-            Spacer(Modifier.height(dimensions.small))
+            RuntimeInfos()
 
-            Column(
-                modifier = Modifier.sizeIn(
-                    maxWidth = 450.dp
-                ),
-                verticalArrangement = Arrangement.spacedBy(
-                    dimensions.small,
-                    Alignment.CenterVertically
+            HorizontalDivider(
+                modifier = Modifier.padding(
+                    vertical = dimensions.small.s
                 )
-            ) {
+            )
 
-                Text(stringResource(Res.string.about_description_text))
-
-                if (platform is Platform.Desktop) {
-                    RuntimeInfos()
-                }
-
-                HorizontalDivider(
-                    modifier = Modifier.padding(
-                        vertical = dimensions.tiny
-                    )
-                )
-
-                Link(
-                    text = stringResource(Res.string.about_libraries_btn),
-                    onClick = {
-                        coroutines.launch {
-                            navigation.emit(
-                                Navigation.Event.Navigate(
-                                    screen = Navigation.Screen.Libraries
-                                )
+            Link(
+                text = stringResource(Res.string.about_libraries_btn),
+                onClick = {
+                    coroutines.launch {
+                        navigation.emit(
+                            Navigation.Event.Navigate(
+                                screen = Navigation.Screen.Libraries
                             )
-                        }
+                        )
                     }
-                )
+                }
+            )
 
-                val uriHandler = LocalUriHandler.current
+            val uriHandler = LocalUriHandler.current
 
-                Link(
-                    text = stringResource(Res.string.about_source_code_btn),
-                    onClick = {
-                        uriHandler.openUri(uri = "https://github.com/NeoUtils/NeoRegex")
-                    }
-                )
+            Link(
+                text = stringResource(Res.string.about_source_code_btn),
+                onClick = {
+                    uriHandler.openUri(uri = "https://github.com/NeoUtils/NeoRegex")
+                }
+            )
 
-                Link(
-                    text = stringResource(Res.string.about_license_btn),
-                    onClick = {
-                        uriHandler.openUri(uri = "https://github.com/NeoUtils/NeoRegex#GPL-3.0-1-ov-file")
-                    }
-                )
-            }
+            Link(
+                text = stringResource(Res.string.about_license_btn),
+                onClick = {
+                    uriHandler.openUri(uri = "https://github.com/NeoUtils/NeoRegex#GPL-3.0-1-ov-file")
+                }
+            )
         }
     }
 }

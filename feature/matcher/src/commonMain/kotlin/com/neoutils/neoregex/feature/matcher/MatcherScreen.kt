@@ -25,6 +25,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -39,6 +40,7 @@ import cafe.adriel.voyager.koin.koinScreenModel
 import com.neoutils.neoregex.core.common.model.Field
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.designsystem.component.ErrorTooltip
+import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
 import com.neoutils.neoregex.core.sharedui.component.Footer
 import com.neoutils.neoregex.core.sharedui.component.Performance
@@ -64,7 +66,7 @@ class MatcherScreen : Screen {
 
         val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-        BoxWithConstraints(modifier = Modifier.weight(weight = 1f)) {
+        BoxWithConstraints(Modifier.weight(weight = 1f)) {
 
             TextEditor(
                 value = uiState.inputs.text,
@@ -80,10 +82,6 @@ class MatcherScreen : Screen {
                         )
                     }
                 },
-                textStyle = TextStyle(
-                    letterSpacing = 1.sp,
-                    fontSize = fontSizes.medium,
-                ),
                 matches = remember(uiState.result) {
                     when (val result = uiState.result) {
                         is MatcherUiState.Result.Failure -> listOf()
@@ -111,7 +109,9 @@ class MatcherScreen : Screen {
                 },
             )
 
-            Performance(uiState.performance)
+            Performance(
+                performance = uiState.performance,
+            )
         }
 
         Footer(
@@ -125,7 +125,7 @@ class MatcherScreen : Screen {
                         fadeIn() togetherWith fadeOut()
                     }
                 ) { result ->
-                    Box(Modifier.size(24.dp)) {
+                    Box(Modifier.size(dimensions.large.m)) {
                         if (result is MatcherUiState.Result.Failure) {
                             ErrorTooltip(result.error)
                         }

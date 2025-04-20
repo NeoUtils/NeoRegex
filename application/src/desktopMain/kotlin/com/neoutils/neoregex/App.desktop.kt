@@ -18,23 +18,37 @@
 
 package com.neoutils.neoregex
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.compositeOver
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.neoutils.neoregex.core.common.di.commonModule
 import com.neoutils.neoregex.core.common.util.ColorTheme
+import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
 import com.neoutils.neoregex.core.database.di.databaseModule
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource
@@ -45,10 +59,11 @@ import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.datasource.remember.rememberWindowState
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.dispatcher.di.dispatcherModule
 import com.neoutils.neoregex.core.manager.di.managerModule
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.core.repository.di.repositoryModule
+import com.neoutils.neoregex.core.resources.Res
+import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.sharedui.component.*
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
 import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
@@ -56,16 +71,18 @@ import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
 import com.neoutils.neoregex.feature.matcher.di.matcherModule
 import com.neoutils.neoregex.feature.saved.di.savedModule
 import com.neoutils.neoregex.feature.validator.di.validatorModule
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ApplicationScope.DesktopApp() = WithKoin(
+    commonModule,
     managerModule,
     dataSourceModule,
     databaseModule,
     repositoryModule,
-    dispatcherModule,
     matcherModule,
     validatorModule,
     savedModule,
@@ -74,8 +91,12 @@ fun ApplicationScope.DesktopApp() = WithKoin(
     val preferencesDataSource = koinInject<PreferencesDataSource>()
     val windowStateDataSource = koinInject<WindowStateDataSource>()
 
+    val salvageManager = koinInject<SalvageManager>()
+
     val preferences by preferencesDataSource.flow.collectAsState()
     val windowState by windowStateDataSource.flow.collectAsState()
+
+    val coroutine = rememberCoroutineScope()
 
     NeoTheme(
         colorTheme = when (preferences.colorTheme) {
@@ -91,7 +112,20 @@ fun ApplicationScope.DesktopApp() = WithKoin(
 
             windowStateDataSource.observe(window)
 
-            App()
+            App(
+                modifier = Modifier.onKeyEvent {
+                    when (Command.from(it)) {
+                        Command.Save -> {
+                            coroutine.launch {
+                                salvageManager.update()
+                            }
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
+            )
         }
     }
 }
@@ -101,6 +135,7 @@ fun ApplicationScope.DesktopApp() = WithKoin(
 private fun FrameWindowScope.HeaderImpl(
     modifier: Modifier = Modifier,
     preferencesDataSource: PreferencesDataSource = koinInject(),
+    salvageManager: SalvageManager = koinInject(),
 ) {
 
     val preferences by preferencesDataSource.flow.collectAsStateWithLifecycle()
@@ -126,20 +161,98 @@ private fun FrameWindowScope.HeaderImpl(
                 },
             ),
             navigationIcon = {
+
+                val startPadding = padding.calculateStartPadding(direction)
+
                 Controller(
                     modifier = Modifier.padding(
-                        start = padding.calculateStartPadding(direction) + dimensions.tiny
-                    )
+                        start = startPadding + dimensions.nano.m
+                    ).height(dimensions.large.x)
                 )
             },
             title = {
-                Context()
+                AnimatedContent(
+                    modifier = modifier,
+                    targetState = salvageManager
+                        .flow
+                        .collectAsStateWithLifecycle(
+                            initialValue = null
+                        ).value,
+                    contentKey = { it != null },
+                    transitionSpec = {
+                        slideIntoContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down
+                        ) togetherWith slideOutOfContainer(
+                            AnimatedContentTransitionScope.SlideDirection.Down
+                        )
+                    },
+                    contentAlignment = Alignment.Center,
+                ) { salvage ->
+                    if (salvage == null) {
+                        Text(
+                            text = stringResource(Res.string.app_name),
+                            style = typography.titleLarge.copy(
+                                fontFamily = null
+                            )
+                        )
+                    } else {
+                        val coroutine = rememberCoroutineScope()
+
+                        Salvage(
+                            modifier = Modifier
+                                .height(dimensions.large.x)
+                                .background(
+                                    color = colorScheme.onSurface.copy(
+                                        alpha = 0.05f
+                                    ).compositeOver(
+                                        colorScheme.surfaceVariant
+                                    ),
+                                    shape = RoundedCornerShape(dimensions.nano.m)
+                                ).padding(dimensions.nano.m),
+                            opened = salvage,
+                            onAction = { action ->
+                                when (action) {
+                                    SalvageAction.Close -> {
+                                        coroutine.launch {
+                                            salvageManager.close()
+                                        }
+                                    }
+
+                                    SalvageAction.Update -> {
+                                        coroutine.launch {
+                                            salvageManager.update()
+                                        }
+                                    }
+
+                                    is SalvageAction.ChangeName -> {
+                                        coroutine.launch {
+                                            salvageManager.update {
+                                                it.copy(
+                                                    title = action.name
+                                                )
+                                            }
+                                        }
+                                    }
+
+                                    SalvageAction.Reset -> {
+                                        coroutine.launch {
+                                            salvageManager.sync()
+                                        }
+                                    }
+                                }
+                            }
+                        )
+                    }
+                }
             },
             actions = {
+
+                val endPadding = padding.calculateEndPadding(direction)
+
                 Options(
                     modifier = Modifier.padding(
-                        end = padding.calculateEndPadding(direction) + dimensions.tiny
-                    )
+                        end = endPadding + dimensions.nano.m
+                    ).height(dimensions.large.m)
                 )
             }
         )

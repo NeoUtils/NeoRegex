@@ -20,8 +20,10 @@ package com.neoutils.neoregex.feature.about.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 
 @Composable
 expect fun RuntimeInfos(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    textStyle: TextStyle = TextStyle()
 )

@@ -50,8 +50,8 @@ data class WindowStateData(
         val Default = WindowStateData(
             position = null,
             size = Size(
-                width = 800,
-                height = 600
+                width = 640,
+                height = 480
             ),
             placement = Placement.FLOATING
         )

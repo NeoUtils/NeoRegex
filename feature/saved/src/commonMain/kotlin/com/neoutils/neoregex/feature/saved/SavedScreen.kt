@@ -42,25 +42,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.koin.koinScreenModel
 import com.neoutils.highlight.compose.remember.rememberAnnotatedString
 import com.neoutils.neoregex.core.common.extension.withSpanStyles
 import com.neoutils.neoregex.core.common.util.Syntax
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.buttons
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.fontSizes
-import com.neoutils.neoregex.core.designsystem.theme.configButton
 import com.neoutils.neoregex.core.resources.*
 import com.neoutils.neoregex.core.sharedui.component.NeoRegexDialog
 import com.neoutils.neoregex.core.sharedui.component.PatternNameDialog
+import com.neoutils.neoregex.core.sharedui.component.minimalButton
 import com.neoutils.neoregex.feature.saved.state.SavedUiState
 import org.jetbrains.compose.resources.stringResource
 
@@ -87,14 +83,14 @@ class SavedScreen : Screen {
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
-                    space = dimensions.default,
+                    space = dimensions.default.m,
                 ),
-                contentPadding = PaddingValues(dimensions.default)
+                contentPadding = PaddingValues(dimensions.default.m)
             ) {
                 items(uiState.patterns) { pattern ->
                     Pattern(
                         pattern = pattern,
-                        onOpen = {
+                        open = {
                             viewModel.open(pattern.id)
                         },
                         onDelete = {
@@ -117,7 +113,7 @@ class SavedScreen : Screen {
                 title = {
                     Text(
                         text = stringResource(Res.string.salvage_edit_name_dialog_title),
-                        style = typography.titleSmall.copy(
+                        style = typography.titleMedium.copy(
                             fontFamily = null,
                         )
                     )
@@ -143,7 +139,7 @@ class SavedScreen : Screen {
                     Text(
                         text = stringResource(Res.string.saved_delete_pattern_title),
                         color = colorScheme.onSurfaceVariant,
-                        style = typography.titleSmall.copy(
+                        style = typography.titleMedium.copy(
                             fontFamily = null,
                         )
                     )
@@ -159,7 +155,6 @@ class SavedScreen : Screen {
                                 AnnotatedString.Range(
                                     item = SpanStyle(
                                         fontWeight = FontWeight.Bold,
-                                        fontStyle = FontStyle.Italic
                                     ),
                                     start = startIndex,
                                     end = startIndex + pattern.title.length
@@ -181,13 +176,13 @@ class SavedScreen : Screen {
 private fun Pattern(
     pattern: SavedUiState.Pattern,
     modifier: Modifier = Modifier,
-    onOpen: () -> Unit = {},
+    open: () -> Unit = {},
     onDelete: () -> Unit = {},
     onEdit: () -> Unit = {},
     syntax: Syntax.Regex = remember { Syntax.Regex() }
 ) = Surface(
     modifier = modifier,
-    shape = RoundedCornerShape(4.dp),
+    shape = RoundedCornerShape(dimensions.nano.m),
     color = colorScheme.surfaceContainer,
     contentColor = colorScheme.onSurface,
     border = BorderStroke(
@@ -202,17 +197,16 @@ private fun Pattern(
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(
-                space = dimensions.tiny
+                space = dimensions.nano.m
             ),
             modifier = Modifier
-                .padding(dimensions.tiny)
+                .padding(dimensions.nano.m)
                 .fillMaxWidth(),
         ) {
             Text(
                 text = pattern.title,
                 style = typography.titleSmall,
-                fontSize = fontSizes.small,
-                modifier = Modifier.padding(start = dimensions.short)
+                modifier = Modifier.padding(start = dimensions.small.x)
             )
 
             Icon(
@@ -221,35 +215,34 @@ private fun Pattern(
                 modifier = Modifier
                     .clip(CircleShape)
                     .clickable(onClick = onEdit)
-                    .configButton(
-                        config = buttons.small
-                    )
+                    .minimalButton()
             )
 
             Spacer(Modifier.weight(weight = 1f))
 
-            IconButton(
-                onClick = onOpen,
-                enabled = !pattern.opened,
-                modifier = Modifier.size(dimensions.large)
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
-                    contentDescription = null,
-                    modifier = Modifier.padding(4.2.dp)
-                )
-            }
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
+                contentDescription = null,
+                tint = LocalContentColor.current.copy(
+                    alpha = if (pattern.opened) 0.5f else 1f
+                ),
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable(
+                        enabled = !pattern.opened,
+                        onClick = open
+                    )
+                    .minimalButton()
+            )
 
-            IconButton(
-                onClick = onDelete,
-                modifier = Modifier.size(dimensions.large)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Delete,
-                    contentDescription = null,
-                    modifier = Modifier.padding(4.dp)
-                )
-            }
+            Icon(
+                imageVector = Icons.Outlined.Delete,
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .clickable(onClick = onDelete)
+                    .minimalButton()
+            )
         }
 
         HorizontalDivider()
@@ -269,10 +262,10 @@ private fun Pattern(
                 maxLines = 1,
                 modifier = Modifier
                     .horizontalScroll(rememberScrollState())
-                    .padding(dimensions.default)
+                    .padding(dimensions.default.m)
             )
 
-            val interaction by interactionSource.interactions.collectAsState(initial = null)
+            val interaction by interactionSource.interactions.collectAsStateWithLifecycle(initialValue = null)
 
             when (interaction) {
                 is HoverInteraction.Enter,
@@ -283,8 +276,8 @@ private fun Pattern(
                         contentDescription = null,
                         modifier = Modifier
                             .align(Alignment.CenterEnd)
-                            .padding(16.dp)
-                            .size(20.dp)
+                            .padding(dimensions.default.m)
+                            .size(dimensions.large.s)
                     )
                 }
             }

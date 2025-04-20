@@ -43,9 +43,9 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.neoutils.neoregex.core.common.di.commonModule
 import com.neoutils.neoregex.core.common.extension.toCss
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
@@ -55,7 +55,6 @@ import com.neoutils.neoregex.core.datasource.di.dataSourceModule
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.dispatcher.di.dispatcherModule
 import com.neoutils.neoregex.core.manager.di.managerModule
 import com.neoutils.neoregex.core.repository.di.repositoryModule
 import com.neoutils.neoregex.core.resources.Res
@@ -73,11 +72,11 @@ import org.koin.compose.koinInject
 
 @Composable
 fun WebApp() = WithKoin(
+    commonModule,
     managerModule,
     dataSourceModule,
     databaseModule,
     repositoryModule,
-    dispatcherModule,
     matcherModule,
     validatorModule,
 ) {
@@ -127,7 +126,7 @@ fun WebApp() = WithKoin(
 @Composable
 private fun Header(
     modifier: Modifier = Modifier,
-    shadowElevation: Dp = dimensions.tiny
+    shadowElevation: Dp = dimensions.nano.m
 ) = TopAppBar(
     modifier = modifier.surface(
         shape = RectangleShape,
@@ -139,11 +138,11 @@ private fun Header(
     title = {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(18.dp)
+            horizontalArrangement = Arrangement.spacedBy(dimensions.default.x)
         ) {
             Text(
                 text = stringResource(Res.string.app_name),
-                style = typography.titleMedium.copy(
+                style = typography.titleLarge.copy(
                     fontFamily = null,
                 ),
             )
@@ -154,8 +153,8 @@ private fun Header(
     actions = {
         Options(
             modifier = Modifier
-                .padding(dimensions.short)
-                .height(dimensions.huge),
+                .padding(dimensions.small.x)
+                .height(dimensions.large.x),
         )
     },
     colors = TopAppBarDefaults.topAppBarColors(
@@ -188,11 +187,11 @@ private fun TopLabel(
                 ) {
                     Text(
                         text = text,
-                        fontSize = 12.sp,
+                        style = typography.labelMedium,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .align(Alignment.Center)
-                            .padding(vertical = dimensions.small),
+                            .padding(vertical = dimensions.small.s),
                     )
 
                     Icon(
@@ -200,11 +199,11 @@ private fun TopLabel(
                         contentDescription = null,
                         tint = Color.Black,
                         modifier = Modifier
-                            .padding(dimensions.tiny)
-                            .size(dimensions.large)
+                            .padding(dimensions.nano.m)
+                            .size(dimensions.large.m)
                             .clip(CircleShape)
                             .clickable(onClick = onClose)
-                            .padding(dimensions.micro)
+                            .padding(dimensions.nano.s)
                             .align(Alignment.CenterEnd)
                     )
                 }

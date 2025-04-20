@@ -19,35 +19,30 @@
 package com.neoutils.neoregex
 
 import android.app.Application
-import android.content.Context
+import com.neoutils.neoregex.core.common.di.commonModule
 import com.neoutils.neoregex.core.database.di.databaseModule
 import com.neoutils.neoregex.core.datasource.di.dataSourceModule
-import com.neoutils.neoregex.core.dispatcher.di.dispatcherModule
 import com.neoutils.neoregex.core.manager.di.managerModule
 import com.neoutils.neoregex.core.repository.di.repositoryModule
 import com.neoutils.neoregex.feature.matcher.di.matcherModule
 import com.neoutils.neoregex.feature.saved.di.savedModule
 import com.neoutils.neoregex.feature.validator.di.validatorModule
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.GlobalContext.startKoin
-import org.koin.dsl.module
 
 class NeoAndroidApp : Application() {
-
-    private val module = module {
-        single<Context> { applicationContext }
-    }
 
     override fun onCreate() {
         super.onCreate()
 
         startKoin {
+            androidContext(this@NeoAndroidApp)
             modules(
-                module,
+                commonModule,
                 managerModule,
                 dataSourceModule,
                 databaseModule,
                 repositoryModule,
-                dispatcherModule,
                 matcherModule,
                 validatorModule,
                 savedModule,

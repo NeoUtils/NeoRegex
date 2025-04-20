@@ -18,13 +18,14 @@
 
 package com.neoutils.neoregex.core.manager.salvage
 
-import com.neoutils.neoregex.core.common.model.Opened
+import com.neoutils.neoregex.core.manager.model.Opened
 import com.neoutils.neoregex.core.datasource.model.Pattern
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 interface SalvageManager {
 
-    val flow: Flow<Opened?>
+    val flow: StateFlow<Opened?>
     val canSave: Flow<Boolean>
 
     suspend fun open(id: Long)

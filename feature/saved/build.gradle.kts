@@ -38,7 +38,6 @@ kotlin {
             implementation(projects.core.datasource)
             implementation(projects.core.repository)
             implementation(projects.core.manager)
-            implementation(projects.core.dispatcher)
 
             // voyager
             implementation(catalog.voyager.navigator)

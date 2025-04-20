@@ -42,6 +42,8 @@ private val LightColors = lightColorScheme(
     onSurfaceVariant = Color.Black,
     surfaceTint = Color.White,
     surfaceContainer = Gray100,
+    surfaceContainerLow = Gray80,
+    surfaceContainerLowest = Gray40,
     surfaceBright = Gray300,
     secondary = Blue100,
     onSecondary = Color.Black,
@@ -61,6 +63,8 @@ private val DarkColors = darkColorScheme(
     onSurfaceVariant = Color.White,
     surfaceTint = Color.Black,
     surfaceContainer = Gray800,
+    surfaceContainerLow = Gray840,
+    surfaceContainerLowest = Gray880,
     surfaceBright = Gray500,
     secondary = Blue700,
     onSecondary = Color.White,
@@ -73,34 +77,35 @@ private val DarkColors = darkColorScheme(
 @Composable
 fun NeoTheme(
     colorTheme: ColorTheme = rememberColorTheme(),
-    typography: Typography = NeoTypography(
-        fontFamily = FontFamily(Font(Res.font.roboto_mono))
-    ),
+    fontSizes: FontSizes = FontSizes(),
+    dimensions: Dimensions = Dimensions(),
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
         LocalColorTheme provides colorTheme
     ) {
-        NeoBaseTheme(
+        NeoBasicTheme(
             colorScheme = when (colorTheme) {
                 ColorTheme.LIGHT, ColorTheme.LIGHT_SYSTEM -> LightColors
                 ColorTheme.DARK, ColorTheme.DARK_SYSTEM -> DarkColors
             },
-            fontSizes = FontSizes(),
-            dimensions = Dimensions(),
-            typography = typography,
+            fontSizes = fontSizes,
+            dimensions = dimensions,
+            typography = NeoTypography(
+                fontFamily = FontFamily(Font(Res.font.roboto_mono)),
+                fontSizes = fontSizes
+            ),
             content = content
         )
     }
 }
 
 @Composable
-fun NeoBaseTheme(
+fun NeoBasicTheme(
     colorScheme: ColorScheme,
-    buttons: Buttons = Buttons.Default,
     fontSizes: FontSizes = FontSizes(),
     dimensions: Dimensions = Dimensions(),
-    typography: Typography = NeoTypography(),
+    typography: Typography = NeoTypography(fontSizes),
     content: @Composable () -> Unit
 ) {
     MaterialTheme(
@@ -110,7 +115,6 @@ fun NeoBaseTheme(
         CompositionLocalProvider(
             LocalFontSizes provides fontSizes,
             LocalDimensions provides dimensions,
-            LocalButtons provides buttons,
             content = content
         )
     }
@@ -143,8 +147,4 @@ object NeoTheme {
         @ReadOnlyComposable
         get() = LocalFontSizes.current
 
-    val buttons: Buttons
-        @Composable
-        @ReadOnlyComposable
-        get() = LocalButtons.current
 }

@@ -26,6 +26,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
@@ -37,6 +38,7 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -49,12 +51,11 @@ import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.designsystem.component.Link
 import com.neoutils.neoregex.core.designsystem.component.LinkColor
 import com.neoutils.neoregex.core.designsystem.textfield.NeoTextField
-import com.neoutils.neoregex.core.designsystem.theme.Buttons.Config
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.designsystem.theme.configButton
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.test_case_untitled
 import com.neoutils.neoregex.core.resources.validator_insert_input_hint
+import com.neoutils.neoregex.core.sharedui.component.minimalButton
 import com.neoutils.neoregex.core.sharedui.extension.Swipe
 import com.neoutils.neoregex.core.sharedui.extension.onSwipe
 import com.neoutils.neoregex.feature.validator.action.TestCaseAction
@@ -72,7 +73,7 @@ fun TestCase(
     onAction: (TestCaseAction) -> Unit,
     modifier: Modifier = Modifier,
     textStyle: TextStyle = TextStyle(),
-    contentPadding: PaddingValues = PaddingValues(dimensions.default),
+    contentPadding: PaddingValues = PaddingValues(dimensions.default.m),
     hint: String = stringResource(Res.string.validator_insert_input_hint)
 ) {
     val infiniteTransition = rememberInfiniteTransition()
@@ -105,7 +106,7 @@ fun TestCase(
 
     Surface(
         modifier = modifier,
-        shape = RoundedCornerShape(4.dp),
+        shape = RoundedCornerShape(dimensions.nano.m),
         color = colorScheme.surfaceContainer,
         contentColor = colorScheme.onSurface,
         border = BorderStroke(
@@ -117,10 +118,10 @@ fun TestCase(
             AnimatedVisibility(visible = expanded) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(dimensions.small),
+                    horizontalArrangement = Arrangement.spacedBy(dimensions.small.s),
                     modifier = Modifier
-                        .padding(horizontal = dimensions.small)
-                        .padding(top = dimensions.small)
+                        .padding(horizontal = dimensions.small.s)
+                        .padding(top = dimensions.small.s)
                         .fillMaxWidth(),
                 ) {
                     NeoTextField(
@@ -134,7 +135,7 @@ fun TestCase(
                             )
                         },
                         contentPadding = PaddingValues(0.dp),
-                        textStyle = typography.labelMedium,
+                        textStyle = typography.titleSmall,
                         hint = {
                             Text(
                                 text = stringResource(Res.string.test_case_untitled),
@@ -151,7 +152,7 @@ fun TestCase(
                         },
                         singleLine = true,
                         modifier = Modifier
-                            .padding(start = dimensions.small)
+                            .padding(start = dimensions.small.s)
                             .fillMaxWidth()
                             .weight(1f)
                     )
@@ -252,7 +253,7 @@ fun TestCase(
                             .padding(contentPadding)
                             .fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(dimensions.default)
+                        horizontalArrangement = Arrangement.spacedBy(dimensions.default.m)
                     ) {
                         Text(
                             text = title.substringBefore(delimiter = "\n").trim(),
@@ -283,7 +284,7 @@ private fun Options(
 ) = Row(
     modifier = modifier,
     verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.spacedBy(dimensions.tiny)
+    horizontalArrangement = Arrangement.spacedBy(dimensions.nano.m)
 ) {
     MatchDropDown(
         case = case,
@@ -315,27 +316,19 @@ private fun Options(
         imageVector = Icons.Outlined.Delete,
         contentDescription = null,
         modifier = Modifier
+            .clip(CircleShape)
             .clickable(onClick = onDelete)
-            .configButton(
-                config = Config(
-                    size = dimensions.large,
-                    padding = dimensions.tiny
-                )
-            )
+            .minimalButton()
     )
 
     Icon(
         imageVector = Icons.Outlined.ExpandCircleDown,
         contentDescription = null,
         modifier = Modifier
+            .clip(CircleShape)
             .rotate(degrees = 180f)
             .clickable(onClick = onClose)
-            .configButton(
-                config = Config(
-                    size = dimensions.large,
-                    padding = dimensions.tiny
-                )
-            )
+            .minimalButton()
     )
 }
 
@@ -366,7 +359,7 @@ private fun MatchDropDown(
         endIcon = {
             Icon(
                 imageVector = Icons.Outlined.KeyboardArrowDown,
-                modifier = Modifier.size(dimensions.great),
+                modifier = Modifier.size(dimensions.default.x),
                 contentDescription = null
             )
         },

@@ -21,6 +21,8 @@ package com.neoutils.neoregex.core.sharedui.component
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -34,7 +36,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.designsystem.theme.configButton
 import com.neoutils.neoregex.core.resources.*
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.koinInject
@@ -45,7 +46,10 @@ fun Options(
     preferencesDataSource: PreferencesDataSource = koinInject(),
 ) = Row(
     modifier = modifier,
-    horizontalArrangement = Arrangement.spacedBy(dimensions.small, Alignment.End),
+    horizontalArrangement = Arrangement.spacedBy(
+        dimensions.small.s,
+        Alignment.End
+    ),
     verticalAlignment = Alignment.CenterVertically
 ) {
 
@@ -59,14 +63,14 @@ fun Options(
         tint = colorScheme.onSurface,
         modifier = Modifier
             .clip(CircleShape)
+            .aspectRatio(ratio = 1f)
             .clickable(
                 onClick = {
                     uriHandler.openUri(
                         uri = "https://github.com/NeoUtils/NeoRegex"
                     )
                 }
-            )
-            .configButton()
+            ).padding(dimensions.nano.m)
     )
 
     Icon(
@@ -78,6 +82,7 @@ fun Options(
         contentDescription = null,
         modifier = Modifier
             .clip(CircleShape)
+            .aspectRatio(ratio = 1f)
             .clickable(
                 onClick = {
                     preferencesDataSource.update {
@@ -90,7 +95,6 @@ fun Options(
                         )
                     }
                 }
-            )
-            .configButton()
+            ).padding(dimensions.nano.m)
     )
 }
