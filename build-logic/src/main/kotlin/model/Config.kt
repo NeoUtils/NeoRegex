@@ -37,11 +37,11 @@ data class Config(
         val targetSdk: Int
     )
 
-    enum class Phase(val value: String) {
-        DEVELOP(value = "dev"),
-        ALPHA(value = "alpha"),
-        BETA(value = "beta"),
-        RELEASE_CANDIDATE(value = "rc"),
-        RELEASE("release")
+    enum class Phase(val suffix: String? = null) {
+        DEVELOP(suffix = "dev"),
+        ALPHA(suffix = "alpha"),
+        BETA(suffix = "beta"),
+        RELEASE_CANDIDATE(suffix = "rc"),
+        RELEASE
     }
 }

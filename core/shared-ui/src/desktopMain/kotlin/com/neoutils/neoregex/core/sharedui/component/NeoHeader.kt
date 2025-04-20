@@ -46,10 +46,10 @@ import com.neoutils.neoregex.core.common.util.DragHandler
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.designsystem.theme.TopBarHeight
-import com.neoutils.neoregex.core.sharedui.remember.NeoWindowState
-import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
-import com.neoutils.neoregex.core.sharedui.remember.rememberNeoWindowState
-import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
+import com.neoutils.neoregex.core.sharedui.extension.NeoWindowState
+import com.neoutils.neoregex.core.sharedui.extension.WindowFocus
+import com.neoutils.neoregex.core.sharedui.extension.rememberNeoWindowState
+import com.neoutils.neoregex.core.sharedui.extension.rememberWindowFocus
 import java.awt.Frame
 import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent

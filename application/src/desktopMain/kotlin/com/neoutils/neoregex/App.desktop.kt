@@ -66,8 +66,9 @@ import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.sharedui.component.*
 import com.neoutils.neoregex.core.sharedui.di.WithKoin
-import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
-import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
+import com.neoutils.neoregex.core.sharedui.event.SalvageAction
+import com.neoutils.neoregex.core.sharedui.extension.WindowFocus
+import com.neoutils.neoregex.core.sharedui.extension.rememberWindowFocus
 import com.neoutils.neoregex.feature.matcher.di.matcherModule
 import com.neoutils.neoregex.feature.saved.di.savedModule
 import com.neoutils.neoregex.feature.validator.di.validatorModule

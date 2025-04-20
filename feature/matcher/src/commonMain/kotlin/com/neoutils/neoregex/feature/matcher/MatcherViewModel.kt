@@ -26,7 +26,7 @@ import com.neoutils.neoregex.core.common.model.Inputs
 import com.neoutils.neoregex.core.common.model.Match
 import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
 import com.neoutils.neoregex.core.repository.text.TextSampleRepository
-import com.neoutils.neoregex.core.sharedui.component.FooterAction
+import com.neoutils.neoregex.core.sharedui.event.FooterAction
 import com.neoutils.neoregex.core.sharedui.component.Performance
 import com.neoutils.neoregex.feature.matcher.action.MatcherAction
 import com.neoutils.neoregex.feature.matcher.state.MatcherUiState

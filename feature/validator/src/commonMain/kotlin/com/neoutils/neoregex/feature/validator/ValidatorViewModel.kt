@@ -24,7 +24,7 @@ import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.core.common.util.ObservableMutableMap
 import com.neoutils.neoregex.core.repository.pattern.PatternStateRepository
 import com.neoutils.neoregex.core.repository.testcase.TestCasesRepository
-import com.neoutils.neoregex.core.sharedui.component.FooterAction
+import com.neoutils.neoregex.core.sharedui.event.FooterAction
 import com.neoutils.neoregex.feature.validator.action.TestCaseAction
 import com.neoutils.neoregex.feature.validator.action.ValidatorAction
 import com.neoutils.neoregex.feature.validator.component.toTestCaseUi

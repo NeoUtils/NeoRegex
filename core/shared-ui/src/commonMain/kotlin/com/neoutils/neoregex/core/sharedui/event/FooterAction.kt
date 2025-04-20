@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2025 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,26 +16,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package extension
+package com.neoutils.neoregex.core.sharedui.event
 
-import model.Config
-import model.Config.Phase
+import com.neoutils.neoregex.core.common.model.Field
+import com.neoutils.neoregex.core.common.model.TextState
 
-fun Config.Version.name(
-    withPhase: Boolean = true
-): String {
+sealed class FooterAction {
+    data class UpdateRegex(
+        val text: TextState
+    ) : FooterAction()
 
-    if (withPhase && phase.suffix != null) {
-        return "$major.$minor.$patch-${phase.suffix}"
+    sealed class History : FooterAction() {
+
+        abstract val field: Field?
+
+        data class Undo(
+            override val field: Field? = null
+        ) : History()
+
+        data class Redo(
+            override val field: Field? = null
+        ) : History()
     }
-
-    return "$major.$minor.$patch"
-}
-
-fun Config.Version.code(): Int {
-
-    require(patch in 0..9)
-    require(minor in 0..9)
-
-    return major * 100 + minor * 10 + patch
 }

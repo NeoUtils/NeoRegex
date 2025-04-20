@@ -22,31 +22,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
-import com.neoutils.neoregex.core.common.model.Field
 import com.neoutils.neoregex.core.common.model.HistoryState
 import com.neoutils.neoregex.core.common.model.TextState
 import com.neoutils.neoregex.core.common.util.Syntax
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
+import com.neoutils.neoregex.core.sharedui.event.FooterAction
 import org.koin.compose.koinInject
-
-sealed class FooterAction {
-    data class UpdateRegex(
-        val text: TextState
-    ) : FooterAction()
-
-    sealed class History : FooterAction() {
-
-        abstract val field: Field?
-
-        data class Undo(
-            override val field: Field? = null
-        ) : History()
-
-        data class Redo(
-            override val field: Field? = null
-        ) : History()
-    }
-}
 
 @Composable
 expect fun Footer(
