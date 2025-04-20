@@ -22,6 +22,7 @@ import com.neoutils.neoregex.core.common.model.Match
 import com.neoutils.neoregex.core.common.model.TestCase
 import com.neoutils.neoregex.feature.validator.model.TestCaseValidation
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 class ValidateUseCase {
