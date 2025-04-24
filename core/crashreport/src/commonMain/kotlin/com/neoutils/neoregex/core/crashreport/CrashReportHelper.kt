@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2025 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,19 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex.core.sharedui.di
+package com.neoutils.neoregex.core.crashreport
 
-import androidx.compose.runtime.Composable
-import org.koin.compose.KoinApplication
-import org.koin.core.module.Module
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-@Composable
-fun WithKoin(
-    vararg modules: Module,
-    content: @Composable () -> Unit,
-) = KoinApplication(
-    application = {
-        modules(modules.toList())
-    },
-    content = content
-)
+object CrashReportHelper : KoinComponent{
+    val service by inject<CrashReportService>()
+}

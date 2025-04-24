@@ -19,9 +19,9 @@
 package com.neoutils.neoregex
 
 import android.app.Application
-import com.bugsnag.android.Bugsnag
-import com.bugsnag.android.performance.BugsnagPerformance
 import com.neoutils.neoregex.core.common.di.commonModule
+import com.neoutils.neoregex.core.crashreport.CrashReportHelper
+import com.neoutils.neoregex.core.crashreport.di.crashReportModule
 import com.neoutils.neoregex.core.database.di.databaseModule
 import com.neoutils.neoregex.core.datasource.di.dataSourceModule
 import com.neoutils.neoregex.core.manager.di.managerModule
@@ -37,11 +37,6 @@ class NeoAndroidApp : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        BuildKonfig.BUGSNAG_API_KEY?.let { apiKey ->
-            Bugsnag.start(this, apiKey)
-            BugsnagPerformance.start(this, apiKey)
-        }
-
         startKoin {
             androidContext(this@NeoAndroidApp)
             modules(
@@ -53,7 +48,10 @@ class NeoAndroidApp : Application() {
                 matcherModule,
                 validatorModule,
                 savedModule,
+                crashReportModule
             )
         }
+
+        CrashReportHelper.service.setup()
     }
 }

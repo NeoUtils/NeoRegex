@@ -19,12 +19,9 @@
 @file:Suppress("UnstableApiUsage")
 
 import com.android.utils.osArchitecture
-import com.codingfeline.buildkonfig.compiler.FieldSpec
 import extension.catalog
 import extension.config
-import extension.environment
 import extension.name
-import model.Config
 import org.jetbrains.kotlin.konan.util.visibleName
 
 plugins {
@@ -32,7 +29,6 @@ plugins {
     alias(libs.plugins.neoutils.neoregex.desktop)
     alias(libs.plugins.neoutils.neoregex.web)
     alias(libs.plugins.aboutlibraries)
-    alias(libs.plugins.buildkonfig)
 }
 
 kotlin {
@@ -49,6 +45,7 @@ kotlin {
             implementation(projects.core.database)
             implementation(projects.core.repository)
             implementation(projects.core.manager)
+            implementation(projects.core.crashreport)
 
             // feature
             implementation(projects.feature.matcher)
@@ -82,18 +79,6 @@ kotlin {
 
             // koin
             implementation(libs.koin.android)
-
-            // bugsnag
-            implementation("com.bugsnag:bugsnag-android:6.13.0")
-            implementation("com.bugsnag:bugsnag-android-performance:1.12.0")
-        }
-
-        val desktopMain by getting {
-            dependencies {
-
-                // bugsnag
-                implementation("com.bugsnag:bugsnag:3.7.2")
-            }
         }
     }
 }
@@ -122,48 +107,4 @@ tasks.register<Tar>("packageReleaseTarGz") {
 
 aboutLibraries {
     prettyPrint = true
-}
-
-
-buildkonfig {
-    packageName = config.basePackage
-
-    defaultConfigs {
-        buildConfigField(
-            type = FieldSpec.Type.STRING,
-            name = "STAGE",
-            value = when(config.version.stage) {
-                Config.Stage.DEVELOP -> "development"
-                Config.Stage.ALPHA -> "alpha"
-                Config.Stage.BETA -> "beta"
-                Config.Stage.RELEASE_CANDIDATE -> "release-candidate"
-                Config.Stage.RELEASE -> "release"
-            },
-        )
-    }
-
-    targetConfigs {
-
-        val environment = rootDir
-            .resolve("environment.properties")
-            .environment()
-
-        create("android") {
-            buildConfigField(
-                type = FieldSpec.Type.STRING,
-                name = "BUGSNAG_API_KEY",
-                value = environment?.bugsnagAndroidApiKey,
-                nullable = true
-            )
-        }
-
-        create("desktop") {
-            buildConfigField(
-                type = FieldSpec.Type.STRING,
-                name = "BUGSNAG_API_KEY",
-                value = environment?.bugsnagDesktopApiKey,
-                nullable = true
-            )
-        }
-    }
 }
