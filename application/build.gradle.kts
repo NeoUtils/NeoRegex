@@ -24,6 +24,7 @@ import extension.catalog
 import extension.config
 import extension.environment
 import extension.name
+import model.Config
 import org.jetbrains.kotlin.konan.util.visibleName
 
 plugins {
@@ -83,8 +84,8 @@ kotlin {
             implementation(libs.koin.android)
 
             // bugsnag
-            implementation("com.bugsnag:bugsnag-android:6.+")
-            implementation("com.bugsnag:bugsnag-android-performance:1.+")
+            implementation("com.bugsnag:bugsnag-android:6.13.0")
+            implementation("com.bugsnag:bugsnag-android-performance:1.12.0")
         }
 
         val desktopMain by getting {
@@ -127,7 +128,19 @@ aboutLibraries {
 buildkonfig {
     packageName = config.basePackage
 
-    defaultConfigs {}
+    defaultConfigs {
+        buildConfigField(
+            type = FieldSpec.Type.STRING,
+            name = "STAGE",
+            value = when(config.version.stage) {
+                Config.Stage.DEVELOP -> "development"
+                Config.Stage.ALPHA -> "alpha"
+                Config.Stage.BETA -> "beta"
+                Config.Stage.RELEASE_CANDIDATE -> "release-candidate"
+                Config.Stage.RELEASE -> "release"
+            },
+        )
+    }
 
     targetConfigs {
 
