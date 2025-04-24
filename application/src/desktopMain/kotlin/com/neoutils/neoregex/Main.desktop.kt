@@ -23,7 +23,12 @@ import com.bugsnag.Bugsnag
 
 fun main() {
 
-    BuildKonfig.BUGSNAG_API_KEY?.let(::Bugsnag)
+    BuildKonfig.BUGSNAG_API_KEY
+        ?.let(::Bugsnag)
+        ?.apply {
+            setAppVersion(NeoConfig.version)
+            setReleaseStage(BuildKonfig.STAGE)
+        }
 
     application { DesktopApp() }
 }

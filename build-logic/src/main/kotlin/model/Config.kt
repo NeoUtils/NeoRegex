@@ -28,7 +28,7 @@ data class Config(
         val major: Int,
         val minor: Int,
         val patch: Int,
-        val phase: Phase
+        val stage: Stage
     )
 
     data class Android(
@@ -37,11 +37,11 @@ data class Config(
         val targetSdk: Int
     )
 
-    enum class Phase(val suffix: String? = null) {
+    enum class Stage(val suffix: String?) {
         DEVELOP(suffix = "dev"),
         ALPHA(suffix = "alpha"),
         BETA(suffix = "beta"),
         RELEASE_CANDIDATE(suffix = "rc"),
-        RELEASE
+        RELEASE(suffix = null)
     }
 }
