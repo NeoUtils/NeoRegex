@@ -45,13 +45,13 @@ kotlin {
         }
     }
 
-   sourceSets {
-       androidMain.dependencies {
+    sourceSets {
+        androidMain.dependencies {
 
-           // activity
-           implementation(catalog.androidx.activity.compose)
-       }
-   }
+            // activity
+            implementation(catalog.androidx.activity.compose)
+        }
+    }
 }
 
 android {
@@ -76,7 +76,7 @@ android {
         create("release") {
             rootDir
                 .resolve("keystore.properties")
-                .properties()?.let {
+                .keystore()?.let {
                     storeFile = it.storeFile
                     storePassword = it.storePassword
                     keyAlias = it.keyAlias

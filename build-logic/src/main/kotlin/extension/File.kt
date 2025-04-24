@@ -18,21 +18,39 @@
 
 package extension
 
-import model.Properties
+import model.Environment
+import model.Keystore
 import java.io.File
+import java.util.*
 
-fun File.properties(): Properties? {
+fun File.properties(): Map<String, String>? {
 
     if (!exists()) return null
 
-    val properties = java.util.Properties().apply {
-        load(inputStream())
+    val properties = Properties().apply {
+        inputStream().use { load(it) }
     }
 
-    return Properties(
-        storeFile = File(parent, properties.getProperty("STORE_FILE")),
-        storePassword = properties.getProperty("STORE_PASSWORD"),
-        keyAlias = properties.getProperty("KEY_ALIAS"),
-        keyPassword = properties.getProperty("KEY_PASSWORD")
+    return buildMap {
+        properties.forEach {
+            put(it.key.toString(), it.value.toString())
+        }
+    }
+}
+
+fun File.keystore(): Keystore? {
+
+    val properties = properties() ?: return null
+
+    return Keystore(
+        storeFile = File(parent, checkNotNull(properties["STORE_FILE"])),
+        properties = properties
     )
+}
+
+fun File.environment(): Environment? {
+
+    val properties = properties() ?: return null
+
+    return Environment(properties)
 }
