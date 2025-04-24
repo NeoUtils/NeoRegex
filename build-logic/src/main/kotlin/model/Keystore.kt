@@ -16,14 +16,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.neoutils.neoregex
+package model
 
-import androidx.compose.ui.window.application
-import com.bugsnag.Bugsnag
+import java.io.File
 
-fun main() {
-
-    BuildKonfig.BUGSNAG_API_KEY?.let(::Bugsnag)
-
-    application { DesktopApp() }
+data class Keystore(
+    val storeFile: File,
+    val storePassword: String,
+    val keyAlias: String,
+    val keyPassword: String
+) {
+    constructor(storeFile: File, properties: Map<String, String>) : this(
+        storeFile = storeFile,
+        storePassword = checkNotNull(properties["STORE_PASSWORD"]),
+        keyAlias = checkNotNull(properties["KEY_ALIAS"]),
+        keyPassword = checkNotNull(properties["KEY_PASSWORD"])
+    )
 }

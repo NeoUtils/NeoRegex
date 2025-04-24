@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2025 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,11 +18,14 @@
 
 package model
 
-import java.io.File
-
-data class Properties(
-    val storeFile: File,
-    val storePassword: String,
-    val keyAlias: String,
-    val keyPassword: String
-)
+data class Environment(
+    val bugsnagAndroidApiKey: String = "",
+    val bugsnagDesktopApiKey: String = "",
+) {
+    constructor(
+        properties: Map<String, String>
+    ) : this(
+        bugsnagAndroidApiKey = properties.getOrDefault("BUGSNAG_ANDROID_API_KEY", ""),
+        bugsnagDesktopApiKey = properties.getOrDefault("BUGSNAG_DESKTOP_API_KEY", ""),
+    )
+}

@@ -48,4 +48,5 @@ bin/
 ### Android ###
 local.properties
 keystore.properties
+environment.properties
 keystore.jks
