@@ -19,16 +19,35 @@
 package com.neoutils.neoregex
 
 import androidx.compose.ui.window.application
-import com.bugsnag.Bugsnag
+import com.neoutils.neoregex.core.common.di.commonModule
+import com.neoutils.neoregex.core.crashreport.CrashReportHelper
+import com.neoutils.neoregex.core.crashreport.di.crashReportModule
+import com.neoutils.neoregex.core.database.di.databaseModule
+import com.neoutils.neoregex.core.datasource.di.dataSourceModule
+import com.neoutils.neoregex.core.manager.di.managerModule
+import com.neoutils.neoregex.core.repository.di.repositoryModule
+import com.neoutils.neoregex.feature.matcher.di.matcherModule
+import com.neoutils.neoregex.feature.saved.di.savedModule
+import com.neoutils.neoregex.feature.validator.di.validatorModule
+import org.koin.core.context.startKoin
 
 fun main() {
 
-    BuildKonfig.BUGSNAG_API_KEY
-        ?.let(::Bugsnag)
-        ?.apply {
-            setAppVersion(NeoConfig.version)
-            setReleaseStage(BuildKonfig.STAGE)
-        }
+    startKoin {
+        modules(
+            commonModule,
+            managerModule,
+            dataSourceModule,
+            databaseModule,
+            crashReportModule,
+            repositoryModule,
+            matcherModule,
+            validatorModule,
+            savedModule
+        )
+    }
+
+    CrashReportHelper.crashReportService.setup()
 
     application { DesktopApp() }
 }
