@@ -18,6 +18,9 @@ jobs:
         with:
           java-version: 17
 
+      - name: Decode Environment
+        run: echo "${{ secrets.ENVIRONMENT_PROPERTIES_BASE64 }}" | base64 --decode > environment.properties
+
       - name: Build 🏗️
         run: ./gradlew application:webBrowserDistribution
 
