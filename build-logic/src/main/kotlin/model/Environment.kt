@@ -21,11 +21,13 @@ package model
 data class Environment(
     val bugsnagAndroidApiKey: String = "",
     val bugsnagDesktopApiKey: String = "",
+    val bugsnagWebApikey: String = ""
 ) {
     constructor(
         properties: Map<String, String>
     ) : this(
         bugsnagAndroidApiKey = properties.getOrDefault("BUGSNAG_ANDROID_API_KEY", ""),
         bugsnagDesktopApiKey = properties.getOrDefault("BUGSNAG_DESKTOP_API_KEY", ""),
+        bugsnagWebApikey = properties.getOrDefault("BUGSNAG_WEB_API_KEY", "")
     )
 }

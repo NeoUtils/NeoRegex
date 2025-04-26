@@ -17,7 +17,9 @@
  */
 
 import com.codingfeline.buildkonfig.compiler.FieldSpec
-import extension.*
+import extension.config
+import extension.environment
+import extension.module
 import model.Config
 
 plugins {
@@ -42,12 +44,15 @@ kotlin {
             implementation(libs.bugsnag.android.performance)
         }
 
-        val desktopMain by getting {
-            dependencies {
+        desktopMain.dependencies {
 
-                // bugsnag
-                implementation(libs.bugsnag.desktop)
-            }
+            // bugsnag
+            implementation(libs.bugsnag.desktop)
+        }
+
+        webMain.dependencies {
+            implementation(npm("@bugsnag/js", "8.2.0"))
+            implementation(npm("@bugsnag/browser-performance", "2.12.0"))
         }
     }
 }
@@ -59,7 +64,7 @@ buildkonfig {
         buildConfigField(
             type = FieldSpec.Type.STRING,
             name = "STAGE",
-            value = when(config.version.stage) {
+            value = when (config.version.stage) {
                 Config.Stage.DEVELOP -> "development"
                 Config.Stage.ALPHA -> "alpha"
                 Config.Stage.BETA -> "beta"
@@ -89,6 +94,15 @@ buildkonfig {
                 type = FieldSpec.Type.STRING,
                 name = "BUGSNAG_API_KEY",
                 value = environment?.bugsnagDesktopApiKey,
+                nullable = true
+            )
+        }
+
+        create("web") {
+            buildConfigField(
+                type = FieldSpec.Type.STRING,
+                name = "BUGSNAG_API_KEY",
+                value = environment?.bugsnagWebApikey,
                 nullable = true
             )
         }

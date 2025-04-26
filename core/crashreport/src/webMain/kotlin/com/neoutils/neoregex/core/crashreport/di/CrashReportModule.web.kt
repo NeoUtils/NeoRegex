@@ -18,7 +18,10 @@
 
 package com.neoutils.neoregex.core.crashreport.di
 
-import org.koin.core.module.Module
+import com.neoutils.neoregex.core.crashreport.impl.CrashReportServiceImpl
+import com.neoutils.neoregex.core.crashreport.CrashReportService
+import org.koin.dsl.module
 
-actual val crashReportModule: Module
-    get() = TODO("Don't support")
+actual val crashReportModule = module {
+    single<CrashReportService> { CrashReportServiceImpl() }
+}
