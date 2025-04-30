@@ -11,7 +11,7 @@
       <option name="taskNames">
         <list>
           <option value="clean" />
-          <option value="application:webBrowserRun" />
+          <option value="application:webBrowserDevelopmentRun" />
         </list>
       </option>
       <option name="vmOptions" />

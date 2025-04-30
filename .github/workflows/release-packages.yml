@@ -25,6 +25,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Decode Environment
+        run: echo "${{ secrets.ENVIRONMENT_PROPERTIES_BASE64 }}" | base64 --decode > environment.properties
+
       - name: Package
         run: |
           ./gradlew application:packageReleaseTarGz
@@ -60,6 +63,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Decode Environment
+        shell: pwsh
+        run: |
+          $env = "${{ secrets.ENVIRONMENT_PROPERTIES_BASE64 }}"
+          $bytes = [System.Convert]::FromBase64String($env)
+          [IO.File]::WriteAllBytes("environment.properties", $bytes)
+
       - name: Package exe
         run: ./gradlew application:packageReleaseExe
 
@@ -85,6 +95,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Decode Environment
+        run: echo "${{ secrets.ENVIRONMENT_PROPERTIES_BASE64 }}" | base64 --decode > environment.properties
+
       - name: Package dmg
         run: ./gradlew application:packageReleaseDmg
 
@@ -109,6 +122,9 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+
+      - name: Decode Environment
+        run: echo "${{ secrets.ENVIRONMENT_PROPERTIES_BASE64 }}" | base64 --decode > environment.properties
 
       - name: Decode Keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
