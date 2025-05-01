@@ -64,7 +64,7 @@ fun FrameWindowScope.NeoHeader(
     val focus = rememberWindowFocus()
     val state = rememberNeoWindowState()
 
-    val dragHandler = remember { DragHandler(window) }
+    val dragHandler = remember(window) { DragHandler(window) }
 
     // only macOS and Windows supports
     val customTitleBar = remember {
@@ -90,29 +90,18 @@ fun FrameWindowScope.NeoHeader(
             customTitleBar?.height = it.height.toFloat()
         }.run {
             customTitleBar?.let {
-                pointerInput(colorTheme) {
-
-                    var inUserControl = false
-
+                pointerInput(customTitleBar) {
                     awaitEachGesture {
                         awaitPointerEvent(PointerEventPass.Main).let { event ->
                             event.changes.forEach {
-                                if (!it.isConsumed && !inUserControl) {
+                                if (!it.isConsumed) {
                                     customTitleBar.forceHitTest(false)
-                                } else {
-                                    if (event.type == PointerEventType.Press) {
-                                        inUserControl = true
-                                    }
-                                    if (event.type == PointerEventType.Release) {
-                                        inUserControl = false
-                                    }
-                                    customTitleBar.forceHitTest(true)
                                 }
                             }
                         }
                     }
                 }
-            } ?: pointerInput(state) {
+            } ?: pointerInput(dragHandler, state) {
                 detectTapGestures(
                     onDoubleTap = {
                         when (state) {
@@ -134,6 +123,7 @@ fun FrameWindowScope.NeoHeader(
                             window,
                             MouseEvent.BUTTON1
                         ) ?: run {
+                            // No Runtime of JetBrains
                             dragHandler.onDragStarted()
                         }
                     }
