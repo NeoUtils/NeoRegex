@@ -1,7 +1,7 @@
 /*
  * NeoRegex.
  *
- * Copyright (C) 2024 Irineu A. Silva.
+ * Copyright (C) 2025 Irineu A. Silva.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,13 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package model
+package com.neoutils.neoregex.core.crashreport
 
-import java.io.File
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
-data class Properties(
-    val storeFile: File,
-    val storePassword: String,
-    val keyAlias: String,
-    val keyPassword: String
-)
+object CrashReportHelper : KoinComponent{
+    val service by inject<CrashReportService>()
+}

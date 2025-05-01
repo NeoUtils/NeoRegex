@@ -38,6 +38,7 @@ import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.ic_redo_24
 import com.neoutils.neoregex.core.resources.ic_undo_24
 import com.neoutils.neoregex.core.sharedui.extension.onLongPress
+import com.neoutils.neoregex.core.sharedui.event.FooterAction
 import org.jetbrains.compose.resources.painterResource
 
 @Composable

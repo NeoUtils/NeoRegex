@@ -46,47 +46,30 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.window.ApplicationScope
 import androidx.compose.ui.window.FrameWindowScope
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.neoutils.neoregex.core.common.di.commonModule
 import com.neoutils.neoregex.core.common.util.ColorTheme
 import com.neoutils.neoregex.core.common.util.Command
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
-import com.neoutils.neoregex.core.database.di.databaseModule
 import com.neoutils.neoregex.core.datasource.PreferencesDataSource
 import com.neoutils.neoregex.core.datasource.WindowStateDataSource
-import com.neoutils.neoregex.core.datasource.di.dataSourceModule
 import com.neoutils.neoregex.core.datasource.extension.observe
 import com.neoutils.neoregex.core.datasource.model.Preferences
 import com.neoutils.neoregex.core.datasource.remember.rememberWindowState
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
-import com.neoutils.neoregex.core.manager.di.managerModule
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
-import com.neoutils.neoregex.core.repository.di.repositoryModule
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.app_name
 import com.neoutils.neoregex.core.sharedui.component.*
-import com.neoutils.neoregex.core.sharedui.di.WithKoin
-import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
-import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
-import com.neoutils.neoregex.feature.matcher.di.matcherModule
-import com.neoutils.neoregex.feature.saved.di.savedModule
-import com.neoutils.neoregex.feature.validator.di.validatorModule
+import com.neoutils.neoregex.core.sharedui.event.SalvageAction
+import com.neoutils.neoregex.core.sharedui.extension.WindowFocus
+import com.neoutils.neoregex.core.sharedui.extension.rememberWindowFocus
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun ApplicationScope.DesktopApp() = WithKoin(
-    commonModule,
-    managerModule,
-    dataSourceModule,
-    databaseModule,
-    repositoryModule,
-    matcherModule,
-    validatorModule,
-    savedModule,
-) {
+fun ApplicationScope.DesktopApp() {
 
     val preferencesDataSource = koinInject<PreferencesDataSource>()
     val windowStateDataSource = koinInject<WindowStateDataSource>()

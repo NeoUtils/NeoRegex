@@ -48,6 +48,7 @@ import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.manager.salvage.SalvageManager
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.matcher_footer_insert_regex_hint
+import com.neoutils.neoregex.core.sharedui.event.FooterAction
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

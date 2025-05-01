@@ -19,14 +19,13 @@
 package extension
 
 import model.Config
-import model.Config.Phase
 
 fun Config.Version.name(
-    withPhase: Boolean = true
+    withStage: Boolean = true
 ): String {
 
-    if (withPhase && phase != Phase.RELEASE) {
-        return "$major.$minor.$patch-${phase.value}"
+    if (withStage && stage.suffix != null) {
+        return "$major.$minor.$patch-${stage.suffix}"
     }
 
     return "$major.$minor.$patch"

@@ -74,7 +74,7 @@ compose.desktop {
 
             packageName = config.name
             description = "A simple regex tester"
-            packageVersion = config.version.name(withPhase = false)
+            packageVersion = config.version.name(withStage = false)
             licenseFile.set(rootProject.file("LICENSE"))
             vendor = "NeoUtils"
 

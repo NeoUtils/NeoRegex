@@ -45,6 +45,7 @@ kotlin {
             implementation(projects.core.database)
             implementation(projects.core.repository)
             implementation(projects.core.manager)
+            implementation(projects.core.crashreport)
 
             // feature
             implementation(projects.feature.matcher)

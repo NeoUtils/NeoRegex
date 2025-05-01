@@ -1,10 +1,12 @@
 # Privacy Policy
 
-NeoRegex is a cross-platform application for validating regular expressions. This privacy policy explains how user information is handled.
+NeoRegex is a cross-platform application for manipulating and validating regular expressions. This privacy policy explains how user information is handled.
 
 ## **Data Collection**
 
-NeoRegex does not collect, store, or share any personal or usage data. The app operates entirely offline, and all operations are performed locally on the device.
+NeoRegex does not collect, store, or share personal or general usage data. The app operates mostly offline, and all validation operations are performed locally on the device.
+
+In the event of critical failures, the app may collect error information (crash logs), which includes technical data such as device type, operating system version, and exception tracking (stack trace). This data is used exclusively for diagnosing and fixing issues.
 
 ## **App Usage**
 
@@ -16,8 +18,8 @@ This privacy policy may be updated occasionally. Updates will be published on th
 
 ## **Contact**
 
-If you have any questions regarding this privacy policy or NeoRegex, please contact us at mmmirineusilva@gmail.com.
+If you have any questions about this privacy policy or about NeoRegex, please contact us at [mmmirineusilva@gmail.com](mailto:mmmirineusilva@gmail.com).
 
 ---
 
-_**Last updated:** September 18, 2024_
+_**Last updated:** April 27, 2025_

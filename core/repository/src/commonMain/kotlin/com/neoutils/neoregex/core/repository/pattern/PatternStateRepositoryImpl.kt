@@ -66,6 +66,10 @@ internal class PatternStateRepositoryImpl(
                 delimiter = "\n"
             )
         )
+
+        if (input.value == "(crash-test-123)") {
+            throw RuntimeException("test")
+        }
     }
 
     override fun undo() {

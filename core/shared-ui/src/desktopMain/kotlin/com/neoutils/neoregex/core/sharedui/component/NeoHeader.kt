@@ -46,10 +46,10 @@ import com.neoutils.neoregex.core.common.util.DragHandler
 import com.neoutils.neoregex.core.common.util.rememberColorTheme
 import com.neoutils.neoregex.core.designsystem.theme.NeoTheme.dimensions
 import com.neoutils.neoregex.core.designsystem.theme.TopBarHeight
-import com.neoutils.neoregex.core.sharedui.remember.NeoWindowState
-import com.neoutils.neoregex.core.sharedui.remember.WindowFocus
-import com.neoutils.neoregex.core.sharedui.remember.rememberNeoWindowState
-import com.neoutils.neoregex.core.sharedui.remember.rememberWindowFocus
+import com.neoutils.neoregex.core.sharedui.extension.NeoWindowState
+import com.neoutils.neoregex.core.sharedui.extension.WindowFocus
+import com.neoutils.neoregex.core.sharedui.extension.rememberNeoWindowState
+import com.neoutils.neoregex.core.sharedui.extension.rememberWindowFocus
 import java.awt.Frame
 import java.awt.event.MouseEvent
 import java.awt.event.WindowEvent
@@ -64,7 +64,7 @@ fun FrameWindowScope.NeoHeader(
     val focus = rememberWindowFocus()
     val state = rememberNeoWindowState()
 
-    val dragHandler = remember { DragHandler(window) }
+    val dragHandler = remember(window) { DragHandler(window) }
 
     // only macOS and Windows supports
     val customTitleBar = remember {
@@ -90,29 +90,18 @@ fun FrameWindowScope.NeoHeader(
             customTitleBar?.height = it.height.toFloat()
         }.run {
             customTitleBar?.let {
-                pointerInput(colorTheme) {
-
-                    var inUserControl = false
-
+                pointerInput(customTitleBar) {
                     awaitEachGesture {
                         awaitPointerEvent(PointerEventPass.Main).let { event ->
                             event.changes.forEach {
-                                if (!it.isConsumed && !inUserControl) {
+                                if (!it.isConsumed) {
                                     customTitleBar.forceHitTest(false)
-                                } else {
-                                    if (event.type == PointerEventType.Press) {
-                                        inUserControl = true
-                                    }
-                                    if (event.type == PointerEventType.Release) {
-                                        inUserControl = false
-                                    }
-                                    customTitleBar.forceHitTest(true)
                                 }
                             }
                         }
                     }
                 }
-            } ?: pointerInput(state) {
+            } ?: pointerInput(dragHandler, state) {
                 detectTapGestures(
                     onDoubleTap = {
                         when (state) {
@@ -134,6 +123,7 @@ fun FrameWindowScope.NeoHeader(
                             window,
                             MouseEvent.BUTTON1
                         ) ?: run {
+                            // No Runtime of JetBrains
                             dragHandler.onDragStarted()
                         }
                     }

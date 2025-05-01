@@ -24,7 +24,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -49,14 +48,8 @@ import com.neoutils.neoregex.core.manager.model.Opened
 import com.neoutils.neoregex.core.resources.Res
 import com.neoutils.neoregex.core.resources.common_confirm_btn
 import com.neoutils.neoregex.core.resources.salvage_edit_name_dialog_title
+import com.neoutils.neoregex.core.sharedui.event.SalvageAction
 import org.jetbrains.compose.resources.stringResource
-
-sealed class SalvageAction {
-    data object Update : SalvageAction()
-    data object Reset : SalvageAction()
-    data class ChangeName(val name: String) : SalvageAction()
-    data object Close : SalvageAction()
-}
 
 enum class Mode {
     EXPANDED,
