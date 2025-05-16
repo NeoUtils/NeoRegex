@@ -60,7 +60,7 @@ kotlin {
             implementation(catalog.voyager.koin)
 
             // lifecycle
-            implementation(catalog.androidx.multplatform.lifecycle.runtime.compose)
+            implementation(catalog.jetbrains.androidx.lifecycle.runtime.compose)
 
             // compose
             implementation(compose.runtime)

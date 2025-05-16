@@ -18,6 +18,7 @@
 
 @file:Suppress("UnstableApiUsage")
 
+import extension.catalog
 import extension.config
 import gradle.kotlin.dsl.accessors._99f383e9504ff70e774f7d99a658657b.kotlin
 
@@ -33,12 +34,11 @@ kotlin {
 }
 
 android {
-
     namespace = config.basePackage
-    compileSdk = config.android.compileSdk
+    compileSdk = catalog.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdk = config.android.minSdk
+        minSdk = catalog.versions.android.minSdk.get().toInt()
     }
 
     buildFeatures {

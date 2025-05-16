@@ -52,13 +52,13 @@ kotlin {
 
 android {
     namespace = config.basePackage
-    compileSdk = config.android.compileSdk
+    compileSdk = catalog.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.neo.regex" // Legacy package
 
-        minSdk = config.android.minSdk
-        targetSdk = config.android.targetSdk
+        minSdk = catalog.versions.android.minSdk.get().toInt()
+        targetSdk = catalog.versions.android.targetSdk.get().toInt()
 
         versionCode = config.version.code()
         versionName = config.version.name()

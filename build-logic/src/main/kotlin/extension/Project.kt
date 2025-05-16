@@ -30,11 +30,6 @@ val config = Config(
         patch = 0,
         stage = Config.Stage.DEVELOP
     ),
-    android = Config.Android(
-        compileSdk = 35,
-        minSdk = 24,
-        targetSdk = 35
-    ),
     basePackage = "com.neoutils.neoregex",
     name = "NeoRegex"
 )
