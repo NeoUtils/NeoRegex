@@ -1,11 +1,11 @@
 [versions]
-agp = "8.5.2"
+agp = "8.6.1" # Gradle 8.6+
 bugsnag = "3.7.2"
 bugsnag-android = "6.13.0"
 bugsnag-android-performance = "1.12.0"
-cmp = "1.7.0" # Jetpack Compose 1.7.0 & APG 8.1+
+cmp = "1.8.0" # based Jetpack Compose 1.8.0, require Kotlin 2.1.0+
 dbus-java-core = "5.1.0"
-kotlin = "2.0.20" # Gradle 7.5 ~ 8.8 & AGP 7.4.2 ~ 8.5
+kotlin = "2.1.21" # Gradle 8.1+, AGP 8.2.0+
 kotlinx-datetime = "0.6.1"
 kotlinx-serialization = "1.7.3"
 multiplatform-settings = "1.2.0"

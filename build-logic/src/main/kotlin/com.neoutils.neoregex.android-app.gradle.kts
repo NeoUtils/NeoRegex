@@ -16,13 +16,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-@file:OptIn(ExperimentalKotlinGradlePluginApi::class)
 @file:Suppress("UnstableApiUsage")
 
 import extension.*
-import gradle.kotlin.dsl.accessors._3c98c44ac979be75a1ef93311f530471.kotlin
-import gradle.kotlin.dsl.accessors._9d6accdeac6876c73060866945fb6d8c.sourceSets
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {

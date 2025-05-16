@@ -19,7 +19,7 @@
 @file:Suppress("UnstableApiUsage")
 
 import extension.config
-import gradle.kotlin.dsl.accessors._3c98c44ac979be75a1ef93311f530471.kotlin
+import gradle.kotlin.dsl.accessors._99f383e9504ff70e774f7d99a658657b.kotlin
 
 plugins {
     id("com.android.library")
