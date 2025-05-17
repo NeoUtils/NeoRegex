@@ -65,6 +65,7 @@ kotlin {
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
 
             // koin
             implementation(catalog.koin.core)
@@ -74,6 +75,12 @@ kotlin {
             implementation(catalog.kotlinx.datetime)
         }
 
+        androidMain.dependencies {
+
+            // compose
+            implementation(compose.preview)
+        }
+
         val desktopMain by getting {
             dependencies {
                 // compose
@@ -81,4 +88,8 @@ kotlin {
             }
         }
     }
+}
+
+dependencies {
+    debugImplementation(compose.uiTooling)
 }
